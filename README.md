@@ -1,0 +1,1 @@
+Documentacion de todo el proyecto, aca se realizara documentacion, con este archivo se debe poder entender el codigo sin necesidad de haberlo estudiado o haberse involucrado en su creación este queda en la pag principal junto con el INDEX.HTML
