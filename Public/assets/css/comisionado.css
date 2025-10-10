@@ -1,0 +1,16 @@
+.side-bar .container-fluid{
+    font-family:"Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    background-color: #949494;
+}
+
+.side-bar .home-icon{
+    font-size: 30px;
+    color: #606060;
+}
+
+.side-bar .reg-caso{
+    font-size: 35px;
+    color: #606060;
+}
