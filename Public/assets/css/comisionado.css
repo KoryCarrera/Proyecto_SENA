@@ -1,16 +1,34 @@
+/*CSS contenedor barra lateral*/
 .side-bar .container-fluid{
     font-family:"Roboto", sans-serif;
-    font-weight: 400;
+    font-weight: 40px;
     font-style: normal;
     background-color: #949494;
+    color: #606060;
 }
-
+/*CSS icono casa*/
 .side-bar .home-icon{
-    font-size: 30px;
+    font-size: 40px;
     color: #606060;
 }
-
+/*CSS icono registrar caso*/
 .side-bar .reg-caso{
-    font-size: 35px;
+    font-size: 40px;
     color: #606060;
+}
+/*CSS icono ver caso*/
+.side-bar .ver-caso{
+    font-size: 40px;
+    color: #606060;
+}
+/*CSS icono notificacion icono*/
+.side-bar .noti-icon{
+    font-size: 40px;
+    color: #606060;
+}
+/*CSS icono crear notificacion icono*/
+.side-bar .crear-icon{
+    font-size: 40px;
+    color: #606060;
+    text-align: center;
 }
