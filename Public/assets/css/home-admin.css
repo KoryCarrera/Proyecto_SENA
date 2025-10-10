@@ -1,0 +1,12 @@
+.top-bar .container-fluid{
+    background-color: #214554;
+    font-family: "roboto", sans-serif;
+}
+.top-bar .container-fluid h2 {
+    font-size: 26px;
+    color: white;
+}
+.top-bar .container-fluid h4 {
+    font-size: 24px;
+    color: white;
+}
