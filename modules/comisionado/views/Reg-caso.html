@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comisionado</title>
     <!--css propio-->
-    <link rel="stylesheet" href="C:\Users\isaac\workspace\Proyecto_SENA\Public\assets\css\home-comisionado.css">
+    <link rel="stylesheet" href="C:\Users\isaac\workspace\Proyecto_SENA\Public\assets\css\com-reg-caso.css">
 
     <!--Google fonts-->
     <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet">
@@ -76,38 +76,56 @@
     </ul>
   </div>
 </div>
+<!--contenido de la pagina de registrar caso-->
 <div class="main-content">
-  <div class="contenido">
-    <h1>¡Bienvenido al Sistema de Gestión SENA!</h1>
-    <p>
-      Como administrador, tienes acceso total a las herramientas y funciones de esta plataforma.
-      <br>Desde aquí podrás gestionar usuarios, supervisar solicitudes, generar reportes y mantener actualizada la información institucional.
-      <br>Tu rol es fundamental para garantizar el correcto funcionamiento del sistema y apoyar la labor de la Comisión de Personal.
-    </p>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Registro de Caso</h1>
     
-<div class="row">
-  <div class="col-sm-6 mb-3 mb-sm-0">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Casos Por Mes</h5>
-        <img class="card-text" src="../../../Public/assets/img/Grafica_example1.png">
-      </div>
+    <div class="custom-form-box mx-auto">
+        <h2 class="text-center mb-4">Información del Caso</h2>
+
+        <form id="registroForm">
+            <div id="seccion1" class="form-section">
+                
+                <div class="input-group mb-4 custom-input-group">
+                    <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
+                <select class="form-select custom-input" id="tipo-usuario">
+                    <option selected disabled>Selecione el Tipo de Usuario</option>
+                    <option value="aprendiz">Aprendiz</option>
+                    <option value="empleado">Empleado</option>
+                    <option value="anonimo">Anonimo</option>
+                </select>
+                </div>
+
+                <div class="input-group mb-4 custom-input-group">
+                    <input type="text" class="form-control custom-input" placeholder="Nombre:">
+                </div>
+
+                <div class="input-group mb-4 custom-input-group">
+                    <input type="text" class="form-control custom-input" placeholder="Apellido:">
+                </div>
+
+                <div class="input-group mb-4 custom-input-group">
+                    <input type="text" class="form-control custom-input" placeholder="Documento:">
+                </div>
+
+                <button type="button" class="btn btn-block w-100 btn-siguiente" onclick="mostrarSeccion('seccion2')">
+                    SIGUIENTE
+                </button>
+            </div>
+
+            <div id="seccion2" class="form-section d-none">
+                <p class="text-center py-4">Aquí iría la siguiente parte del formulario.</p>
+                
+                <button type="button" class="btn btn-secondary btn-block w-100 mb-3" onclick="mostrarSeccion('seccion1')">
+                    ANTERIOR
+                </button>
+                <button type="submit" class="btn btn-success btn-block w-100">
+                    FINALIZAR REGISTRO
+                </button>
+            </div>
+        </form>
     </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Estados de los Casos</h5>
-        <p class="card-text">🟩​: Casos atendido
-        <br>
-        🟥: Casos no atendido
-        <br>
-        🟨: Casos por atender
-        </p>
-        <img class="card-text" src="../../../Public/assets/img/Grafica_example2.png">
-      </div>
-    </div>
-  </div>
 </div>
 </body>
 </html>
