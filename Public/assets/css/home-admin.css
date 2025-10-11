@@ -10,3 +10,123 @@
     font-size: 24px;
     color: white;
 }
+.side-bar {
+		background-color: #2E6076;
+}
+.side-bar {
+    position: fixed;
+    top: 100px;
+    left: 0;
+    width: 160px;
+    height: calc(100vh - 100px);
+    background-color: #2E6076;
+    overflow-y: auto; /* permite desplazarse */
+    scrollbar-width: none; /* Oculta scroll en Firefox */
+    -ms-overflow-style: none; /* Oculta scroll en IE y Edge antiguos */
+    font-family: "Roboto", sans-serif;
+    color: #C0C0C0;
+    z-index: 900;
+}
+.sidebar .nav-item.active .nav-link span{
+		color: white;
+  }
+.sidebar .nav-item.active .nav-link .home-icon{
+		color: white;
+	}
+/* Oculta la barra en Chrome, Edge y Safari */
+.side-bar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Elimina el scroll interno para evitar conflicto */
+.side-bar .container-fluid {
+    background-color: #2E6076;
+    color: #C0C0C0;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    overflow: visible;
+    height: auto;
+}
+/*CSS icono casa*/
+.side-bar .home-icon{
+    font-size: 40px;
+    color: #C0C0C0;
+}
+/*CSS icono crear notificacion*/
+.side-bar .crear-notificacion{
+    font-size: 40px;
+    color: #C0C0C0;
+}
+/*CSS icono ver caso*/
+.side-bar .ver-caso{
+    font-size: 40px;
+    color: #C0C0C0;
+}
+/*CSS icono procesos icono*/
+.side-bar .procesos{
+    font-size: 40px;
+    color: #C0C0C0;
+}
+/*CSS icono crear usuarios icono*/
+.side-bar .usuarios{
+    font-size: 40px;
+    color: #C0C0C0;
+    text-align: center;
+}
+/*CSS icono notificaciones icono*/
+.side-bar .notificacion{
+    font-size: 40px;
+    color: #C0C0C0;
+    text-align: center;
+}
+.side-bar span {
+		color: #C0C0C0;
+}
+/*Fonts del contenido interno de la pagina*/
+.main-content {
+  margin-left: 160px;
+  margin-top: 5px;
+  min-height: calc(100vh - 100px);
+  background-image: url("../../../Public/assets/img/logo_sena.png");
+  background-size: 500px;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/*Configuracion del div que tiene el contenido*/
+.contenido {
+  font-family: "ADLaM Display", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  text-align: center;
+  
+}
+/*Configuración del background la img*/
+.main-content::before {
+  content: "";
+  position: absolute;
+  top: 100px;
+  left: 160px;
+  width: calc(100% - 160px);
+  height: calc(100% - 100px);
+  background-image: url("../../../Public/assets/img/logo_sena.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.08;
+  z-index: 0;
+}
+.main-content > * {
+  position: relative;
+  z-index: 1;
+}
+.card {
+ background-color: #D0DEE6;
+ border: black;
+ border-radius: 40px;
+ margin-left: 10px;
+ margin-right: 10px;
+}
