@@ -38,7 +38,7 @@
 .sidebar .nav-item.active .nav-link span{
 		color: white;
   }
-.sidebar .nav-item.active .nav-link .home-icon{
+.sidebar .nav-item.active .nav-link .bi-file-earmark-text-fill{
 		color: white;
 	}
 /* Oculta la barra en Chrome, Edge y Safari */
@@ -131,10 +131,99 @@
   position: relative;
   z-index: 1;
 }
-.card {
- background-color: #D0DEE6;
- border: black;
- border-radius: 40px;
- margin-left: 10px;
- margin-right: 10px;
+/*Form del contenido*/
+
+/* contenedor del form*/
+.custom-form-box {
+    max-width: 450px;
+    padding: 20px 40px; 
+    background-color: #EBEBEB; 
+    border: 1px solid #000000; 
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+    position: relative;
+}
+
+.custom-form-box h2 {
+    color: #4A4A4A; 
+    font-weight: 700;
+    font-size: 1.5rem;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 30px !important;
+}
+
+/* Estilo para todo el grupo de input (para el fondo blanco redondeado) */
+.custom-input-group {
+    background-color: white;
+    border-radius: 10px; /* Bordes redondeados del contenedor blanco */
+    padding: 5px 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil para el input */
+}
+
+/* Estilo para el campo de entrada real */
+.custom-input {
+    /* El borde y el fondo de Bootstrap se eliminan */
+    border: none;
+    background-color: transparent;
+    font-size: 1rem;
+    font-weight: 600; /* Hace que el texto se vea más legible */
+    padding: 8px 0;
+    color: #4A4A4A; /* Color del texto ingresado */
+}
+
+/* Mantiene el color del placeholder (el texto de ejemplo) */
+.custom-input::placeholder {
+    color: #6c757d; /* Un gris para el texto del placeholder */
+    opacity: 1; 
+}
+
+/* Estilo del icono (solo para el campo de Usuario) */
+.custom-icon {
+    border: none;
+    background-color: transparent;
+    color: #4A4A4A; /* Color del icono */
+    font-size: 1.5rem;
+    padding-right: 10px;
+}
+
+/* Estilo del botón SIGUIENTE */
+.btn-siguiente {
+    background-color: #388e3c;
+    color: white;
+    font-weight: bold;
+    padding: 12px 0;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-size: 1.2rem;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.btn-siguiente:hover {
+    background-color: #2e7d32;
+    color: white;
+}
+
+.btn-IMPORTAR {
+    background-color: #EBEBEB;
+    color: black;
+    font-weight: bold;
+    padding: 12px 0;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-size: 1.2rem;
+    border: none;
+    transition: background-color 0.3s;
+    border: 1px solid black;
+}
+
+.btn-IMPORTAR:hover {
+    background-color: #EBEBEB;
+    color: white;
+}
+
+/* Oculta los bordes por defecto del input-group de Bootstrap */
+.input-group:not(.has-validation) > .form-control:not(:last-child) {
+    border-radius: 0 10px 10px 0;
 }
