@@ -14,7 +14,7 @@
     
     <!--CSS propio para colores y fonts-->
 
-    <link rel="stylesheet" href="../../../Public/assets/css/home-admin.css">
+    <link rel="stylesheet" href="../../../Public/assets/css/casos-admin.css">
     
     <!--Link de google fonts-->
 
@@ -47,13 +47,46 @@
             </div>
         </nav>
     </div>
+    <!--Barra de navegación secundaria-->
+<div class="second-bar">
+<nav class="navbar navbar-expand-lg second-bar">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Seguimiento</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Filtrar
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Nombre Del Caso</a></li>
+            <li><a class="dropdown-item" href="#">Fecha de registro</a></li>
+            <li><a class="dropdown-item" href="#">Tipo de Caso</a></li>
+            <li><a class="dropdown-item" href="#">Fecha de respuesta</a></li>
+            <li><a class="dropdown-item" href="#">Estado</a></li>
+            <li><a class="dropdown-item" href="#">Proceso</a></li>
+            <li><a class="dropdown-item" href="#">Comisionado Encargado</a></li>
+          </ul>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Palabras Claves" aria-label="Search"/>
+        <button class="btn btn-outline-success" type="submit">Buscar</button>
+      </form>
+    </div>
+  </div>
+</nav>
+</div>
     <!--SlideBar-->
 
 <div class="side-bar">
   <div class="sidebar container-fluid">
     <ul class="nav flex-column text-center">
     
-				<li class="nav-item my-1 active">
+				<li class="nav-item my-1">
 					<a href="#" class="nav-link text-none">
 						<i class="bi bi-house-fill home-icon d-block"></i>
 						<span>Inicio</span>
@@ -68,7 +101,7 @@
         </a>
       </li>
 
-      <li class="nav-item my-1">
+      <li class="nav-item my-1 active">
         <a href="casos.html" class="nav-link text-none">
           <i class="bi bi-eye-fill ver-caso d-block"></i>
           <span>Casos</span>
@@ -92,50 +125,61 @@
     </ul>
   </div>
 </div>
-
-<!--Contenido de la pagina-->
-
 <div class="main-content">
-  <div class="contenido">
-    <h1>¡Bienvenido al Sistema de Gestión SENA!</h1>
-    <p>
-      Como administrador, tienes acceso total a las herramientas y funciones de esta plataforma.
-      <br>Desde aquí podrás gestionar usuarios, supervisar solicitudes, generar reportes y mantener actualizada la información institucional.
-      <br>Tu rol es fundamental para garantizar el correcto funcionamiento del sistema y apoyar la labor de la Comisión de Personal.
-    </p>
-    
-<div class="row">
-  <div class="col-sm-6 mb-3 mb-sm-0">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Casos Por Mes</h5>
-        <img class="card-text" src="../../../Public/assets/img/Grafica_example1.png">
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Estados de los Casos</h5>
-        <p class="card-text">🟩​: Casos atendido
-        <br>
-        🟥: Casos no atendido
-        <br>
-        🟨: Casos por atender
-        </p>
-        <img class="card-text" src="../../../Public/assets/img/Grafica_example2.png">
-      </div>
-    </div>
-  </div>
+	<div class="contenido">
+		<table class="table table-striped table-hover">
+			<thead>
+				<tr>
+					<th scope="col"># Id</th>
+					<th scope="col">Fecha de Registro</th>
+					<th scope="col">Tipo de Caso</th>
+					<th scope="col">Fecha de respuesta</th>
+					<th scope="col">Estado</th>
+					<th scope="col">Proceso</th>
+					<th scope="col">Comisionado Encargado</th>
+					<th scope="col">Gestionar</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+				<th scope="row">1</th>
+				<td>example</td>
+				<td>example</td>
+				<td>example</td>
+				<td>example</td>
+				<td>example</td>
+				<td>example</td>
+				<td><button class="btn-table">Supervisar</button></td>
+				</tr>
+				<tr>
+				<th scope="row">2</th>
+				<td>example</td>
+				<td>example</td>
+				<td>example</td>
+				<td>example</td>
+				<td>example</td>
+				<td>example</td>
+				<td><button class="btn-table">Supervisar</button></td>
+				</tr>
+				<tr>
+				<th scope="row">3</th>
+				<td>example</td>
+				<td>example</td>
+				<td>example</td>
+				<td>example</td>
+				<td>example</td>
+				<td>example</td>
+				<td><button class="btn-table">Supervisar</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
 
-  </div>
-</div>
+	<!--JS de bootstrap-->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
-
 </body>
-
 </html>
