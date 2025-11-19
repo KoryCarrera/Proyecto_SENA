@@ -9,6 +9,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
+    <link rel="stylesheet" href="../assets/css/inicio-entrada-cartas.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -22,7 +23,7 @@
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
           <a class="navbar-brand" href="#">SENA</a>
-          <buttog
+          <button
             class="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
@@ -53,37 +54,54 @@
         </div>
       </nav>
     </section>
-    <section class="ini">
-      <div>
-        <h2>sobre nosotros</h2>
-      </div>
-    </section>
-    <main>
-      <section class="nosotros">
-        <div class="targeta" id="targeta-1">
-          <h3>porque de esta pagina?</h3>
-          <p>
-            Esta pagina es una herramienta para el manejo de la informacion de los comisionados</p>
+
+    <!--contenedores con los los tipos de usuarios,estaprimera es la del comisionado-->
+    <main class="contenedor">
+      <section class="tipos_usuarios">
+        <h2>selecciona tu tipo de cuenta</h2>
+        <div class="cartas_usuarios">
+          <div class="formulario_entrada_admin">
+             <i class="fa-solid fa-user-tie"></i> <br>
+             <input type = "number" placeholder="ingrese su cedula"><br>
+             <input type="password" placeholder="ingrese su contraseña"><br>
+             <button type="submit">ingrese</button>
+          </div>
+          <div class="carta_administrador_login">
+            <i class="fa-solid fa-user-gear"></i>
+            <h3>administrador</h3>
+            <p>bienvenido de nuevamente administrador</p>           
+          </div>
         </div>
-        <div class="targeta" id="targeta-2">
-          <h3>porque de esta pagina?</h3>
-          <p>
-            Esta pagina es una herramienta para el manejo de la informacion de los comisionados</p>
-        </div>
-        <div class="targeta" id="tarjeta-3">
-          <h3>porque de esta pagina?</h3>
-          <p>
-            Esta pagina es una herramienta para el manejo de la informacion de los comisionados</p>
-        </div>
-        <div class="targeta" id="tarjeta-4">
-          <h3>porque de esta pagina?</h3>
-          <p>
-            Esta pagina es una herramienta para el manejo de la informacion de los comisionados</p>
-        </div>
+         <a href="../indexOrigin.php" class="boton-volver">Volver al inicio</a>
       </section>
     </main>
+    <!--pie de pagina, toca segir buscando que tipos de lincks y contenido pondremos-->
     <footer>
-      <p>todos los derechos reservados &copy; 2025</p>
+      <div class="links_paginas">
+        <ul class="links">
+          <li><a href="#">servicios</a></li>
+          <li><a href="#">mapas de sitio</a></li>
+          <li><a href="#">terminos"</a></li>
+        </ul>
+      </div>
+      <!--los separe en tres div para presentarlo como columnas,cosa que no aparecia en el mockup-->
+      <div class="a_cerca_de">
+        <ul class="links">
+          <li><a href="#">acerca de nosotros</a></li>
+          <li><a href="#">contactanos</a></li>
+        </ul>
+      </div>
+      <div class="servicio_al_cliente">
+        <ul class="links">
+          <li><a href="#">servicio al cliente</a></li>
+          <li><a href="#">ayuda</a></li>
+        </ul>
+      </div>
     </footer>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

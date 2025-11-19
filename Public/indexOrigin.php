@@ -41,7 +41,7 @@
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">nosotros</a>
+                <a class="nav-link" href="pages/nosotros.php">nosotros</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">cuentas</a>
@@ -61,14 +61,14 @@
         <div class="cartas_usuarios">
           <!--esta es la carta del comisionado-->
           <div class="carta_comisionado">
-            <a href="entrada_comisionado.html" class="link-cartas">
+            <a href="pages/entrada_comisionado.php" class="link-cartas">
              <i class="fa-solid fa-user-tie"></i>
              <h3>comisionado</h3>
             </a>
           </div>
           <!--esta es la carta del administrador-->
           <div class="carta_administrador" id="admin_login">
-            <a  href="/app/views/pages/entrada_administrador.php" class="link-cartas">
+            <a  href="pages/entrada_administrador.php" class="link-cartas">
              <i class="fa-solid fa-user-gear"></i>
              <h3>administrador</h3>
             </a>           
