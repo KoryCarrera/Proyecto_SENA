@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="Estilo1.css" />
+    <link rel="stylesheet" href="../../../Public/assets/css/inicio-entrada-cartas.css" />
     <title>pagina de inicio del sistema de gestion</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="/Estilo1.css" />
+    <link rel="stylesheet" href="../../../Public/assets/css/inicio-entrada-cartas.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -60,23 +60,21 @@
       <section class="tipos_usuarios">
         <h2>selecciona tu tipo de cuenta</h2>
         <div class="cartas_usuarios">
-          <!--esta es la carta del comisionado-->
-          <div class="carta_comisionado">
-            <a href="entrada_comisionado.html" class="link-cartas">
-             <i class="fa-solid fa-user-tie"></i>
-             <h3>comisionado</h3>
-            </a>
-          </div>
-          <!--esta es la carta del administrador-->
-          <div class="carta_administrador" id="admin_login">
-            <a  href="entrada_administrador.html" class="link-cartas">
-             <i class="fa-solid fa-user-gear"></i>
-             <h3>administrador</h3>
-            </a>           
+          <div class="carta_comisionado_login" id="comisionado_entrada">
+            <i class="fa-solid fa-user-tie"></i>
+            <h3>comisionado</h3>
+            <p>bienvenido de nuevamente comisionado</p>
           </div>
           <!--se crea una tercera carta que permanecera oculta,esta sera el formulario que
           pedira los datos para el ingreso al sistema de gestions segun su tipo de usuario-->
+          <div class="formulario_entrada">
+             <i class="fa-solid fa-user-tie"></i> <br>
+            <input type = "number" placeholder="ingrese su cedula"><br>
+            <input type="password" placeholder="ingrese su contraseña"><br>
+            <button type="submit">ingrese</button>
+          </div>
         </div>
+         <a href="index.html" class="boton-volver">Volver al inicio</a>
       </section>
     </main>
     <!--pie de pagina, toca segir buscando que tipos de lincks y contenido pondremos-->
