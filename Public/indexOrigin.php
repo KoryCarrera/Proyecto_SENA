@@ -41,7 +41,7 @@
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="pages/nosotros.php">nosotros</a>
+                <a class="nav-link" href="./pages/nosotros.php">nosotros</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">cuentas</a>
