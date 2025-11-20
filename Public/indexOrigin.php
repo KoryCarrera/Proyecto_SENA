@@ -3,13 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="Estilo1.css" />
+<link rel="stylesheet" href="./assets/css/inicio-entrada-cartas.css">
     <title>pagina de inicio del sistema de gestion</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="/Estilo1.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -42,7 +41,7 @@
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">nosotros</a>
+                <a class="nav-link" href="pages/nosotros.php">nosotros</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">cuentas</a>
@@ -62,14 +61,14 @@
         <div class="cartas_usuarios">
           <!--esta es la carta del comisionado-->
           <div class="carta_comisionado">
-            <a href="entrada_comisionado.html" class="link-cartas">
+            <a href="pages/entrada_comisionado.php" class="link-cartas">
              <i class="fa-solid fa-user-tie"></i>
              <h3>comisionado</h3>
             </a>
           </div>
           <!--esta es la carta del administrador-->
           <div class="carta_administrador" id="admin_login">
-            <a  href="entrada_administrador.html" class="link-cartas">
+            <a  href="pages/entrada_administrador.php" class="link-cartas">
              <i class="fa-solid fa-user-gear"></i>
              <h3>administrador</h3>
             </a>           
