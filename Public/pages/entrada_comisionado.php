@@ -74,7 +74,7 @@
             <button type="submit">ingrese</button>
           </div>
         </div>
-         <a href="../indexOrigin.php" class="boton-volver">Volver al inicio</a>
+         <a href="../index.php" class="boton-volver">Volver al inicio</a>
       </section>
     </main>
     <!--pie de pagina, toca segir buscando que tipos de lincks y contenido pondremos-->

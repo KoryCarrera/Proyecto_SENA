@@ -12,9 +12,9 @@ $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
 
 try {
     $pdo = new PDO ($dsn, $user, $pass);
-    echo 'Conexion exitosa a la base de datos';
+    //echo 'Conexion exitosa a la base de datos';
 } catch (PDOException $e) {
-    echo 'Conexion fallida: ' . $e->getMessage();
+    //echo 'Conexion fallida: ' . $e->getMessage();
 }
 
 ?>
