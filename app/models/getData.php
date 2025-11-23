@@ -83,16 +83,37 @@ function resumenGeneral($pdo)
     }
 }
 
-function loginUsuario($pdo, $documento, $contraseña)
+function loginUsuario($pdo, $documento, $contrasena)
 {
-    $stmt = $pdo->prepare("CALL sp_login_usuario(:documento, :contraseña)");
-    $stmt->bindParam(':documento', $documento, PDO::PARAM_INT);
-    $stmt->bindParam(':contraseña', $documento, PDO::PARAM_STR);
+    error_log("-> DEBUG LOGIN: Intentando login para Documento: " . $documento . " y Contrasena: " . $contrasena);
+    $stmt = $pdo->prepare("CALL sp_login_usuario(?, ?)");
+    $stmt->bindParam(1, $documento, PDO::PARAM_STR);
+    $stmt->bindParam(2, $contrasena, PDO::PARAM_STR);
 
-    try{
+    try {
         $stmt->execute();
-        $stmt->Closecursor();
-    } catch(PDOException){
-        return false;
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        error_log("-> DEBUG LOGIN: Resultado de fetch() para el usuario: " . print_r($data, true));
+        $stmt->closeCursor();
+
+        if ($data) {
+            return [
+                'status' => 'ok',
+                'mensaje' => 'Usuario válido',
+                'data' => $data
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'mensaje' => 'Credenciales inválidas'
+            ];
+        }
+
+    } catch (PDOException $e) {
+        error_log("-> DEBUG LOGIN: Error SQL en loginUsuario: " . $e->getMessage());
+        return [
+            'status' => 'error',
+            'mensaje' => 'error SQL'
+        ];
     }
 }
