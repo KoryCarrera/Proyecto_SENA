@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/> 
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../../../Public/assets/css/style.css">
     <title>Document</title>
         <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
@@ -35,14 +35,14 @@
     <ul class="nav flex-column text-center">
     
 				<li class="nav-item my-1 active">
-					<a href="#" class="nav-link text-none">
+					<a href="home.php" class="nav-link text-none">
 						<i class="bi bi-house-fill home-icon d-block"></i>
 						<span>Inicio</span>
 					</a>
 				</li>
 
       <li class="nav-item my-1">
-        <a href="generar_informe.html" class="nav-link text-none">
+        <a href="generar_informe.php" class="nav-link text-none">
           <i class="bi bi-file-earmark-text-fill crear-notificacion"></i>
           <br>
           <span>Generar<br>Informe</span>
@@ -50,7 +50,7 @@
       </li>
 
       <li class="nav-item my-1">
-        <a href="#" class="nav-link text-none">
+        <a href="casos.php" class="nav-link text-none">
           <i class="bi bi-eye-fill ver-caso d-block"></i>
           <span>Casos</span>
         </a>
