@@ -81,6 +81,7 @@
             Esta pagina es una herramienta para el manejo de la informacion de los comisionados</p>
         </div>
       </section>
+       <a href="../index.php" class="boton-volver">Volver al inicio</a>
     </main>
     <footer>
       <p>todos los derechos reservados &copy; 2025</p>
