@@ -1,3 +1,5 @@
+<?php require_once "../../controllers/checkSession.php";?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -76,7 +78,7 @@
       </li>
 
       <li class="nav-item my-1">
-        <a href="#" class="nav-link text-none">
+        <a href="crear-usuario.php" class="nav-link text-none">
           <i class="bi bi-person-fill-gear usuarios"></i>
           <span>Usuarios</span>
         </a>
@@ -108,22 +110,21 @@
   <div class="col-sm-6 mb-3 mb-sm-0">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Casos Por Mes</h5>
-        <img class="card-text" src="../../../Public/assets/img/Grafica_example1.png">
+			<canvas id="polarChart"></canvas>
       </div>
     </div>
   </div>
   <div class="col-sm-6">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Estados de los Casos</h5>
-        <p class="card-text">🟩​: Casos atendido
-        <br>
-        🟥: Casos no atendido
-        <br>
-        🟨: Casos por atender
-        </p>
-        <img class="card-text" src="../../../Public/assets/img/Grafica_example2.png">
+			<canvas id="pieChart"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 my-3">
+    <div class="card">
+      <div class="card-body">
+			<canvas id="barChart"></canvas>
       </div>
     </div>
   </div>
@@ -135,6 +136,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+    <script src="../../../Public/assets/js/dashboard_admin.js"></script>    
 
 </body>
 

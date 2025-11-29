@@ -1,3 +1,18 @@
+<?php
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+if(empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+$token = $_SESSION['csrf_token'];
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -60,6 +75,7 @@
       <div class="cartas_usuarios">
         <div class="formulario_entrada_admin">
           <i class="fa-solid fa-user-tie"></i> <br>
+            <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
             <input type="number" placeholder="ingrese su cedula" name="documento" id="documento"><br>
             <input type="password" placeholder="ingrese su contraseña" name="contraseña" id="password"><br>
             <button id="ingresar">ingrese</button>
@@ -96,7 +112,7 @@
       </ul>
     </div>
   </footer>
-  <script src="../assets/js/login.js"></script>
+  <script src="../assets/js/loginAdmin.js"></script>
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"

@@ -5,10 +5,12 @@ var enviar = document.getElementById("ingresar");
 enviar.addEventListener('click', function login() {
     var documento = document.getElementById("documento").value;
     var contraseña = document.getElementById("password").value;
+    var csrfToken = document.getElementById("csrf_token").value;
 
     var parametros = {
         'documento': documento,
-        'password': contraseña
+        'password': contraseña,
+        'csrf_token': csrfToken
     }
     console.log("se esta ejecutando");
     $.ajax({

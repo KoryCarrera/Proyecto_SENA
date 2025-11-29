@@ -77,18 +77,24 @@ function resumenGeneral($pdo)
         $stmt->execute();
         $resumenGeneral = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
+        return [
+            'status' => 'ok',
+            'data' => $resumenGeneral
+        ];
     } catch (PDOException $e) {
         error_log("Error al obtener el resumen general: " . $e->getMessage());
-        return null;
+        return [
+            'status' => 'error',
+            'mensaje' => 'Error al obtener el resumen general'
+        ];
     }
 }
 
 function loginUsuario($pdo, $documento, $contrasena)
 {
-    error_log("-> DEBUG LOGIN: Intentando login para Documento: " . $documento . " y Contrasena: " . $contrasena);
-    $stmt = $pdo->prepare("CALL sp_login_usuario(?, ?)");
+    error_log("-> DEBUG LOGIN: Intentando login para Documento: " . $documento . " y Contraseña: " . $contrasena);
+    $stmt = $pdo->prepare("CALL sp_login_usuario(?)");
     $stmt->bindParam(1, $documento, PDO::PARAM_STR);
-    $stmt->bindParam(2, $contrasena, PDO::PARAM_STR);
 
     try {
         $stmt->execute();
@@ -96,13 +102,13 @@ function loginUsuario($pdo, $documento, $contrasena)
         error_log("-> DEBUG LOGIN: Resultado de fetch() para el usuario: " . print_r($data, true));
         $stmt->closeCursor();
 
-        if ($data) {
+        if ($data && password_verify($contrasena, $data['contraseña'])) {
             return [
                 'status' => 'ok',
                 'mensaje' => 'Usuario válido',
                 'data' => $data
             ];
-        } else {
+        }else{
             return [
                 'status' => 'error',
                 'mensaje' => 'Credenciales inválidas'
@@ -116,4 +122,34 @@ function loginUsuario($pdo, $documento, $contrasena)
             'mensaje' => 'error SQL'
         ];
     }
+}
+
+function casosPorTipo($pdo)
+{
+	$stmt = $pdo->prepare("CALL sp_contear_casos_tipo");
+	
+	try {
+		$stmt->execute();
+		$conteo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$stmt->closeCursor();
+		
+		if($conteo) {
+				$nombres = [];
+				$totales = [];
+				
+				foreach ($conteo as $flecha) {
+						$nombres[] = $flecha['nombre_caso'];
+						$totales[] = (int)$flecha['total'];
+					}
+				return [
+					'labels' => $nombres,
+					'total' => $totales
+				];
+			} else {
+				return false;
+				}
+	} catch (PDOException $e) {
+		error_log("Error SQL en casosPorTipo: ". $e->getMessage());
+		return false;
+		}
 }

@@ -1,3 +1,5 @@
+<?php require_once "../../controllers/checkSession.php";?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -102,14 +104,14 @@
       </li>
 
       <li class="nav-item my-1 active">
-        <a href="#" class="nav-link text-none">
+        <a href="casos.php" class="nav-link text-none">
           <i class="bi bi-eye-fill ver-caso d-block"></i>
           <span>Casos</span>
         </a>
       </li>
 
       <li class="nav-item my-1">
-        <a href="#" class="nav-link text-none">
+        <a href="crear-usuario.php" class="nav-link text-none">
           <i class="bi bi-person-fill-gear usuarios"></i>
           <span>Usuarios</span>
         </a>
