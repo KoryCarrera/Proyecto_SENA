@@ -1,0 +1,289 @@
+*{
+    text-decoration: none;
+}
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  }
+  .top-bar .navbar_m-0_p-0 nav{
+    background-color: #214554;
+  }
+.top-bar .container-fluid{
+    background-color: #214554 !important;
+    font-family: "roboto", sans-serif;
+    position: static;
+}
+.top-bar .container-fluid h2 {
+    font-size: 26px;
+    color: white;
+    }
+.top-bar .container-fluid h4 {
+    font-size: 24px;
+    color: white;
+}
+.side-bar {
+		background-color: #2E6076;
+}
+.side-bar {
+      display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: fixed;
+    top: 100px;
+    left: 0;
+    width: 160px;
+    height: calc(100vh - 100px);
+    background-color: #2E6076;
+    overflow-y: auto; /* permite desplazarse */
+    scrollbar-width: none; /* Oculta scroll en Firefox */
+    -ms-overflow-style: none; /* Oculta scroll en IE y Edge antiguos */
+    font-family: "Roboto", sans-serif;
+    color: #C0C0C0;
+    z-index: 900;
+}
+.sidebar .nav-item.active .nav-link span{
+		color: white;
+  }
+
+    
+
+.side-bar ul {
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* cambia este valor a tu gusto */
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+
+.sidebar .nav-item.active .nav-link .home-icon{
+		color: white;
+	}
+/* Oculta la barra en Chrome, Edge y Safari */
+.side-bar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Elimina el scroll interno para evitar conflicto */
+.side-bar .container-fluid {
+    background-color: #2E6076;
+    color: #C0C0C0;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    overflow: visible;
+    height: auto;
+}
+/*CSS icono casa*/
+.side-bar .home-icon{
+    font-size: 40px;
+    color: #C0C0C0;
+}
+/*CSS icono crear notificacion*/
+.side-bar .crear-notificacion{
+    font-size: 40px;
+    color: #C0C0C0;
+}
+/*CSS icono ver caso*/
+.side-bar .ver-caso{
+    font-size: 40px;
+    color: #C0C0C0;
+}
+/*CSS icono procesos icono*/
+.side-bar .procesos{
+    font-size: 40px;
+    color: #2b9345;
+}
+/*CSS icono crear usuarios icono*/
+.side-bar .usuarios{
+    font-size: 40px;
+    color: #c0c0c0;
+    text-align: center;
+}
+/*CSS icono notificaciones icono*/
+.side-bar .notificacion{
+    font-size: 40px;
+    color: #C0C0C0;
+    text-align: center;
+}
+.side-bar span {
+		color: #C0C0C0;
+}
+/*se pone en la sidebar un espaciado por toda la side*/
+.nav-flex{
+    height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 0;
+    margin:0;
+    list-style-type: none;
+
+}
+
+
+
+/*creacion de estilos para la tabla de usuarios*/
+main{
+  margin-top: 100px;
+    margin-left: 160px;
+    padding: 30px;
+    min-height: calc(100vh - 100px);
+    width: calc(100% - 160px);
+    background-color: #fcfcfd;
+    color: #000000;
+    font-size: 1.2rem;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+
+}
+/* se crea la tabla*/
+table{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  background-color: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+  border-radius: 15px;
+  overflow: hidden;
+}
+/*son las cabeceras*/
+thead{
+    display: flex;
+  background-color: #cdcdcd;
+  color: #000000;
+  font-size: 1.2rem;
+  overflow: hidden;
+  padding: 5px 1rem;
+  justify-content: space-evenly;
+  width: 100%;
+}
+/*son las cabeceras de las columnas*/
+.head-tabla {
+    display: flex;
+    flex-direction: row;
+  background-color: #cdcdcd;
+  color: #000000;
+  font-size: 1.2rem;
+  overflow: hidden;
+  padding: 5px 1rem;
+  justify-content: space-evenly;
+  width: 100%;
+ border-collapse:collapse;
+}
+/*son las filas de la tabla*/
+.cont-tabla{
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 1.2rem;
+  overflow: hidden;
+  padding: 5px 1rem;
+  width: 100%;
+ border-collapse:collapse;
+}
+/* conteniodo de la tabla*/
+.ejemplos{
+    display: flex;
+    flex-direction: row;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 1.2rem;
+  width: 100%;
+ border-collapse:collapse;
+ justify-content: space-evenly;
+
+}
+/*linea separatoria entre las filas*/
+.head-tabla,.ejemplos{
+  padding: 10px;
+  border-bottom:1px solid #ccc;
+}
+/*boton gestionar*/
+.btn-tabla{
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none !important;
+
+}
+
+/*animacion del boton*/
+.btn-tabla:hover {
+    background-color: #45a049;
+}
+
+.btn-tabla td,
+.btn-tabla tr {
+    border-bottom: none !important;
+}
+
+
+/* estilos para el formulario*/
+.formulario-crear-usuario form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .3rem;
+    width: 100%;
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    backdrop-filter: blur(6px);
+}
+
+   
+/*estilos para los inputs*/
+input{
+    padding: .5rem;
+    border-radius: 15px;
+    border: none;
+    background-color: #EBEBEB;
+    color: black;
+   
+}
+.formulario{
+    display: flex;
+   margin: 1rem;
+}
+/*animaciones y estilos para el boton*/
+.btn-usuario{
+    background-color: green;
+     backdrop-filter: blur(6px);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: .5rem  2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.btn-usuario:hover {
+    background-color: #45a049;
+}
+   #usuarios{
+    background-color: #EBEBEB;
+    color: black;
+    border: none;
+    border-radius: 15px;
+    padding: .5rem  2rem;
+    cursor: pointer;
+   
+
+   }
+ 
+   

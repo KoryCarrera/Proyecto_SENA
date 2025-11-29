@@ -2,87 +2,28 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    text-decoration: none;
 }
-body{
-    background-color: #cdcdcf;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    overflow-x: hidden;color: #fff;
-}
-
 .top-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100px; /* ajusta según tu diseño */
-    z-index: 1000;
-}
-
-.side-bar {
-    position: fixed;
-    top: 100px;
-    left: 0;
-    width: 160px;
-    height: calc(100vh - 100px);
-    background-color: #949494;
-    overflow-y: auto; /* permite desplazarse */
-    scrollbar-width: none; /* Oculta scroll en Firefox */
-    -ms-overflow-style: none; /* Oculta scroll en IE y Edge antiguos */
-    font-family: "Roboto", sans-serif;
-    color: #606060;
-    z-index: 900;
-}
-
-/* Oculta la barra en Chrome, Edge y Safari */
-.side-bar::-webkit-scrollbar {
-    display: none;
-}
-
-/* Elimina el scroll interno para evitar conflicto */
-.side-bar .container-fluid {
-    background-color: #949494;
-    color: #606060;
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    overflow: visible;
-    height: auto;
-}
-/*CSS icono casa*/
-.side-bar .home-icon{
-    font-size: 40px;
-    color: #606060;
-}
-/*CSS icono registrar caso*/
-.side-bar .reg-caso{
-    font-size: 40px;
-    color: #606060;
-}
-/*CSS icono ver caso*/
-.side-bar .ver-caso{
-    font-size: 40px;
-    color: #606060;
-}
-/*CSS icono notificacion icono*/
-.side-bar .noti-icon{
-    font-size: 40px;
-    color: #606060;
-}
-/*CSS icono crear notificacion icono*/
-.side-bar .crear-icon{
-    font-size: 40px;
-    color: #606060;
-    text-align: center;
-}
-
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #214554;
+  }
+  .top-bar .navbar_m-0_p-0 nav{
+    background-color: #214554;
+  }
 .top-bar .container-fluid{
-    background-color: #4A4A4A;
+    background-color: #214554 !important;
     font-family: "roboto", sans-serif;
+    position: static;
 }
 .top-bar .container-fluid h2 {
     font-size: 26px;
     color: white;
-}
+    }
 .top-bar .container-fluid h4 {
     font-size: 24px;
     color: white;
@@ -91,6 +32,9 @@ body{
 		background-color: #2E6076;
 }
 .side-bar {
+      display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     position: fixed;
     top: 100px;
     left: 0;
@@ -104,11 +48,20 @@ body{
     color: #C0C0C0;
     z-index: 900;
 }
-/*Sección activa*/
 .sidebar .nav-item.active .nav-link span{
 		color: white;
   }
-.sidebar .nav-item.active .nav-link .ver-caso{
+
+.side-bar ul {
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* cambia este valor a tu gusto */
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+
+.sidebar .nav-item.active .nav-link .home-icon{
 		color: white;
 	}
 /* Oculta la barra en Chrome, Edge y Safari */
@@ -144,12 +97,12 @@ body{
 /*CSS icono procesos icono*/
 .side-bar .procesos{
     font-size: 40px;
-    color: #C0C0C0;
+    color: #2b9345;
 }
 /*CSS icono crear usuarios icono*/
 .side-bar .usuarios{
     font-size: 40px;
-    color: #C0C0C0;
+    color: #c0c0c0;
     text-align: center;
 }
 /*CSS icono notificaciones icono*/
@@ -161,12 +114,27 @@ body{
 .side-bar span {
 		color: #C0C0C0;
 }
+/*se pone en la sidebar un espaciado por toda la side*/
+.nav-flex{
+    height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 0;
+    margin:0;
+    list-style-type: none;
+
+}
 
 main{
-    margin-top: 5rem;
-    margin-left: 12.5rem;
+    margin-top: 100px;
+    margin-left: 160px;
     padding: 30px;
-    min-height: calc(100vh - 5rem);
+    min-height: calc(100vh - 100px);
+    width: calc(100% - 160px);
     background-color: #cdcdcf;
     color: #000000;
     font-size: 1.2rem;
@@ -181,6 +149,7 @@ main{
 }
 .noti{
     list-style: none;
+    width:auto
 }
 .notis{
     border-radius: 15px;
@@ -190,7 +159,7 @@ main{
     transition: background-color 0.3s ease-in-out;
 }
 .notis:nth-child(even){
-    background-color: #e0e0e0;
+    background-color: #dbdbdb;
     border-radius: 15px;
     padding: 1rem;
     margin: 1rem;
