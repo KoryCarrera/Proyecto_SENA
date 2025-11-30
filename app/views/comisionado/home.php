@@ -1,3 +1,5 @@
+<?php require_once "../../controllers/checkSession.php";?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comisionado</title>
     <!--css propio-->
-    <link rel="stylesheet" href="C:\Users\isaac\workspace\Proyecto_SENA\Public\assets\css\home-comisionado.css">
+    <link rel="stylesheet" href="../../../Public/assets/css/home-comisionado.css">
 
     <!--Google fonts-->
     <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet">

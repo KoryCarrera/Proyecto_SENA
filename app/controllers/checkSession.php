@@ -1,6 +1,6 @@
 <?php
-// Define el tiempo máximo de inactividad en segundos (ej. 30 minutos = 1800 segundos)
-define('TIEMPO_MAXIMO_INACTIVIDAD', 1800); 
+// Define el tiempo máximo de inactividad en segundos (ej. 5 minutos = 300 segundos)
+define('TIEMPO_MAXIMO_INACTIVIDAD', 10); 
 
 // === 1. INICIO DE SESIÓN Y BLOQUEO DE CACHÉ ===
 
@@ -19,7 +19,7 @@ header("Expires: 0"); // Proxies/Caché
 // === 2. VERIFICACIÓN DE AUTENTICACIÓN ===
 
 // Comprueba si la variable de sesión 'admin_user' existe (es decir, si el usuario se logeó exitosamente)
-if (!isset($_SESSION['admin_user'])) {
+if (!isset($_SESSION['user'])) {
     
     // Si NO está logeado, lo redirigimos inmediatamente al login
     // AJUSTA ESTA RUTA si la ubicación de tu login.php es diferente

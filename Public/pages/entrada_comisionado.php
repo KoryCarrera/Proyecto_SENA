@@ -1,3 +1,16 @@
+<?php
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+} 
+
+if (empty($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+$token = $_SESSION['csrf_token'];
+
+?>
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -16,6 +29,7 @@
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
     />
+    <script src="../assets/js/jquery-3.7.1.min.js"></script>
   </head>
   <body>
     <!--barra de navegacion extraida de bootstrap-->
@@ -69,9 +83,10 @@
           pedira los datos para el ingreso al sistema de gestions segun su tipo de usuario-->
           <div class="formulario_entrada">
              <i class="fa-solid fa-user-tie"></i> <br>
-            <input type = "number" placeholder="ingrese su cedula"><br>
-            <input type="password" placeholder="ingrese su contraseña"><br>
-            <button type="submit">ingrese</button>
+            <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token);?>">
+            <input type = "number" placeholder="ingrese su cedula" name="documento" id="documento"><br>
+            <input type="password" placeholder="ingrese su contraseña" name="contraseña" id="password"><br>
+            <button id="ingresar">ingrese</button>
           </div>
         </div>
          <a href="../index.php" class="boton-volver">Volver al inicio</a>
@@ -100,6 +115,7 @@
         </ul>
       </div>
     </footer>
+    <script src="../assets/js/loginComisionado.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"

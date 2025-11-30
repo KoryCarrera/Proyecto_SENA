@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($documentoInseguro && $contrasena) {
-            
-            $documento = limpiar($documentoInseguro);
+
+        $documento = limpiar($documentoInseguro);
 
         $verificacion = loginUsuario($pdo, $documento, $contrasena);
         if ($verificacion['status'] === 'ok') {
@@ -29,13 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 session_regenerate_id(true);
 
-                $_SESSION['admin_user'] = [
+                $_SESSION['user'] = [
                     'documento' => $verificacion['data']['documento'],
                     'id_rol' => $verificacion['data']['id_rol']
                 ];
-                
+
                 $_SESSION['ultima_actividad'] = time();
-                
+
                 unset($_SESSION['csrf_token']);
                 echo json_encode([
                     'status' => 'ok',
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
             }
         } else {
-             echo json_encode([
+            echo json_encode([
                 'status' => 'error',
                 'mensaje' => 'Credenciales Invalidas'
             ]);
