@@ -6,18 +6,18 @@ require_once "../config/conexion.php";
 require_once "../models/getData.php";
 
 	$casosTipos = casosPorTipo($pdo);
-	$casosComisionado = casosPorComisionado($pdo);
-	$casosPorMes = casosPorMes($pdo);
+	$casosEstado = casosPorEstado($pdo);
+	$casosProceso = casosPorProceso($pdo);
 	
-	if ($casosTipos || $casosComisionado || $casosPorMes) {
+	if ($casosTipos || $casosEstado || $casosProceso) {
 
 		echo json_encode ([
 			'status' => 'ok',
 			'labelsPolar' => $casosTipos['tipos'],
 			'dataPolar' => $casosTipos['casos'],
-			'labelsPie' => $casosComisionado['comisionado'],
-			'dataPie' => $casosComisionado['casos'],
-			'labelsBar' => $casosPorMes['mes'],
+			'labelsPie' => $casosEstado['estado'],
+			'dataPie' => $casosEstado['casos'],
+			'labelsBar' => $casosProceso['proceso'],
 			'dataBar' => $casosPorMes['casos']
 		]);
 		} else {

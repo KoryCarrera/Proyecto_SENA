@@ -18,7 +18,7 @@ function listarCasos($pdo)
     }
 }
 
-function casosPorComisionado($pdo, $document)
+function filtrarPorComisionado($pdo, $document)
 {
     $stmt = $pdo->prepare("CALL sp_listar_casos_por_comisionado(:documento)");
     $stmt->bindParam(':documento', $document, PDO::PARAM_INT);
@@ -137,13 +137,13 @@ function casosPorTipo($pdo)
 				$nombres = [];
 				$totales = [];
 				
-				foreach ($conteo as $flecha) {
-						$nombres[] = $flecha['nombre_caso'];
-						$totales[] = (int)$flecha['total'];
+				foreach ($conteo as $temp) {
+						$nombres[] = $temp['nombre_caso'];
+						$totales[] = (int)$temp['total'];
 					}
 				return [
-					'labels' => $nombres,
-					'total' => $totales
+					'tipo' => $nombres,
+					'casos' => $totales
 				];
 			} else {
 				return false;
@@ -152,4 +152,124 @@ function casosPorTipo($pdo)
 		error_log("Error SQL en casosPorTipo: ". $e->getMessage());
 		return false;
 		}
+}
+
+function casosPorComisionado($pdo) {
+    $stmt = $pdo->prepare("CALL sp_casos_por_comisionado");
+
+    try {
+        $stmt->execute();
+        $casosComisionados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($casosComisionados) {
+            $comisionado = [];
+            $total = [];
+
+            foreach($casosComisionados as $temp) {
+                $comisionado[] = $temp['comisionado'];
+                $total[] = (int)$temp['total_casos'];
+            }
+
+            return [
+                'comisionado' => $comisionado,
+                'casos' => $total
+            ];
+        } else {
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("error en la obtención de casos por comisionado". $e->getMessage());
+        return false;
+    }
+}
+
+function casosPorMes ($pdo) {
+    $stmt = $pdo->prepare("CALL sp_casos_por_mes");
+
+    try {
+        $stmt->execute();
+        $mesesCasos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($mesesCasos) {
+            $mes = [];
+            $casos = [];
+
+            foreach ($mesesCasos as $temp) {
+                $mes[] = $temp['mes'];
+                $casos[] = (int)$temp['total_casos'];
+            }
+
+            return [
+                'mes' => $mes,
+                'casos' => $casos
+            ];
+        } else {
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Error en la obtencion de los datos por mes ". $e->getMessage());
+        return false;
+    }
+}
+
+function casosPorEstado($pdo) {
+    $stmt = $pdo->prepare("CALL sp_casos_por_estado");
+
+    try {
+        $stmt->execute();
+        $casosEstado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if($casosEstado) {
+            $estados = [];
+            $casos = [];
+            
+            foreach ($casosEstado as $temp) {
+                $estados[] = $temp['nombre_estado'];
+                $casos[] = $temp['total_casos'];
+            }
+            
+            return [
+                'estado' => $estados,
+                'casos' => $casos
+            ];
+        } else {
+            return false;
+        }
+
+    } catch (PDOException $e) {
+        error_log("Ha ocurrido un erro al obtener los casos por estado ". $e->getMessage());        return false;
+    }
+}
+
+function casosPorProceso($pdo) {
+    $stmt = $pdo->prepare("CALL sp_casos_por_proceso");
+
+    try {
+        $stmt->execute();
+        $casosProceso = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if($casosProceso) {
+            $proceso = [];
+            $casos = [];
+
+            foreach ($casosProceso as $temp){
+                $proceso[] = $temp['proceso'];
+                $casos[] = $temp['total_casos'];
+            }
+
+            return[
+                'proceso' => $proceso,
+                'casos' => $casos
+            ];
+        } else {
+            return false;
+        }
+    } catch (PDOEXception $e) {
+        error_log("Error al obtener los casos por proceso ". $e->getMessage());
+        return false;
+    }
 }

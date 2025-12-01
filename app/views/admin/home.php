@@ -29,6 +29,8 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet">
 
+    <script src="../../../public/assets/js/jquery-3.7.1.min.js"></script>
+
 </head>
 
 <body>
@@ -114,14 +116,14 @@
       </div>
     </div>
   </div>
-  <div class="col-sm-6">
+  <div class="col-sm-6 mb-3 mb-sm-0">
     <div class="card">
       <div class="card-body">
 			<canvas id="pieChart"></canvas>
       </div>
     </div>
   </div>
-  <div class="col-sm-12 my-3">
+  <div class="col-sm-12 mt-3">
     <div class="card">
       <div class="card-body">
 			<canvas id="barChart"></canvas>
@@ -138,7 +140,7 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
-    <script src="../../../Public/assets/js/dashboard_admin.js"></script>    
+    <script src="../../../public/assets/js/dashboard_admin.js"></script>    
 
 </body>
 
