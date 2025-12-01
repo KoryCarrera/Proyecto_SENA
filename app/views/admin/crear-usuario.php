@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 <?php require_once "../../controllers/checkSession.php";?>
 
 <!DOCTYPE html>
 <html lang="es">
+=======
+<!DOCTYPE html>
+<html lang="en">
+>>>>>>> 2c2da00fc53db237edaf990c9c2659bcb98c3e87
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

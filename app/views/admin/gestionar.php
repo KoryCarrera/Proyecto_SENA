@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 <?php require_once "../../controllers/checkSession.php";?>
 
+=======
+>>>>>>> 2c2da00fc53db237edaf990c9c2659bcb98c3e87
 <!DOCTYPE html>
 <html lang="en">
 <head>
