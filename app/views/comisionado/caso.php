@@ -1,3 +1,4 @@
+<?php require_once "../../controllers/checkSession.php";?>
 <!DOCTYPE html>
 <html lang="es">
 

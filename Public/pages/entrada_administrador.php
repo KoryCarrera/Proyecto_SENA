@@ -64,20 +64,6 @@ $token = $_SESSION['csrf_token'];
             </li>
           </ul>
         </div>
-<<<<<<< HEAD
-=======
-         <a href="../index.php" class="boton-volver">Volver al inicio</a>
-      </section>
-    </main>
-    <!--pie de pagina, toca segir buscando que tipos de lincks y contenido pondremos-->
-    <footer>
-      <div class="links_paginas">
-        <ul class="links">
-          <li><a href="#">servicios</a></li>
-          <li><a href="#">mapas de sitio</a></li>
-          <li><a href="#">terminos"</a></li>
-        </ul>
->>>>>>> 2c2da00fc53db237edaf990c9c2659bcb98c3e87
       </div>
     </nav>
   </section>
