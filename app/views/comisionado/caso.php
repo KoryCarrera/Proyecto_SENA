@@ -106,14 +106,14 @@
       <ul class="nav flex-column text-center">
 
         <li class="nav-item my-3">
-          <a href="../../../modules/comisionado/views/home.html" class="nav-link text-dark">
+          <a href="home.php" class="nav-link text-dark">
             <i class="bi bi-house-fill home-icon d-block"></i>
             <span>Inicio</span>
           </a>
         </li>
 
         <li class="nav-item my-3">
-          <a href="../../../modules/comisionado/views/Reg-caso.html" class="nav-link text-dark">
+          <a href="Reg-caso.php" class="nav-link text-dark">
             <i class="bi bi-file-earmark-person-fill reg-caso d-block"></i>
             <span>Registrar <br> Caso</span>
           </a>

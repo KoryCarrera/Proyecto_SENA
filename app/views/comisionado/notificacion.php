@@ -1,4 +1,4 @@
-<?php require_once "../../controllers/checkSession.php";?>
+<?php require_once "../../controllers/checkSession.php"; ?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -42,36 +42,36 @@
         </nav>
     </div>
     <!--Barra de navegación secundaria-->
-<nav class="navbar navbar-expand-lg second-bar">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Seguimiento</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Filtrar
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Nombre Del Caso</a></li>
-            <li><a class="dropdown-item" href="#">Fecha de registro</a></li>
-            <li><a class="dropdown-item" href="#">Tipo de Caso</a></li>
-            <li><a class="dropdown-item" href="#">Fecha de respuesta</a></li>
-            <li><a class="dropdown-item" href="#">Estado</a></li>
-            <li><a class="dropdown-item" href="#">Proceso</a></li>
-            <li><a class="dropdown-item" href="#">Comisionado Encargado</a></li>
-          </ul>
-        </li>
-      </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Palabras Claves" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">Buscar</button>
-      </form>
-    </div>
-  </div>
-</nav>
+    <nav class="navbar navbar-expand-lg second-bar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Seguimiento</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Filtrar
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Nombre Del Caso</a></li>
+                            <li><a class="dropdown-item" href="#">Fecha de registro</a></li>
+                            <li><a class="dropdown-item" href="#">Tipo de Caso</a></li>
+                            <li><a class="dropdown-item" href="#">Fecha de respuesta</a></li>
+                            <li><a class="dropdown-item" href="#">Estado</a></li>
+                            <li><a class="dropdown-item" href="#">Proceso</a></li>
+                            <li><a class="dropdown-item" href="#">Comisionado Encargado</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Palabras Claves" aria-label="Search" />
+                    <button class="btn btn-outline-success" type="submit">Buscar</button>
+                </form>
+            </div>
+        </div>
+    </nav>
 
     <!--contenedor barra lateral-->
     <div class="side-bar">
@@ -79,14 +79,14 @@
             <ul class="nav flex-column text-center">
 
                 <li class="nav-item my-3">
-                    <a href="../../../modules/comisionado/views/home.html" class="nav-link text-dark">
+                    <a href="home.php" class="nav-link text-dark">
                         <i class="bi bi-house-fill home-icon d-block"></i>
                         <span>Inicio</span>
                     </a>
                 </li>
 
                 <li class="nav-item my-3">
-                    <a href="../../../modules/comisionado/views/Reg-caso.html" class="nav-link text-dark">
+                    <a href="Reg-caso.php" class="nav-link text-dark">
                         <i class="bi bi-file-earmark-person-fill reg-caso d-block"></i>
                         <span>Registrar <br> Caso</span>
                     </a>
