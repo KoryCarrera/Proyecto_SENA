@@ -1,0 +1,187 @@
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  }
+.top-bar .container-fluid{
+    background-color: #606060;
+    font-family: "roboto", sans-serif;
+    position: static;
+}
+.top-bar .container-fluid h2 {
+    font-size: 26px;
+    color: white;
+    }
+.top-bar .container-fluid h4 {
+    font-size: 24px;
+    color: white;
+}
+
+/*Barra secundaria abajo de la principal*/
+.second-bar{
+	background-color: #b3b3b3 !important;
+	color: white;
+	position:static;
+	top: 100px;
+	left: 160px;
+	width:calc(100% - 160px);
+	border: none;
+	z-index: 500;
+}
+.second-bar .nav-link,
+.second-bar .navbar-brand {
+	color: white !important;
+}
+.dropdown-menu{
+	background-color: #606060;
+}
+.dropdown-item {
+	color: white;
+}
+.second-bar .btn {
+	color: white;
+	border-color: white;
+}
+.side-bar {
+		background-color: #606060;
+}
+.side-bar {
+     display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 100px;
+    left: 0;
+    width: 160px;
+    height: calc(100vh - 100px);
+    background-color: #949494;
+    overflow-y: auto; /* permite desplazarse */
+    scrollbar-width: none; /* Oculta scroll en Firefox */
+    -ms-overflow-style: none; /* Oculta scroll en IE y Edge antiguos */
+    font-family: "Roboto", sans-serif;
+    color: #C0C0C0;
+    z-index: 900;
+}
+.side-bar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 100%;
+    text-align: center;
+    gap: 35px;;
+}
+/*Sección activa*/
+.sidebar .nav-item.active .nav-link span{
+		color: white;
+  }
+.sidebar .nav-item.active .nav-link .ver-caso{
+		color: white;
+	}
+/* Oculta la barra en Chrome, Edge y Safari */
+.side-bar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Elimina el scroll interno para evitar conflicto */
+.side-bar .container-fluid {
+    background-color: #949494;
+    color: #C0C0C0;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    overflow: visible;
+    height: auto;
+}
+/*CSS icono casa*/
+.side-bar .home-icon{
+    font-size: 40px;
+    color: #606060;
+}
+/*CSS icono crear notificacion*/
+.side-bar .crear-icon{
+    font-size: 40px;
+    color: #606060;
+}
+/*CSS icono ver caso*/
+.side-bar .ver-caso{
+    font-size: 40px;
+    color: #606060;
+}
+/*CSS icono procesos icono*/
+.side-bar .noti-icon{
+    font-size: 40px;
+    color: #606060;
+}
+/*CSS icono crear usuarios icono*/
+.side-bar .reg-caso{
+    font-size: 40px;
+    color: #606060;
+    text-align: center;
+}
+/*CSS icono notificaciones icono*/
+.side-bar .noti-icon{
+    font-size: 40px;
+    color: #fff;
+    text-align: center;
+}
+.side-bar span {
+		color: #606060;
+}
+
+main{
+    margin-top: 100px;
+    margin-left: 160px;
+    padding: 30px;
+    min-height: calc(100% - 100px);
+    width: calc(100% - 160px);
+    background-color: #cdcdcf;
+    color: #000000;
+    font-size: 1.2rem;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+}
+.notificaciones{
+    border-radius: 15px;
+    padding: 1rem;
+    background-color: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+
+}
+.noti{
+    list-style: none;
+    width:100%;
+    
+}
+.notis{
+    border-radius: 15px;
+    padding: 1rem;
+    margin: 1rem;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease-in-out;
+}
+.notis:nth-child(even){
+    background-color: #dbdbdb;
+    border-radius: 15px;
+    padding: 1rem;
+    margin: 1rem;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+}
+.notis:nth-child(odd){
+    background-color: #919191;
+    border-radius: 15px;
+    padding: 1rem;
+    margin: 1rem;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+}
+.notis:hover{
+    background-color: beige;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+

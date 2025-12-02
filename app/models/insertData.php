@@ -1,16 +1,14 @@
 <?php 
 
-require_once '../config/conexion.php';
-
 function registrarCasos($pdo, $documento, $proceso, $estado, $tipo, $descripcion)
 {
     
-    $stmt = $pdo->prepare("CALL sp_registrar_caso(:documento, :proceso, :estado, :tipo, :descripción)");
-    $stmt->bindParam(':documento', $documento, PDO::PARAM_INT);
-    $stmt->bindParam(':proceso', $proceso, PDO::PARAM_INT);
-    $stmt->bindParam(':estado', $estado, PDO::PARAM_INT);
-    $stmt->bindParam(':tipo', $tipo, PDO::PARAM_INT);
-    $stmt->bindParam(':descripción', $descripcion, PDO::PARAM_STR);
+    $stmt = $pdo->prepare("CALL sp_registrar_caso(?, ?, ?, ?, ?)");
+    $stmt->bindParam(1, $documento, PDO::PARAM_INT);
+    $stmt->bindParam(2, $proceso, PDO::PARAM_INT);
+    $stmt->bindParam(3, $estado, PDO::PARAM_INT);
+    $stmt->bindParam(4, $tipo, PDO::PARAM_INT);
+    $stmt->bindParam(5, $descripcion, PDO::PARAM_STR);
 
     try {
         $stmt->execute();
@@ -38,13 +36,15 @@ function registrarSeguimiento($pdo, $observacion)
 
 function registrarUsuario($pdo, $documento, $nombre, $apellido, $email, $rol, $contraseña)
 {
-    $stmt = $pdo->prepare("CALL sp_registrar_usuario(:documento, :nombre, :apellido, :email, :rol, :contraseña)");
-    $stmt->bindParam(':documento', $documento, PDO::PARAM_INT);
-    $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
-    $stmt->bindParam(':apellido', $apellido, PDO::PARAM_STR);
-    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-    $stmt->bindParam(':rol', $rol, PDO::PARAM_INT);
-    $stmt->bindParam(':contraseña', $contraseña, PDO::PARAM_STR);
+    $passhash = password_hash($contraseña, PASSWORD_BCRYPT);
+
+    $stmt = $pdo->prepare("CALL sp_registrar_usuario(?, ?, ?, ?, ?, ?)");
+    $stmt->bindParam(1, $documento, PDO::PARAM_STR);
+    $stmt->bindParam(2, $nombre, PDO::PARAM_STR);
+    $stmt->bindParam(3, $apellido, PDO::PARAM_STR);
+    $stmt->bindParam(4, $email, PDO::PARAM_STR);
+    $stmt->bindParam(5, $rol, PDO::PARAM_INT);
+    $stmt->bindParam(6, $passhash, PDO::PARAM_STR);
 
     try {
         $stmt->execute();
