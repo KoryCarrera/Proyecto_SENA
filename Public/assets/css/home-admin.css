@@ -1,3 +1,15 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.main-content {
+    overflow-x: hidden;
+    max-width: 100%;
+}
 body {
     padding: none;
     margin: none;
