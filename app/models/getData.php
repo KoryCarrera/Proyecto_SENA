@@ -126,32 +126,33 @@ function loginUsuario($pdo, $documento, $contrasena)
 
 function casosPorTipo($pdo)
 {
-	$stmt = $pdo->prepare("CALL sp_contear_casos_tipo");
-	
-	try {
-		$stmt->execute();
-		$conteo = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		$stmt->closeCursor();
-		
-		if($conteo) {
-				$nombres = [];
-				$totales = [];
-				
-				foreach ($conteo as $temp) {
-						$nombres[] = $temp['nombre_caso'];
-						$totales[] = (int)$temp['total'];
-					}
-				return [
-					'tipo' => $nombres,
-					'casos' => $totales
-				];
-			} else {
-				return false;
-				}
-	} catch (PDOException $e) {
-		error_log("Error SQL en casosPorTipo: ". $e->getMessage());
-		return false;
-		}
+    $stmt = $pdo->prepare("CALL sp_contear_casos_tipo");
+    
+    try {
+        $stmt->execute();
+        $conteo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        
+        if($conteo && count($conteo) > 0) {
+            $nombres = [];
+            $totales = [];
+            
+            foreach ($conteo as $temp) {
+                $nombres[] = $temp['nombre_caso'];  // ← Coincide con el SP
+                $totales[] = (int)$temp['total'];    // ← Coincide con el SP
+            }
+            return [
+                'tipos' => $nombres,
+                'casos' => $totales
+            ];
+        } else {
+            error_log("sp_contear_casos_tipo no devolvió filas");
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Error SQL en casosPorTipo: ". $e->getMessage());
+        return false;
+    }
 }
 
 function casosPorComisionado($pdo) {
@@ -222,13 +223,13 @@ function casosPorEstado($pdo) {
         $casosEstado = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
 
-        if($casosEstado) {
+        if($casosEstado && count($casosEstado) > 0) {
             $estados = [];
             $casos = [];
             
             foreach ($casosEstado as $temp) {
-                $estados[] = $temp['nombre_estado'];
-                $casos[] = $temp['total_casos'];
+                $estados[] = $temp['nombre_estado'];  // ← Coincide con el SP
+                $casos[] = (int)$temp['total_casos']; // ← Coincide con el SP
             }
             
             return [
@@ -236,13 +237,16 @@ function casosPorEstado($pdo) {
                 'casos' => $casos
             ];
         } else {
+            error_log("sp_casos_por_estado no devolvió filas");
             return false;
         }
 
     } catch (PDOException $e) {
-        error_log("Ha ocurrido un erro al obtener los casos por estado ". $e->getMessage());        return false;
+        error_log("Ha ocurrido un error al obtener los casos por estado: ". $e->getMessage());
+        return false;
     }
 }
+
 
 function casosPorProceso($pdo) {
     $stmt = $pdo->prepare("CALL sp_casos_por_proceso");
@@ -252,24 +256,25 @@ function casosPorProceso($pdo) {
         $casosProceso = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
 
-        if($casosProceso) {
+        if($casosProceso && count($casosProceso) > 0) {
             $proceso = [];
             $casos = [];
 
-            foreach ($casosProceso as $temp){
-                $proceso[] = $temp['proceso'];
-                $casos[] = $temp['total_casos'];
+            foreach ($casosProceso as $temp) {
+                $proceso[] = $temp['proceso'];           // ← Coincide con el SP
+                $casos[] = (int)$temp['total_casos'];    // ← Coincide con el SP
             }
 
-            return[
+            return [
                 'proceso' => $proceso,
                 'casos' => $casos
             ];
         } else {
+            error_log("sp_casos_por_proceso no devolvió filas");
             return false;
         }
-    } catch (PDOEXception $e) {
-        error_log("Error al obtener los casos por proceso ". $e->getMessage());
+    } catch (PDOException $e) {
+        error_log("Error al obtener los casos por proceso: ". $e->getMessage());
         return false;
     }
 }

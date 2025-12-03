@@ -1,15 +1,22 @@
 const ENDPOINT = '../../../app/controllers/dashboardAdmin.php'; 
 
 const CHART_COLORS = [
-    'rgb(79, 70, 229)',    
-    'rgb(239, 68, 68)',    
-    'rgb(245, 158, 11)',  
-    'rgb(16, 185, 129)',   
-    'rgb(54, 162, 235)'    
+    'rgb(79, 70, 229)',     
+    'rgb(239, 68, 68)',     
+    'rgb(245, 158, 11)',   
+    'rgb(16, 185, 129)',    
+    'rgb(54, 162, 235)'     
 ];
 
-const drawChart = (canvasElement, type, labels, data) => {
+const MONTH_NAMES_ES = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+];
 
+/**
+ * Función genérica para dibujar gráficos de Chart.js.
+ */
+const drawChart = (canvasElement, type, labels, data) => {
     if (canvasElement.chart) {
         canvasElement.chart.destroy();
     }
@@ -39,85 +46,111 @@ const drawChart = (canvasElement, type, labels, data) => {
     });
 };
 
-const renderChartFromResponse = (chartElement, apiResponse, chartId, chartType, chartName) => {
-    const container = chartElement.parentElement;
+/**
+ * Función que gestiona la representación de un gráfico.
+ */
+const renderChartFromResponse = (canvasId, container, apiResponse, chartId, chartType, chartName) => {
     
-    if (!container) return; 
-
     const chartIdCapitalized = chartId.charAt(0).toUpperCase() + chartId.slice(1);
-    const labelsKey = `labels${chartIdCapitalized}`;
-    const dataKey = `data${chartIdCapitalized}`;
-    
-    const labels = apiResponse[labelsKey];
-    const data = apiResponse[dataKey];
+    let labels = apiResponse[`labels${chartIdCapitalized}`]; 
+    const data = apiResponse[`data${chartIdCapitalized}`];
+
+    // Convertir etiquetas numéricas de meses a strings
+    if (chartId === 'bar' && labels && Array.isArray(labels) && labels.length > 0 && typeof labels[0] === 'number') {
+        labels = labels.map(monthNum => MONTH_NAMES_ES[monthNum - 1] || `Mes ${monthNum}`);
+    }
 
     const errorMessage = apiResponse.errors?.[chartId]; 
 
-    if (errorMessage || !labels || !data || labels.length === 0) {
+    // Manejo de errores o datos vacíos
+    if (errorMessage || !labels || !data || labels.length === 0 || data.length === 0) {
         const errorText = errorMessage 
             ? `⚠️ Error en ${chartName}: ${errorMessage}`
             : `✅ No hay datos de ${chartName} registrados para mostrar.`;
             
-        container.innerHTML = `<p class="text-indigo-600 text-center p-8 font-semibold text-sm">
-            ${errorText}
-        </p>`;
+        container.innerHTML = `<p class="text-center p-4 text-warning">${errorText}</p>`;
         return;
     }
 
-    if (!container.contains(chartElement)) {
-        container.innerHTML = '';
-        container.appendChild(chartElement);
-    }
+    // Crear nuevo canvas
+    container.innerHTML = ''; 
+    const newCanvas = document.createElement('canvas');
+    newCanvas.id = canvasId; 
+    container.appendChild(newCanvas);
     
-    drawChart(chartElement, chartType, labels, data);
+    // Dibujar el gráfico
+    drawChart(newCanvas, chartType, labels, data);
 };
 
+/**
+ * Función principal que realiza UNA SOLA petición a la API y distribuye los datos.
+ */
 const loadAllChartData = async () => {
     
-    const chartsToLoad = [
-        { element: document.getElementById("barChart"), id: 'bar', type: 'bar', name: 'Casos por Mes' },
-        { element: document.getElementById("pieChart"), id: 'pie', type: 'pie', name: 'Casos por Comisionado' },
-        { element: document.getElementById("polarChart"), id: 'polar', type: 'polarArea', name: 'Casos por Tipo' }
-    ].filter(c => c.element);
-    
-    chartsToLoad.forEach(({ element, name }) => {
-        const container = element.parentElement;
-        if(container) {
-            container.innerHTML = `<p class="text-gray-500 text-center p-8">Cargando datos de ${name}...</p>`;
-            container.originalCanvas = element; 
+    // Obtener referencias a los contenedores (NO a los canvas)
+    const charts = [
+        { 
+            canvasId: 'barChart',
+            container: document.getElementById('barChart')?.parentElement,
+            id: 'bar', 
+            type: 'bar', 
+            name: 'Casos por Mes' 
+        },
+        { 
+            canvasId: 'pieChart',
+            container: document.getElementById('pieChart')?.parentElement,
+            id: 'pie', 
+            type: 'pie', 
+            name: 'Casos por Comisionado' 
+        },
+        { 
+            canvasId: 'polarChart',
+            container: document.getElementById('polarChart')?.parentElement,
+            id: 'polar', 
+            type: 'polarArea', 
+            name: 'Casos por Tipo' 
         }
+    ].filter(c => c.container);
+    
+    console.log('Charts encontrados:', charts.length);
+    
+    // Mostrar indicador de carga
+    charts.forEach(c => {
+        c.container.innerHTML = `<p class="text-center p-4 text-muted">Cargando datos de ${c.name}...</p>`;
     });
 
     try {
-
+        console.log('Haciendo fetch a:', ENDPOINT);
+        
         const response = await fetch(ENDPOINT);
         
+        console.log('Response status:', response.status);
+        
         if (!response.ok) {
-            throw new Error(`Error HTTP ${response.status}: Verifica la ruta del controlador PHP.`);
+            throw new Error(`Error HTTP ${response.status}`);
         }
         
-        const apiResponse = await response.json(); 
+        const apiResponse = await response.json();
+        
+        console.log('Respuesta completa del servidor:', apiResponse);
         
         if (apiResponse.status !== 'ok' && apiResponse.status !== 'partial_error') {
-            throw new Error(apiResponse.mensaje || 'Fallo crítico del servidor al obtener todos los datos.');
+            throw new Error(apiResponse.mensaje || 'Error del servidor');
         }
 
-        chartsToLoad.forEach(c => {
-            const originalCanvas = c.element.parentElement.originalCanvas; 
-            if (originalCanvas) {
-                renderChartFromResponse(originalCanvas, apiResponse, c.id, c.type, c.name);
-            }
+        // Renderizar cada gráfico
+        charts.forEach(c => {
+            console.log(`Renderizando gráfico: ${c.name}`);
+            renderChartFromResponse(c.canvasId, c.container, apiResponse, c.id, c.type, c.name);
         });
 
     } catch (error) {
-
-        console.error("Error crítico de la API:", error);
+        console.error("Error crítico:", error);
         
-        chartsToLoad.forEach(c => {
-            const container = c.element.parentElement;
-            if(container) {
-                 container.innerHTML = `<p class="text-red-600 text-center p-8 font-bold text-sm">
-                    Error de Conexión: ${error.message}. Asegúrate de que XAMPP y MySQL estén activos.
+        charts.forEach(c => {
+            if(c.container) {
+                c.container.innerHTML = `<p class="text-center p-4 text-danger">
+                    <strong>Error:</strong> ${error.message}
                 </p>`;
             }
         });

@@ -1,5 +1,16 @@
-/*CSS contenedor barra lateral*/
+* {
+    box-sizing: border-box;
+}
 
+body {
+    overflow-x: hidden;
+}
+
+.main-content {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+/*CSS contenedor barra lateral*/
 .top-bar {
     position: fixed;
     top: 0;
