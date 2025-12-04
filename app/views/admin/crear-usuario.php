@@ -22,6 +22,7 @@ require_once "../../models/insertData.php";
   <!--Bootstrap-->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <!--CSS propio para colores y fonts-->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,44 +93,6 @@ require_once "../../models/insertData.php";
   </div>
 
   <main class="main">
-    <section class="tabla-usuarios">
-      <table>
-        <thead>
-          <tr class="head-tabla">
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Correo</th>
-            <th>Rol</th>
-            <th>gestionar</th>
-          </tr>
-        </thead>
-        <tbody class="cont-tabla">
-          <tr class="ejemplos">
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td class="boton"><a class="btn-tabla" href="gestionar.php">Gestionar</a></td>
-          </tr>
-          <tr class="ejemplos">
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td class="boton"><a class="btn-tabla" href="gestionar.php">Gestionar</a></td>
-          </tr>
-        </tbody>
-        <tbody class="cont-tabla">
-          <tr class="ejemplos">
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td class="boton"><a class="btn-tabla" href="gestionar.php">Gestionar</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
     <section class="formulario-crear-usuario">
 
       <form action="" method="POST">
@@ -163,8 +126,45 @@ require_once "../../models/insertData.php";
         ?>
       </form>
     </section>
+    <section class="tabla-usuarios">
+      <table>
+        <thead>
+          <tr class="head-tabla">
+            <th scope="col">Documento</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Correo</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Rol</th>
+            <th scope="col">Gestionar</th>
+          </tr>
+        </thead>
+        <tbody class="cont-tabla" id="tablaUsuarios">
+        </tbody>
+      </table>
+    </section>
 
   </main>
+  <!--Modal de supervisar-->
+  <div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalUsuarioLabel">Detalles del Caso</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modalUsuarioBody">
+          <!-- El contenido se carga dinámicamente con JavaScript -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" onclick="editarUsuario()">
+            <i class="bi bi-pencil"></i> Editar Usuario
+          </button>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"></script>
+          <script src="../../../public/assets/js/usuariosAdmin.js"></script>
 </body>
 
 </html>

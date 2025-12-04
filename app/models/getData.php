@@ -11,7 +11,17 @@ function listarCasos($pdo)
         $stmt->execute();
         $casos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
-        return $casos;
+        if($casos) {
+            return [
+                'status' => 'ok',
+                'data' => $casos
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'mensaje' => 'Valores vacios'
+            ];
+        }
     } catch (PDOException $e) {
         error_log('Error al obtener los casos: ' . $e->getMessage());
         return null;
@@ -275,6 +285,74 @@ function casosPorProceso($pdo) {
         }
     } catch (PDOException $e) {
         error_log("Error al obtener los casos por proceso: ". $e->getMessage());
+        return false;
+    }
+}
+
+function traerCaso($pdo, $idCaso) {
+    $stmt = $pdo->prepare("CALL sp_obtener_caso_por_id(?)");
+    $stmt->bindParam(1, $idCaso, PDO::PARAM_INT);
+
+    try {
+        $stmt->execute();
+        $casoGestionar = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if($casoGestionar) {
+            return [
+                'status' => 'ok',
+                'data' => $casoGestionar
+            ];
+        } else {
+            return false;
+        } 
+    } catch (PDOException $e) {
+        error_log("Error al obtener el caso solicitado". $e->getMessage());
+        return false;
+    }
+}
+
+function listarUsuarios($pdo){
+    $stmt = $pdo->prepare("CALL sp_listar_usuarios()");
+    
+    try {
+        $stmt->execute();
+        $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($usuarios) {
+            return [
+                'status' => 'ok',
+                'data' => $usuarios
+            ];
+        } else {
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Error al obtener usuarios ". $e->getMessage());
+        return false;
+    }
+}
+
+function gestionarUsuario($pdo, $documento){
+    $stmt = $pdo->prepare("CALL sp_traer_usuario(?)");
+    $stmt->bindParam(1, $documento, PDO::PARAM_STR);
+
+    try {
+        $stmt->execute();
+        $usuarioGestionar = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($usuarioGestionar) {
+            return [
+                'status' => 'ok',
+                'data' => $usuarioGestionar
+            ];
+        } else {
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Error al obtener el caso solicitado ". $e->getMessage());
         return false;
     }
 }
