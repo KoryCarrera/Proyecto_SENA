@@ -1,6 +1,6 @@
 <?php
 // Define el tiempo máximo de inactividad en segundos (ej. 5 minutos = 300 segundos)
-define('TIEMPO_MAXIMO_INACTIVIDAD', 300); 
+define('TIEMPO_MAXIMO_INACTIVIDAD', 600);
 
 // === 1. INICIO DE SESIÓN Y BLOQUEO DE CACHÉ ===
 
@@ -20,10 +20,10 @@ header("Expires: 0"); // Proxies/Caché
 
 // Comprueba si la variable de sesión 'admin_user' existe (es decir, si el usuario se logeó exitosamente)
 if (!isset($_SESSION['user'])) {
-    
+
     // Si NO está logeado, lo redirigimos inmediatamente al login
     // AJUSTA ESTA RUTA si la ubicación de tu login.php es diferente
-    header('Location: ../../../Public/index.php'); 
+    header('Location: ../../../Public/index.php');
     exit; // Detiene la ejecución del resto del script (y no muestra el contenido de la página)
 }
 
@@ -32,11 +32,11 @@ if (!isset($_SESSION['user'])) {
 // Verifica si la sesión tiene registrada la hora de la última actividad
 // Y si ha pasado más tiempo del límite permitido
 if (isset($_SESSION['ultima_actividad']) && (time() - $_SESSION['ultima_actividad'] > TIEMPO_MAXIMO_INACTIVIDAD)) {
-    
+
     // Si la sesión ha expirado por inactividad:
     session_unset();    // Elimina todas las variables de sesión (admin_user, etc.)
     session_destroy();  // Destruye el archivo de sesión del servidor
-    
+
     // Redirigir al login (con un parámetro para indicar que fue por timeout)
     header('Location: ../../../Public/index.php?timeout=1');
     exit;

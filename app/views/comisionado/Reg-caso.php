@@ -1,5 +1,5 @@
-<?php 
-require_once "../../controllers/checkSession.php"; 
+<?php
+require_once "../../controllers/checkSession.php";
 require_once "../../config/conexion.php";
 require_once "../../models/insertData.php";
 ?>
@@ -38,7 +38,10 @@ require_once "../../models/insertData.php";
           <a href="#">
             <img src="../../../Public/assets/img/icon account.png" alt="User" width="76" height="76">
           </a>
-          <a href="cerrar_sesion.php">Cerrar Sesion</a>
+          <form action="../../controllers/logout.php" method="POST">
+            <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
+            <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+          </form>
         </div>
       </div>
     </nav>
@@ -145,17 +148,17 @@ require_once "../../models/insertData.php";
             </div>
           </div>
         </form>
-        <?php 
-        if ($_SERVER["REQUEST_METHOD"] === "POST"){
+        <?php
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
           $documento = $_POST["documento"];
           $proceso = $_POST["proceso"];
           $estado = $_POST["estado"];
           $tipo = $_POST["tipo"];
           $descripcion = $_POST["descripcion"];
-          if ($documento && $proceso && $estado && $tipo && $descripcion){
+          if ($documento && $proceso && $estado && $tipo && $descripcion) {
             $registrar = registrarCasos($pdo, $documento, $proceso, $estado, $tipo, $descripcion);
-            if($registrar){
-              echo "caso registrado con exito"; 
+            if ($registrar) {
+              echo "caso registrado con exito";
             } else {
               echo "error al registar caso";
             }
@@ -168,6 +171,7 @@ require_once "../../models/insertData.php";
         ?>
       </div>
     </div>
+    <script src="../../../public/assets/js/cache.js"></script>
 </body>
 
 </html>
