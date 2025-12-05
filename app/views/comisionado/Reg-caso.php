@@ -38,6 +38,7 @@ require_once "../../models/insertData.php";
           <a href="#">
             <img src="../../../Public/assets/img/icon account.png" alt="User" width="76" height="76">
           </a>
+          <a href="cerrar_sesion.php">Cerrar Sesion</a>
         </div>
       </div>
     </nav>
