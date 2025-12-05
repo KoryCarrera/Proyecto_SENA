@@ -35,7 +35,10 @@
           <a href="#">
             <img src="../../../Public/assets/img/icon account.png" alt="User" width="76" height="76">
           </a>
-          <a href="cerrar_sesion.php">Cerrar Sesion</a>
+          <form action="../../controllers/logout.php" method="POST">
+            <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
+            <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+          </form>
         </div>
       </div>
     </nav>
@@ -118,6 +121,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
     <script src="../../../public/assets/js/dashboard_comi.js"></script>
+    <script src="../../../public/assets/js/cache.js"></script>
 </body>
 
 </html>

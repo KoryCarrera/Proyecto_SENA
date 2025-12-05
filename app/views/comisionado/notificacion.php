@@ -37,7 +37,10 @@
                     <a href="#">
                         <img src="../../../public/assets/img/icon account.png" alt="User" width="76" height="76">
                     </a>
-                    <a href="cerrar_sesion.php">Cerrar Sesion</a>
+                    <form action="../../controllers/logout.php" method="POST">
+                        <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
+                        <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+                    </form>
                 </div>
             </div>
         </nav>
@@ -154,6 +157,7 @@
             </ul>
         </div>
     </main>
+    <script src="../../../public/assets/js/cache.js"></script>
 </body>
 
 </html>

@@ -46,7 +46,10 @@
                     <a href="#">
                         <img src="../../../Public/assets/img/icon account.png" alt="User" width="76" height="76">
                     </a>
-                    <a href="cerrar_sesion.php">Cerrar Sesion</a>
+                    <form action="../../controllers/logout.php" method="POST">
+                        <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
+                        <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+                    </form>
                 </div>
             </div>
         </nav>
@@ -136,6 +139,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
             crossorigin="anonymous"></script>
+        <script src="../../../public/assets/js/cache.js"></script>
 </body>
 
 </html>
