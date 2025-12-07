@@ -1,6 +1,6 @@
 <?php
 
-//Indica que la respuesta de este script siempre será un objeto JSON.
+//Indica que la respuesta y recibimiento de este script siempre será un objeto JSON.
 header('Content-Type: application/json');
 
 //INCLUSIÓN DE DEPENDENCIAS
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrf_token = $_POST['csrf_token'] ?? '';
 
     // VALIDACIÓN DEL TOKEN CSRF
-    if (!validarCsrfToken($csrf_token)){
+    if (!validarCsrfToken($csrf_token)){ 
         session_destroy();
         echo json_encode([
             'status' => 'error',

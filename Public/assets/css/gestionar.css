@@ -144,7 +144,7 @@ main{
     overflow: hidden;
 
 }
-.formulario{
+.formulario{ /*Estilos del formulario utilizado*/
     display: flex;
     flex-direction: column;
     color: #000000;
@@ -156,7 +156,7 @@ main{
       align-items: center;
       gap: 1rem;
 }
-input{
+input{ /*Estilos inputs*/
 
    width: 100%;
     color: #000000;
@@ -167,15 +167,16 @@ input{
     padding: .7rem  2rem;
   
 }
-::placeholder {
+::placeholder { 
   color: #000000;
 }
-.formulario-gestion:nth-child(even){
+.formulario-gestion:nth-child(even){ /*Son manejos de estilos según la organizacion de los inputs y diosito*/
     background-color: #dbdbdb;
 }
 .formulario-gestion:nth-child(odd){
     background-color: #919191;
 
+    /*Select dentro del formulario, con su estilo aplicado*/
 }select{
     
      width: 100%;
@@ -201,7 +202,7 @@ option:nth-child(even){
 option:nth-child(odd){
     background-color: #e1e1e1;
 }
-.btn-actualizar{
+.btn-actualizar{ /*Estilos boton*/
     background-color: #388e3c;
     color: white;
     font-weight: bold;
@@ -213,7 +214,7 @@ option:nth-child(odd){
     transition: background-color 0.3s;
 }
 
-.btn-actualizar:hover{
+.btn-actualizar:hover{ /*Reaccion al cursor*/
     background-color: #2e7d32;
   transform:translateY(-2px);
 }
