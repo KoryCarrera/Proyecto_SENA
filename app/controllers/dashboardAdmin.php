@@ -1,19 +1,18 @@
 <?php
-
+//Indica que la respuesta y recibimiento de este script siempre será un objeto JSON.
 header('Content-Type: application/json');
-// Evitar cualquier output antes del JSON
-error_reporting(E_ALL);
-ini_set('display_errors', 0); // No mostrar errores en pantalla
-ini_set('log_errors', 1);
 
+//Se llaman los archivos con las dependencias que necesitamos
 require_once "../config/conexion.php";
 require_once "../models/getData.php";
 
 try {
+    //Se llaman las funciones que necesitamos
     $casosTipos = casosPorTipo($pdo);
     $casosComisionado = casosPorComisionado($pdo);
     $casosPorMes = casosPorMes($pdo);
     
+    //Se asignan los valores que necesitamos en una variable para facilitar su manejo
     $response = [
         'status' => 'ok',
         'labelsPolar' => $casosTipos ? $casosTipos['tipos'] : [],
@@ -25,24 +24,25 @@ try {
         'errors' => []
     ];
     
+    //Se validan que los datos devueltos no sean false por cada uno
     if (!$casosTipos) $response['errors']['polar'] = 'No se pudieron obtener casos por tipo';
     if (!$casosComisionado) $response['errors']['pie'] = 'No se pudieron obtener casos por comisionado';
     if (!$casosPorMes) $response['errors']['bar'] = 'No se pudieron obtener casos por mes';
     
-    if (!$casosTipos && !$casosComisionado && !$casosPorMes) {
+    if (!$casosTipos && !$casosComisionado && !$casosPorMes) { //Validamos que todos esten llenos mediante una negación
         $response['status'] = 'error';
         $response['mensaje'] = 'No se pudieron obtener ningún dato';
-    } else if (count($response['errors']) > 0) {
+    } else if (count($response['errors']) > 0) { //Validamos que no hayan errores
         $response['status'] = 'partial_error';
     }
     
-    echo json_encode($response);
+    echo json_encode($response); //Retornamos el json
     
-} catch (Exception $e) {
+} catch (Exception $e) { //Capturamos errores sql
     error_log("Error en dashboardAdmin.php: " . $e->getMessage());
     echo json_encode([
         'status' => 'error',
         'mensaje' => 'Error del servidor: ' . $e->getMessage()
     ]);
 }
-exit;
+exit; //finalizamos el script

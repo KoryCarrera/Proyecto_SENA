@@ -62,19 +62,21 @@ function obtenerSeguimientosPorCaso($pdo, $idCaso)
 }
 
 function buscarUsuario($pdo, $document, $name)
-{
+{   
+    //Se prepara la sentencia sql a ejecutar
     $stmt = $pdo->prepare("CALL sp_buscar_usuario(:documento, :nombre)");
-    $stmt->bindParam(':documento', $document, PDO::PARAM_INT);
+    //Se asignan los parametros necesarios para el sp
+    $stmt->bindParam(':documento', $document, PDO::PARAM_STR);
     $stmt->bindParam(':nombre', $name, PDO::PARAM_STR);
 
-
+    //Ejecutamos dentro de un try/catch para manejo de errores
     try {
         $stmt->execute();
-        $usuario = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC); //Fetch debido a que es un unico registro para hacerlo un objeto y no un array
+        $stmt->closeCursor(); //Cerramos el "tunel" con la Bases de datos para evitar errore y sobre cargas
         return $usuario;
     } catch (PDOException $e) {
-        error_log("Error al buscar el usuario: " . $e->getMessage());
+        error_log("Error al buscar el usuario: " . $e->getMessage()); //Captamos errores en el log del servidor 
         return null;
     }
 }
@@ -102,9 +104,10 @@ function resumenGeneral($pdo)
 
 function loginUsuario($pdo, $documento, $contrasena)
 {
-    error_log("-> DEBUG LOGIN: Intentando login para Documento: " . $documento . " y Contraseña: " . $contrasena);
-    $stmt = $pdo->prepare("CALL sp_login_usuario(?)");
-    $stmt->bindParam(1, $documento, PDO::PARAM_STR);
+    error_log("-> DEBUG LOGIN: Intentando login para Documento: " . $documento . " y Contraseña: " . $contrasena); 
+    //Se alamcenan los errores en el log del servidor
+    $stmt = $pdo->prepare("CALL sp_login_usuario(?)"); //Unicamente se verifica el documento debido al encriptamiento de contraseña
+    $stmt->bindParam(1, $documento, PDO::PARAM_STR); //Asignamos parametros al sp
 
     try {
         $stmt->execute();
@@ -112,20 +115,20 @@ function loginUsuario($pdo, $documento, $contrasena)
         error_log("-> DEBUG LOGIN: Resultado de fetch() para el usuario: " . print_r($data, true));
         $stmt->closeCursor();
 
-        if ($data && password_verify($contrasena, $data['contraseña'])) {
+        if ($data && password_verify($contrasena, $data['contraseña'])) { //Validamos que data sea true y password verify tambien
             return [
                 'status' => 'ok',
                 'mensaje' => 'Usuario válido',
                 'data' => $data
-            ];
+            ]; //Retornamos un array asociativo
         }else{
             return [
                 'status' => 'error',
                 'mensaje' => 'Credenciales inválidas'
-            ];
+            ]; //Retornamos error en caso de algun dato false
         }
 
-    } catch (PDOException $e) {
+    } catch (PDOException $e) { //Cualquier error sql se captura dentro del catch 
         error_log("-> DEBUG LOGIN: Error SQL en loginUsuario: " . $e->getMessage());
         return [
             'status' => 'error',
@@ -148,8 +151,8 @@ function casosPorTipo($pdo)
             $totales = [];
             
             foreach ($conteo as $temp) {
-                $nombres[] = $temp['nombre_caso'];  // ← Coincide con el SP
-                $totales[] = (int)$temp['total'];    // ← Coincide con el SP
+                $nombres[] = $temp['nombre_caso'];  // 
+                $totales[] = (int)$temp['total'];    // 
             }
             return [
                 'tipos' => $nombres,
@@ -196,30 +199,31 @@ function casosPorComisionado($pdo) {
 }
 
 function casosPorMes ($pdo) {
-    $stmt = $pdo->prepare("CALL sp_casos_por_mes");
+    $stmt = $pdo->prepare("CALL sp_casos_por_mes"); //Se llama al sp (storage procedure)
 
     try {
-        $stmt->execute();
-        $mesesCasos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->execute(); //Se ejecuta dentro de un try/catch
+        $mesesCasos = $stmt->fetchAll(PDO::FETCH_ASSOC); //se almacenan los valores como un array asociativo dentro de la variable
         $stmt->closeCursor();
 
-        if ($mesesCasos) {
-            $mes = [];
+        if ($mesesCasos) { //Validamos el retorno de datos en la variable
+            //Se declaran arrays vacios para evitar undefined variable
+            $mes = []; 
             $casos = [];
-
-            foreach ($mesesCasos as $temp) {
-                $mes[] = $temp['mes'];
-                $casos[] = (int)$temp['total_casos'];
+            
+            foreach ($mesesCasos as $temp) { //Se recorren los arrays con la palaba reservada
+                $mes[] = $temp['mes']; //Guardamos los valores de mes dentro de su variable
+                $casos[] = (int)$temp['total_casos']; //Especificamos el tipo de dato y guardamos casos dentro de su variable
             }
 
             return [
                 'mes' => $mes,
                 'casos' => $casos
-            ];
+            ]; //Retornamos en array asociativo con los datos corregidos
         } else {
-            return false;
+            return false; //En caso de no retorno retornamos false
         }
-    } catch (PDOException $e) {
+    } catch (PDOException $e) { //Captura de errores sql e imprimirlos en el log del servidor
         error_log("Error en la obtencion de los datos por mes ". $e->getMessage());
         return false;
     }
@@ -233,13 +237,13 @@ function casosPorEstado($pdo) {
         $casosEstado = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
 
-        if($casosEstado && count($casosEstado) > 0) {
+        if($casosEstado && count($casosEstado) > 0) { //Este if valida que casosEstados no sea false y sus registros sean mayor a 0
             $estados = [];
             $casos = [];
             
-            foreach ($casosEstado as $temp) {
-                $estados[] = $temp['nombre_estado'];  // ← Coincide con el SP
-                $casos[] = (int)$temp['total_casos']; // ← Coincide con el SP
+            foreach ($casosEstado as $temp) { //Palabra reservada para recorrer arrays
+                $estados[] = $temp['nombre_estado']; 
+                $casos[] = (int)$temp['total_casos'];
             }
             
             return [
