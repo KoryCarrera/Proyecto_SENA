@@ -36,7 +36,11 @@ require_once "../../models/insertData.php";
         <img class="ms-3" src="../../../public/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
         <div class="d-flex align-items-center">
           <div class="text-end me-3">
-            <h2 class="mb-0 d-none d-md-block">User Name</h2>
+            <?php if (isset($_SESSION['user']['username'])): ?>
+              <h2 class='mb-0 d-none d-md-block'>
+                <?php echo $_SESSION['user']['username']; ?>
+              </h2>
+            <?php endif; ?>
             <h4 class="mb-0 d-none d-md-block">Administrador</h4>
           </div>
           <a href="#">

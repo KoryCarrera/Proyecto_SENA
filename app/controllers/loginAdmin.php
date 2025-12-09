@@ -45,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 //CONFIGURACIÓN DE VARIABLES DE SESIÓN DEL USUARIO
                 $_SESSION['user'] = [
                     'documento' => $verificacion['data']['documento'],
+                    'username' => $verificacion['data']['username'],
                     'id_rol' => $verificacion['data']['id_rol']
                 ];
 
