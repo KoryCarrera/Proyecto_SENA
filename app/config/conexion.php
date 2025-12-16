@@ -8,7 +8,7 @@ $dbname = 'proyecto_senadb';
 $user = 'root';
 $pass = '';
 
-//hola Kory
+//hola Kory como estas? XD
 
 $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
 
