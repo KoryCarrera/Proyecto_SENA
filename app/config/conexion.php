@@ -8,6 +8,8 @@ $dbname = 'proyecto_senadb';
 $user = 'root';
 $pass = '';
 
+//hola Kory
+
 $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
 
 try {
