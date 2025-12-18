@@ -66,11 +66,10 @@ const cargarUsuarios = async () => {
     }
 };
 
-// ✅ CORREGIDO: usuarios → usuario (singular)
 const renderizarTablaUsuarios = (usuarios, cuerpoTabla) => {
     let htmlFilas = '';
 
-    usuarios.forEach((usuario) => {  // ← Cambio aquí
+    usuarios.forEach((usuario) => {  
         const estadoUsuario = obtenerEstadoUsuario(usuario.id_estado);
         const rolUsuario = obtenerRolUsuario(usuario.id_rol);
         
