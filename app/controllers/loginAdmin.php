@@ -46,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user'] = [
                     'documento' => $verificacion['data']['documento'],
                     'username' => $verificacion['data']['username'],
-                    'id_rol' => $verificacion['data']['id_rol']
+                    'id_rol' => $verificacion['data']['id_rol'],
+                    'email' => $verificacion['data']['email']
                 ];
 
                 //MARCA DE TIEMPO PARA CONTROL DE INACTIVIDAD

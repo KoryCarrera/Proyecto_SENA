@@ -18,7 +18,7 @@
   <!--Bootstrap-->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  <script src="../../../public/assets/js/jquery-3.7.1.min.js"></script>
+  <script src="../../../Public/assets/js/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
@@ -124,8 +124,8 @@
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
-    <script src="../../../public/assets/js/dashboard_comi.js"></script>
-    <script src="../../../public/assets/js/cache.js"></script>
+    <script src="../../../Public/assets/js/dashboard_comi.js"></script>
+    <script src="../../../Public/assets/js/cache.js"></script>
 </body>
 
 </html>
