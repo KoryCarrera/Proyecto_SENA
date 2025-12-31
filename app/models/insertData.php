@@ -68,7 +68,7 @@ function registrarMonitoreo($pdo, $documento, $tipo, $descripcion)
 {
     // PREPARACIÓN DE LA LLAMADA AL PROCEDIMIENTO ALMACENADO
     $stmt = $pdo->prepare("CALL sp_registrar_monitoreo(?, ?, ?)");
-    $stmt->bindParam(1, $documento, PDO::PARAM_INT);
+    $stmt->bindParam(1, $documento, PDO::PARAM_STR); //Isaac carechimba, el documento es string
     $stmt->bindParam9(2, $tipo, PDO::PARAM_STR);
     $stmt->bindParam(3, $descripcion, PDO::PARAM_STR);
 
@@ -78,6 +78,30 @@ function registrarMonitoreo($pdo, $documento, $tipo, $descripcion)
         $stmt->Closecursor(); // Limpiar el cursor después de la ejecución
         return true;
     } catch(PDOException) {
+        return false;
+    }
+}
+
+//FUNCIÔN: REGISTRAR GENERACION DE UN INFORME
+function registrarInforme($pdo, $documento, $formato, $conclusiones)
+{
+    //Preparamos la llamada y ejecución del sp
+    $stmt = $pdo->prepare("CALL sp_registrar_informe(?, ?, ?)");
+
+    //Asignamos valores a los parametros
+    $stmt->bindParam(1, $documento, PDO::PARAM_STR);
+    $stmt->bindParam(2, $formato, PDO::PARAM_STR);
+    $stmt->bindParam(3, $conclusiones, PDO::PARAM_STR);
+
+    //Ejecucion y manejo de errores (PDOException)
+    try{
+        $stmt->execute();
+        $datosGenerados = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        return $datosGenerados;
+    } catch(PDOException $e) {
+        error_log("Error en la obtencion o registro de datos". $e->getMessage());
         return false;
     }
 }

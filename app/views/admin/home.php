@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet">
 
-  <script src="../../../public/assets/js/jquery-3.7.1.min.js"></script>
+  <script src="../../../Public/assets/js/jquery-3.7.1.min.js"></script>
 
 </head>
 
@@ -151,8 +151,8 @@
     crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
-  <script src="../../../public/assets/js/dashboard_admin.js"></script>
-  <script src="../../../public/assets/js/cache.js"></script>
+  <script src="../../../Public/assets/js/dashboard_admin.js"></script>
+  <script src="../../../Public/assets/js/cache.js"></script>
 
 </body>
 

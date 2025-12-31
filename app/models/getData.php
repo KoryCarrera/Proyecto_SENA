@@ -248,7 +248,8 @@ function casosPorEstado($pdo) {
             
             return [
                 'estado' => $estados,
-                'casos' => $casos
+                'casos' => $casos,
+                'total' => $casosEstado[0]['gran_total']
             ];
         } else {
             error_log("sp_casos_por_estado no devolvió filas");

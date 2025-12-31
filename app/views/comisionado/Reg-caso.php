@@ -175,7 +175,7 @@ require_once "../../models/insertData.php";
         ?>
       </div>
     </div>
-    <script src="../../../public/assets/js/cache.js"></script>
+    <script src="../../../Public/assets/js/cache.js"></script>
 </body>
 
 </html>

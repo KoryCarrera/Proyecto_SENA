@@ -28,7 +28,7 @@
     <div class="top-bar">
         <nav class="navbar_m-0_p-0">
             <div class="container-fluid d-flex align-items-center justify-content-between">
-                <img class="ms-3" src="../../../public/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
+                <img class="ms-3" src="../../../Public/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
                 <div class="d-flex align-items-center">
                     <div class="text-end me-3">
                         <?php if (isset($_SESSION['user']['username'])): ?>
@@ -39,7 +39,7 @@
                         <h4 class="mb-0 d-none d-md-block">comisionado</h4>
                     </div>
                     <a href="#">
-                        <img src="../../../public/assets/img/icon account.png" alt="User" width="76" height="76">
+                        <img src="../../../Public/assets/img/icon account.png" alt="User" width="76" height="76">
                     </a>
                     <form action="../../controllers/logout.php" method="POST">
                         <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
@@ -161,7 +161,7 @@
             </ul>
         </div>
     </main>
-    <script src="../../../public/assets/js/cache.js"></script>
+    <script src="../../../Public/assets/js/cache.js"></script>
 </body>
 
 </html>

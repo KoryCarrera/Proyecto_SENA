@@ -111,39 +111,48 @@
             <h1 class="text-center mb-4">Generación de Informe</h1>
             <div class="custom-form-box mx-auto">
                 <h2 class="text-center mb-4">Datos de Informe</h2>
-                <form id="registroForm">
-                    <div id="seccion1" class="form-section">
-                        <div class="input-group mb-4 custom-input-group">
-                            <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
+                <div id="seccion1" class="form-section">
+                    <div class="input-group mb-4 custom-input-group">
+                        <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
 
-                            <select class="form-select custom-input" id="tipo-usuario">
-                                <option selected selected>Selecione el tipo de archivo</option>
-                                <option value="PDF">PDF</option>
-                                <option value="excel">EXCEL</option>
-                            </select>
-                        </div>
-
-                        <div class="input-group mb-4 custom-input-group">
-                            <input type="text" class="form-control custom-input" placeholder="Titulo">
-                        </div>
-
-                        <div class="input-group mb-4 custom-input-group">
-
-                            <textarea type="text" class="form-control custom-input" placeholder="Contenido"></textarea>
-                        </div>
-
-                        <button type="button" class="btn btn-block w-100 btn-IMPORTAR" onclick="mostrarSeccion('seccion2')">IMPORTAR ARCHIVO</button>
-                        <button type="button" class="btn btn-block w-100 btn-siguiente" onclick="mostrarSeccion('seccion2')">SIGUIENTE</button>
+                        <select class="form-select custom-input" id="formato">
+                            <option selected selected>Selecione el tipo de archivo</option>
+                            <option value="1">PDF</option>
+                            <option value="2">EXCEL</option>
+                        </select>
                     </div>
-                </form>
+
+                    <div class="input-group mb-4 custom-input-group">
+                        <input type="text" class="form-control custom-input" placeholder="Titulo de la observacion" id="titulo">
+                    </div>
+
+                    <div class="input-group mb-4 custom-input-group">
+
+                        <textarea type="text" class="form-control custom-input" placeholder="Contenido De La Observacion/es" id="descripcion"></textarea>
+
+                    </div>
+
+                    <div class="input-group mb-4 custom-input-group">
+
+                        <textarea type="text" class="form-control custom-input" placeholder="Conclusiones Respectiva" id="conclusion"></textarea>
+
+                    </div>
+
+                    <button type="button" class="btn btn-block w-100 btn-IMPORTAR">IMPORTAR ARCHIVO</button>
+                    <button type="button" class="btn btn-block w-100 btn-siguiente" id="informe">SIGUIENTE</button>
+                </div>
             </div>
         </div>
 
-        <!--JS de Bootstrap-->
+        <!--JS de Bootstrap y jquery-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
             crossorigin="anonymous"></script>
-        <script src="../../../public/assets/js/cache.js"></script>
+        <script src="../../../Public/assets/js/jquery-3.7.1.min.js"></script>
+
+        <!--JS propio-->
+        <script src="../../../Public/assets/js/cache.js"></script>
+        <script src="../../../Public/assets/js/generarInforme.js"></script>
 </body>
 
 </html>

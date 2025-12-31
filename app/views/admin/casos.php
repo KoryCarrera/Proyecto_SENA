@@ -184,8 +184,8 @@
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
 
-  <script src="../../../public/assets/js/casosAdmin.js"></script>
-  <script src="../../../public/assets/js/cache.js"></script>
+  <script src="../../../Public/assets/js/casosAdmin.js"></script>
+  <script src="../../../Public/assets/js/cache.js"></script>
 </body>
 
 </html>
