@@ -1,4 +1,10 @@
 <?php
+//Debug
+/*ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+*/
+
 //Cargamos la session
 session_start();
 
@@ -32,7 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $indiceAtendidos = array_search('Atendido', $estados['estado']);
         $indicePorAtender = array_search('Por atender', $estados['estado']);
         $indiceNoAtendido = array_search('No atendido', $estados['estado']);
-        
+
+        //Se limita unicamente a los ultimos 10 casos para reutilizar el sp de listar casos con limit 30
+        $casosListados['data'] = array_slice($casosListados['data'], 0, 10);
 
         //Se valida si los indices devolvieron el indice esperado
         if ($indiceAtendidos !== false && $indicePorAtender !== false && $indiceNoAtendido !== false) {
@@ -47,9 +55,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $totalNoAtendido = 0;
         }
 
+        //Conseguimos el porcentaje de la cantidad de casos por cada tipo de estado en relacion al total
+        if ($totalAtendidos > 0 && $estados['total'] > 0) {
+            $porcentajeAtendidos = number_format((($totalAtendidos / $estados['total']) * 100), 1);
+        } else {
+            $porcentajeAtendidos = 0;
+        }
+
+        if ($totalPorAtender > 0 && $estados['total'] > 0) {
+            $porcentajePorAtender = number_format((($totalPorAtender / $estados['total']) * 100),1);
+        } else {
+            $porcentajePorAtender = 0;
+        }
+
+        if ($totalNoAtendido > 0 && $estados['total'] > 0) {
+            $porcentajeNoAtendidos = number_format((($totalNoAtendidos / $estados['total']) * 100), 1);
+        } else {
+            $porcentajeNoAtendidos = 0;
+        }
+
         //Convertimos la imagen a base64 para mejor entendimiento de la misma por DOMPDF
         $logoPath = __DIR__ . '/../../Public/assets/img/logo_sena.png';
-        
+
         if (file_exists($logoPath)) {
             $logoData = base64_encode(file_get_contents($logoPath));
             $logoSrc = 'data:image/png;base64,' . $logoData;
@@ -406,10 +433,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class='section-title'>1. RESUMEN EJECUTIVO</div>
             <div class='content-box'>
-                Durante el período analizado se registraron un total de <?php echo $estados['total']; ?> casos de PQRSD.
+                Durante el ciclo analizado, se registró un volumen global de <strong><?php echo $estados['total']; ?></strong> casos de PQRSD en el transcurso del año <strong><?php echo date('Y'); ?></strong>.
+                De este total, el <strong><?php echo $porcentajeAtendidos; ?>%</strong> corresponde a solicitudes que ya han sido <strong>atendidas</strong> formalmente.
+                Por otro lado, se identifica que un <strong><?php echo $porcentajePorAtender; ?>%</strong> de los casos se encuentra actualmente en estado <strong>por atender</strong>,
+                mientras que el <strong><?php echo $porcentajeNoAtendidos; ?>%</strong> restante se clasifica bajo el estatus de <strong>no atendido</strong> en relación con el consolidado general.
             </div>
 
-            <div class='section-title'>2. Ultimos 10 Casos Registrados</div>
+            <div class='section-title'>2. Ultimos 10 Casos Registrados En El Transcurso Del Año</div>
             <table class='data-table'>
                 <thead>
                     <tr>
