@@ -138,8 +138,8 @@
 
                     </div>
 
-                    <button type="button" class="btn btn-block w-100 btn-IMPORTAR">IMPORTAR ARCHIVO</button>
-                    <button type="button" class="btn btn-block w-100 btn-siguiente" id="informe">SIGUIENTE</button>
+                    <button type="button" class="btn btn-block w-100 btn-siguiente" id="informe">DESCARGAR</button>
+                
                 </div>
             </div>
         </div>
