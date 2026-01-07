@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($totalNoAtendido > 0 && $estados['total'] > 0) {
-            $porcentajeNoAtendidos = number_format((($totalNoAtendidos / $estados['total']) * 100), 1);
+            $porcentajeNoAtendidos = number_format((($totalNoAtendido / $estados['total']) * 100), 1);
         } else {
             $porcentajeNoAtendidos = 0;
         }
