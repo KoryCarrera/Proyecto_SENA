@@ -2,13 +2,11 @@
 
 //Se declaran las variables de certificación para la bd
 
-$host = 'localhost';
+$host = 'db_sena';
 $port = '3306';
-$dbname = 'proyecto_senadb';
+$dbname = 'proyectosena_db';
 $user = 'root';
-$pass = '';
-
-//hola Kory como estas? XD
+$pass = 'root';
 
 $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
 
