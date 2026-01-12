@@ -1,7 +1,7 @@
 <?php
-require_once "../../controllers/checkSession.php";
-require_once "../../config/conexion.php";
-require_once "../../models/insertData.php";
+require_once __DIR__ . "../../controllers/checkSession.php";
+require_once __DIR__ . "../../config/conexion.php";
+require_once __DIR__ . "../../models/insertData.php";
 
 ?>
 
@@ -13,7 +13,7 @@ require_once "../../models/insertData.php";
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>gestionar cuentas de usuario</title>
   <link
-    rel="stylesheet" href="../../../Public/assets/css/crear-usuario.css">
+    rel="stylesheet" href="/assets/css/crear-usuario.css">
   <!--Google fonts-->
   <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -33,7 +33,7 @@ require_once "../../models/insertData.php";
   <div class="top-bar">
     <nav class="navbar_m-0_p-0">
       <div class="container-fluid d-flex align-items-center justify-content-between">
-        <img class="ms-3" src="../../../Public/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
+        <img class="ms-3" src="/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
         <div class="d-flex align-items-center">
           <div class="text-end me-3">
             <?php if (isset($_SESSION['user']['username'])): ?>
@@ -44,7 +44,7 @@ require_once "../../models/insertData.php";
             <h4 class="mb-0 d-none d-md-block">Administrador</h4>
           </div>
           <a href="#">
-            <img src="../../../Public/assets/img/icon account.png" alt="User" width="76" height="76">
+            <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
           </a>
           <form action="../../controllers/logout.php" method="POST">
             <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
@@ -173,8 +173,8 @@ require_once "../../models/insertData.php";
           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
             crossorigin="anonymous"></script>
-          <script src="../../../Public/assets/js/usuariosAdmin.js"></script>
-          <script src="../../../Public/assets/js/cache.js"></script>
+          <script src="/assets/js/usuariosAdmin.js"></script>
+          <script src="/assets/js/cache.js"></script>
 
 </body>
 

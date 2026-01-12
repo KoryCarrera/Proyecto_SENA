@@ -4,9 +4,9 @@
 header('Content-Type: application/json');
 
 //INCLUSIÓN DE DEPENDENCIAS
-require_once "../config/conexion.php";
-require_once "../models/getData.php";
-require_once "../models/seguridad.php";
+require_once __DIR__ . "/../config/conexion.php";
+require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ . "/../models/seguridad.php";
 
 //SOLO PERMITIR SOLICITUDES POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 //RESPUESTA EXITOSA Y REDIRECCIÓN A VISTA DE ADMINISTRADOR
                 echo json_encode([
                     'status' => 'ok',
-                    'redirect' => '../../app/views/comisionado/home.php'
+                    'redirect' => '/dashboardComi'
                 ]);
                 exit;
             } else {

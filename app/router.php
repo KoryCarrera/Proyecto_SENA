@@ -25,7 +25,7 @@ $router -> map('GET', '/dashboardAdmin', 'views/admin/home.php');
 $router -> map('GET', '/casosAdmin', 'views/admin/casos.php');
 $router -> map('GET', '/generarInforme', 'views/admin/generar_informe.php');
 $router -> map('GET', '/usuarios', 'views/admin/crear-usuario.php');
-$router -> map('GET', '/notifaciones', 'views/admin/notificaciones.php');
+$router -> map('GET', '/notificacionesAdmin', 'views/admin/notificaciones.php');
 $router -> map('GET', '/gestionar', 'views/admin/gestionar.php');
 
 //Rutas hacia views comisionado
@@ -33,7 +33,7 @@ $router -> map('GET', '/gestionar', 'views/admin/gestionar.php');
 $router -> map('GET', '/dashboardComi', 'views/comisionado/home.php');
 $router -> map('GET', '/casos', 'views/comisionado/casos.php');
 $router -> map('GET', '/registrarCasos', 'views/comisionado/Reg-caso.php');
-$router -> map('GET', '/notificaciones', 'views/comisionado/notificaciones.php');
+$router -> map('GET', '/notificacionesComi', 'views/comisionado/notificaciones.php');
 
 return $router;
 ?>
