@@ -4,7 +4,7 @@
 $router = new AltoRouter();
 
 //definimos la pagina raiz
-$router->map('GET', '/', '../Public/index.php');
+$router->map('GET', '/', '../Public/landing.php');
 
 //Rutas hacia controladores
 
@@ -34,6 +34,11 @@ $router -> map('GET', '/dashboardComi', 'views/comisionado/home.php');
 $router -> map('GET', '/casos', 'views/comisionado/casos.php');
 $router -> map('GET', '/registrarCasos', 'views/comisionado/Reg-caso.php');
 $router -> map('GET', '/notificacionesComi', 'views/comisionado/notificaciones.php');
+
+//Rutas views inicio
+
+$router -> map('GET', '/entradaAdmin', '../Public/pages/entrada_administrador.php');
+$router -> map('GET', '/entradaComi', '../Public/pages/entrada_comisionado.php');
 
 return $router;
 ?>

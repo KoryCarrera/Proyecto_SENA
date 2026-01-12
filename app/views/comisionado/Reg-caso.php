@@ -11,6 +11,10 @@ require_once __DIR__ . "/../models/insertData.php";
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Comisionado</title>
+
+  <!--Icon de la pagina-->
+  <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
+
   <!--css propio-->
   <link rel="stylesheet" href="/assets/css/com-reg-caso.css">
 
@@ -42,7 +46,11 @@ require_once __DIR__ . "/../models/insertData.php";
           <a href="#">
             <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
           </a>
+<<<<<<< HEAD
           <form action="/logout.php" method="POST">
+=======
+          <form action="/logout" method="POST">
+>>>>>>> b8233ab1f5d384c44f6759a406f039b48c335355
             <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
             <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
           </form>
@@ -56,28 +64,28 @@ require_once __DIR__ . "/../models/insertData.php";
       <ul class="nav flex-column text-center">
 
         <li class="nav-item my-3">
-          <a href="home.php" class="nav-link text-dark">
+          <a href="/dashboardComi" class="nav-link text-dark">
             <i class="bi bi-house-fill home-icon d-block"></i>
             <span>Inicio</span>
           </a>
         </li>
 
         <li class="nav-item my-3">
-          <a href="Reg-caso.php" class="nav-link text-dark">
+          <a href="/registrarCasos" class="nav-link text-dark">
             <i class="bi bi-file-earmark-person-fill reg-caso d-block"></i>
             <span>Registrar <br> Caso</span>
           </a>
         </li>
 
         <li class="nav-item my-3">
-          <a href="caso.php" class="nav-link text-dark">
+          <a href="/casos" class="nav-link text-dark">
             <i class="bi bi-eye-fill ver-caso d-block"></i>
             <span>Casos</span>
           </a>
         </li>
 
         <li class="nav-item my-3">
-          <a href="notificacion.php" class="nav-link text-dark">
+          <a href="/notificacionesComi" class="nav-link text-dark">
             <i class="bi bi-envelope-fill noti-icon d-block"></i>
             <span>Notificaciones</span>
           </a>

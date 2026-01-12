@@ -9,10 +9,10 @@ error_reporting(E_ALL);
 session_start();
 
 //Llamar al archivo necesario para dompdf y otros archivos necesarios para obtener datos
-require '../../vendor/autoload.php';
-require_once "../config/conexion.php";
-require_once "../models/insertData.php";
-require_once "../models/getData.php";
+require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . "/../config/conexion.php";
+require_once __DIR__ . "/../models/insertData.php";
+require_once __DIR__ . "/../models/getData.php";
 
 //referenciar dompdf
 use Dompdf\Dompdf;

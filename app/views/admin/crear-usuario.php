@@ -12,6 +12,10 @@ require_once __DIR__ . "../../models/insertData.php";
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>gestionar cuentas de usuario</title>
+
+  <!--Icon de la pagina-->
+  <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
+
   <link
     rel="stylesheet" href="/assets/css/crear-usuario.css">
   <!--Google fonts-->
