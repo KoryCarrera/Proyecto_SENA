@@ -1,5 +1,4 @@
 <?php
-require_once '../config/conexion.php';
 
 function listarCasos($pdo)
 {
