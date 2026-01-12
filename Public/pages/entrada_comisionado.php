@@ -13,6 +13,61 @@ $token = $_SESSION['csrf_token'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/assets/css/inicio-entrada-cartas.css" />
+    <title>pagina de inicio del sistema de gestion</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/assets/css/inicio-entrada-cartas.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <script src="/assets/js/jquery-3.7.1.min.js"></script>
+  </head>
+  <body>
+    <!--barra de navegacion extraida de bootstrap-->
+    <section class="menu">
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">SENA</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#"
+                  >inicio</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="nosotros.php">nosotros</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">cuentas</a>
+              </li>
+              <li class="nav-item dropdown">
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </section>
 
 <head>
   <meta charset="UTF-8" />
@@ -66,6 +121,20 @@ $token = $_SESSION['csrf_token'];
             </li>
           </ul>
         </div>
+<<<<<<< HEAD
+         <a href="/" class="boton-volver">Volver al inicio</a>
+      </section>
+    </main>
+    <!--pie de pagina, toca segir buscando que tipos de lincks y contenido pondremos-->
+    <footer>
+      <div class="links_paginas">
+        <ul class="links">
+          <li><a href="#">servicios</a></li>
+          <li><a href="#">mapas de sitio</a></li>
+          <li><a href="#">terminos"</a></li>
+        </ul>
+=======
+>>>>>>> b8233ab1f5d384c44f6759a406f039b48c335355
       </div>
     </nav>
   </section>
@@ -90,6 +159,23 @@ $token = $_SESSION['csrf_token'];
           <button id="ingresar">ingrese</button>
         </div>
       </div>
+<<<<<<< HEAD
+      <div class="servicio_al_cliente">
+        <ul class="links">
+          <li><a href="#">servicio al cliente</a></li>
+          <li><a href="#">ayuda</a></li>
+        </ul>
+      </div>
+    </footer>
+    <script src="/assets/js/loginComisionado.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
+=======
       <a href="/" class="boton-volver">Volver al inicio</a>
     </section>
   </main>
@@ -124,3 +210,4 @@ $token = $_SESSION['csrf_token'];
 </body>
 
 </html>
+>>>>>>> b8233ab1f5d384c44f6759a406f039b48c335355

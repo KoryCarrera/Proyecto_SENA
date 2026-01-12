@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . "/../../controllers/checkSession.php";
-require_once __DIR__ . "/../../config/conexion.php";
-require_once __DIR__ . "/../../models/insertData.php";
+require_once __DIR__ . "/../controllers/checkSession.php";
+require_once __DIR__ . "/../config/conexion.php";
+require_once __DIR__ . "/../models/insertData.php";
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +46,11 @@ require_once __DIR__ . "/../../models/insertData.php";
           <a href="#">
             <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
           </a>
+<<<<<<< HEAD
+          <form action="/logout.php" method="POST">
+=======
           <form action="/logout" method="POST">
+>>>>>>> b8233ab1f5d384c44f6759a406f039b48c335355
             <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
             <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
           </form>
