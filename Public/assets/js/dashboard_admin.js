@@ -1,4 +1,4 @@
-const ENDPOINT = '../../../app/controllers/dashboardAdmin.php'; 
+const ENDPOINT = '/graficasAdmin'; 
 
 const CHART_COLORS = [
     'rgb(79, 70, 229)',     

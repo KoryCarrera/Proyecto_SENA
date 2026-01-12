@@ -1,4 +1,4 @@
-const ENDPOINT = '../../../app/controllers/dashboardComi.php'; 
+const ENDPOINT = '/graficasComi'; 
 
 const CHART_COLORS = [
     'rgb(79, 70, 229)',     

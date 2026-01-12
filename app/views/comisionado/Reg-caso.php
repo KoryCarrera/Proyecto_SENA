@@ -1,7 +1,7 @@
 <?php
-require_once "../../controllers/checkSession.php";
-require_once "../../config/conexion.php";
-require_once "../../models/insertData.php";
+require_once __DIR__ . "/../../controllers/checkSession.php";
+require_once __DIR__ . "/../../config/conexion.php";
+require_once __DIR__ . "/../../models/insertData.php";
 ?>
 
 <!DOCTYPE html>
@@ -11,8 +11,12 @@ require_once "../../models/insertData.php";
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Comisionado</title>
+
+  <!--Icon de la pagina-->
+  <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
+
   <!--css propio-->
-  <link rel="stylesheet" href="../../../Public\assets\css\com-reg-caso.css">
+  <link rel="stylesheet" href="/assets/css/com-reg-caso.css">
 
   <!--Google fonts-->
   <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet">
@@ -29,7 +33,7 @@ require_once "../../models/insertData.php";
   <div class="top-bar">
     <nav class="navbar m-0 p-0 bg-body-tertiary">
       <div class="container-fluid d-flex align-items-center justify-content-between">
-        <img class="ms-3" src="../../../Public/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
+        <img class="ms-3" src="/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
         <div class="d-flex align-items-center">
           <div class="text-end me-3">
             <?php if (isset($_SESSION['user']['username'])): ?>
@@ -40,9 +44,9 @@ require_once "../../models/insertData.php";
             <h4 class="mb-0 d-none d-md-block">Comisionado</h4>
           </div>
           <a href="#">
-            <img src="../../../Public/assets/img/icon account.png" alt="User" width="76" height="76">
+            <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
           </a>
-          <form action="../../controllers/logout.php" method="POST">
+          <form action="/logout" method="POST">
             <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
             <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
           </form>
@@ -56,28 +60,28 @@ require_once "../../models/insertData.php";
       <ul class="nav flex-column text-center">
 
         <li class="nav-item my-3">
-          <a href="home.php" class="nav-link text-dark">
+          <a href="/dashboardComi" class="nav-link text-dark">
             <i class="bi bi-house-fill home-icon d-block"></i>
             <span>Inicio</span>
           </a>
         </li>
 
         <li class="nav-item my-3">
-          <a href="Reg-caso.php" class="nav-link text-dark">
+          <a href="/registrarCasos" class="nav-link text-dark">
             <i class="bi bi-file-earmark-person-fill reg-caso d-block"></i>
             <span>Registrar <br> Caso</span>
           </a>
         </li>
 
         <li class="nav-item my-3">
-          <a href="caso.php" class="nav-link text-dark">
+          <a href="/casos" class="nav-link text-dark">
             <i class="bi bi-eye-fill ver-caso d-block"></i>
             <span>Casos</span>
           </a>
         </li>
 
         <li class="nav-item my-3">
-          <a href="notificacion.php" class="nav-link text-dark">
+          <a href="/notificacionesComi" class="nav-link text-dark">
             <i class="bi bi-envelope-fill noti-icon d-block"></i>
             <span>Notificaciones</span>
           </a>
@@ -175,7 +179,7 @@ require_once "../../models/insertData.php";
         ?>
       </div>
     </div>
-    <script src="../../../Public/assets/js/cache.js"></script>
+    <script src="/assets/js/cache.js"></script>
 </body>
 
 </html>

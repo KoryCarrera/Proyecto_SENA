@@ -3,8 +3,8 @@
 header('Content-Type: application/json');
 
 //Llamamos los archivos necesarios
-require_once "../config/conexion.php";
-require_once "../models/getData.php";
+require_once __DIR__ . "/../config/conexion.php";
+require_once __DIR__ . "/../models/getData.php";
 
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { //Validamos que es el metodo que necesitamos

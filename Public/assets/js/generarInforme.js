@@ -15,9 +15,9 @@ generarInforme.addEventListener('click', function() {
 
     let ENDPOINT;
     if (formato != 2) {
-        ENDPOINT = '../../../app/controllers/reportePDF.php';
+        ENDPOINT = '/generarPDF';
     } else {
-        ENDPOINT = '../../../app/controllers/reporteEXCEL.php';
+        ENDPOINT = '/generarExcel';
     }
 
     // Crear un formulario temporal y enviarlo en nueva ventana
