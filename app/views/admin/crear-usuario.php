@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . "../../controllers/checkSession.php";
-require_once __DIR__ . "../../config/conexion.php";
-require_once __DIR__ . "../../models/insertData.php";
+require_once __DIR__ . "/../../controllers/checkSession.php";
+require_once __DIR__ . "/../../config/conexion.php";
+require_once __DIR__ . "/../../models/insertData.php";
 
 ?>
 
@@ -50,7 +50,7 @@ require_once __DIR__ . "../../models/insertData.php";
           <a href="#">
             <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
           </a>
-          <form action="../../controllers/logout.php" method="POST">
+          <form action="/logout" method="POST">
             <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
             <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
           </form>
@@ -63,14 +63,14 @@ require_once __DIR__ . "../../models/insertData.php";
       <ul class="nav-flex">
 
         <li class="nav-item-my-1">
-          <a href="home.php" class="nav-link text-none">
+          <a href="/dashboardAdmin" class="nav-link text-none">
             <i class="bi bi-house-fill home-icon d-block"></i>
             <span>Inicio</span>
           </a>
         </li>
 
         <li class="nav-item-my-1">
-          <a href="generar_informe.php" class="nav-link text-none">
+          <a href="/generarInforme" class="nav-link text-none">
             <i class="bi bi-file-earmark-text-fill crear-notificacion"></i>
             <br>
             <span>Generar<br>Informe</span>
@@ -78,14 +78,14 @@ require_once __DIR__ . "../../models/insertData.php";
         </li>
         <div>
           <li class="nav-item-my-1">
-            <a href="casos.php" class="nav-link text-none">
+            <a href="/casosAdmin" class="nav-link text-none">
               <i class="bi bi-eye-fill ver-caso d-block"></i>
               <span>Casos</span>
             </a>
           </li>
         </div>
         <li class="nav-item-my-1 active">
-          <a href="crear-usuario.php" class="nav-link text-none">
+          <a href="/usuarios" class="nav-link text-none">
             <i class="bi bi-person-fill-gear usuarios"></i>
             <br>
             <span>Usuarios</span>
@@ -93,7 +93,7 @@ require_once __DIR__ . "../../models/insertData.php";
         </li>
 
         <li class="nav-item-my-1">
-          <a href="notificaciones.php" class="nav-link text-none">
+          <a href="/notificacionesAdmin" class="nav-link text-none">
             <i class="bi bi-bell-fill notificacion"></i>
             <br>
             <span>Notificación</span>
