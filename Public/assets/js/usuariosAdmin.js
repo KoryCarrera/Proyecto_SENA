@@ -1,5 +1,5 @@
-const ENDPOINT_LISTAR = '../../../app/controllers/listarUsuariosAdmin.php';
-const ENDPOINT_OBTENER = '../../../app/controllers/modalUsuario.php';
+const ENDPOINT_LISTAR = '/listarUsuarios';
+const ENDPOINT_OBTENER = '/modalUsuario';
 
 console.log(ENDPOINT_OBTENER);
 
