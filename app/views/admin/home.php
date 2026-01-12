@@ -1,4 +1,4 @@
-<?php require_once "../../controllers/checkSession.php"; ?>
+<?php require_once __DIR__ . "/../../controllers/checkSession.php"; ?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -17,7 +17,7 @@
 
   <!--CSS propio para colores y fonts-->
 
-  <link rel="stylesheet" href="../../../Public/assets/css/home-admin.css">
+  <link rel="stylesheet" href="/assets/css/home-admin.css">
 
   <!--Link de google fonts-->
 
@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet">
 
-  <script src="../../../Public/assets/js/jquery-3.7.1.min.js"></script>
+  <script src="/assets/js/jquery-3.7.1.min.js"></script>
 
 </head>
 
@@ -39,7 +39,7 @@
   <div class="top-bar">
     <nav class="navbar m-0 p-0 bg-body-tertiary">
       <div class="container-fluid d-flex align-items-center justify-content-between">
-        <img class="ms-3" src="../../../Public/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
+        <img class="ms-3" src="/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
         <div class="d-flex align-items-center">
           <div class="text-end me-3">
             <?php if (isset($_SESSION['user']['username'])): ?>
@@ -50,10 +50,10 @@
             <h4 class="mb-0 d-none d-md-block">Administrador</h4>
           </div>
           <a href="#">
-            <img src="../../../Public/assets/img/icon account.png" alt="User" width="76" height="76">
+            <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
           </a>
           <div>
-            <form action="../../controllers/logout.php" method="POST">
+            <form action="/logoutdo" method="POST">
               <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
               <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
             </form>
@@ -151,8 +151,8 @@
     crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
-  <script src="../../../Public/assets/js/dashboard_admin.js"></script>
-  <script src="../../../Public/assets/js/cache.js"></script>
+  <script src="/assets/js/dashboard_admin.js"></script>
+  <script src="/assets/js/cache.js"></script>
 
 </body>
 

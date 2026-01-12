@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         header("Pragma: no-cache");
 
         // REDIRECCIÓN FINAL AL INICIO
-        header("Location: /Proyecto_SENA/Public/index.php");
+        header("Location: /");
         exit;
     }
 } else {

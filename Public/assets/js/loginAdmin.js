@@ -1,4 +1,3 @@
-console.log('estoy bien referenciado');
 
 var enviar = document.getElementById("ingresar");
 
@@ -15,7 +14,7 @@ enviar.addEventListener('click', function login() {
     console.log("se esta ejecutando");
     $.ajax({
         data: parametros,
-        url: '../../app/controllers/loginAdmin.php',
+        url: '/loginAdmin/auth',
         type: 'POST',
         dataType: 'json',
         success: function redireccion(respuesta) {

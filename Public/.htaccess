@@ -1,9 +1,4 @@
 RewriteEngine On
-
-# Si el archivo existe físicamente, NO redirigir
 RewriteCond %{REQUEST_FILENAME} !-f
-# Si el directorio existe físicamente, NO redirigir
 RewriteCond %{REQUEST_FILENAME} !-d
-
-# Solo si no existe, mandar al index.php
-RewriteRule . index.php [L]
+RewriteRule ^ index.php [L]

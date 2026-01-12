@@ -1,5 +1,4 @@
 <?php
-require_once '../config/conexion.php';
 
 function inhabilitarUsuario($pdo, $document)
 {

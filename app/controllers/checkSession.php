@@ -23,7 +23,7 @@ if (!isset($_SESSION['user'])) {
 
     // Si NO está logeado, lo redirigimos inmediatamente al login
     // AJUSTA ESTA RUTA si la ubicación de tu login.php es diferente
-    header('Location: ../../../Public/index.php');
+    header('Location: /');
     exit; // Detiene la ejecución del resto del script (y no muestra el contenido de la página)
 }
 
@@ -38,7 +38,7 @@ if (isset($_SESSION['ultima_actividad']) && (time() - $_SESSION['ultima_activida
     session_destroy();  // Destruye el archivo de sesión del servidor
 
     // Redirigir al login (con un parámetro para indicar que fue por timeout)
-    header('Location: ../../../Public/index.php?timeout=1');
+    header('Location: /?timeout=1');
     exit;
 }
 
