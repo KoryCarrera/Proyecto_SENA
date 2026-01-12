@@ -1,7 +1,7 @@
 <?php
 
 if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 
 if (empty($_SESSION['csrf_token'])) {
@@ -21,6 +21,10 @@ $token = $_SESSION['csrf_token'];
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="../assets/css/inicio-entrada-cartas.css" />
   <title>pagina de inicio del sistema de gestion</title>
+
+  <!--Icon de la pagina-->
+  <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
+
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -30,7 +34,7 @@ $token = $_SESSION['csrf_token'];
     rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
     crossorigin="anonymous" />
-    <script src="../assets/js/jquery-3.7.1.min.js"></script>
+  <script src="../assets/js/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
@@ -75,10 +79,10 @@ $token = $_SESSION['csrf_token'];
       <div class="cartas_usuarios">
         <div class="formulario_entrada_admin">
           <i class="fa-solid fa-user-tie"></i> <br>
-            <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
-            <input type="number" placeholder="ingrese su cedula" name="documento" id="documento"><br>
-            <input type="password" placeholder="ingrese su contraseña" name="contraseña" id="password"><br>
-            <button id="ingresar">ingrese</button>
+          <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+          <input type="number" placeholder="ingrese su cedula" name="documento" id="documento"><br>
+          <input type="password" placeholder="ingrese su contraseña" name="contraseña" id="password"><br>
+          <button id="ingresar">ingrese</button>
         </div>
         <div class="carta_administrador_login">
           <i class="fa-solid fa-user-gear"></i>
@@ -86,7 +90,7 @@ $token = $_SESSION['csrf_token'];
           <p>bienvenido de nuevamente administrador</p>
         </div>
       </div>
-      <a href="../index.php" class="boton-volver">Volver al inicio</a>
+      <a href="/" class="boton-volver">Volver al inicio</a>
     </section>
   </main>
   <!--pie de pagina, toca segir buscando que tipos de lincks y contenido pondremos-->

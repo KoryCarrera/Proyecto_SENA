@@ -1,4 +1,4 @@
-<?php require_once "../../controllers/checkSession.php"; ?>
+<?php require_once __DIR__ . "/../../controllers/checkSession.php"; ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,8 +7,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Comisionado</title>
+
+  <!--Icon de la pagina-->
+  <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
+
   <!--css propio-->
-  <link rel="stylesheet" href="../../../Public/assets/css/home-comisionado.css">
+  <link rel="stylesheet" href="/assets/css/home-comisionado.css">
 
   <!--Google fonts-->
   <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet">
@@ -18,7 +22,7 @@
   <!--Bootstrap-->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  <script src="../../../Public/assets/js/jquery-3.7.1.min.js"></script>
+  <script src="/assets/js/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
@@ -26,7 +30,7 @@
   <div class="top-bar">
     <nav class="navbar m-0 p-0 bg-body-tertiary">
       <div class="container-fluid d-flex align-items-center justify-content-between">
-        <img class="ms-3" src="../../../Public/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
+        <img class="ms-3" src="/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
         <div class="d-flex align-items-center">
           <div class="text-end me-3">
             <?php if (isset($_SESSION['user']['username'])): ?>
@@ -37,9 +41,9 @@
             <h4 class="mb-0 d-none d-md-block">Comisionado</h4>
           </div>
           <a href="#">
-            <img src="../../../Public/assets/img/icon account.png" alt="User" width="76" height="76">
+            <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
           </a>
-          <form action="../../controllers/logout.php" method="POST">
+          <form action="/logout" method="POST">
             <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
             <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
           </form>
@@ -53,28 +57,28 @@
       <ul class="nav flex-column text-center">
 
         <li class="nav-item my-3">
-          <a href="home.php" class="nav-link text-dark">
+          <a href="/dashboarComi" class="nav-link text-dark">
             <i class="bi bi-house-fill home-icon d-block"></i>
             <span>Inicio</span>
           </a>
         </li>
 
         <li class="nav-item my-3">
-          <a href="Reg-caso.php" class="nav-link text-dark">
+          <a href="/registrarCasos" class="nav-link text-dark">
             <i class="bi bi-file-earmark-person-fill reg-caso d-block"></i>
             <span>Registrar <br> Caso</span>
           </a>
         </li>
 
         <li class="nav-item my-3">
-          <a href="caso.php" class="nav-link text-dark">
+          <a href="/casos" class="nav-link text-dark">
             <i class="bi bi-eye-fill ver-caso d-block"></i>
             <span>Casos</span>
           </a>
         </li>
 
         <li class="nav-item my-3">
-          <a href="notificacion.php" class="nav-link text-dark">
+          <a href="/notificacionesComi" class="nav-link text-dark">
             <i class="bi bi-envelope-fill noti-icon d-block"></i>
             <span>Notificaciones</span>
           </a>
@@ -124,8 +128,8 @@
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
-    <script src="../../../Public/assets/js/dashboard_comi.js"></script>
-    <script src="../../../Public/assets/js/cache.js"></script>
+    <script src="/assets/js/dashboard_comi.js"></script>
+    <script src="/assets/js/cache.js"></script>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
-const ENDPOINT_LISTAR = '../../../app/controllers/listarCasos.php';
-const ENDPOINT_OBTENER = '../../../app/controllers/modalCasoAdmin.php';
+const ENDPOINT_LISTAR = '/listarCasos';
+const ENDPOINT_OBTENER = '/modalCasoAdmin';
 
 const cargarCasos = async () => {
     const cuerpoTabla = document.getElementById('tablaCasos');

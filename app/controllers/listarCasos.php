@@ -3,8 +3,8 @@
 header('Content-Type: application/json');
 
 //Llamamos la credenciales necesarias
-require_once "../config/conexion.php";
-require_once "../models/getData.php";
+require_once __DIR__ . "/../config/conexion.php";
+require_once __DIR__ . "/../models/getData.php";
 
 try {
     $casosListados = listarCasos($pdo); //llamamos la funcion que necesitamos
