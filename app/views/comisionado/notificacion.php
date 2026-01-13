@@ -91,7 +91,7 @@
             <ul class="nav flex-column text-center">
 
                 <li class="nav-item my-3">
-                    <a href="/dashboardAdmin" class="nav-link text-dark">
+                    <a href="/dashboardComi" class="nav-link text-dark">
                         <i class="bi bi-house-fill home-icon d-block"></i>
                         <span>Inicio</span>
                     </a>
