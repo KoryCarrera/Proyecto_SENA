@@ -56,7 +56,7 @@ $token = $_SESSION['csrf_token'];
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="index.php">inicio</a>
+              <a class="nav-link active" aria-current="page" href="/">inicio</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="nosotros.php">nosotros</a>
