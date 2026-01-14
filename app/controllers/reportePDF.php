@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($totalPorAtender > 0 && $estados['total'] > 0) {
-            $porcentajePorAtender = number_format((($totalPorAtender / $estados['total']) * 100),1);
+            $porcentajePorAtender = number_format((($totalPorAtender / $estados['total']) * 100), 1);
         } else {
             $porcentajePorAtender = 0;
         }
@@ -84,12 +84,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Si no encuentra el logo, usar el placeholder
             $logoSrc = '';
         }
-
         //Usamos las funciones reservadas de ob para obtener el html y almacenarlo en una variable
+        ob_start();
 ?>
-
-        <?php ob_start(); ?>
-
         <!DOCTYPE html>
         <html lang='es'>
 
@@ -498,7 +495,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </html>
 
 <?php
-
         $html = ob_get_clean();
 
         //Inicializamos y usamos la clase de Dompdf
