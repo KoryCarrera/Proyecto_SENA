@@ -10,7 +10,7 @@ function listarCasos($pdo)
         $stmt->execute();
         $casos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
-        if($casos) {
+        if ($casos) {
             return [
                 'status' => 'ok',
                 'data' => $casos
@@ -61,7 +61,7 @@ function obtenerSeguimientosPorCaso($pdo, $idCaso)
 }
 
 function buscarUsuario($pdo, $document, $name)
-{   
+{
     //Se prepara la sentencia sql a ejecutar
     $stmt = $pdo->prepare("CALL sp_buscar_usuario(:documento, :nombre)");
     //Se asignan los parametros necesarios para el sp
@@ -103,7 +103,7 @@ function resumenGeneral($pdo)
 
 function loginUsuario($pdo, $documento, $contrasena)
 {
-    error_log("-> DEBUG LOGIN: Intentando login para Documento: " . $documento . " y Contraseña: " . $contrasena); 
+    error_log("-> DEBUG LOGIN: Intentando login para Documento: " . $documento . " y Contraseña: " . $contrasena);
     //Se alamcenan los errores en el log del servidor
     $stmt = $pdo->prepare("CALL sp_login_usuario(?)"); //Unicamente se verifica el documento debido al encriptamiento de contraseña
     $stmt->bindParam(1, $documento, PDO::PARAM_STR); //Asignamos parametros al sp
@@ -120,13 +120,12 @@ function loginUsuario($pdo, $documento, $contrasena)
                 'mensaje' => 'Usuario válido',
                 'data' => $data
             ]; //Retornamos un array asociativo
-        }else{
+        } else {
             return [
                 'status' => 'error',
                 'mensaje' => 'Credenciales inválidas'
             ]; //Retornamos error en caso de algun dato false
         }
-
     } catch (PDOException $e) { //Cualquier error sql se captura dentro del catch 
         error_log("-> DEBUG LOGIN: Error SQL en loginUsuario: " . $e->getMessage());
         return [
@@ -139,16 +138,16 @@ function loginUsuario($pdo, $documento, $contrasena)
 function casosPorTipo($pdo)
 {
     $stmt = $pdo->prepare("CALL sp_contear_casos_tipo");
-    
+
     try {
         $stmt->execute();
         $conteo = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
-        
-        if($conteo && count($conteo) > 0) {
+
+        if ($conteo && count($conteo) > 0) {
             $nombres = [];
             $totales = [];
-            
+
             foreach ($conteo as $temp) {
                 $nombres[] = $temp['nombre_caso'];  // 
                 $totales[] = (int)$temp['total'];    // 
@@ -162,12 +161,13 @@ function casosPorTipo($pdo)
             return false;
         }
     } catch (PDOException $e) {
-        error_log("Error SQL en casosPorTipo: ". $e->getMessage());
+        error_log("Error SQL en casosPorTipo: " . $e->getMessage());
         return false;
     }
 }
 
-function casosPorComisionado($pdo) {
+function casosPorComisionado($pdo)
+{
     $stmt = $pdo->prepare("CALL sp_casos_por_comisionado");
 
     try {
@@ -179,7 +179,7 @@ function casosPorComisionado($pdo) {
             $comisionado = [];
             $total = [];
 
-            foreach($casosComisionados as $temp) {
+            foreach ($casosComisionados as $temp) {
                 $comisionado[] = $temp['comisionado'];
                 $total[] = (int)$temp['total_casos'];
             }
@@ -192,12 +192,13 @@ function casosPorComisionado($pdo) {
             return false;
         }
     } catch (PDOException $e) {
-        error_log("error en la obtención de casos por comisionado". $e->getMessage());
+        error_log("error en la obtención de casos por comisionado" . $e->getMessage());
         return false;
     }
 }
 
-function casosPorMes ($pdo) {
+function casosPorMes($pdo)
+{
     $stmt = $pdo->prepare("CALL sp_casos_por_mes"); //Se llama al sp (storage procedure)
 
     try {
@@ -207,9 +208,9 @@ function casosPorMes ($pdo) {
 
         if ($mesesCasos) { //Validamos el retorno de datos en la variable
             //Se declaran arrays vacios para evitar undefined variable
-            $mes = []; 
+            $mes = [];
             $casos = [];
-            
+
             foreach ($mesesCasos as $temp) { //Se recorren los arrays con la palaba reservada
                 $mes[] = $temp['mes']; //Guardamos los valores de mes dentro de su variable
                 $casos[] = (int)$temp['total_casos']; //Especificamos el tipo de dato y guardamos casos dentro de su variable
@@ -223,12 +224,13 @@ function casosPorMes ($pdo) {
             return false; //En caso de no retorno retornamos false
         }
     } catch (PDOException $e) { //Captura de errores sql e imprimirlos en el log del servidor
-        error_log("Error en la obtencion de los datos por mes ". $e->getMessage());
+        error_log("Error en la obtencion de los datos por mes " . $e->getMessage());
         return false;
     }
 }
 
-function casosPorEstado($pdo) {
+function casosPorEstado($pdo)
+{
     $stmt = $pdo->prepare("CALL sp_casos_por_estado");
 
     try {
@@ -236,15 +238,15 @@ function casosPorEstado($pdo) {
         $casosEstado = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
 
-        if($casosEstado && count($casosEstado) > 0) { //Este if valida que casosEstados no sea false y sus registros sean mayor a 0
+        if ($casosEstado && count($casosEstado) > 0) { //Este if valida que casosEstados no sea false y sus registros sean mayor a 0
             $estados = [];
             $casos = [];
-            
+
             foreach ($casosEstado as $temp) { //Palabra reservada para recorrer arrays
-                $estados[] = $temp['nombre_estado']; 
+                $estados[] = $temp['nombre_estado'];
                 $casos[] = (int)$temp['total_casos'];
             }
-            
+
             return [
                 'estado' => $estados,
                 'casos' => $casos,
@@ -254,15 +256,15 @@ function casosPorEstado($pdo) {
             error_log("sp_casos_por_estado no devolvió filas");
             return false;
         }
-
     } catch (PDOException $e) {
-        error_log("Ha ocurrido un error al obtener los casos por estado: ". $e->getMessage());
+        error_log("Ha ocurrido un error al obtener los casos por estado: " . $e->getMessage());
         return false;
     }
 }
 
 
-function casosPorProceso($pdo) {
+function casosPorProceso($pdo)
+{
     $stmt = $pdo->prepare("CALL sp_casos_por_proceso");
 
     try {
@@ -270,7 +272,7 @@ function casosPorProceso($pdo) {
         $casosProceso = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
 
-        if($casosProceso && count($casosProceso) > 0) {
+        if ($casosProceso && count($casosProceso) > 0) {
             $proceso = [];
             $casos = [];
 
@@ -288,12 +290,13 @@ function casosPorProceso($pdo) {
             return false;
         }
     } catch (PDOException $e) {
-        error_log("Error al obtener los casos por proceso: ". $e->getMessage());
+        error_log("Error al obtener los casos por proceso: " . $e->getMessage());
         return false;
     }
 }
 
-function traerCaso($pdo, $idCaso) {
+function traerCaso($pdo, $idCaso)
+{
     $stmt = $pdo->prepare("CALL sp_obtener_caso_por_id(?)");
     $stmt->bindParam(1, $idCaso, PDO::PARAM_INT);
 
@@ -302,23 +305,24 @@ function traerCaso($pdo, $idCaso) {
         $casoGestionar = $stmt->fetch(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
 
-        if($casoGestionar) {
+        if ($casoGestionar) {
             return [
                 'status' => 'ok',
                 'data' => $casoGestionar
             ];
         } else {
             return false;
-        } 
+        }
     } catch (PDOException $e) {
-        error_log("Error al obtener el caso solicitado". $e->getMessage());
+        error_log("Error al obtener el caso solicitado" . $e->getMessage());
         return false;
     }
 }
 
-function listarUsuarios($pdo){
+function listarUsuarios($pdo)
+{
     $stmt = $pdo->prepare("CALL sp_listar_usuarios()");
-    
+
     try {
         $stmt->execute();
         $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -333,12 +337,13 @@ function listarUsuarios($pdo){
             return false;
         }
     } catch (PDOException $e) {
-        error_log("Error al obtener usuarios ". $e->getMessage());
+        error_log("Error al obtener usuarios " . $e->getMessage());
         return false;
     }
 }
 
-function gestionarUsuario($pdo, $documento){
+function gestionarUsuario($pdo, $documento)
+{
     $stmt = $pdo->prepare("CALL sp_traer_usuario(?)");
     $stmt->bindParam(1, $documento, PDO::PARAM_STR);
 
@@ -356,7 +361,61 @@ function gestionarUsuario($pdo, $documento){
             return false;
         }
     } catch (PDOException $e) {
-        error_log("Error al obtener el caso solicitado ". $e->getMessage());
+        error_log("Error al obtener el caso solicitado " . $e->getMessage());
+        return false;
+    }
+}
+
+//Funciona para que podamos obtener el resumen productivo de los comisionados
+
+function obtenerResumenProductividad($pdo)
+{
+    try {
+        $stmt = $pdo->prepare("CALL sp_resumen_productividad_comisionados()");
+        $stmt->execute();
+
+        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+
+        return $resultados;
+    } catch (PDOException $e) {
+        error_log("Error al obtener resumen de comisionados: " . $e->getMessage());
+        return false;
+    }
+}
+
+//Funciona para que nos traiga los casos que los comisionados han hecho en el mes
+function obtenerCaracterizacionUsuarios($pdo)
+{
+    try {
+        $stmt = $pdo->prepare("CALL sp_caracterizacion_usuarios()");
+        $stmt->execute;
+
+        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor;
+
+        return $resultados;
+    } catch (PDOException $e) {
+        error_log("Error al obtener casos de los usuarios: " . $e->getMessage());
+        return false;
+    }
+}
+
+//Funciona para mostrarnos un análasis de los tipos de PQRS del sistema
+
+function obtenerAnalisisDemanda($pdo)
+{
+    try {
+        $stmt = $pdo->prepare("CALL sp_analisis_demanda()");
+        $stmt->execute();
+
+        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        return $resultados;
+    } catch (PDOException $e) {
+        error_log("Error en obtener el analisis de las demandas: " . $e->getMessage());
         return false;
     }
 }
