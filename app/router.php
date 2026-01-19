@@ -27,6 +27,7 @@ $router -> map('GET', '/generarInforme', 'views/admin/generar_informe.php');
 $router -> map('GET', '/usuarios', 'views/admin/crear-usuario.php');
 $router -> map('GET', '/notificacionesAdmin', 'views/admin/notificaciones.php');
 $router -> map('GET', '/gestionar', 'views/admin/gestionar.php');
+$router -> map('GET', '/procesoOrganizacional', 'views/admin/proceso-organizacional.php');
 
 //Rutas hacia views comisionado
 

@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrador</title>
+    <title>proceso organizacional</title>
 
     <!--Icon de la pagina-->
     <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
@@ -16,11 +16,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
     <!--CSS propio para colores y fonts-->
 
-    <link rel="stylesheet" href="/assets/css/generar_informe-admin.css">
+    <link rel="stylesheet" href="/assets/css/procesoOrganizacional.css">
 
     <!--Link de google fonts-->
 
@@ -55,7 +56,8 @@
                     </a>
                     <form action="/logout" method="POST">
                         <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
-                        <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+                        <input type="hidden" name="csrf_token" id="csrf_token"
+                            value="<?php echo htmlspecialchars($token); ?>">
                     </form>
                 </div>
             </div>
@@ -88,13 +90,12 @@
                         <span>Casos</span>
                     </a>
                 </li>
-                
-                 <li class="nav-item my-1">
-          <a href="/procesoOrganizacional" class="nav-link text-none">
-            <i class="bi bi-person-fill-gear usuarios"></i>
-            <span>procesos</span>
-          </a>
-        </li>
+                <li class="nav-item my-1">
+                    <a href="/procesoOrganizacional" class="nav-link text-none">
+                        <i class="bi bi-person-fill-gear usuarios"></i>
+                        <span>procesos</span>
+                    </a>
+                </li>
 
                 <li class="nav-item my-1">
                     <a href="/usuarios" class="nav-link text-none">
@@ -113,56 +114,38 @@
             </ul>
         </div>
     </div>
-
-    <!--Contenido de la pagina-->
-    <div class="main-content">
-
-        <div class="container mt-5">
-            <h1 class="text-center mb-4">Generación de Informe</h1>
-            <div class="custom-form-box mx-auto">
-                <h2 class="text-center mb-4">Datos de Informe</h2>
-                <div id="seccion1" class="form-section">
-                    <div class="input-group mb-4 custom-input-group">
-                        <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
-
-                        <select class="form-select custom-input" id="formato">
-                            <option selected selected>Selecione el tipo de archivo</option>
-                            <option value="1">PDF</option>
-                            <option value="2">EXCEL</option>
-                        </select>
-                    </div>
-
-                    <div class="input-group mb-4 custom-input-group">
-                        <input type="text" class="form-control custom-input" placeholder="Titulo de la observacion" id="titulo">
-                    </div>
-
-                    <div class="input-group mb-4 custom-input-group">
-
-                        <textarea type="text" class="form-control custom-input" placeholder="Contenido De La Observacion/es" id="descripcion"></textarea>
-
-                    </div>
-
-                    <div class="input-group mb-4 custom-input-group">
-
-                        <textarea type="text" class="form-control custom-input" placeholder="Conclusiones Respectiva" id="conclusion"></textarea>
-
-                    </div>
-
-                    <button type="button" class="btn btn-block w-100 btn-siguiente" id="informe">DESCARGAR</button>
-
+    <main class="main">
+        <button type="button" id="abrirModal" class="btn-modal">crear proceso</button>
+       <section class="tabla-procesos">
+    <table>
+        <thead>
+            <tr class="cabecera-tabla">
+                <th scope="col">Nombre<br>Proceso</th>
+                <th scope="col">Fecha<br>Registro</th>
+                <th scope="col">Fecha de<br>Desactivación</th>
+                <th scope="col">Creador del<br>Proceso</th>
+                <th scope="col">Gestionar</th>
+            </tr>
+        </thead>
+        <tbody class="cont-tabla" id="tablaUsuarios">
+        </tbody>
+    </table>
+</section>
+    </main>
+    <div id="modal" class="modal">
+        <div class="contenido-modal">
+            <h2 class="titulo-modal">crear proceso</h2>
+            <form action="" method="post" class="formulario">
+                <input type="text" id="nombre-proceso" name="nombre-proceso" placeholder="Nombre de proceso"
+                    class="contenido">
+                <textarea name="descripcion" id="descripcion" cols="30" rows="4" placeholder="Descripcion"
+                    class="contenido"></textarea>
+                <div class="botones">
+                    <button type="submit" id="guardar-modal" class="boton">crear proceso</button>
+                    <button type="button" id="cerrar-modal" class="boton">cerrar</button>
                 </div>
-            </div>
+            </form>
         </div>
-
-        <!--JS de Bootstrap y jquery-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-            crossorigin="anonymous"></script>
-        <script src="/assets/js/jquery-3.7.1.min.js"></script>
-
-        <!--JS propio-->
-        <script src="/assets/js/cache.js"></script>
-        <script src="/assets/js/generarInforme.js"></script>
+    </div>
+    <script src="assets/js/procesos-modal.js"></script>
 </body>
-
-</html>

@@ -7,7 +7,7 @@ function obtenerResumenProductividad($pdo)
 		$stmt = $pdo->prepare("CALL sp_resumen_productividad_comisionados()");
 		$stmt->execute();
 		
-		$resultados = $stmt->fetchAll(PDO::FETCH_ASSOC)
+		$resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		$stmt->closeCursor();
 		
 		return $resultados;
