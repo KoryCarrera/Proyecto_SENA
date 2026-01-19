@@ -121,6 +121,12 @@
             <span>Casos</span>
           </a>
         </li>
+         <li class="nav-item my-1">
+          <a href="/procesoOrganizacional" class="nav-link text-none">
+            <i class="bi bi-person-fill-gear usuarios"></i>
+            <span>procesos</span>
+          </a>
+        </li>
 
         <li class="nav-item my-1">
           <a href="/usuarios" class="nav-link text-none">

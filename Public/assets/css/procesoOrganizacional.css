@@ -1,0 +1,354 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.main-content {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+body {
+    padding: none;
+    margin: none;
+}
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  }
+.top-bar .container-fluid{
+    background-color: #214554;
+    font-family: "roboto", sans-serif;
+    position: static;
+}
+.top-bar .container-fluid h2 {
+    font-size: 26px;
+    color: white;
+    }
+.top-bar .container-fluid h4 {
+    font-size: 24px;
+    color: white;
+}
+.side-bar {
+		background-color: #2E6076;
+}
+.side-bar {
+    position: fixed;
+    top: 100px;
+    left: 0;
+    width: 160px;
+    height: calc(100vh - 100px);
+    background-color: #2E6076;
+    overflow-y: auto; /* permite desplazarse */
+    scrollbar-width: none; /* Oculta scroll en Firefox */
+    -ms-overflow-style: none; /* Oculta scroll en IE y Edge antiguos */
+    font-family: "Roboto", sans-serif;
+    color: #C0C0C0;
+    z-index: 900;
+}
+.sidebar .nav-item.active .nav-link span{
+		color: white;
+  }
+.sidebar .nav-item.active .nav-link .home-icon{
+		color: white;
+	}
+/* Oculta la barra en Chrome, Edge y Safari */
+.side-bar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Elimina el scroll interno para evitar conflicto */
+.side-bar .container-fluid {
+    background-color: #2E6076;
+    color: #C0C0C0;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    overflow: visible;
+    height: auto;
+}
+/*CSS icono casa*/
+.side-bar .home-icon{
+    font-size: 40px;
+    color: #C0C0C0;
+}
+/*CSS icono crear notificacion*/
+.side-bar .crear-notificacion{
+    font-size: 40px;
+    color: #C0C0C0;
+}
+/*CSS icono ver caso*/
+.side-bar .ver-caso{
+    font-size: 40px;
+    color: #C0C0C0;
+}
+/*CSS icono procesos icono*/
+.side-bar .procesos{
+    font-size: 40px;
+    color: #C0C0C0;
+}
+/*CSS icono crear usuarios icono*/
+.side-bar .usuarios{
+    font-size: 40px;
+    color: #C0C0C0;
+    text-align: center;
+}
+/*CSS icono notificaciones icono*/
+.side-bar .notificacion{
+    font-size: 40px;
+    color: #C0C0C0;
+    text-align: center;
+}
+.side-bar span {
+		color: #C0C0C0;
+    }
+
+
+
+.main{
+  margin-left: 160px;
+  margin-top: 100px;
+  min-height: calc(100vh - 100px);
+  min-width: calc(100vw - 160px);
+  background-color: #fff9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.tabla-procesos{
+        /* Quitar flex para usar el modelo de tabla tradicional */
+    table-layout: fixed;
+    /* Esto fuerza a que las columnas tengan el ancho fijo que definamos */
+    width: 90%;
+    background-color: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    border-radius: 15px;
+    overflow: hidden;
+    border-collapse: collapse;
+    /* Añadir esto */
+}
+table{
+    /* Quitar flex para usar el modelo de tabla tradicional */
+    display: table;
+    table-layout: fixed;
+    /* Esto fuerza a que las columnas tengan el ancho fijo que definamos */
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+    border-radius: 15px;
+    overflow: hidden;
+    border-collapse: collapse;
+    /* Añadir esto */
+}
+.cabecera-tabla{
+    background-color: #09a949;
+    color: #fff;
+    width: 110%;
+}
+.tabla-procesos th,
+.tabla-procesos td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #8e8c8c;
+    /* Definir anchos basados en el contenido de las 7 columnas */
+    width: 14%;
+    /* 100% / 7 */
+}
+
+/* Ajuste de anchos para contenido específico: */
+table th:nth-child(1),
+table td:nth-child(1) {
+    width: 12%;
+}
+
+/* Documento */
+table th:nth-child(2),
+table td:nth-child(2) {
+    width: 14%;
+}
+
+/* Nombre */
+table th:nth-child(3),
+table td:nth-child(3) {
+    width: 14%;
+}
+
+/* Apellido */
+table th:nth-child(4),
+table td:nth-child(4) {
+    width: 20%;
+}
+
+/* Correo (el más largo) */
+table th:nth-child(5),
+table td:nth-child(5) {
+    width: 10%;
+}
+
+/* Estado */
+table th:nth-child(6),
+table td:nth-child(6) {
+    width: 10%;
+}
+
+/* Rol */
+table th:nth-child(7),
+table td:nth-child(7) {
+    width: 20%;
+}
+
+/* Gestionar (botón necesita más espacio) */
+
+
+thead {
+    /* Quitar flex */
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 1.2rem;
+    padding: 5px 0;
+    /* padding 0 ya que las celdas tienen padding */
+}
+
+/* Quitar flex del encabezado */
+.head-tabla {
+    background-color: white;
+    color: #000000;
+    font-size: 1.2rem;
+}
+
+/* son las filas de la tabla */
+.cont-tabla {
+    /* tbody, no necesita flex */
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 1.2rem;
+}
+
+/* Contenido de la tabla (filas tr) - Quitar flex */
+.cont-tabla tr {
+    /* Asegurar que las filas no usen flex si se usó la clase .ejemplos antes */
+    display: table-row;
+}
+
+/* Borrar clase .ejemplos para evitar conflictos si se usa en el <tr> */
+/* .ejemplos{
+    display: flex; 
+    justify-content: space-evenly;
+} */
+
+
+/* línea separatoria entre las filas */
+.head-tabla,
+.ejemplos {
+    padding: 0;
+    /* El padding está en el TH/TD */
+    border-bottom: none;
+    /* Las celdas manejan el borde */
+}
+.btn-gestionar {
+    /* <- Cambié a btn-table, el HTML tiene btn-table */
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none !important;
+
+}
+
+/*animacion del boton*/
+.btn-gestionar:hover {
+    background-color: #45a049;
+}
+ .modal{
+    position: fixed;
+    display:none;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 100px);
+    min-width: calc(100% - 160px);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #000000;
+    font-size: 1.2rem;
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+}
+.contenido-modal{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .3rem;
+    justify-content: center;
+    padding: 1rem;
+    margin: 1rem;
+    text-align: center;
+     background-color: #ffffff;
+     border-radius: 25px;
+     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+     color: #000000;
+     font-size: 1.2rem; 
+     height: 70vh;
+     width: 35%; 
+}
+.formulario{
+    display: flex;
+    flex-direction: column;
+    color: #000000;
+    font-size: 1.2rem;
+    position: relative;
+    overflow: hidden;
+      margin: .5rem;
+      justify-content:center;
+      align-items: center;
+      gap: 1rem;
+}
+.contenido{
+    display: flex;
+    flex-direction: column;
+    color: #000000;
+    font-size: 1.2rem;
+    position: relative;
+    overflow: hidden;
+      margin: .5rem;
+      justify-content:center;
+      align-items: center;
+      gap: 1rem;
+      border-radius: 25px;
+      background-color: #EBEBEB;
+      border: none;
+}
+::placeholder{
+    color:#000;
+    opacity: 1;
+    text-align: center;
+}
+.botones{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem;
+}
+.boton{
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none !important;
+}
+
+/*animacion del boton*/
+.boton:hover {
+    background-color: #45a049;
+}
