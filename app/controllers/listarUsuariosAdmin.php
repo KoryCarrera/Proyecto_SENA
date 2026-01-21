@@ -21,7 +21,7 @@ try {
     }
 
 } catch (Exception $e) {
-    error_log("Error en listarUsuarios.phg ". $e->getMessage());
+    error_log("Error en listarUsuarios.php ". $e->getMessage());
     echo json_encode([
         'status' => 'error',
         'mensaje' => '!Erro del servidor¡'

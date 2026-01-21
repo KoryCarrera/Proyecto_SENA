@@ -404,8 +404,7 @@ function obtenerCaracterizacionUsuarios($pdo)
 
 //Funciona para mostrarnos un análasis de los tipos de PQRS del sistema
 
-function obtenerAnalisisDemanda($pdo)
-{
+function obtenerAnalisisDemanda($pdo) {
     try {
         $stmt = $pdo->prepare("CALL sp_analisis_demanda()");
         $stmt->execute();
@@ -417,5 +416,42 @@ function obtenerAnalisisDemanda($pdo)
     } catch (PDOException $e) {
         error_log("Error en obtener el analisis de las demandas: " . $e->getMessage());
         return false;
+        }
+        }
+        
+function listarProceso($pdo)
+{
+    // 1. Preparamos la llamada al procedimiento
+    $stmt = $pdo->prepare("CALL sp_listar_proceso_organizacional()");
+
+    try {
+        // 2. Ejecutar la sentencia
+        $stmt->execute();
+
+        // 3. Traemos TODAS las filas
+        $procesos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Limpiamos el cursor para permitir futuras consultas en la misma conexión
+        $stmt->closeCursor();
+
+        // 4. Verificamos si hay datos
+        if ($procesos !== false) {
+            return [
+                'status' => 'ok',
+                'data' => $procesos // Retorna el array de objetos
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => 'No se pudieron recuperar los datos'
+            ];
+        }
+
+    } catch (PDOException $e) {
+        error_log("Error en listarProceso: " . $e->getMessage());
+        return [
+            'status' => 'error',
+            'message' => 'Error interno del servidor'
+        ];
     }
 }

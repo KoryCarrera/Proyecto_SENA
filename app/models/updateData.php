@@ -18,3 +18,16 @@ function ActualizarUsuario($pdo, $documento, $nombre, $apellido, $email, $rol)
         return false;
     }
 }
+
+function reactivarProceso($pdo, $id_proceso){
+    $stmt = $pdo->prepare("CALL sp_reactivar_proceso(?)");
+    $stmt->bindParam(1, $id_proceso, PDO::PARAM_INT);
+
+    try{
+        $stmt->execute();
+        $stmt->closeCursor();
+        return true;
+    } catch (PDOException){
+        return false;
+    }
+}

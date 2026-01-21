@@ -1,6 +1,11 @@
+const ENDPOINT_LISTAR = '/listarProceso';
+const ENDPOINT_CREAR = '/registrarProceso';
+const ENDPOINT_DESACTIVAR = '/desactivarProceso';
+const ENDPOINT_REACTIVAR = '/reactivarProceso';
+
 const cargarProcesos = async () => {
     
-    const cuerpoTabla = document.getElementById("tablaUsuarios");
+    const cuerpoTabla = document.getElementById("tablaProcesos");
     
 
     if (!cuerpoTabla) {
@@ -17,7 +22,7 @@ const cargarProcesos = async () => {
     `;
     
     try {
-        const response = await fetch('/listarProcesos');
+        const response = await fetch(ENDPOINT_LISTAR);
         const data = await response.json();
         
         if (data.status === 'ok' && data.procesos.length > 0) {
@@ -48,50 +53,55 @@ const cargarProcesos = async () => {
     }
 };
 const renderizarTablaProcesos = (procesos, cuerpoTabla) => {
-    //desde aca comenzamos con la tabla de procesos,llenando todo con los procesos desde la bd
     let htmlFilas = '';
     
-    // con el foreach hacemos un bucle de recorrido
     procesos.forEach((proceso) => {
-        // desde aca estamos creando una fila para cada una de los procesos
+        // ✅ Determinar qué botón mostrar según el estado
+        const botonGestion = proceso.estado == 1 
+            ? `<button class="btn-gestionar btn-desactivar" 
+                       onclick="desactivarProceso(${proceso.id_proceso})">
+                   Desactivar
+               </button>`
+            : `<button class="btn-gestionar btn-reactivar" 
+                       onclick="reactivarProceso(${proceso.id_proceso})">
+                   Reactivar
+               </button>`;
+        
         htmlFilas += `
             <tr>
-                <td>${proceso.nombre}</td>
-                <td>${proceso.fechaRegistro}</td>
-                <td>${proceso.fechaDesactivacion}</td>
-                <td>${proceso.creador}</td>
-                <td>
-                    <button class="btn-gestionar" 
-                            onclick="desactivarProceso(${proceso.id})">
-                        Desactivar
-                    </button>
-                </td>
+                <td>${proceso.nombre_proceso}</td>
+                <td>${proceso.descripcion}</td>
+                <td>${proceso.fecha_creacion}</td>
+                <td>${proceso.documento}</td>
+                <td>${proceso.nombre_creador}</td>
+                <td>${botonGestion}</td>
             </tr>
         `;
     });
-    cuerpoTabla.innerHTML = htmlFilas;
     
-    console.log(` Se cargaron ${procesos.length} procesos`);
+    cuerpoTabla.innerHTML = htmlFilas;
+    console.log(`Se cargaron ${procesos.length} procesos`);
 };
-const desactivarProceso = async (idProceso) => {
+
+const desactivarProceso = async (id_Proceso) => {
     // confirmacion de desactivacion
     if (!confirm('¿deseas desactivar este proceso?')) {
         return; 
     }
     
     try {
-        const response = await fetch('/desactivarProceso', {
+        const response = await fetch(ENDPOINT_DESACTIVAR, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id: idProceso })
+            body: JSON.stringify({ id: id_Proceso })
         });
         
         const data = await response.json();
         
         if (data.status === 'ok') {
-            alert(' Proceso esta desactivado');
+            alert('Proceso ha sido desactivado');
             cargarProcesos();
         } else {
             alert('Error: ' + data.mensaje);
@@ -100,6 +110,35 @@ const desactivarProceso = async (idProceso) => {
     } catch (error) {
         console.error('Error:', error);
         alert(' Error al desactivar el proceso');
+    }
+};
+
+const reactivarProceso = async (id_Proceso) => {
+    if (!confirm('¿Deseas reactivar este proceso?')) {
+        return; 
+    }
+    
+    try {
+        const response = await fetch(ENDPOINT_REACTIVAR, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: id_Proceso })
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'ok') {
+            alert('Proceso reactivado exitosamente');
+            cargarProcesos();
+        } else {
+            alert('Error: ' + data.mensaje);
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al reactivar el proceso');
     }
 };
 

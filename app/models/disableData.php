@@ -13,3 +13,16 @@ function inhabilitarUsuario($pdo, $document)
         return false;
     }
 }
+
+function desactivarProceso($pdo, $id_proceso){
+    $stmt = $pdo->prepare("CALL sp_desactivar_proceso(?)");
+    $stmt->bindParam(1, $id_proceso, PDO::PARAM_INT);
+
+    try{
+        $stmt->execute();
+        $stmt->closeCursor();
+        return true;
+    } catch (PDOException){
+        return false;
+    }
+}

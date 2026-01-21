@@ -252,8 +252,6 @@ thead {
     /* Las celdas manejan el borde */
 }
 .btn-gestionar {
-    /* <- Cambié a btn-table, el HTML tiene btn-table */
-    background-color: green;
     color: white;
     border: none;
     border-radius: 5px;
@@ -264,10 +262,6 @@ thead {
 
 }
 
-/*animacion del boton*/
-.btn-gestionar:hover {
-    background-color: #45a049;
-}
  .modal{
     position: fixed;
     display:none;
@@ -330,25 +324,27 @@ thead {
     opacity: 1;
     text-align: center;
 }
-.botones{
+.btn-gestionar{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: end;
     gap: 1rem;
 }
-.boton{
-    background-color: green;
+.btn-desactivar {
+    background-color: #dc3545; 
     color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    text-decoration: none !important;
 }
 
-/*animacion del boton*/
-.boton:hover {
-    background-color: #45a049;
+.btn-desactivar:hover {
+    background-color: #c82333;
+}
+
+.btn-reactivar {
+    background-color: #28a745; 
+    color: white;
+}
+
+.btn-reactivar:hover {
+    background-color: #218838;
 }

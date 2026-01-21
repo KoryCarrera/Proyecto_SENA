@@ -18,6 +18,10 @@ $router -> map('POST', '/logout', 'controllers/logout.php');
 $router -> map('POST', '/modalCasoAdmin', 'controllers/modalCasoAdmin.php');
 $router -> map('POST', '/modalUsuario', 'controllers/modalUsuario.php');
 $router -> map('POST', '/generarPDF', 'controllers/reportePDF.php');
+$router -> map('POST', '/registrarProceso', 'controllers/registrarProceso.php');
+$router -> map('GET', '/listarProceso', 'controllers/listarProceso.php');
+$router -> map('POST', '/desactivarProceso', 'controllers/desactivarProceso.php');
+$router -> map('POST', '/reactivarProceso', 'controllers/reactivarProceso.php');
 
 //Rutas hacia views admin
 
@@ -28,6 +32,7 @@ $router -> map('GET', '/usuarios', 'views/admin/crear-usuario.php');
 $router -> map('GET', '/notificacionesAdmin', 'views/admin/notificaciones.php');
 $router -> map('GET', '/gestionar', 'views/admin/gestionar.php');
 $router -> map('GET', '/procesoOrganizacional', 'views/admin/proceso-organizacional.php');
+$router -> map('GET', '/editarUsuario', 'views/admin/editar-usuario.php');
 
 //Rutas hacia views comisionado
 
