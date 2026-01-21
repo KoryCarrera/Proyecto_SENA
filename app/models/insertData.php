@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 //FUNCIÓN: REGISTRAR CASOS
 function registrarCasos($pdo, $documento, $proceso, $estado, $tipo, $descripcion)
@@ -77,7 +77,7 @@ function registrarMonitoreo($pdo, $documento, $tipo, $descripcion)
         $stmt->execute();
         $stmt->Closecursor(); // Limpiar el cursor después de la ejecución
         return true;
-    } catch(PDOException) {
+    } catch (PDOException) {
         return false;
     }
 }
@@ -94,15 +94,35 @@ function registrarInforme($pdo, $documento, $formato, $conclusiones)
     $stmt->bindParam(3, $conclusiones, PDO::PARAM_STR);
 
     //Ejecucion y manejo de errores (PDOException)
-    try{
+    try {
         $stmt->execute();
         $datosGenerados = $stmt->fetch(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
 
         return $datosGenerados;
-    } catch(PDOException $e) {
-        error_log("Error en la obtencion o registro de datos". $e->getMessage());
+    } catch (PDOException $e) {
+        error_log("Error en la obtencion o registro de datos" . $e->getMessage());
         return false;
     }
 }
-?>
+
+//FUNCIÔN: REGISTRAR UN PROCESO ORGANIZACIONAL
+function registrarProceso($pdo, $nombre, $descripcion, $documentoUsuario)
+{
+        $stmt = $pdo->prepare("CALL sp_registrar_proceso_organizacional(?, ?, ?)");
+        
+        $stmt->bindParam(1, $nombre, PDO::PARAM_STR);
+        $stmt->bindParam(2, $descripcion, PDO::PARAM_STR);
+        $stmt->bindParam(3, $documentoUsuario, PDO::PARAM_STR);
+
+    try {
+        $stmt->execute();
+        $stmt->closeCursor();
+
+        return true;
+        
+    } catch (PDOException $e) {
+        error_log("Error en registrarProceso: " . $e->getMessage());
+        return false;
+    }
+}

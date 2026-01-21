@@ -1,6 +1,6 @@
 <?php
 // Define el tiempo máximo de inactividad en segundos (ej. 5 minutos = 300 segundos)
-define('TIEMPO_MAXIMO_INACTIVIDAD', 600);
+define('TIEMPO_MAXIMO_INACTIVIDAD', 900);
 
 // === 1. INICIO DE SESIÓN Y BLOQUEO DE CACHÉ ===
 

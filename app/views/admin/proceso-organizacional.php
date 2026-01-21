@@ -1,4 +1,6 @@
-<?php require_once __DIR__ . "/../../controllers/checkSession.php"; ?>
+<?php require_once __DIR__ . "/../../controllers/checkSession.php"; 
+
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -121,13 +123,14 @@
         <thead>
             <tr class="cabecera-tabla">
                 <th scope="col">Nombre<br>Proceso</th>
-                <th scope="col">Fecha<br>Registro</th>
-                <th scope="col">Fecha de<br>Desactivación</th>
+                <th scope="col">descripcion</th>
+                <th scope="col">Fecha de<br>Creacion</th>
+                <th scope="col">documento</th>
                 <th scope="col">Creador del<br>Proceso</th>
                 <th scope="col">Gestionar</th>
             </tr>
         </thead>
-        <tbody class="cont-tabla" id="tablaUsuarios">
+        <tbody class="cont-tabla" id="tablaProcesos">
         </tbody>
     </table>
 </section>
@@ -135,17 +138,19 @@
     <div id="modal" class="modal">
         <div class="contenido-modal">
             <h2 class="titulo-modal">crear proceso</h2>
-            <form action="" method="post" class="formulario">
+            <div id="formProceso" class="formulario">
                 <input type="text" id="nombre-proceso" name="nombre-proceso" placeholder="Nombre de proceso"
                     class="contenido">
                 <textarea name="descripcion" id="descripcion" cols="30" rows="4" placeholder="Descripcion"
                     class="contenido"></textarea>
                 <div class="botones">
-                    <button type="submit" id="guardar-modal" class="boton">crear proceso</button>
+                    <button type="button" id="btnRegistrarProceso" class="boton">crear proceso</button>
                     <button type="button" id="cerrar-modal" class="boton">cerrar</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="assets/js/procesos-modal.js"></script>
+    <script src="assets/js/registrarProceso.js"></script>
 </body>

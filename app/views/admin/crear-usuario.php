@@ -180,7 +180,7 @@ require_once __DIR__ . "/../../models/insertData.php";
           <button type="button" class="btn btn-primary" onclick="editarUsuario()">
             <i class="bi bi-pencil"></i> Editar Usuario
           </button>
-          <a href="#">a</a>
+          <a href="/editarUsuario">a</a>
           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
             crossorigin="anonymous"></script>
