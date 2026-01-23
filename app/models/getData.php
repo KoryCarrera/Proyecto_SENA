@@ -455,3 +455,24 @@ function listarProceso($pdo)
         ];
     }
 }
+
+function tablaBaseExcel ($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_reporte_pqrs_excel()");
+
+    try {
+        $stmt->execute();
+
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+
+        if($data !== false) {
+            return $data;
+        } else {
+            return false;
+        }
+    }catch(PDOException){
+
+    }
+}
