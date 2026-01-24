@@ -105,30 +105,23 @@ require_once __DIR__ . "/../../models/insertData.php";
       <div class="custom-form-box mx-auto">
         <h2 class="text-center mb-4">Información del Caso</h2>
 
-        <form id="registroForm" method="POST">
+        <div id="registroForm">
           <div id="seccion1" class="form-section">
 
             <div class="input-group mb-4 custom-input-group">
               <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
-              <select class="form-select custom-input" id="tipo-usuario">
-                <option selected disabled>Selecione el Tipo de Usuario</option>
-                <option value="aprendiz">Aprendiz</option>
-                <option value="empleado">Empleado</option>
-                <option value="anonimo">Anonimo</option>
-              </select>
+              
             </div>
 
-            <div class="input-group mb-4 custom-input-group">
-              <input name="documento" type="text" class="form-control custom-input" placeholder="Documento">
-            </div>
+            
 
             <div class="input-group mb-4 custom-input-group">
-              <input name="proceso" type="number" class="form-control custom-input" placeholder="Id Proceso">
+              <input name="proceso" id="proceso" type="number" class="form-control custom-input" placeholder="Id Proceso">
             </div>
 
             <div class="input-group mb-4 custom-input-group">
               <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
-              <select name="estado" class="form-select custom-input" id="tipo-usuario">
+              <select name="estado" class="form-select custom-input" id="estado
                 <option selected disabled>Seleccione el estado</option>
                 <option value="1">Atendido</option>
                 <option value="2">Por atender</option>
@@ -138,7 +131,7 @@ require_once __DIR__ . "/../../models/insertData.php";
 
             <div class="input-group mb-4 custom-input-group">
               <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
-              <select name="tipo" class="form-select custom-input" id="tipo-usuario">
+              <select name="tipo" class="form-select custom-input" id="tipo-caso">">
                 <option selected disabled>Seleccione el Tipo de caso</option>
                 <option value="1">peticion</option>
                 <option value="2">queja</option>
@@ -147,36 +140,19 @@ require_once __DIR__ . "/../../models/insertData.php";
                 <option value="5">denuncia</option>
               </select>
             </div>
+            <div class="input-group mb-4 custom-input-group">
+				<input name="descripcion" id="descripcion" type="text" class="form-control custom-input" placeholder="Descripcion"
+				</div>
 
             <div class="input-group mb-4 custom-input-group">
-              <input name="descripcion" type="text" class="form-control custom-input" placeholder="Descripcion">
+              <button type="button" id="btnRegistrarcaso" class="form-control custom-input">ENVIAR</button>
             </div>
             <div class="input-group mb-4 custom-input-group">
               <input type="submit" class="form-control custom-input" placeholder="ENVIAR">
             </div>
           </div>
-        </form>
-        <?php
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
-          $documento = $_POST["documento"];
-          $proceso = $_POST["proceso"];
-          $estado = $_POST["estado"];
-          $tipo = $_POST["tipo"];
-          $descripcion = $_POST["descripcion"];
-          if ($documento && $proceso && $estado && $tipo && $descripcion) {
-            $registrar = registrarCasos($pdo, $documento, $proceso, $estado, $tipo, $descripcion);
-            if ($registrar) {
-              echo "caso registrado con exito";
-            } else {
-              echo "error al registar caso";
-            }
-          } else {
-            echo "Ingrese valores validos";
-          }
-        } else {
-          echo "Rellene todos los campos";
-        }
-        ?>
+        </div>
+     
       </div>
     </div>
     <script src="/assets/js/cache.js"></script>
