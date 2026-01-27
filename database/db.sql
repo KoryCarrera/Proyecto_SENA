@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 24-01-2026 a las 03:17:13
+-- Tiempo de generación: 27-01-2026 a las 17:02:21
 -- Versión del servidor: 10.6.24-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -37,7 +37,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_actualizar_estado_caso` (IN `p_i
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_actualizar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(50), IN `p_apellido` VARCHAR(50), IN `p_email` VARCHAR(100), IN `p_id_rol` INT(11))   BEGIN
 
-UPDATE usuario SET nombre=p_nombre, apellido=p_apellido, email=p_email, id_rol=p_id_rol 
+UPDATE usuario SET documento= COALESCE(p_nuevo_documento, documento), nombre= COALESCE(p_nombre, nombre), apellido= COALESCE(p_apellido, apellido), email= COALESCE(p_email, email), id_rol= COALESCE(p_id_rol, id_rol), contraseña= COALESCE(p_contraseña, contraseña) 
 WHERE documento = p_documento;
 
 END$$
