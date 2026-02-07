@@ -114,16 +114,27 @@ git clone https://github.com/KoryCarrera/Proyecto_SENA.git
 cd Proyecto_SENA
 ```
 
-### 2️⃣ Levantar contenedores con Docker
+### 2️⃣ Instalar dependencias con Docker
+```bash
+#Linux
+docker run --rm -v $(pwd):/app composer install --ignore-platform-reqs
+
+#Windows
+docker run --rm -v ${PWD}:/app composer install --ignore-platform-reqs
+```
+
+### 3️⃣ Levantar contenedores con Docker
 ```bash
 docker-compose up --build
 ```
 
-Este comando:
+Estos comandos:
+- ✅ Traen los cambios mas recientes del repositorio
+- ✅ Instalan dependencias locales con docker
 - ✅ Construye las imágenes Docker
 - ✅ Levanta los 3 contenedores (app, db, phpmyadmin)
 - ✅ Carga automáticamente el esquema y datos de prueba desde `database/db.sql`
-- ✅ Instala dependencias con Composer
+- ✅ Instala dependencias con Composer en los contenedores
 
 ### 3️⃣ Acceder al sistema
 
@@ -228,7 +239,7 @@ Proyecto_SENA/
 - Sistema de notificaciones en tiempo real
 - Adjuntar evidencias fotográficas/videos a casos
 - Alertas automáticas por correo electrónico
-- Control de acceso basado en casos asignados (comisionados solo ven sus casos)
+- Control de acceso basado en casos asignados (comisionados solo deben ver sus casos)
 
 ---
 
