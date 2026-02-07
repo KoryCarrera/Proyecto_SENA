@@ -27,7 +27,7 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 $datosReporte = [];
 
 //Ingresamos en la base de datos la generación del reporte
-registrarInforme($pdo, $_SESSION['user']['documento'], 'EXCEL', null);
+$datosInforme = registrarInforme($pdo, $_SESSION['user']['documento'], 'EXCEL', null);
 
 //En el array vacio asignamos el resultado de la consulta 
 $datosReporte = tablaBaseExcel($pdo);
@@ -39,6 +39,8 @@ $sheet->setTitle("Tabla Base"); //definimos el nombre de la hoja que capturamos 
 
 $sheet->mergeCells('B2:K2'); //Combinamos y centramos de la celda B2 a la K2 para definir el titulo de la pestaña
 $sheet->setCellValue('B2', 'INFORME DE GESTIÓN SENA'); //Ingresamos lo que ira en esas celdas mergeadas
+$sheet->mergeCells('B3:K3'); //Combinamos y centramos una nueva celda para ingresar datos relacionados al reporte
+$sheet->setCellValue('B3', 'ID de reporte: ' . $datosInforme['id_generado']. ' Fecha de generación: ' . $datosInforme['fecha_registro']); //Insertamos los datos de auditoria en el documento (ID y fecha)
 
 $estiloTitulo = [ //En un array definimos las parametros de estilos
     'font' => [
@@ -58,7 +60,26 @@ $estiloTitulo = [ //En un array definimos las parametros de estilos
         'outline' => ['borderStyle' => Border::BORDER_THIN],
     ],
 ];
-$sheet->getStyle('B2:K2')->applyFromArray($estiloTitulo); //Lo aplicamos con el metodo aplyFromArray
+
+$estiloSubTitulo = [ //Definimos los estilos de la segunda celda combinada y centrada
+    'font' => [
+        'size' => 14,
+        'color' => ['rgb' => '000000'],
+    ],
+    'alignment' => [
+        'horizontal' => Alignment::HORIZONTAL_CENTER,
+        'vertical' => Alignment::VERTICAL_CENTER
+    ],
+    'borders' => [
+        'outline' => ['borderStyle' => Border::BORDER_THIN],
+        'color' => ['rgb' => '000000'],
+    ],
+];
+
+//Aplicamos los estilos con el metodo aplyFromArray
+
+$sheet->getStyle('B2:K2')->applyFromArray($estiloTitulo);
+$sheet->getStyle('B3:K3')->applyFromArray($estiloSubTitulo);
 
 
 $encabezados = ['Documento', 'Id', 'Comisionado', 'Estado Usuario', 'Mes', 'Tipo', 'Estado', 'Proceso', 'Fecha Registro', 'Fecha Radicado']; //Definimos las cabeceras de las tablas

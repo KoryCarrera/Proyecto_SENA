@@ -14,7 +14,7 @@ try {
     $pdo = new PDO ($dsn, $user, $pass);
     //echo 'Conexion exitosa a la base de datos';
 } catch (PDOException $e) {
-    //echo 'Conexion fallida: ' . $e->getMessage(); //hola
+    //echo 'Conexion fallida: ' . $e->getMessage();
 }
 
 ?>
