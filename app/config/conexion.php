@@ -4,9 +4,9 @@
 
 $host = 'db_sena';
 $port = '3306';
-$dbname = 'proyectosena_db';
-$user = 'root';
-$pass = 'root';
+$dbname = getenv('DB_NAME');
+$user = getenv('USER_DB');
+$pass = getenv('DB_ROOT_PASSWORD');
 
 $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
 

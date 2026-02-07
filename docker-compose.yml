@@ -7,6 +7,8 @@ services:
       - "8000:80" #Se accede a la app colocando en el navegador: localhost:puerto (definido en el archivo o seleccionaod desde docker)
     volumes:
       - .:/var/www/html #Sincronizamos los archivos de nuestra maquina con el del contenedor
+    env_file:
+      - .env
     networks:
       - sena-network
     depends_on:
@@ -16,9 +18,11 @@ services:
   db_sena:
     image: mariadb:10.6 #Imagen preconstruida de dockerhub
     container_name: Sistema_BD #Definimos el nombre del contenedor con la base de datos
+    env_file:
+      - .env
     environment: #Definimos variables de entorno
-      MYSQL_DATABASE: proyectosena_db
-      MYSQL_ROOT_PASSWORD: root
+      - MARIADB_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     ports: #definimos el puerto de la bd
       - "3306:3306"
     volumes:
@@ -34,10 +38,12 @@ services:
     restart: always
     ports:
       - "8001:80" #Definimos el puerto para gestionar la bd
+    env_file:
+      - .env
     environment:
-      PMA_HOST: db_sena
-      PMA_USER: root
-      PMA_PASSWORD: root
+      - PMA_HOST: db_sena
+      - PMA_USER: root
+      - PMA_PASSWORD=${DB_ROOT_PASSWORD}
     depends_on:
       - db_sena
     networks:
