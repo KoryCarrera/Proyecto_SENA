@@ -1,5 +1,5 @@
-<<<<<<< HEAD
-  <?php require_once __DIR__ . "/../../controllers/checkSession.php"; ?>
+<?php require_once __DIR__ . "/../../controllers/checkSessionAdmin.php"; ?>
+
   <!DOCTYPE html>
   <html lang="en">
 
