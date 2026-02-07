@@ -230,10 +230,7 @@ Proyecto_SENA/
 
 ---
 
-## ⚠️ Problemas Conocidos
-
-### 🐛 Bugs
-- **Validación de sesión incompleta**: Los usuarios pueden acceder a interfaces de ambos roles (admin/comisionado) sin restricción estricta.
+## ⚠️ Pendientes Conocidos
 
 ### 🚧 Funcionalidades Pendientes
 - Sistema de notificaciones en tiempo real
