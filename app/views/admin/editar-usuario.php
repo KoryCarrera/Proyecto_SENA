@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . "/../../models/updateData.php";
+require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
