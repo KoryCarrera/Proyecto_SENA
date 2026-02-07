@@ -38,12 +38,12 @@ services:
     restart: always
     ports:
       - "8001:80" #Definimos el puerto para gestionar la bd
-    env_file:
+    env_file: #definimos el archivo donde estaran las variables de entorno
       - .env
     environment:
-      - PMA_HOST: db_sena
-      - PMA_USER: root
-      - PMA_PASSWORD=${DB_ROOT_PASSWORD}
+      - PMA_HOST=db_sena
+      - PMA_USER=root
+      - PMA_PASSWORD=${SGBD_ROOT_PASSWORD}
     depends_on:
       - db_sena
     networks:

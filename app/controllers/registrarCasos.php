@@ -1,4 +1,10 @@
 <?php
+
+require_once __DIR__ . "/../config/conexion.php";
+require_once __DIR__ . "/../models/insertData.php";
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
         'status' => 'error',  
@@ -44,7 +50,7 @@ try {
     }
     
            
-          $registrar = registrarProceso($pdo, $_SESSION['user']['documento'], $proceso, $estado, $tipo, $descripcion);
+          $registrar = registrarCasos($pdo, $_SESSION['user']['documento'], $proceso, $estado, $tipo, $descripcion);
 
     if ($registrar === true) {
         echo json_encode([
@@ -63,3 +69,5 @@ try {
         'status' => 'error',
         'mensaje' => 'Error del servidor'
     ]);
+        }
+}
