@@ -1,13 +1,15 @@
+//definimos todos nuestros endpoints
 const ENDPOINT_LISTAR = '/listarProceso';
 const ENDPOINT_CREAR = '/registrarProceso';
 const ENDPOINT_DESACTIVAR = '/desactivarProceso';
 const ENDPOINT_REACTIVAR = '/reactivarProceso';
 
-const cargarProcesos = async () => {
+const cargarProcesos = async () => { //utilizamos una arrow function para cargar los procesos
     
+    //capturamos el tbody
     const cuerpoTabla = document.getElementById("tablaProcesos");
     
-
+    //validamos la captura
     if (!cuerpoTabla) {
         console.error('No se encuentra  la tabla');
         return; 
@@ -22,11 +24,16 @@ const cargarProcesos = async () => {
     `;
     
     try {
+        //Esperamos una respuesta y un formato json de la misma respuesta
         const response = await fetch(ENDPOINT_LISTAR);
         const data = await response.json();
         
+        //Validamos que el status de la respuesta es ok y su longitud es mayor a 0
         if (data.status === 'ok' && data.procesos.length > 0) {
+
+            //renderizamos la tabla con una funcion que declararemos mas adelante
             renderizarTablaProcesos(data.procesos, cuerpoTabla);
+
         } else {
             // en caso de que no hayan procesos,esto es lo que se muestra
             cuerpoTabla.innerHTML = `
@@ -52,11 +59,12 @@ const cargarProcesos = async () => {
         `;
     }
 };
-const renderizarTablaProcesos = (procesos, cuerpoTabla) => {
+const renderizarTablaProcesos = (procesos, cuerpoTabla) => { //Procedemos a definir la arrow function anterior
     let htmlFilas = '';
-    
+
+    //recorremos el json y los vamos almacenando en una variable
     procesos.forEach((proceso) => {
-        // ✅ Determinar qué botón mostrar según el estado
+        //Determinar qué botón mostrar según el estado
         const botonGestion = proceso.estado == 1 
             ? `<button class="btn-gestionar btn-desactivar" 
                        onclick="desactivarProceso(${proceso.id_proceso})">
@@ -79,8 +87,8 @@ const renderizarTablaProcesos = (procesos, cuerpoTabla) => {
         `;
     });
     
+    //insertamos el recorrido en el cuerpo de la tabla
     cuerpoTabla.innerHTML = htmlFilas;
-    console.log(`Se cargaron ${procesos.length} procesos`);
 };
 
 const desactivarProceso = async (id_Proceso) => {
@@ -90,31 +98,31 @@ const desactivarProceso = async (id_Proceso) => {
     }
     
     try {
-        const response = await fetch(ENDPOINT_DESACTIVAR, {
-            method: 'POST',
+        const response = await fetch(ENDPOINT_DESACTIVAR, { //hacemos un fetch al endpoint de desactivar
+            method: 'POST', //definimos el motodo de la request
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json' //header de la request
             },
-            body: JSON.stringify({ id: id_Proceso })
+            body: JSON.stringify({ id: id_Proceso }) //body de la request
         });
         
-        const data = await response.json();
+        const data = await response.json(); //transformamos la respuesta a json
         
-        if (data.status === 'ok') {
-            alert('Proceso ha sido desactivado');
+        if (data.status === 'ok') { //validamos el estado
+            alert('Proceso ha sido desactivado'); //mandamos un alert para validar la accion exitosa
             cargarProcesos();
         } else {
-            alert('Error: ' + data.mensaje);
+            alert('Error: ' + data.mensaje); //en caso de error mostrar el mensaje
         }
         
-    } catch (error) {
-        console.error('Error:', error);
+    } catch (error) { //capturamos errores
+        console.error('Error:', error); //capturamos el error en la consola
         alert(' Error al desactivar el proceso');
     }
 };
 
 const reactivarProceso = async (id_Proceso) => {
-    if (!confirm('¿Deseas reactivar este proceso?')) {
+    if (!confirm('¿Deseas reactivar este proceso?')) { //Confirmamos la accion
         return; 
     }
     
@@ -142,13 +150,12 @@ const reactivarProceso = async (id_Proceso) => {
     }
 };
 
+
+//Configuramos el modal y le damos interactividad (abrir, cerrar, guardar)
 document.addEventListener('DOMContentLoaded', () => {
-    console.log(' Página cargada, cargando procesos...');
     cargarProcesos();
 });
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Configurando sistema...');
-    
     
     const botonAbrir = document.getElementById('abrirModal');
     const botonCerrar = document.getElementById('cerrar-modal');
@@ -157,7 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const formulario = document.querySelector('.formulario');
     
     if (!botonAbrir || !botonCerrar || !modal || !formulario) {
-        console.error('Faltan elementos del modal');
         return;
     }
     
@@ -198,7 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
     formulario.addEventListener('submit', async (evento) => {
         evento.preventDefault();
         
-        console.log(' Enviando formulario...');
         
 
         const nombreProceso = document.getElementById('nombre-proceso').value;
@@ -262,9 +267,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    console.log('Modal configurado');
-    
-
-    console.log('Cargando procesos...');
     cargarProcesos();
 });
