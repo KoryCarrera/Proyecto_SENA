@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 try {
 	$proceso = $_POST["proceso"];
           $estado = $_POST["estado"];
-          $tipo = $_POST["tipo"];
+          $tipoCaso = $_POST["tipoCaso"];
           $descripcion = $_POST["descripcion"];
           
            if (!$proceso || !is_string($proceso) || trim($proceso) === '') {
@@ -33,7 +33,7 @@ try {
         exit;
     }
     
-     if (!$tipo || !is_string($tipo) || trim($tipo) === '') {
+     if (!$tipoCaso || !is_string($tipoCaso) || trim($tipoCaso) === '') {
         echo json_encode([
             'status' => 'error',
             'mensaje' => 'El tipo es requerido'
@@ -50,7 +50,7 @@ try {
     }
     
            
-          $registrar = registrarCasos($pdo, $_SESSION['user']['documento'], $proceso, $estado, $tipo, $descripcion);
+          $registrar = registrarCasos($pdo, $_SESSION['user']['documento'], $proceso, $estado, $tipoCaso, $descripcion);
 
     if ($registrar === true) {
         echo json_encode([

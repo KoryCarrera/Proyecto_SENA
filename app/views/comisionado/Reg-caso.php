@@ -131,7 +131,7 @@ require_once __DIR__ . "/../../models/insertData.php";
 
             <div class="input-group mb-4 custom-input-group">
               <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
-              <select name="tipo" class="form-select custom-input" id="tipo-caso">">
+              <select name="tipo" class="form-select custom-input" id="tipoCaso">">
                 <option selected disabled>Seleccione el Tipo de caso</option>
                 <option value="1">peticion</option>
                 <option value="2">queja</option>
@@ -141,14 +141,10 @@ require_once __DIR__ . "/../../models/insertData.php";
               </select>
             </div>
             <div class="input-group mb-4 custom-input-group">
-				<input name="descripcion" id="descripcion" type="text" class="form-control custom-input" placeholder="Descripcion"
-				</div>
+				<input name="descripcion" id="descripcion" type="text" class="form-control custom-input" placeholder="Descripcion">
 
             <div class="input-group mb-4 custom-input-group">
               <button type="button" id="btnRegistrarcaso" class="form-control custom-input">ENVIAR</button>
-            </div>
-            <div class="input-group mb-4 custom-input-group">
-              <input type="submit" class="form-control custom-input" placeholder="ENVIAR">
             </div>
           </div>
         </div>
