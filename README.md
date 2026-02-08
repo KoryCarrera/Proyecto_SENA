@@ -19,7 +19,7 @@ Sistema web para la gestión eficiente de Peticiones, Quejas, Reclamos, Sugerenc
 - [Uso](#-uso)
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 - [Capturas de Pantalla](#-capturas-de-pantalla)
-- [Problemas Conocidos](#-problemas-conocidos)
+- [Pendientes Conocidos](#-pendientes-conocidos)
 - [Roadmap](#-roadmap)
 - [Contribuidores](#-contribuidores)
 - [Licencia](#-licencia)
@@ -62,7 +62,6 @@ Sistema web que proporciona:
 - 🔄 Acceso restringido solo a casos asignados - En desarrollo
 
 ---
-
 ## 🛠️ Tecnologías
 
 ### Backend
@@ -81,6 +80,8 @@ Sistema web que proporciona:
 - **[AltoRouter](https://altorouter.com/)** - Enrutamiento de URLs
 - **[DOMPDF](https://github.com/dompdf/dompdf)** - Generación de reportes PDF
 - **[PhpSpreadsheet](https://phpspreadsheet.readthedocs.io/)** - Generación de reportes Excel
+- **[phpdotenv](https://github.com/vlucas/phpdotenv)** - Lectura de variables de entorno
+- **[Resend](https://resend.com/php)** - Envios de notificaciones a gmail automaticamente
 
 ### DevOps
 - **Docker** - Contenedorización
