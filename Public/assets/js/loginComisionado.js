@@ -1,5 +1,3 @@
-console.log('estoy bien referenciado');
-
 var enviar = document.getElementById("ingresar");
 
 enviar.addEventListener('click', function login() {
@@ -12,7 +10,6 @@ enviar.addEventListener('click', function login() {
         'password': contraseña,
         'csrf_token': csrfToken
     }
-    console.log("se esta ejecutando");
     $.ajax({
         data: parametros,
         url: '/loginComisionado/auth',
