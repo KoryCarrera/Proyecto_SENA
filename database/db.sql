@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 08-02-2026 a las 09:23:08
+-- Tiempo de generación: 08-02-2026 a las 10:41:22
 -- Versión del servidor: 10.5.29-MariaDB-0+deb11u1
 -- Versión de PHP: 7.4.33
 
@@ -217,6 +217,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_caso_por_comisionado` (`p
 		ORDER BY c.fecha_inicio DESC LIMIT 20;
     END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_estados_caso` ()  BEGIN
+    SELECT 
+        id_estado AS id,
+        estado AS nombre
+    FROM estado;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_procesos_activos` ()  BEGIN
+    SELECT 
+        id_proceso AS id,
+        nombre
+    FROM procesoorganizacional
+    WHERE estado = 1;
+END$$
+
 CREATE DEFINER=`root`@`%` PROCEDURE `sp_listar_proceso_organizacional` ()  BEGIN 
 	SELECT p.id_proceso, p.nombre AS nombre_proceso, p.descripcion, p.fecha_creacion, p.estado, CONCAT(u.nombre, ' ', u.apellido) AS nombre_creador, u.documento, u.email
  	FROM procesoorganizacional p INNER JOIN usuario u ON p.documento_usuario = u.documento ORDER BY p.fecha_creacion DESC;
@@ -234,6 +249,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_seguimientos_por_caso` (`
     LIMIT 20;
     
     END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_tipos_caso` ()  BEGIN
+    SELECT 
+        id_tipo_caso AS id,
+        nombre_caso AS nombre
+    FROM tipo_caso;
+END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_usuarios` ()  BEGIN
 
