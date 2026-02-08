@@ -1,8 +1,5 @@
 <?php
 require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
-require_once __DIR__ . "/../../config/conexion.php";
-require_once __DIR__ . "/../../models/insertData.php";
-
 ?>
 
 <!DOCTYPE html>
@@ -85,7 +82,7 @@ require_once __DIR__ . "/../../models/insertData.php";
           </li>
         </div>
 
-         <li class="nav-item my-1">
+        <li class="nav-item my-1">
           <a href="/procesoOrganizacional" class="nav-link text-none">
             <i class="bi bi-person-fill-gear usuarios"></i>
             <span>procesos</span>
@@ -116,33 +113,20 @@ require_once __DIR__ . "/../../models/insertData.php";
 
       <form action="" method="POST">
         <h2>Crear Usuario</h2>
-        <input type="text" id="rol" name="rol" required placeholder="Rol" class="formulario">
-        <input type="text" id="name" name="name" required placeholder="Nombre" class="formulario">
+
+        <select id="rol" name="rol" required class="formulario">
+          <option value="" disabled selected>Escoge un rol</option>
+          <option value="1">Administrador</option>
+          <option value="2">Comisionado</option>
+        </select>
+
+        <input type="text" id="nombre" name="nombre" required placeholder="Nombre" class="formulario">
         <input type="text" id="apellido" name="apellido" required placeholder="Apellido" class="formulario">
         <input type="text" id="documento" name="documento" required placeholder="documento" class="formulario">
         <input type="text" id="email" name="email" required placeholder="email" class="formulario">
-        <input type="password" id="password" name="password" required placeholder="Contraseña" class="formulario">
-        <button type="submit" class="btn-usuario" id="btn-usuario">siguiente</button>
-        <?php
-        if ($_SERVER['REQUEST_METHOD'] === "POST") {
-          $rol = $_POST["rol"];
-          $nombre = $_POST["name"];
-          $apellido = $_POST["apellido"];
-          $documento = $_POST["documento"];
-          $email = $_POST["email"];
-          $contraseña = $_POST["password"];
-          if ($rol && $nombre && $apellido && $email && $documento && $contraseña) {
-            $registrar = registrarUsuario($pdo, $documento, $nombre, $apellido, $email, $rol, $contraseña);
-            if ($registrar) {
-              echo "registrado con exito";
-            } else {
-              echo "error al registrar usuario";
-            }
-          } else {
-            echo "ingrese valores validos";
-          }
-        }
-        ?>
+        <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" class="formulario">
+
+        <button type="button" class="btn-usuario" id="btn-usuario">siguiente</button>
       </form>
     </section>
     <section class="tabla-usuarios">
@@ -184,6 +168,7 @@ require_once __DIR__ . "/../../models/insertData.php";
           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
             crossorigin="anonymous"></script>
+          <script src="/assets/js/jquery-3.7.1.min.js"></script>
           <script src="/assets/js/usuariosAdmin.js"></script>
           <script src="/assets/js/cache.js"></script>
 

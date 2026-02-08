@@ -1,11 +1,61 @@
 //definimos los endpoints en unas constantes
 const ENDPOINT_LISTAR = '/listarUsuarios';
 const ENDPOINT_OBTENER = '/modalUsuario';
+const ENDPOINT_INSERTAR = '/registrarUsuario';
+
+//capturamos el boton para añadirle un evento
+const botonEnviar = document.getElementById('btn-usuario')
+
+//se le agrega el evento click
+botonEnviar.addEventListener('click', function insertarUsuario(){
+    const documento = document.getElementById('documento').value;
+    const rol = document.getElementById('rol').value;
+    const nombre = document.getElementById('nombre').value;
+    const apellido = document.getElementById('apellido').value;
+    const email = document.getElementById('email').value;
+    const contrasena = document.getElementById('contrasena').value;
+
+    const parametros = {
+        'documento': documento,
+        'rol': rol,
+        'nombre': nombre,
+        'apellido': apellido,
+        'email': email,
+        'contrasena': contrasena
+    };
+
+    try {
+        $.ajax({
+            data: parametros,
+            url: ENDPOINT_INSERTAR,
+            type: 'POST',
+            dataType: 'json',
+            success: function mostrarResultado(response) {
+                alert(response.mensaje);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
+                alert("Ocurrió un error de conexión.");
+            },
+        });
+    } catch (error) {
+        throw new Error(`Ha ocurrido un error al ingresar al usuario ${error}`);
+    }
+
+    //limpiamos los inputs
+    document.getElementById('documento').value = '';
+    document.getElementById('rol').value = '';
+    document.getElementById('nombre').value = '';
+    document.getElementById('apellido').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('contrasena').value = '';
+});
+
 
 const cargarUsuarios = async () => { //Realizamos una async function
     const cuerpoTabla = document.getElementById("tablaUsuarios"); //capturamos el cuerpo de la tabla
 
-    if(!cuerpoTabla) { //Validamos que encontramos la tabla
+    if (!cuerpoTabla) { //Validamos que encontramos la tabla
         console.error('No se encontró el cuerpo de la tabla');
         return;
     }
@@ -32,7 +82,7 @@ const cargarUsuarios = async () => { //Realizamos una async function
 
         const data = await response.json(); //convertimos la respuesta a json
 
-        if(data.status !== 'ok') { //Verificamos que el status NO es ok y lanzamos un error en tal caso
+        if (data.status !== 'ok') { //Verificamos que el status NO es ok y lanzamos un error en tal caso
             throw new Error(data.mensaje || 'Error desconocido');
         }
 
@@ -72,7 +122,7 @@ const renderizarTablaUsuarios = (usuarios, cuerpoTabla) => { //definimos la func
     usuarios.forEach((usuario) => {  //*recorremos los roles y usuarios para personalizar su aspecto segun su contenido
         const estadoUsuario = obtenerEstadoUsuario(usuario.id_estado);
         const rolUsuario = obtenerRolUsuario(usuario.id_rol);
-        
+
         //Recorremos e insertamos datos en la variable html
         htmlFilas += `
             <tr>
@@ -157,7 +207,7 @@ const gestionarUsuario = async (documento) => {
         const data = await response.json();
 
 
-        if(data.status === 'ok' && data.usuario) { //verificamos el status de la response
+        if (data.status === 'ok' && data.usuario) { //verificamos el status de la response
             mostrarDetallesUsuario(data.usuario);
         } else {
             throw new Error(data.mensaje || 'No se pudo obtener el usuario');

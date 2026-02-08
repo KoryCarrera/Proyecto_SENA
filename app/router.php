@@ -24,6 +24,7 @@ $router -> map('POST', '/desactivarProceso', 'controllers/desactivarProceso.php'
 $router -> map('POST', '/reactivarProceso', 'controllers/reactivarProceso.php');
 $router -> map('POST', '/generarExcel', 'controllers/reporteExcel.php');
 $router -> map('POST', '/registrarCaso', 'controllers/registrarCasos.php');
+$router -> map('POST', '/registrarUsuario', 'controllers/crearUsuario.php');
 $router -> map('GET', '/listarOpcionesRegistro', 'controllers/listarOpcionesRegistro.php');
 
 //Rutas hacia views admin
