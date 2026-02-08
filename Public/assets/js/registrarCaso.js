@@ -6,14 +6,14 @@ btnRegistrar.addEventListener('click', function registrarCaso() {
     
     var estado = document.getElementById("estado").value;
     
-    var tipo-caso = document.getElementById("tipo-caso").value;
+    var tipoCaso = document.getElementById("tipoCaso").value;
     
     var descripcion = document.getElementById("descripcion").value;
 
     var parametros = {
         'proceso': proceso,
         'estado': estado,
-        'tpo-caso': tipo-caso,
+        'tipoCaso': tipoCaso,
         'descripcion': descripcion
     }
 
@@ -33,7 +33,7 @@ btnRegistrar.addEventListener('click', function registrarCaso() {
 
                 document.getElementById("proceso").value = '';
                 document.getElementById("estado").value = '';
-                document.getElementById("tpo-caso").value = '';
+                document.getElementById("tipoCaso").value = '';
                 document.getElementById("descripcion").value = '';
 
             } else if (respuesta.status === 'error') {

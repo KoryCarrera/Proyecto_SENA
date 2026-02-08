@@ -1,14 +1,14 @@
 <?php
 
 //FUNCIÓN: REGISTRAR CASOS
-function registrarCasos($pdo, $documento, $proceso, $estado, $tipo, $descripcion)
+function registrarCasos($pdo, $documento, $proceso, $estado, $tipoCaso, $descripcion)
 {
     // PREPARACIÓN DE LA LLAMADA AL PROCEDIMIENTO ALMACENADO
     $stmt = $pdo->prepare("CALL sp_registrar_caso(?, ?, ?, ?, ?)");
     $stmt->bindParam(1, $documento, PDO::PARAM_STR);
     $stmt->bindParam(2, $proceso, PDO::PARAM_INT);
     $stmt->bindParam(3, $estado, PDO::PARAM_INT);
-    $stmt->bindParam(4, $tipo, PDO::PARAM_INT);
+    $stmt->bindParam(4, $tipoCaso, PDO::PARAM_INT);
     $stmt->bindParam(5, $descripcion, PDO::PARAM_STR);
 
     // EJECUCIÓN Y MANEJO DE ERRORES (PDOException)
