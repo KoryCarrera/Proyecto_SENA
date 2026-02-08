@@ -476,3 +476,28 @@ function tablaBaseExcel ($pdo)
 
     }
 }
+
+function listarCasosComi ($pdo, $documento)
+{
+	$stmt = $pdo->prepare("CALL sp_listar_casos_comi()");
+	
+	$stmt->bindParam(1, $documento, PDO::PARAM_STR);
+
+	try {
+        $stmt->execute();
+        $listarCasosComi = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($listarCasosComi) {
+            return [
+                'status' => 'ok',
+                'data' => $listarCasosComi
+            ];
+        } else {
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Error al listar caso " . $e->getMessage());
+        return false;
+    }
+	}
