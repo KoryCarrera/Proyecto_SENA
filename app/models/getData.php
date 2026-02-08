@@ -501,3 +501,76 @@ function listarCasosComi ($pdo, $documento)
         return false;
     }
 	}
+	
+	function listarProcesosActivos($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_listar_procesos_activos()");
+
+    try {
+        $stmt->execute();
+        $procesos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($procesos) {
+            return [
+                'status' => 'ok',
+                'data' => $procesos
+            ];
+        } else {
+            return false;
+        }
+
+    } catch (PDOException $e) {
+        error_log("Error al listar procesos activos: " . $e->getMessage());
+        return false;
+    }
+}
+
+function listarTiposCaso($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_listar_tipos_caso()");
+
+    try {
+        $stmt->execute();
+        $tiposCaso = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($tiposCaso) {
+            return [
+                'status' => 'ok',
+                'data' => $tiposCaso
+            ];
+        } else {
+            return false;
+        }
+
+    } catch (PDOException $e) {
+        error_log("Error al listar tipos de caso: " . $e->getMessage());
+        return false;
+    }
+}
+
+function listarEstadosCaso($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_listar_estados_caso()");
+
+    try {
+        $stmt->execute();
+        $estados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($estados) {
+            return [
+                'status' => 'ok',
+                'data' => $estados
+            ];
+        } else {
+            return false;
+        }
+
+    } catch (PDOException $e) {
+        error_log("Error al listar estados de caso: " . $e->getMessage());
+        return false;
+    }
+}
+
