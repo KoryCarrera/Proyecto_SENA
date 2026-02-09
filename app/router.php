@@ -28,6 +28,7 @@ $router -> map('POST', '/registrarUsuario', 'controllers/crearUsuario.php');
 $router -> map('GET', '/listarOpcionesRegistro', 'controllers/listarOpcionesRegistro.php');
 $router -> map('POST', '/editarUsuario', '/controllers/editarUsuario.php');
 $router -> map('POST', '/cambiarEstadoUsuario', '/controllers/cambiarEstadoUsuario.php');
+$router -> map ('GET','/listarCasosComi','/controllers/listarCasosComi.php');
 
 //Rutas hacia views admin
 

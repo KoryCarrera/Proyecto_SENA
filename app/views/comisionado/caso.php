@@ -160,7 +160,7 @@
       <table class="table table-striped table-hover">
         <thead>
           <tr>
-            <th scope="col">nombre de caso</th>
+            <th scope="col">Id de caso</th>
             <th scope="col">Fecha de Registro</th>
             <th scope="col">Tipo de Caso</th>
             <th scope="col">Fecha de respuesta</th>

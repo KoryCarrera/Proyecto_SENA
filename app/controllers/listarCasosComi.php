@@ -5,6 +5,7 @@ header('Content-Type: application/json');
 //Llamamos la credenciales necesarias
 require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ .  "/checkSessionComi.php";
 
 
 try {

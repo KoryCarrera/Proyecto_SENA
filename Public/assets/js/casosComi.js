@@ -1,3 +1,6 @@
+
+const ENDPOINT_LISTAR = '/listarCasosComi';
+
 const CargarCasos = async () => {
 
     const cuerpoTabla = document.getElementById("tablaCasos"); /* capturamos el cuerpo de la tabla */
@@ -21,9 +24,19 @@ const CargarCasos = async () => {
         `;
         const response = await fetch(ENDPOINT_LISTAR);
         const data = await response.json();
-/* validamos el estado de la respuesta  y si hay casos */
-        if (data.status === 'ok' && data.casos.length > 0) {
-            renderizarTablaCasos(data.casos, cuerpoTabla);
+        console.log('RESPUESTA REAL DEL BACKEND:', data);
+        console.log('OBJ casos:', data.casos);
+
+
+/* validamos el estado de la r espuesta  y si hay casos */
+const casos = Array.isArray(data.casos)
+    ? data.casos
+    : data.casos
+        ? [data.casos]
+        : [];
+
+if (data.status === 'ok' && casos.length > 0) {
+    renderizarTablaCasos(casos, cuerpoTabla);
         } else {
             /* si no hay casos enseñamos un mensaje diciendo que no hay casos */
             cuerpoTabla.innerHTML = `
@@ -36,7 +49,6 @@ const CargarCasos = async () => {
         }
 /*si falla,mostramos que hubo un error */
     } catch (error) {
-
         console.error('error', error);
         cuerpoTabla.innerHTML = `
             <tr>
@@ -47,19 +59,18 @@ const CargarCasos = async () => {
         `;
     }
 };
-
-
-const renderizarTablaCasos = (casos, cuerpoTabla) => { /* declaramos la funcion flecha  */
+const renderizarTablaCasos = (casos, cuerpoTabla) => {
 
     let htmlFilas = '';
 
-    casos.forEach((caso) => { /*almacenamos el json y lo recorremos */
+    // Iteramos sobre cada caso y creamos una fila de tabla para cada caso
+    casos.forEach((caso) => {
         htmlFilas += `
             <tr>
                 <th>${caso.id_caso}</th>
                 <td>${caso.fecha_inicio}</td>
                 <td>${caso.tipo_caso}</td>
-                <td>${caso.fecha_cierre ?? '-'}</td>
+                <td>${caso.fecha_cierre ?? 'N/A'}</td>
                 <td>${caso.estado}</td>
                 <td>${caso.proceso}</td>
                 <td>${caso.comisionado}</td>
@@ -101,5 +112,6 @@ const supervisarCaso = async (id_caso) => {
     } catch (error) {
         console.error(error);
         alert('Error al supervisar el caso');
-    }
+    }   
 };
+document.addEventListener('DOMContentLoaded', CargarCasos);
