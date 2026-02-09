@@ -107,21 +107,13 @@ require_once __DIR__ . "/../../models/insertData.php";
 
         <div id="registroForm">
           <div id="seccion1" class="form-section">
-
-            <div class="input-group mb-4 custom-input-group">
-              <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
-              
-            </div>
-
-            
-
             <div class="input-group mb-4 custom-input-group">
               <input name="proceso" id="proceso" type="number" class="form-control custom-input" placeholder="Id Proceso">
             </div>
 
             <div class="input-group mb-4 custom-input-group">
               <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
-              <select name="estado" class="form-select custom-input" id="estado
+              <select name="estado" class="form-select custom-input" id="estado">
                 <option selected disabled>Seleccione el estado</option>
                 <option value="1">Atendido</option>
                 <option value="2">Por atender</option>
@@ -141,17 +133,19 @@ require_once __DIR__ . "/../../models/insertData.php";
               </select>
             </div>
             <div class="input-group mb-4 custom-input-group">
-				<input name="descripcion" id="descripcion" type="text" class="form-control custom-input" placeholder="Descripcion">
+              <input name="descripcion" id="descripcion" type="text" class="form-control custom-input" placeholder="Descripcion">
 
-            <div class="input-group mb-4 custom-input-group">
-              <button type="button" id="btnRegistrarcaso" class="form-control custom-input">ENVIAR</button>
+              <div class="input-group mb-4 custom-input-group">
+                <button type="button" id="btnRegistrarcaso" class="form-control custom-input">ENVIAR</button>
+              </div>
             </div>
           </div>
+
         </div>
-     
       </div>
-    </div>
-    <script src="/assets/js/cache.js"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="assets/js/registrarCaso.js"></script>
+      <script src="assets/js/cache.js"></script>
 </body>
 
 </html>

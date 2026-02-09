@@ -4,6 +4,7 @@
 header('Content-Type: application/json');
 
 // Inclusión de dependencias
+require_once __DIR__ . "/checkSessionComi.php";
 
 // Conexión a la base de datos (PDO)
 require_once __DIR__ . "/../config/conexion.php";
@@ -90,7 +91,7 @@ try {
     } else {
         echo json_encode([
             'status'  => 'error',
-            'mensaje' => 'Error al registrar el proceso'
+            'mensaje' => 'Error al registrar el caso'
         ]);
     }
 
