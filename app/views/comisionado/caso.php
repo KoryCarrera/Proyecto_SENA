@@ -170,37 +170,7 @@
             <th scope="col">Gestionar</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td><button class="btn-table">Supervisar</button></td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td><button class="btn-table">Supervisar</button></td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td><button class="btn-table">Supervisar</button></td>
-          </tr>
+        <tbody class="cont-tabla" id="tabla de contenido">
         </tbody>
       </table>
     </div>
