@@ -1,14 +1,14 @@
 const CargarCasos = async () => {
 
-    const cuerpoTabla = document.getElementById("tablaCasos");
+    const cuerpoTabla = document.getElementById("tablaCasos"); /* capturamos el cuerpo de la tabla */
 
-    if (!cuerpoTabla) {
+    if (!cuerpoTabla) {/* validamos,en caso de no encontrar la tabla,ponemos un error */
         console.error('No se encontró la tabla');
         return;
     }
 
     try {
-
+/*         insertamos el "cargando..." mientras nos llegan datos del endpoint" */
         cuerpoTabla.innerHTML = `
             <tr>
                 <td colspan="8" class="text-center py-4">
@@ -19,13 +19,13 @@ const CargarCasos = async () => {
                 </td>
             </tr>
         `;
-
         const response = await fetch(ENDPOINT_LISTAR);
         const data = await response.json();
-
+/* validamos el estado de la respuesta  y si hay casos */
         if (data.status === 'ok' && data.casos.length > 0) {
             renderizarTablaCasos(data.casos, cuerpoTabla);
         } else {
+            /* si no hay casos enseñamos un mensaje diciendo que no hay casos */
             cuerpoTabla.innerHTML = `
                 <tr>
                     <td colspan="8" class="text-center py-4">
@@ -34,7 +34,7 @@ const CargarCasos = async () => {
                 </tr>
             `;
         }
-
+/*si falla,mostramos que hubo un error */
     } catch (error) {
 
         console.error('error', error);
@@ -49,11 +49,11 @@ const CargarCasos = async () => {
 };
 
 
-const renderizarTablaCasos = (casos, cuerpoTabla) => {
+const renderizarTablaCasos = (casos, cuerpoTabla) => { /* declaramos la funcion flecha  */
 
     let htmlFilas = '';
 
-    casos.forEach((caso) => {
+    casos.forEach((caso) => { /*almacenamos el json y lo recorremos */
         htmlFilas += `
             <tr>
                 <th>${caso.id_caso}</th>
@@ -71,10 +71,11 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
             </tr>
         `;
     });
-
+/**insertamos en el cuerpo de la tabla */
     cuerpoTabla.innerHTML = htmlFilas;
 };
 const supervisarCaso = async (id_caso) => {
+    /* confirmamos la accion de supervisar */
 
     if (!confirm('¿Quieres supervisar el caso?')) return;
 
@@ -92,7 +93,7 @@ const supervisarCaso = async (id_caso) => {
 
         if (data.status === 'ok') {
             alert('Caso supervisado correctamente');
-            CargarCasos(); // recargas la tabla
+            CargarCasos(); /* recargas la tabla*/
         } else {
             alert(data.message || 'No se pudo supervisar el caso');
         }
