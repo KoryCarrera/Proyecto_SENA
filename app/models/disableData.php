@@ -1,9 +1,10 @@
 <?php
 
-function inhabilitarUsuario($pdo, $document)
+function cambiarEstadoUsuario($pdo, $document, $nuevoEstado)
 {
-    $stmt = $pdo->prepare("CALL sp_deshabilitar_usuario(?)");
+    $stmt = $pdo->prepare("CALL sp_cambiar_estado_usuario(?, ?)");
     $stmt->bindParam(1, $document, PDO::PARAM_STR);
+    $stmt->bindParam(2, $nuevoEstado, PDO::PARAM_INT);
 
     try {
         $stmt->execute();
