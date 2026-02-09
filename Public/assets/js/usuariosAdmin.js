@@ -2,12 +2,14 @@
 const ENDPOINT_LISTAR = '/listarUsuarios';
 const ENDPOINT_OBTENER = '/modalUsuario';
 const ENDPOINT_INSERTAR = '/registrarUsuario';
+const ENDPOINT_EDITAR = '/editarUsuario'
+const ENDPOINT_ESTADO = '/cambiarEstadoUsuario'
 
 //capturamos el boton para añadirle un evento
 const botonEnviar = document.getElementById('btn-usuario')
 
 //se le agrega el evento click
-botonEnviar.addEventListener('click', function insertarUsuario(){
+botonEnviar.addEventListener('click', function insertarUsuario() {
     const documento = document.getElementById('documento').value;
     const rol = document.getElementById('rol').value;
     const nombre = document.getElementById('nombre').value;
@@ -150,7 +152,7 @@ const obtenerEstadoUsuario = (idEstado) => {
     switch (idEstado) {
         case 1:
             return `<span class="badge bg-success">Activo</span>`;
-        case 2:
+        case 0:
             return `<span class="badge bg-secondary">Inactivo</span>`;
         default:
             return `<span class="badge bg-secondary">Desconocido</span>`;
@@ -168,6 +170,9 @@ const obtenerRolUsuario = (idRol) => {
             return `<span class="badge bg-secondary">Sin rol</span>`;
     }
 };
+
+//inicializamos una variable vacia para luego usarla para editar al usuario
+let usarioEditable = null;
 
 //Definimos funcion para gestionar usuarios anteriorimente declarada en el html
 const gestionarUsuario = async (documento) => {
@@ -224,17 +229,76 @@ const gestionarUsuario = async (documento) => {
     }
 };
 
+//funcion para cambiar estado de usuarios
+const cambiarEstadoUsuario = (nuevoDocumento, nuevoEstado) => {
+
+    //Encapsulamos al ajax en un try catch para captar errores
+    try{
+    $.ajax({
+        data: { //capturamos datos
+            'documento': nuevoDocumento, 
+            'estado': nuevoEstado
+        },
+        //enviamos
+        url: ENDPOINT_ESTADO,
+        type: 'POST',
+        dataType: 'json',
+        
+        success: function (response){
+            alert(response.mensaje)
+
+                //Si el usuario fue cambiado exitosamente se actualizaran los modales y la tabla de fondo
+                usarioEditable.id_estado = nuevoEstado;
+
+                cargarUsuarios();
+
+                mostrarDetallesUsuario(usarioEditable);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
+            alert("Ocurrió un error de conexión.");
+        }
+    });
+
+    } catch (error) {
+        console.error(`Ha ocurrido un error inesperado ${error}`)
+    }
+}
+
 //definimos la funcion anteriormente declarada
 const mostrarDetallesUsuario = (usuario) => {
 
+    //guardamos al usuario seleccionado en una variable
+    usarioEditable = usuario;
+
     //capturamos partes del modal
+    const modalFooter = document.getElementById('modalFooter');
     const modalBody = document.getElementById('modalUsuarioBody');
     const modalTitle = document.getElementById('modalUsuarioLabel');
 
     //Insertamos el titulo del modal
     modalTitle.textContent = `Usuario: ${usuario.nombre} ${usuario.apellido}`;
 
-    //Insertamos los datos del usuario en el modal
+    //inicializamos variable vacia para poder usarla fuera del bloque if
+    let btnEstado = '';
+
+    //Determinamos el color y texto del boton reactivar o activar
+    if (usarioEditable.id_estado != 1) {
+        btnEstado = `<button type="button" class="btn btn-success" onclick="cambiarEstadoUsuario('${usuario.documento}', 1)">Reactivar</button>`;
+    } else {
+        btnEstado = `<button type="button" class="btn btn-danger" onclick="cambiarEstadoUsuario('${usuario.documento}', 0)">Desactivar</button>`;
+    }
+
+    //insertamos el footer
+    modalFooter.innerHTML = `
+    ${btnEstado}
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="habilitarEdicion()">
+            <i class="bi bi-pencil"></i> Editar Usuario
+        </button>
+    `;
+
+    //Insertamos los datos del usuario en el body
     modalBody.innerHTML = `
         <div class="row">
             <div class="col-md-6 mb-3">
@@ -264,6 +328,115 @@ const mostrarDetallesUsuario = (usuario) => {
                 <p class="form-control-plaintext">${obtenerEstadoUsuario(usuario.id_estado)}</p>
             </div>
         </div>
+    `;
+};
+
+//funcion para cerrar modal de bootstrap 5
+const cerrarModal = () => {
+    const modalElement = document.getElementById('modalUsuario');
+    const modal = bootstrap.Modal.getInstance(modalElement);
+    if (modal) {
+        modal.hide();
+    }
+};
+
+//función para guardar cambios del usuario
+const guardarCambios = () => {
+
+    //Capturamos valores de los inputs
+    const emailNuevo = document.getElementById('emailNuevo').value;
+    const nombreNuevo = document.getElementById('nombreNuevo').value;
+    const apellidoNuevo = document.getElementById('apellidoNuevo').value;
+    const rolNuevo = document.getElementById('rolNuevo').value;
+    const documento = document.getElementById('documentoBuscado').value;
+    const nuevaPassword = document.getElementById('nuevaPassword').value ?? null;
+
+    //Asignamos a un objeto para su manejo
+    const parametros = {
+        'nombre': nombreNuevo,
+        'apellido': apellidoNuevo,
+        'rol': rolNuevo,
+        'documento': documento,
+        'contrasena': nuevaPassword,
+        'email': emailNuevo
+    }
+
+    try {
+        $.ajax({
+            data: parametros,
+            url: ENDPOINT_EDITAR,
+            type: 'POST',
+            dataType: 'json',
+
+            success: function (response){
+                alert(response.mensaje); //mostramos el mensaje en una alerta
+
+                cerrarModal(); //cerramos el modal
+                cargarUsuarios() //refrescamos la tabla
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+            console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
+            alert("Ocurrió un error de conexión.");
+        }
+        });
+    } catch (error) {
+        console.error(`Ha ocurrido un error inesperado ${error}`);
+    }
+}
+
+//funcion para editar al usuario
+const habilitarEdicion = () => {
+
+    //capturamos el cuerpo y el footer del modal
+    const modalBody = document.getElementById('modalUsuarioBody');
+    const modalFooter = document.getElementById('modalFooter');
+
+    //Usamos como plantilla el anterior html y cambiamos p por input
+    modalBody.innerHTML = `
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Nombre:</label>
+                <input type="text" class="form-control" id="nombreNuevo" value="${usarioEditable.nombre}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Apellido:</label>
+                <input type="text" class="form-control" id="apellidoNuevo" value="${usarioEditable.apellido}">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Email:</label>
+                <input type="email" class="form-control" id="emailNuevo" value="${usarioEditable.email}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Rol:</label>
+                <select class="form-select" id="rolNuevo">
+                    <option value="1" ${usarioEditable.id_rol == 1 ? 'selected' : ''}>Administrador</option>
+                    <option value="2" ${usarioEditable.id_rol == 2 ? 'selected' : ''}>Comisionado</option>
+                </select>
+            </div>
+            <input type="hidden" id="documentoBuscado" value="${usarioEditable.documento}">
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Estado:</label>
+                <p class="form-control-plaintext">${obtenerEstadoUsuario(usarioEditable.id_estado)}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Nueva Contraseña:</label>
+                <input type="password" class="form-control" id="nuevaPassword">
+            </div>
+        </div>
+    `;
+
+    //insertamos en el footer los boton onclick
+    modalFooter.innerHTML = `
+        <button type="button" class="btn btn-danger" onclick="mostrarDetallesUsuario(usarioEditable)">Cancelar</button>
+        <button type="button" class="btn btn-success" onclick="guardarCambios()">
+            <i class="bi bi-check-circle"></i> Guardar Cambios
+        </button>
     `;
 };
 

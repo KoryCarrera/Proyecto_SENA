@@ -159,9 +159,9 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
         <div class="modal-body" id="modalUsuarioBody">
           <!-- El contenido se carga dinámicamente con JavaScript -->
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" id="modalFooter">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary" onclick="editarUsuario()">
+          <button type="button" class="btn btn-primary" onclick="habilitarEdicion()">
             <i class="bi bi-pencil"></i> Editar Usuario
           </button>
           <a href="/editarUsuario">a</a>

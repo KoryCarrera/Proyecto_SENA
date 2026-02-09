@@ -1,20 +1,29 @@
 <?php
 
-function ActualizarUsuario($pdo, $documento, $nombre, $apellido, $email, $rol)
+function ActualizarUsuario($pdo, $documento, $nombre, $apellido, $email, $rol, $password)
 {
-    $stmt = $pdo->prepare("CALL sp_actualizar_usuario(?, ?, ?, ?, ?)");
-
+    $stmt = $pdo->prepare("CALL sp_editar_usuario(?, ?, ?, ?, ?, ?)");
+/*
     $stmt->bindParam(1, $documento, PDO::PARAM_STR);
     $stmt->bindParam(2, $nombre, PDO::PARAM_STR);
     $stmt->bindParam(3, $apellido, PDO::PARAM_STR);
     $stmt->bindParam(4, $email, PDO::PARAM_STR);
     $stmt->bindParam(5, $rol, PDO::PARAM_INT);
-
+    $stmt->bindParam(6, $password, PDO::PARAM_STR);
+*/
     try {
-        $stmt->execute();
+        $stmt->execute([
+            $documento,
+            $nombre,
+            $apellido,
+            $email,
+            $rol,
+            $password
+        ]);
         $stmt->closeCursor();
         return true;
-    } catch (PDOException) {
+    } catch (PDOException $e) {
+        error_log("Error en SQL: " . $e->getMessage());
         return false;
     }
 }
