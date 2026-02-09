@@ -25,7 +25,8 @@ require_once __DIR__ . "/../../models/insertData.php";
 
   <!--Bootstrap-->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 
 <body>
@@ -108,7 +109,12 @@ require_once __DIR__ . "/../../models/insertData.php";
         <div id="registroForm">
           <div id="seccion1" class="form-section">
             <div class="input-group mb-4 custom-input-group">
-              <input name="proceso" id="proceso" type="number" class="form-control custom-input" placeholder="Id Proceso">
+              <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" class="form-control custom-input"
+                required>
+            </div>
+            <div class="input-group mb-4 custom-input-group">
+              <input name="proceso" id="proceso" type="number" class="form-control custom-input"
+                placeholder="Id Proceso">
             </div>
 
             <div class="input-group mb-4 custom-input-group">
@@ -133,14 +139,13 @@ require_once __DIR__ . "/../../models/insertData.php";
               </select>
             </div>
             <div class="input-group mb-4 custom-input-group">
-              <input name="descripcion" id="descripcion" type="text" class="form-control custom-input" placeholder="Descripcion">
-
-              <div class="input-group mb-4 custom-input-group">
-                <button type="button" id="btnRegistrarcaso" class="form-control custom-input">ENVIAR</button>
-              </div>
+              <input name="descripcion" id="descripcion" type="text" class="form-control custom-input"
+                placeholder="Descripcion">
+            </div>
+            <div class="input-group mb-4 custom-input-group">
+              <button type="button" id="btnRegistrarcaso" class="form-control custom-input">ENVIAR</button>
             </div>
           </div>
-
         </div>
       </div>
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
