@@ -3,23 +3,17 @@
 function ActualizarUsuario($pdo, $documento, $nombre, $apellido, $email, $rol, $password)
 {
     $stmt = $pdo->prepare("CALL sp_editar_usuario(?, ?, ?, ?, ?, ?)");
-/*
+    
+    $passhash = password_hash($password, PASSWORD_BCRYPT);
+
     $stmt->bindParam(1, $documento, PDO::PARAM_STR);
     $stmt->bindParam(2, $nombre, PDO::PARAM_STR);
     $stmt->bindParam(3, $apellido, PDO::PARAM_STR);
     $stmt->bindParam(4, $email, PDO::PARAM_STR);
     $stmt->bindParam(5, $rol, PDO::PARAM_INT);
-    $stmt->bindParam(6, $password, PDO::PARAM_STR);
-*/
+    $stmt->bindParam(6, $passhash, PDO::PARAM_STR);
     try {
-        $stmt->execute([
-            $documento,
-            $nombre,
-            $apellido,
-            $email,
-            $rol,
-            $password
-        ]);
+        $stmt->execute();
         $stmt->closeCursor();
         return true;
     } catch (PDOException $e) {
