@@ -170,7 +170,7 @@
             <th scope="col">Gestionar</th>
           </tr>
         </thead>
-        <tbody class="cont-tabla" id="tabla de contenido">
+        <tbody class="cont-tabla" id="tablaCasos">
         </tbody>
       </table>
     </div>
@@ -182,6 +182,7 @@
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
   <script src="/assets/js/cache.js"></script>
+  <script src="/assets/js/casosComi.js"></script>
 </body>
 
 </html>
