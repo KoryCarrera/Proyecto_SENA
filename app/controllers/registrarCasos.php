@@ -19,26 +19,51 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 // Este controlador solo acepta peticiones POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
-        'status'  => 'error',
+        'status' => 'error',
         'mensaje' => 'Método no permitido'
     ]);
     exit; // Detiene la ejecución
 }
 
 try {
-	
+
     // Captura de datos enviados por POST
 
-    $proceso     = $_POST["proceso"] ?? null;
-    $estado      = $_POST["estado"] ?? null;
-    $tipoCaso    = $_POST["tipoCaso"] ?? null;
+    $fecha_inicio = $_POST["fecha_inicio"] ?? null;
+    $proceso = $_POST["proceso"] ?? null;
+    $estado = $_POST["estado"] ?? null;
+    $tipoCaso = $_POST["tipoCaso"] ?? null;
     $descripcion = $_POST["descripcion"] ?? null;
+
+    // Validacion de fecha de inicio
+    
+    if (!$fecha_inicio) {
+        echo json_encode([
+            'status' => 'error',
+            'mensaje' => 'La fecha de inicio es requerida'
+        ]);
+        exit;
+    }
+
+    // Ahora sí validar el formato
+    $timestamp = strtotime($fecha_inicio);
+
+    if ($timestamp === false) {
+        echo json_encode([
+            'status' => 'error',
+            'mensaje' => 'Formato de fecha inválido'
+        ]);
+        exit;
+    }
+
+    // Convertir al formato MySQL
+    $fecha_formateada = date('Y-m-d H:i:s', $timestamp);
 
 
     // Validación del proceso
     if (!$proceso || !is_string($proceso) || trim($proceso) === '') {
         echo json_encode([
-            'status'  => 'error',
+            'status' => 'error',
             'mensaje' => 'El proceso es requerido'
         ]);
         exit;
@@ -47,7 +72,7 @@ try {
     // Validación del estado
     if (!$estado || !is_string($estado) || trim($estado) === '') {
         echo json_encode([
-            'status'  => 'error',
+            'status' => 'error',
             'mensaje' => 'El estado es requerido'
         ]);
         exit;
@@ -56,7 +81,7 @@ try {
     // Validación del tipo de caso
     if (!$tipoCaso || !is_string($tipoCaso) || trim($tipoCaso) === '') {
         echo json_encode([
-            'status'  => 'error',
+            'status' => 'error',
             'mensaje' => 'El tipo es requerido'
         ]);
         exit;
@@ -65,7 +90,7 @@ try {
     // Validación de la descripción
     if (!$descripcion || !is_string($descripcion) || trim($descripcion) === '') {
         echo json_encode([
-            'status'  => 'error',
+            'status' => 'error',
             'mensaje' => 'La descripción es requerida'
         ]);
         exit;
@@ -75,6 +100,7 @@ try {
     $registrar = registrarCasos(
         $pdo,
         $_SESSION['user']['documento'], // Documento del usuario logueado
+        $fecha_formateada,
         $proceso,
         $estado,
         $tipoCaso,
@@ -83,14 +109,14 @@ try {
 
     // Respuesta según resultado
 
-    if ($registrar === true) {
+    if ($registrar) {
         echo json_encode([
-            'status'  => 'ok',
+            'status' => 'ok',
             'mensaje' => 'Caso registrado exitosamente'
         ]);
     } else {
         echo json_encode([
-            'status'  => 'error',
+            'status' => 'error',
             'mensaje' => 'Error al registrar el caso'
         ]);
     }
@@ -103,7 +129,7 @@ try {
 
     // Respuesta genérica al cliente
     echo json_encode([
-        'status'  => 'error',
+        'status' => 'error',
         'mensaje' => 'Error del servidor'
     ]);
 }
