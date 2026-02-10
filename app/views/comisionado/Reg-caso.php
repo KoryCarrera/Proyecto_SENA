@@ -108,49 +108,78 @@ require_once __DIR__ . "/../../models/insertData.php";
 
         <div id="registroForm">
           <div id="seccion1" class="form-section">
-            <div class="input-group mb-4 custom-input-group">
-              <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" class="form-control custom-input"
-                required>
-            </div>
-            <div class="input-group mb-4 custom-input-group">
-              <input name="proceso" id="proceso" type="number" class="form-control custom-input"
-                placeholder="Id Proceso">
+
+            <div class="mb-4">
+              <label for="fecha_inicio" class="form-label fw-bold text-secondary ms-1">
+                <i class="bi bi-calendar-event-fill"></i> Fecha de Inicio
+              </label>
+              <div class="input-group custom-input-group">
+                <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" class="form-control custom-input" required>
+              </div>
             </div>
 
-            <div class="input-group mb-4 custom-input-group">
-              <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
-              <select name="estado" class="form-select custom-input" id="estado">
-                <option selected disabled>Seleccione el estado</option>
-                <option value="1">Atendido</option>
-                <option value="2">Por atender</option>
-                <option value="3">No atendido</option>
-              </select>
+            <div class="mb-4">
+              <label for="fecha_cierre" class="form-label fw-bold text-secondary ms-1">
+                <i class="bi bi-calendar-check-fill"></i> Fecha de Cierre
+              </label>
+              <div class="input-group custom-input-group">
+                <input type="datetime-local" id="fecha_cierre" name="fecha_cierre" class="form-control custom-input">
+              </div>
             </div>
 
-            <div class="input-group mb-4 custom-input-group">
-              <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
-              <select name="tipo" class="form-select custom-input" id="tipoCaso">">
-                <option selected disabled>Seleccione el Tipo de caso</option>
-                <option value="1">peticion</option>
-                <option value="2">queja</option>
-                <option value="3">reclamo</option>
-                <option value="4">sugerencia</option>
-                <option value="5">denuncia</option>
-              </select>
+            <div class="mb-4">
+              <label for="proceso" class="form-label fw-bold text-secondary ms-1">
+                <i class="bi bi-hash"></i> Proceso Organizacional
+              </label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text custom-icon"><i class="bi bi-diagram-3-fill"></i></span>
+                <select name="proceso" id="proceso" class="form-select custom-input">
+                  <option selected disabled value="">Cargando procesos...</option>
+                </select>
+              </div>
             </div>
-            <div class="input-group mb-4 custom-input-group">
-              <input name="descripcion" id="descripcion" type="text" class="form-control custom-input"
-                placeholder="Descripcion">
+
+            <div class="mb-4">
+              <label for="estado" class="form-label fw-bold text-secondary ms-1">Estado del Caso</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text custom-icon"><i class="bi bi-info-circle-fill"></i></span>
+                <select name="estado" class="form-select custom-input" id="estado">
+                  <option selected disabled value="">Cargando estados...</option>
+                </select>
+              </div>
             </div>
-            <div class="input-group mb-4 custom-input-group">
-              <button type="button" id="btnRegistrarcaso" class="form-control custom-input">ENVIAR</button>
+
+            <div class="mb-4">
+              <label for="tipoCaso" class="form-label fw-bold text-secondary ms-1">Tipo de Solicitud</label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text custom-icon"><i class="bi bi-list-task"></i></span>
+                <select name="tipo" class="form-select custom-input" id="tipoCaso">
+                  <option selected disabled value="">Cargando tipos...</option>
+                </select>
+              </div>
             </div>
+
+            <div class="mb-4">
+              <label for="descripcion" class="form-label fw-bold text-secondary ms-1">Descripción Detallada</label>
+              <div class="input-group custom-input-group">
+                <textarea name="descripcion" id="descripcion" class="form-control custom-input" rows="3" placeholder="Describa los hechos del caso..."></textarea>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <button type="button" id="btnRegistrarcaso" class="btn w-100 fw-bold custom-input" style="background-color: #39A900; color: white;">
+                ENVIAR REGISTRO
+              </button>
+            </div>
+
           </div>
+
         </div>
       </div>
-      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-      <script src="assets/js/registrarCaso.js"></script>
-      <script src="assets/js/cache.js"></script>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/registrarCaso.js"></script>
+    <script src="assets/js/cache.js"></script>
 </body>
 
 </html>

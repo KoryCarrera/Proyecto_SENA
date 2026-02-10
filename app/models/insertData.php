@@ -1,16 +1,17 @@
 <?php
 
 //FUNCIÓN: REGISTRAR CASOS
-function registrarCasos($pdo, $documento, $fecha_inicio, $proceso, $estado, $tipoCaso, $descripcion)
+function registrarCasos($pdo, $documento, $fecha_inicio, $fecha_cierre, $proceso, $estado, $tipoCaso, $descripcion)
 {
     // PREPARACIÓN DE LA LLAMADA AL PROCEDIMIENTO ALMACENADO
-    $stmt = $pdo->prepare("CALL sp_registrar_caso(?, ?, ?, ?, ?, ?)");
+    $stmt = $pdo->prepare("CALL sp_registrar_caso(?, ?, ?, ?, ?, ?, ?)");
     $stmt->bindParam(1, $documento, PDO::PARAM_STR);
     $stmt->bindParam(2, $proceso, PDO::PARAM_INT);
     $stmt->bindParam(3, $estado, PDO::PARAM_INT);
     $stmt->bindParam(4, $tipoCaso, PDO::PARAM_INT);
     $stmt->bindParam(5, $descripcion, PDO::PARAM_STR);
     $stmt->bindParam(6, $fecha_inicio, PDO::PARAM_STR);
+    $stmt->bindParam(7, $fecha_cierre, PDO::PARAM_STR);
 
     // EJECUCIÓN Y MANEJO DE ERRORES (PDOException)
     try {
@@ -77,6 +78,13 @@ function registrarCasos($pdo, $documento, $fecha_inicio, $proceso, $estado, $tip
                                         <td style="padding: 12px 15px; background-color: #f8f9fa; border-left: 4px solid #667eea;">
                                             <strong style="color: #667eea; font-size: 14px;">FECHA Y HORA</strong><br>
                                             <span style="color: #333333; font-size: 15px;">' . htmlspecialchars($casoRegistrado['fecha_inicio']) . '</span>
+                                        </td>
+                                    </tr>
+                                    <tr><td style="height: 10px;"></td></tr>
+                                    <tr>
+                                        <td style="padding: 12px 15px; background-color: #f8f9fa; border-left: 4px solid #667eea;">
+                                            <strong style="color: #667eea; font-size: 14px;">FECHA Y HORA DE CIERRE</strong><br>
+                                            <span style="color: #333333; font-size: 15px;">' . htmlspecialchars($casoRegistrado['fecha_cierre'] ?? 'N/A') . '</span>
                                         </td>
                                     </tr>
                                     <tr><td style="height: 10px;"></td></tr>
