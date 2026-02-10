@@ -3,9 +3,10 @@
 // Indicamos que la respuesta del controlador será en formato JSON
 header('Content-Type: application/json');
 
-// Inclusión de dependencias
-require_once __DIR__ . "/checkSessionComi.php";
+//cargamos la session para obtener los datos del usuario
+session_start();
 
+// Inclusión de dependencias
 // Conexión a la base de datos (PDO)
 require_once __DIR__ . "/../config/conexion.php";
 
@@ -29,26 +30,28 @@ try {
 
     // Captura de datos enviados por POST
 
-    $fecha_inicio = $_POST["fecha_inicio"] ?? null;
+    $fechaInicio = $_POST["fecha_inicio"] ?? null;
+    $fechaCierre = $_POST["fecha_cierre"] ?? null;
     $proceso = $_POST["proceso"] ?? null;
     $estado = $_POST["estado"] ?? null;
     $tipoCaso = $_POST["tipoCaso"] ?? null;
     $descripcion = $_POST["descripcion"] ?? null;
 
-    // Validacion de fecha de inicio
+    // Validacion de fechas
     
-    if (!$fecha_inicio) {
+    if (!$fechaInicio && !$fechaCierre) {
         echo json_encode([
             'status' => 'error',
-            'mensaje' => 'La fecha de inicio es requerida'
+            'mensaje' => 'Las fecha son requerida'
         ]);
         exit;
-    }
+    };
 
     // Ahora sí validar el formato
-    $timestamp = strtotime($fecha_inicio);
+    $timestampinicio = strtotime($fechaInicio);
+    $timestampcierre = strtotime($fechaCierre);
 
-    if ($timestamp === false) {
+    if ($timestampinicio == false && $timestampcierre == false) {
         echo json_encode([
             'status' => 'error',
             'mensaje' => 'Formato de fecha inválido'
@@ -57,7 +60,8 @@ try {
     }
 
     // Convertir al formato MySQL
-    $fecha_formateada = date('Y-m-d H:i:s', $timestamp);
+    $fechaInicioFormateada = date('Y-m-d H:i:s', $timestampinicio);
+    $fechaCierreFormateada = date('Y-m-d H:i:s', $timestampcierre);
 
 
     // Validación del proceso
@@ -100,7 +104,8 @@ try {
     $registrar = registrarCasos(
         $pdo,
         $_SESSION['user']['documento'], // Documento del usuario logueado
-        $fecha_formateada,
+        $fechaInicioFormateada,
+        $fechaCierreFormateada,
         $proceso,
         $estado,
         $tipoCaso,

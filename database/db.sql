@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 10-02-2026 a las 00:01:48
+-- Tiempo de generación: 10-02-2026 a las 03:18:07
 -- Versión del servidor: 10.6.24-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -185,7 +185,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_casos` ()   BEGIN
 		ORDER BY c.fecha_inicio DESC LIMIT 20;
 	END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_caso_por_comisionado` (`p_documento` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_caso_por_comisionado` (IN `p_documento` VARCHAR(50))   BEGIN
     SELECT 
 			c.id_caso,
 			CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
@@ -200,9 +200,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_caso_por_comisionado` (`p
 		JOIN estado e ON c.id_estado = e.id_estado
 		JOIN tipo_caso t ON c.id_tipo_caso = t.id_tipo_caso
 		JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
-        WHERE u.documento = p_documento AND c.id_estado = 2
-		ORDER BY c.fecha_inicio DESC LIMIT 20;
+        WHERE u.documento = p_documento
+		ORDER BY c.fecha_inicio DESC LIMIT 30;
     END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_estados_caso` ()   BEGIN
+    SELECT 
+        id_estado,
+        estado
+    FROM estado
+    ORDER BY id_estado ASC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_procesos_activos` ()   BEGIN
+    SELECT 
+        id_proceso,
+        nombre
+    FROM procesoorganizacional
+    WHERE estado = 1
+    ORDER BY nombre ASC;
+END$$
 
 CREATE DEFINER=`root`@`%` PROCEDURE `sp_listar_proceso_organizacional` ()   BEGIN 
 	SELECT p.id_proceso, p.nombre AS nombre_proceso, p.descripcion, p.fecha_creacion, p.estado, CONCAT(u.nombre, ' ', u.apellido) AS nombre_creador, u.documento, u.email
@@ -221,6 +238,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_seguimientos_por_caso` (`
     LIMIT 20;
     
     END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_tipos_caso` ()   BEGIN
+    SELECT 
+        id_tipo_caso,
+        nombre_caso
+    FROM tipo_caso
+    ORDER BY nombre_caso ASC;
+END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_usuarios` ()   BEGIN
 
@@ -275,12 +300,29 @@ CREATE DEFINER=`root`@`%` PROCEDURE `sp_reactivar_proceso` (IN `p_id_proceso` IN
     WHERE id_proceso = p_id_proceso;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_caso` (IN `p_documento` VARCHAR(20), IN `p_id_proceso` INT(11), IN `p_id_estado` INT(11), IN `p_id_tipo_caso` INT(11), IN `p_descripcion` TEXT, IN `p_fecha_inicio` DATE)   BEGIN 
+CREATE DEFINER=`root`@`%` PROCEDURE `sp_registrar_caso` (IN `p_documento` VARCHAR(20), IN `p_id_proceso` INT, IN `p_id_estado` INT, IN `p_id_tipo_caso` INT, IN `p_descripcion` TEXT, IN `p_fecha_inicio` DATETIME, IN `p_fecha_cierre` DATETIME)   BEGIN
+    -- 1. Realizar la inserción
+    INSERT INTO caso (
+        documento,
+        fecha_inicio,
+        fecha_cierre,
+        id_proceso,
+        id_estado,
+        id_tipo_caso,
+        descripcion
+    )
+    VALUES (
+        p_documento,
+        p_fecha_inicio,
+        p_fecha_cierre,
+        p_id_proceso,
+        p_id_estado,
+        p_id_tipo_caso,
+        p_descripcion
+    );
 
-INSERT INTO caso (documento, fecha_inicio, id_proceso, id_estado, id_tipo_caso, descripcion) 
-VALUES (p_documento, p_fecha_inicio, p_id_proceso, p_id_estado, p_id_tipo_caso, p_descripcion);
-
-SELECT 
+    -- 2. Devolver los datos para el correo (Resend)
+    SELECT 
         c.id_caso,
         CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
         c.fecha_inicio,
@@ -295,6 +337,7 @@ SELECT
     JOIN tipo_caso t ON c.id_tipo_caso = t.id_tipo_caso
     JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
     WHERE c.id_caso = LAST_INSERT_ID();
+
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_informe` (IN `p_documento` VARCHAR(50), IN `p_formato` VARCHAR(10), IN `p_contenido` TEXT)   BEGIN
@@ -508,7 +551,12 @@ INSERT INTO `caso` (`id_caso`, `documento`, `id_proceso`, `fecha_inicio`, `fecha
 (59, '3003', 1, '2026-01-14 07:45:00', '2026-01-14 08:50:00', 1, 2, 'Caso resuelto rápidamente'),
 (60, '3003', 1, '2026-01-14 14:30:00', NULL, 2, 1, 'Caso pendiente de atención'),
 (61, '2222222222', 6, '2026-02-07 17:36:02', NULL, 2, 1, 'pidiendo algo importante'),
-(62, '2222222222', 2, '2026-02-09 00:00:00', NULL, 2, 3, 'example caso fecha');
+(62, '2222222222', 2, '2026-02-09 00:00:00', NULL, 2, 3, 'example caso fecha'),
+(63, '2222222222', 4, '2026-02-09 00:00:00', '2026-02-09 00:00:00', 1, 4, 'example form dinamico'),
+(64, '2222222222', 6, '2026-02-09 00:00:00', '2026-02-09 00:00:00', 2, 2, 'example form interactivo 2'),
+(65, '2222222222', 3, '2026-02-09 00:00:00', '2026-02-19 00:00:00', 1, 4, 'example notificacion gmail'),
+(66, '2222222222', 5, '2026-02-09 22:12:00', '2026-02-26 22:12:00', 2, 2, 'example resend'),
+(67, '2222222222', 1, '2026-02-09 22:16:00', '2026-02-27 22:16:00', 2, 3, 'example resend');
 
 -- --------------------------------------------------------
 
@@ -759,17 +807,17 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
 ('1020304010', 'Isaac', 'Carvajal', 'zacki@hotmail.com', 2, '$2y$10$XJPcDeP8NIq87Z1wuKvrreLIUkUzNqyfY1yOD0K46Bi70jMs3AImi', '2025-11-24 06:54:17', '2025-12-10 11:26:13', 1),
-('1111111111', 'Admin', 'Tester', 'tester.admin@example.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-09 01:59:00', 1),
+('1111111111', 'Admin', 'Tester', 'tester.admin@example.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-10 01:29:57', 1),
 ('112233', 'pepito', 'perez', 'pepito@perez.com', 2, '$2y$10$0RrhJZXlddSMRJGTKJCs3.Vd6GpJTSgLvjb2X2mn73dRVm1oNKf9m', '2025-12-01 17:43:14', NULL, 1),
 ('11223344', 'Pepo', 'Peraz', 'pepito@hola.com', 2, '$2y$10$Zt/ebqk4NLWfRf0wIOaOrOPG1T4gFW0h7j11ZIkUo8yjlREos8P/a', '2025-12-01 18:08:24', NULL, 1),
 ('123456', 'Kory', 'Carrera', 'Kory@carrera.com', 2, '$2y$10$gQ6trQAwy.dl3XF8i3PPieem3.wauWb.daIwa3VWCMsXlojO7z9dO', '2025-12-01 18:11:51', NULL, 1),
 ('123456789', 'Juan', 'Galvis', 'juan@galvis.com', 1, '$2y$10$O/YRYjCjYN09us2MOEpPT.c.GYNWs7/arm/aeShBQry/zG8b/BiMS', '2025-12-01 18:10:06', '2025-12-05 15:50:48', 1),
 ('12345678910', 'floppy', 'carrera', 'floppy.carrera@gmail.com', 1, '$2y$10$3KpsnHx05KaGQIqS6EmeDO7K.zLZ8TcWff5H.tbvXsi0YzmXqSsEa', '2025-12-03 17:56:38', NULL, 1),
-('2222222222', 'Comisionado', 'Tester', 'tester.comi@example.com', 2, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-09 01:02:47', 1),
+('2222222222', 'Comisionado', 'Tester', 'tester.comi@example.com', 2, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-10 02:38:35', 1),
 ('3001', 'Ana', 'Perez', 'ana@correo.com', 2, '$2y$10$vzXg/V5raMW7lgm6S0dbT.KkK5xtVQRm8sEwXBQoO7YH9dprCRdge', '2026-01-14 18:51:42', NULL, 1),
 ('3002', 'Juan', 'Diaz', 'juan@correo.com', 2, '$2y$10$8ONAl./BZNqfZQ6wzzm12.jleYO.G5oj7bi20gIiVbweBeFABWrpG', '2026-01-14 18:51:42', NULL, 1),
 ('3003', 'Laura', 'Gomez', 'laura@correo.com', 2, '$2y$10$VE2n6FX32T1ahxghvQc/N.CutKcmngjWgcH0Bwpm5iLGhd2kjiccS', '2026-01-14 18:51:42', NULL, 1),
-('654321', 'Pepita', 'arnolfita', 'pepita.arnolfa@gmail.com', 1, '$2y$10$XGcTeK/wdWCItm4UKFQ7GOWnDeWZYukZlQgeONPdDaPyG3CSIAzsy', '2025-12-02 17:08:51', '2025-12-18 11:56:45', 1),
+('654321', 'Pepita', 'arnolfita', 'pepitaArnolfa@gmail.com', 1, '$2y$10$yIL85M7u2V8sm/unCLu5uullP6h3mLkpxGi9.Yqp3hcSPF4opETxW', '2025-12-02 17:08:51', '2025-12-18 11:56:45', 1),
 ('98674523', 'Yldegar', 'Alvarez', 'karrerita@gmail.com', 1, '$2y$10$YUBDZSJqh2/LCH9jlPeeJei1i.4P/zYGPYRTCHUK2qjDbK3qE7K6S', '2025-11-24 07:46:37', '2026-01-24 02:47:12', 1),
 ('987654321', 'Isaac', 'carvajal', 'isaac@carvajal.com', 1, '$2y$10$aSUvDXhUTg7PXmhvqX.efuw7ggQhXAbzC2/U2VATfUgC9Uab0auh6', '2025-12-01 18:11:02', '2025-12-18 11:56:57', 1);
 
@@ -882,7 +930,7 @@ ALTER TABLE `archivo`
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
-  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=63;
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`

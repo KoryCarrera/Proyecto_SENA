@@ -5,9 +5,6 @@ header('Content-Type: application/json');
 
 // Inclusión de dependencias
 
-// Verifica que el usuario tenga una sesión válida
-require_once __DIR__ . "/checksession.php";
-
 // Archivo de conexión a la base de datos (PDO)
 require_once __DIR__ . "/../config/conexion.php";
 
