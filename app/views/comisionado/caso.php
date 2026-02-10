@@ -160,7 +160,7 @@
       <table class="table table-striped table-hover">
         <thead>
           <tr>
-            <th scope="col">nombre de caso</th>
+            <th scope="col">Id de caso</th>
             <th scope="col">Fecha de Registro</th>
             <th scope="col">Tipo de Caso</th>
             <th scope="col">Fecha de respuesta</th>
@@ -170,37 +170,7 @@
             <th scope="col">Gestionar</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td><button class="btn-table">Supervisar</button></td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td><button class="btn-table">Supervisar</button></td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td>example</td>
-            <td><button class="btn-table">Supervisar</button></td>
-          </tr>
+        <tbody class="cont-tabla" id="tablaCasos">
         </tbody>
       </table>
     </div>
@@ -212,6 +182,7 @@
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
   <script src="/assets/js/cache.js"></script>
+  <script src="/assets/js/casosComi.js"></script>
 </body>
 
 </html>
