@@ -2,6 +2,9 @@
 //Especificamos el tipo de comunicacion que tendra el script
 header('Content-Type: application/json');
 
+//Cargamos la session activa
+session_start();
+
 //Llamamos la credenciales necesarias
 require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/getData.php";
