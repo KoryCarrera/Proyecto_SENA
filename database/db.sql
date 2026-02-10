@@ -507,7 +507,8 @@ INSERT INTO `caso` (`id_caso`, `documento`, `id_proceso`, `fecha_inicio`, `fecha
 (58, '3002', 1, '2026-01-14 13:00:00', NULL, 3, 3, 'Caso no atendido'),
 (59, '3003', 1, '2026-01-14 07:45:00', '2026-01-14 08:50:00', 1, 2, 'Caso resuelto rápidamente'),
 (60, '3003', 1, '2026-01-14 14:30:00', NULL, 2, 1, 'Caso pendiente de atención'),
-(61, '2222222222', 6, '2026-02-07 17:36:02', NULL, 2, 1, 'pidiendo algo importante');
+(61, '2222222222', 6, '2026-02-07 17:36:02', NULL, 2, 1, 'pidiendo algo importante'),
+(62, '2222222222', 2, '2026-02-09 00:00:00', NULL, 2, 3, 'example caso fecha');
 
 -- --------------------------------------------------------
 
@@ -618,7 +619,8 @@ INSERT INTO `informe` (`id_informe`, `documento`, `fecha_generacion`, `tipo_info
 (36, '1111111111', '2026-02-07 05:09:40', 'EXCEL', NULL),
 (37, '1111111111', '2026-02-07 05:10:43', 'PDF', '111111111111111111111'),
 (38, '1111111111', '2026-02-07 05:16:52', 'EXCEL', NULL),
-(41, '1111111111', '2026-02-07 05:30:34', 'EXCEL', NULL);
+(41, '1111111111', '2026-02-07 05:30:34', 'EXCEL', NULL),
+(42, '1111111111', '2026-02-10 00:11:57', 'EXCEL', NULL);
 
 -- --------------------------------------------------------
 
@@ -880,7 +882,7 @@ ALTER TABLE `archivo`
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
-  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=62;
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`
@@ -898,7 +900,7 @@ ALTER TABLE `estado`
 -- AUTO_INCREMENT de la tabla `informe`
 --
 ALTER TABLE `informe`
-  MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=42;
+  MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT de la tabla `monitoreo`

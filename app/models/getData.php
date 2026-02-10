@@ -479,7 +479,7 @@ function tablaBaseExcel ($pdo)
 
 function listarCasosComi ($pdo, $documento)
 {
-	$stmt = $pdo->prepare("CALL sp_listar_casos_comi(?)");
+	$stmt = $pdo->prepare("CALL sp_listar_caso_por_comisionado(?)");
 	
 	$stmt->bindParam(1, $documento, PDO::PARAM_STR);
 
