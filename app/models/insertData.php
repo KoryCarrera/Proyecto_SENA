@@ -1,17 +1,15 @@
 <?php
 
 //FUNCIÓN: REGISTRAR CASOS
-function registrarCasos($pdo, $documento, $fecha_inicio, $fecha_cierre, $proceso, $estado, $tipoCaso, $descripcion)
+function registrarCasos($pdo, $documento, $proceso, $tipoCaso, $descripcion, $nombre)
 {
     // PREPARACIÓN DE LA LLAMADA AL PROCEDIMIENTO ALMACENADO
-    $stmt = $pdo->prepare("CALL sp_registrar_caso(?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $pdo->prepare("CALL sp_registrar_caso(?, ?, ?, ?, ?)");
     $stmt->bindParam(1, $documento, PDO::PARAM_STR);
     $stmt->bindParam(2, $proceso, PDO::PARAM_INT);
-    $stmt->bindParam(3, $estado, PDO::PARAM_INT);
-    $stmt->bindParam(4, $tipoCaso, PDO::PARAM_INT);
-    $stmt->bindParam(5, $descripcion, PDO::PARAM_STR);
-    $stmt->bindParam(6, $fecha_inicio, PDO::PARAM_STR);
-    $stmt->bindParam(7, $fecha_cierre, PDO::PARAM_STR);
+    $stmt->bindParam(3, $tipoCaso, PDO::PARAM_INT);
+    $stmt->bindParam(4, $descripcion, PDO::PARAM_STR);
+    $stmt->bindParam(5, $nombre, PDO::PARAM_STR);
 
     // EJECUCIÓN Y MANEJO DE ERRORES (PDOException)
     try {
@@ -148,12 +146,18 @@ function registrarCasos($pdo, $documento, $fecha_inicio, $fecha_cierre, $proceso
             } catch (Exception $e) {
                 error_log('Error al enviar notificacion email ' . $e->getMessage());
             }
-            return true;
+            return [
+                'success' => true,
+                'id_caso' => $casoRegistrado['id_caso'],
+                'data' => $casoRegistrado
+            ];
         }
 
-        return true;
-    } catch (PDOException) {
-        return false;
+        return ['success' => false];
+        
+    } catch (PDOException $e) {
+        error_log("Error al registrar caso: " . $e->getMessage());
+        return ['success' => false];
     }
 }
 

@@ -110,70 +110,123 @@ require_once __DIR__ . "/../../models/insertData.php";
           <div id="seccion1" class="form-section">
 
             <div class="mb-4">
-              <label for="fecha_inicio" class="form-label fw-bold text-secondary ms-1">
-                <i class="bi bi-calendar-event-fill"></i> Fecha de Inicio
+              <label for="nombreCaso" class="form-label fw-bold text-secondary ms-1">
+                <i class="bi bi-card-heading"></i> Nombre del Caso
+                <span class="text-danger">*</span>
               </label>
               <div class="input-group custom-input-group">
-                <input type="datetime-local" id="fecha_inicio" name="fecha_inicio" class="form-control custom-input" required>
+                <span class="input-group-text custom-icon">
+                  <i class="bi bi-fonts"></i>
+                </span>
+                <input
+                  type="text"
+                  name="nombreCaso"
+                  id="nombreCaso"
+                  class="form-control custom-input"
+                  placeholder="Ej: Queja por ruido en salones"
+                  maxlength="255"
+                  required>
               </div>
-            </div>
-
-            <div class="mb-4">
-              <label for="fecha_cierre" class="form-label fw-bold text-secondary ms-1">
-                <i class="bi bi-calendar-check-fill"></i> Fecha de Cierre
-              </label>
-              <div class="input-group custom-input-group">
-                <input type="datetime-local" id="fecha_cierre" name="fecha_cierre" class="form-control custom-input">
-              </div>
+              <small class="text-muted ms-1">
+                <i class="bi bi-info-circle-fill"></i> Máximo 255 caracteres
+              </small>
             </div>
 
             <div class="mb-4">
               <label for="proceso" class="form-label fw-bold text-secondary ms-1">
                 <i class="bi bi-hash"></i> Proceso Organizacional
+                <span class="text-danger">*</span>
               </label>
               <div class="input-group custom-input-group">
-                <span class="input-group-text custom-icon"><i class="bi bi-diagram-3-fill"></i></span>
-                <select name="proceso" id="proceso" class="form-select custom-input">
+                <span class="input-group-text custom-icon">
+                  <i class="bi bi-diagram-3-fill"></i>
+                </span>
+                <select name="proceso" id="proceso" class="form-select custom-input" required>
                   <option selected disabled value="">Cargando procesos...</option>
                 </select>
               </div>
             </div>
 
-            <div class="mb-4">
-              <label for="estado" class="form-label fw-bold text-secondary ms-1">Estado del Caso</label>
-              <div class="input-group custom-input-group">
-                <span class="input-group-text custom-icon"><i class="bi bi-info-circle-fill"></i></span>
-                <select name="estado" class="form-select custom-input" id="estado">
-                  <option selected disabled value="">Cargando estados...</option>
-                </select>
-              </div>
-            </div>
 
             <div class="mb-4">
-              <label for="tipoCaso" class="form-label fw-bold text-secondary ms-1">Tipo de Solicitud</label>
+              <label for="tipoCaso" class="form-label fw-bold text-secondary ms-1">
+                <i class="bi bi-list-task"></i> Tipo de Solicitud
+                <span class="text-danger">*</span>
+              </label>
               <div class="input-group custom-input-group">
-                <span class="input-group-text custom-icon"><i class="bi bi-list-task"></i></span>
-                <select name="tipo" class="form-select custom-input" id="tipoCaso">
+                <span class="input-group-text custom-icon">
+                  <i class="bi bi-list-task"></i>
+                </span>
+                <select name="tipo" class="form-select custom-input" id="tipoCaso" required>
                   <option selected disabled value="">Cargando tipos...</option>
                 </select>
               </div>
             </div>
 
+
             <div class="mb-4">
-              <label for="descripcion" class="form-label fw-bold text-secondary ms-1">Descripción Detallada</label>
+              <label for="descripcion" class="form-label fw-bold text-secondary ms-1">
+                <i class="bi bi-file-text"></i> Descripción Detallada
+                <span class="text-danger">*</span>
+              </label>
               <div class="input-group custom-input-group">
-                <textarea name="descripcion" id="descripcion" class="form-control custom-input" rows="3" placeholder="Describa los hechos del caso..."></textarea>
+                <textarea
+                  name="descripcion"
+                  id="descripcion"
+                  class="form-control custom-input"
+                  rows="5"
+                  placeholder="Describa los hechos del caso de manera detallada..."
+                  maxlength="2000"
+                  required></textarea>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-1">
+                <small class="text-muted ms-1">
+                  <i class="bi bi-info-circle"></i> Sea lo más específico posible
+                </small>
+                <small class="text-muted">
+                  <span id="contadorCaracteres">0</span> / 2000 caracteres
+                </small>
               </div>
             </div>
 
+
+            <div class="mb-4">
+              <label for="archivos" class="form-label fw-bold text-secondary ms-1">
+                <i class="bi bi-paperclip"></i> Archivos Adjuntos
+                <span class="badge bg-info text-dark ms-2">Opcional</span>
+              </label>
+              <div class="input-group custom-input-group">
+                <span class="input-group-text custom-icon">
+                  <i class="bi bi-file-earmark-arrow-up"></i>
+                </span>
+                <input
+                  type="file"
+                  name="archivos[]"
+                  id="archivos"
+                  class="form-control custom-input"
+                  multiple
+                  accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.txt">
+              </div>
+              <small class="text-muted ms-1">
+                <i class="bi bi-exclamation-triangle"></i>
+                Máximo 3 archivos. Formatos permitidos: imágenes, videos, PDF, Word, Excel
+              </small>
+
+              <!-- Vista previa de archivos seleccionados -->
+              <div id="vistaArchivos" class="mt-3"></div>
+            </div>
+
             <div class="mt-4">
-              <button type="button" id="btnRegistrarcaso" class="btn w-100 fw-bold custom-input" style="background-color: #39A900; color: white;">
-                ENVIAR REGISTRO
+              <button
+                type="button"
+                id="btnRegistrarcaso"
+                class="btn w-100 fw-bold custom-input"
+                style="background-color: #39A900; color: white;">
+                <i class="bi bi-send-fill"></i> ENVIAR REGISTRO
               </button>
             </div>
 
           </div>
-
         </div>
       </div>
     </div>
