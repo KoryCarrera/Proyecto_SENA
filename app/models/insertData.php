@@ -243,12 +243,12 @@ function registrarInforme($pdo, $documento, $formato, $conclusiones)
 }
 
 //FUNCIÔN: REGISTRAR UN PROCESO ORGANIZACIONAL
-function registrarProceso($pdo, $nombre, $descripcion, $documentoUsuario)
+function registrarProceso($pdo, $descripcion, $nombre, $documentoUsuario)
 {
     $stmt = $pdo->prepare("CALL sp_registrar_proceso_organizacional(?, ?, ?)");
 
-    $stmt->bindParam(1, $nombre, PDO::PARAM_STR);
-    $stmt->bindParam(2, $descripcion, PDO::PARAM_STR);
+    $stmt->bindParam(1, $descripcion, PDO::PARAM_STR);
+    $stmt->bindParam(2, $nombre, PDO::PARAM_STR);
     $stmt->bindParam(3, $documentoUsuario, PDO::PARAM_STR);
 
     try {
