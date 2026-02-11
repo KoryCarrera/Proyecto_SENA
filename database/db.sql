@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 10-02-2026 a las 03:18:07
+-- Tiempo de generación: 11-02-2026 a las 01:11:01
 -- Versión del servidor: 10.6.24-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -807,7 +807,7 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
 ('1020304010', 'Isaac', 'Carvajal', 'zacki@hotmail.com', 2, '$2y$10$XJPcDeP8NIq87Z1wuKvrreLIUkUzNqyfY1yOD0K46Bi70jMs3AImi', '2025-11-24 06:54:17', '2025-12-10 11:26:13', 1),
-('1111111111', 'Admin', 'Tester', 'tester.admin@example.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-10 01:29:57', 1),
+('1111111111', 'Admin', 'Tester', 'tester.admin@example.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-11 01:04:46', 1),
 ('112233', 'pepito', 'perez', 'pepito@perez.com', 2, '$2y$10$0RrhJZXlddSMRJGTKJCs3.Vd6GpJTSgLvjb2X2mn73dRVm1oNKf9m', '2025-12-01 17:43:14', NULL, 1),
 ('11223344', 'Pepo', 'Peraz', 'pepito@hola.com', 2, '$2y$10$Zt/ebqk4NLWfRf0wIOaOrOPG1T4gFW0h7j11ZIkUo8yjlREos8P/a', '2025-12-01 18:08:24', NULL, 1),
 ('123456', 'Kory', 'Carrera', 'Kory@carrera.com', 2, '$2y$10$gQ6trQAwy.dl3XF8i3PPieem3.wauWb.daIwa3VWCMsXlojO7z9dO', '2025-12-01 18:11:51', NULL, 1),
