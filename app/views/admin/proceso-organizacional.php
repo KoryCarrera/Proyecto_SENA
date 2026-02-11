@@ -1,7 +1,5 @@
 <?php require_once __DIR__ . "/../../controllers/checkSessionAdmin.php"; ?>
 
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 

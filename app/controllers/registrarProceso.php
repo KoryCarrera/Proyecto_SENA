@@ -36,7 +36,7 @@ try {
         exit;
     }
 
-    $resultado = registrarProceso($pdo, $nombre, $descripcion, $documentoUsuario);
+    $resultado = registrarProceso($pdo, $descripcion, $nombre, $documentoUsuario);
 
     if ($resultado === true) {
         echo json_encode([
