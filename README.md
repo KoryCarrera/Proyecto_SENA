@@ -122,6 +122,8 @@ docker run --rm -v $(pwd):/app composer install --ignore-platform-reqs
 
 #Windows
 docker run --rm -v ${PWD}:/app composer install --ignore-platform-reqs
+#En caso de fallo del anterior usar el siguiente para windows
+docker run --rm -v %cd%:/app composer install --ignore-platform-reqs
 ```
 
 ### 3️⃣ Levantar contenedores con Docker

@@ -6,7 +6,7 @@ const ENDPOINT_EDITAR = '/editarUsuario'
 const ENDPOINT_ESTADO = '/cambiarEstadoUsuario'
 
 //capturamos el boton para añadirle un evento
-const botonEnviar = document.getElementById('btn-usuario')
+const botonEnviar = document.getElementById('btn-usuario');
 
 //se le agrega el evento click
 botonEnviar.addEventListener('click', function insertarUsuario() {
@@ -26,6 +26,16 @@ botonEnviar.addEventListener('click', function insertarUsuario() {
         'contrasena': contrasena
     };
 
+    if (!parametros) {
+
+        Swal.fire({
+            icon: 'info',
+            title: 'Recuerda rellenar todos los campos',
+            showConfirmButton: false,
+            theme: 'dark',
+            timer: 1000,
+        });
+    }
     try {
         $.ajax({
             data: parametros,
@@ -33,11 +43,43 @@ botonEnviar.addEventListener('click', function insertarUsuario() {
             type: 'POST',
             dataType: 'json',
             success: function mostrarResultado(response) {
-                alert(response.mensaje);
+
+                //Mostramos una alerta estetica con SweetAlert2
+
+                if (response.status !== 'ok') {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Algo ha salido mal!',
+                        text: `${response.mensaje}`,
+                        showConfirmButton: false,
+                        timer: 1000,
+                        theme: 'dark',
+                    });
+
+                } else {
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: `${response.mensaje}`,
+                        showConfirmButton: false,
+                        timer: 1000,
+                        theme: 'dark',
+                    })
+                };
+
+                renderizarTablaUsuarios(data.usuarios, cuerpoTabla);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
-                alert("Ocurrió un error de conexión.");
+
+                SwaL.fire({
+                    icon: 'error',
+                    title: '¡Ha ocurrido un error interno!',
+                    showConfirmButton: false,
+                    timer: 1000,
+                    theme: 'dark',
+                });
             },
         });
     } catch (error) {
@@ -58,7 +100,15 @@ const cargarUsuarios = async () => { //Realizamos una async function
     const cuerpoTabla = document.getElementById("tablaUsuarios"); //capturamos el cuerpo de la tabla
 
     if (!cuerpoTabla) { //Validamos que encontramos la tabla
-        console.error('No se encontró el cuerpo de la tabla');
+
+        Swal.fire({
+            icon: 'error',
+            title: 'No existe la tabla casos!',
+            showConfirmButton: false,
+            timer: 1000,
+            theme: 'dark',
+        })
+
         return;
     }
 
@@ -104,7 +154,14 @@ const cargarUsuarios = async () => { //Realizamos una async function
 
         //manejo de errores
     } catch (error) {
-        console.error('Error al cargar los usuarios:', error);
+
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error al cargar usuarios!',
+            showConfirmButton: false,
+            timer: 1000,
+            theme: 'dark',
+        });
         cuerpoTabla.innerHTML = `
             <tr>
                 <td colspan="7" class="text-center py-4 text-danger">
@@ -233,32 +290,50 @@ const gestionarUsuario = async (documento) => {
 const cambiarEstadoUsuario = (nuevoDocumento, nuevoEstado) => {
 
     //Encapsulamos al ajax en un try catch para captar errores
-    try{
-    $.ajax({
-        data: { //capturamos datos
-            'documento': nuevoDocumento, 
-            'estado': nuevoEstado
-        },
-        //enviamos
-        url: ENDPOINT_ESTADO,
-        type: 'POST',
-        dataType: 'json',
-        
-        success: function (response){
-            alert(response.mensaje)
+    try {
+        $.ajax({
+            data: { //capturamos datos
+                'documento': nuevoDocumento,
+                'estado': nuevoEstado
+            },
+            //enviamos
+            url: ENDPOINT_ESTADO,
+            type: 'POST',
+            dataType: 'json',
 
+            success: function (response) {
+
+                if (response.status != 'ok') {
+
+                    //se muestra una alerta estetica de error
+                    Swal.fire({
+                        icon: 'error',
+                        title: `${response.mensaje}`,
+                        showConfirmButton: false,
+                        theme: 'dark',
+                        timer: 1000
+                    });
+                    return;
+                }
+                //Se muestra alerta estetica
                 //Si el usuario fue cambiado exitosamente se actualizaran los modales y la tabla de fondo
-                usarioEditable.id_estado = nuevoEstado;
 
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Estado cambiado con exito',
+                    theme: 'dark',
+                    showConfirmButton: false,
+                    timer: 1000,
+                });
+                //Cerramos el modal y recargamos la tabla de usuarios
+                cerrarModal();
                 cargarUsuarios();
-
-                mostrarDetallesUsuario(usarioEditable);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
-            alert("Ocurrió un error de conexión.");
-        }
-    });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
+                alert("Ocurrió un error de conexión.");
+            }
+        });
 
     } catch (error) {
         console.error(`Ha ocurrido un error inesperado ${error}`)
@@ -368,16 +443,32 @@ const guardarCambios = () => {
             type: 'POST',
             dataType: 'json',
 
-            success: function (response){
-                alert(response.mensaje); //mostramos el mensaje en una alerta
-
+            success: function (response) {
                 cerrarModal(); //cerramos el modal
                 cargarUsuarios() //refrescamos la tabla
+
+                //mostramos el mensaje en una alerta
+                Swal.fire({
+                    icon:'success',
+                    title: `${response.mensaje}`,
+                    showConfirmButton: false,
+                    theme: 'dark',
+                    timer: 1000
+                })
             },
             error: function (jqXHR, textStatus, errorThrown) {
-            console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
-            alert("Ocurrió un error de conexión.");
-        }
+                console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
+
+                //Mostramos alerta estetica
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Ha ocurrido un error interno!',
+                    theme: 'dark',
+                    showConfirmButton: false,
+                    timer: 1000,
+
+                });
+            }
         });
     } catch (error) {
         console.error(`Ha ocurrido un error inesperado ${error}`);
