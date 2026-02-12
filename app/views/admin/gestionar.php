@@ -6,7 +6,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>gestion de usuarios</title>
+    <title>Gestión de usuarios</title>
 
     <!--Icon de la pagina-->
     <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
@@ -44,7 +44,7 @@
               <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
             </a>
             <form action="/logout" method="POST">
-              <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
+              <button type="submit" name="logout" value="logout">Cerrar Sesión</button>
               <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
             </form>
           </div>
@@ -80,7 +80,7 @@
            <li class="nav-item my-1">
           <a href="/procesoOrganizacional" class="nav-link text-none">
             <i class="bi bi-person-fill-gear usuarios"></i>
-            <span>procesos</span>
+            <span>Procesos</span>
           </a>
         </li>
           <li class="nav-item-my-1">
@@ -109,7 +109,7 @@
         <input type="text" id="apellido" name="apellido" required placeholder="Apellido de usuario" class="formulario-gestion">
         <input type="text" id="documento" name="documento" required placeholder="Documento de usuario" class="formulario-gestion">
         <select id="rol" name="rol">
-          <option value="" disabled selected hidden>rol del usuario</option>
+          <option value="" disabled selected hidden>Rol del usuario</option>
           <option value="admin">Administrador</option>
           <option value="usuario">Usuario</option>
         </select>
@@ -121,7 +121,7 @@
           <option value="inactivo">Inactivo</option>
         </select>
         <input type="text" id="contraseña" name="contraseña" required placeholder="Contraseña de usuario" class="formulario-gestion">
-        <button class="btn-actualizar" id="btn-actualizar" name="btn-actualizar">actualizar</button>
+        <button class="btn-actualizar" id="btn-actualizar" name="btn-actualizar">Actualizar</button>
       </div>
     </main>
     <script src="/assets/js/cache.js"></script>

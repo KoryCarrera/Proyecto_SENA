@@ -21,7 +21,8 @@
 
   <!--Bootstrap-->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <script src="/assets/js/jquery-3.7.1.min.js"></script>
 </head>
 
@@ -44,7 +45,7 @@
             <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
           </a>
           <form action="/logout" method="POST">
-            <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
+            <button type="submit" name="logout" value="logout">Cerrar Sesión</button>
             <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
           </form>
         </div>
@@ -98,9 +99,11 @@
     <div class="contenido">
       <h1>¡Bienvenido al Sistema de Gestión SENA!</h1>
       <p>
-        Como administrador, tienes acceso total a las herramientas y funciones de esta plataforma.
-        <br>Desde aquí podrás gestionar usuarios, supervisar solicitudes, generar reportes y mantener actualizada la información institucional.
-        <br>Tu rol es fundamental para garantizar el correcto funcionamiento del sistema y apoyar la labor de la Comisión de Personal.
+        Como comisionado, cuentas con acceso a las funciones necesarias para cumplir tu labor dentro de la plataforma.
+        <br>Desde aquí podrás revisar y evaluar solicitudes, participar en la toma de decisiones, consultar información
+        relevante y hacer seguimiento a los casos asignados.
+        <br>Tu rol es fundamental para garantizar la transparencia, objetividad y el adecuado funcionamiento de la
+        Comisión de Personal.
       </p>
 
       <div class="row">

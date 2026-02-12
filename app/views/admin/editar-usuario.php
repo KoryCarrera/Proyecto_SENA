@@ -26,9 +26,9 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
             <option value="1">Administrador</option>
             <option value="2">Comisionado</option>
         </select>
-        <button type="submit" class="btn-usuario" id="btn-usuario">siguiente</button>
+        <button type="submit" class="btn-usuario" id="btn-usuario">Siguiente</button>
     </form>
-    <a href="inhabilitar-usuario.php">inhabilitar Usuario</a>
+    <a href="inhabilitar-usuario.php">Inhabilitar Usuario</a>
 </body>
 
 </html>

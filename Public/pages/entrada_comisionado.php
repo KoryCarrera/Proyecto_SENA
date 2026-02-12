@@ -18,7 +18,7 @@ $token = $_SESSION['csrf_token'];
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/assets/css/inicio-entrada-cartas.css" />
-  <title>pagina de inicio del sistema de gestion</title>
+  <title>Página de Inicio del Sistema de Gestión</title>
 
   <!--Icon de la pagina-->
   <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
@@ -54,13 +54,13 @@ $token = $_SESSION['csrf_token'];
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">inicio</a>
+              <a class="nav-link active" aria-current="page" href="#">Inicio</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="nosotros.php">nosotros</a>
+              <a class="nav-link" href="nosotros.php">Nosotros</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">cuentas</a>
+              <a class="nav-link" href="#">Cuentas</a>
             </li>
             <li class="nav-item dropdown">
             </li>
@@ -73,21 +73,21 @@ $token = $_SESSION['csrf_token'];
   <!--contenedores con los los tipos de usuarios,estaprimera es la del comisionado-->
   <main class="contenedor">
     <section class="tipos_usuarios">
-      <h2>selecciona tu tipo de cuenta</h2>
+      <h2>Selecciona tu tipo de cuenta</h2>
       <div class="cartas_usuarios">
         <div class="carta_comisionado_login" id="comisionado_entrada">
           <i class="fa-solid fa-user-tie"></i>
-          <h3>comisionado</h3>
-          <p>bienvenido de nuevamente comisionado</p>
+          <h3>Comisionado</h3>
+          <p>Bienvenido nuevamente Comisionado</p>
         </div>
         <!--se crea una tercera carta que permanecera oculta,esta sera el formulario que
           pedira los datos para el ingreso al sistema de gestions segun su tipo de usuario-->
         <div class="formulario_entrada">
           <i class="fa-solid fa-user-tie"></i> <br>
           <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
-          <input type="number" placeholder="ingrese su cedula" name="documento" id="documento"><br>
-          <input type="password" placeholder="ingrese su contraseña" name="contraseña" id="password"><br>
-          <button id="ingresar">ingrese</button>
+          <input type="number" placeholder="Ingrese su cedula" name="documento" id="documento"><br>
+          <input type="password" placeholder="Ingrese su contraseña" name="contraseña" id="password"><br>
+          <button id="ingresar">Ingrese</button>
         </div>
       </div>
       <a href="/" class="boton-volver">Volver al inicio</a>
@@ -97,22 +97,22 @@ $token = $_SESSION['csrf_token'];
   <footer>
     <div class="links_paginas">
       <ul class="links">
-        <li><a href="#">servicios</a></li>
-        <li><a href="#">mapas de sitio</a></li>
-        <li><a href="#">terminos"</a></li>
+        <li><a href="#">Servicios</a></li>
+        <li><a href="#">Mapas de sitio</a></li>
+        <li><a href="#">Términos"</a></li>
       </ul>
     </div>
     <!--los separe en tres div para presentarlo como columnas,cosa que no aparecia en el mockup-->
     <div class="a_cerca_de">
       <ul class="links">
-        <li><a href="#">acerca de nosotros</a></li>
-        <li><a href="#">contactanos</a></li>
+        <li><a href="#">Acerca de nosotros</a></li>
+        <li><a href="#">Contáctanos</a></li>
       </ul>
     </div>
     <div class="servicio_al_cliente">
       <ul class="links">
-        <li><a href="#">servicio al cliente</a></li>
-        <li><a href="#">ayuda</a></li>
+        <li><a href="#">Serbicio al cliente</a></li>
+        <li><a href="#">Ayuda</a></li>
       </ul>
     </div>
   </footer>
