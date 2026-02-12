@@ -1,7 +1,7 @@
 <?php
 
 //FUNCIÓN: REGISTRAR CASOS
-function registrarCasos($pdo, $documento, $proceso, $tipoCaso, $descripcion, $nombre,)
+function registrarCasos($pdo, $documento, $proceso, $tipoCaso, $descripcion, $nombre)
 {
     // PREPARACIÓN DE LA LLAMADA AL PROCEDIMIENTO ALMACENADO
     $stmt = $pdo->prepare("CALL sp_registrar_caso(?, ?, ?, ?, ?)");
