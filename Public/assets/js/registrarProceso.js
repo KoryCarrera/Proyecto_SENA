@@ -23,7 +23,12 @@ btnRegistrar.addEventListener('click', function registrarProceso() { //le agrega
         success: function (respuesta) { //Si la request recibió una response esto se ejecutara
             if (respuesta.status === 'ok') {
 
-                alert(respuesta.mensaje); //Mandamos el mensaje del endpoint en una alert
+                //Mandamos el mensaje del endpoint en una alert
+                Swal.fire({
+                    icon: 'success',
+                    title: `${respuesta.mensaje}`,
+                    showConfirmButton: false,
+                });
 
                 //Vaciamos los inputs
                 document.getElementById("nombre-proceso").value = '';

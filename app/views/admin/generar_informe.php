@@ -126,7 +126,7 @@
                         <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
 
                         <select class="form-select custom-input" id="formato">
-                            <option selected selected>Selecione el tipo de archivo</option>
+                            <option selected selected value="">Selecione el tipo de archivo</option>
                             <option value="1">PDF</option>
                             <option value="2">EXCEL</option>
                         </select>
@@ -161,6 +161,7 @@
         <script src="/assets/js/jquery-3.7.1.min.js"></script>
 
         <!--JS propio-->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="/assets/js/cache.js"></script>
         <script src="/assets/js/generarInforme.js"></script>
 </body>

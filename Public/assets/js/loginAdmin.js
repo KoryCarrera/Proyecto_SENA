@@ -21,21 +21,46 @@ enviar.addEventListener('click', function login() { //Se le agrega el evento cli
         success: function redireccion(respuesta) { //Definimos lo que pasa si el evento fue success
             if (respuesta.status === 'ok') {  //verificamos status
 
+                //Mostramos una alerta estetica
+                Swal.fire({
+                    title: "¡Ingreso permitido!",
+                    icon: 'success',
+                    theme: 'dark',
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                
                 //Redireccionamos utilizando la ruta proporcionada por el controller
-                window.location.href = respuesta.redirect;
+                setTimeout(() => {
+                    window.location.href = respuesta.redirect;
+                }, 1000);
 
+                //Si el estatus es error mostrará una alerta dando el mensaje
             } else if (respuesta.status === 'error') {
 
-                //en caso de status error enviamos el mensaje recibido
-                alert(respuesta.mensaje);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: `${respuesta.mensaje}`,
+                    theme: 'dark',
+                    timer: 1500,
+                    showConfirmButton: false,
+                });
             }
         },
 
         //si el evento falla definimos lo que pasara
         error: function (jqXHR, textStatus, errorThrown) {
             console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
-            alert("Ocurrió un error de conexión.");
+            
+            Swal.fire({
+                icon: "error",
+                title: "¡Ha ocurrido un error interno!",
+                theme: 'dark',
+                timer: 1500,
+                showConfirmButton: false,
+            });
         }
-});
+    });
 }
 );
