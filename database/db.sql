@@ -1,11 +1,10 @@
-SET FOREIGN_KEY_CHECKS = 0;
 -- phpMyAdmin SQL Dump
 -- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 11-02-2026 a las 01:11:01
--- Versión del servidor: 10.6.24-MariaDB-ubu2204
+-- Tiempo de generación: 12-02-2026 a las 00:56:24
+-- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -301,43 +300,30 @@ CREATE PROCEDURE `sp_reactivar_proceso` (IN `p_id_proceso` INT)   BEGIN
     WHERE id_proceso = p_id_proceso;
 END$$
 
-CREATE PROCEDURE `sp_registrar_caso` (IN `p_documento` VARCHAR(20), IN `p_id_proceso` INT, IN `p_id_estado` INT, IN `p_id_tipo_caso` INT, IN `p_descripcion` TEXT, IN `p_fecha_inicio` DATETIME, IN `p_fecha_cierre` DATETIME)   BEGIN
-    -- 1. Realizar la inserción
-    INSERT INTO caso (
-        documento,
-        fecha_inicio,
-        fecha_cierre,
-        id_proceso,
-        id_estado,
-        id_tipo_caso,
-        descripcion
-    )
-    VALUES (
-        p_documento,
-        p_fecha_inicio,
-        p_fecha_cierre,
-        p_id_proceso,
-        p_id_estado,
-        p_id_tipo_caso,
-        p_descripcion
-    );
+CREATE PROCEDURE `sp_registrar_caso` (IN `p_documento` VARCHAR(20), IN `p_id_proceso` INT, IN `p_id_tipo_caso` INT, IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(255))   BEGIN
+DECLARE v_id_caso INT;
+    
+INSERT INTO caso (documento, id_proceso, id_tipo_caso, descripcion, nombre) VALUES (p_documento, p_id_proceso, p_id_tipo_caso, p_descripcion, p_nombre);
+    
+    SET v_id_caso = LAST_INSERT_ID();
 
-    -- 2. Devolver los datos para el correo (Resend)
-    SELECT 
-        c.id_caso,
-        CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
+	SELECT 
+    	c.id_caso, 
+        c.nombre,
+        c.documento,
         c.fecha_inicio,
         c.fecha_cierre,
-        e.estado AS estado,
+        e.estado,
         t.nombre_caso AS tipo_caso,
         p.nombre AS proceso,
-        c.descripcion
-    FROM caso c
-    LEFT JOIN usuario u ON c.documento = u.documento
-    JOIN estado e ON c.id_estado = e.id_estado
-    JOIN tipo_caso t ON c.id_tipo_caso = t.id_tipo_caso
-    JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
-    WHERE c.id_caso = LAST_INSERT_ID();
+        c.descripcion,
+        CONCAT(u.nombre, ' ', u.apellido) AS comisionado
+        FROM caso c
+        INNER JOIN estado e ON c.id_estado = e.id_estado
+        INNER JOIN tipo_caso t ON c.id_tipo_caso = t.id_tipo_caso
+        INNER JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
+        LEFT JOIN usuario u ON c.documento = u.documento
+        WHERE c.id_caso = v_id_caso;
 
 END$$
 
@@ -417,7 +403,7 @@ CREATE PROCEDURE `sp_reporte_pqrs_excel` ()   BEGIN
             ELSE 'Inactivo'
         END                                                   AS `Estado Usuario`,
 
-        -- Mes en español
+        
         CASE MONTH(c.fecha_inicio)
             WHEN 1 THEN 'enero'
             WHEN 2 THEN 'febrero'
@@ -525,11 +511,12 @@ CREATE TABLE `archivo` (
 
 CREATE TABLE `caso` (
   `id_caso` int(11) NOT NULL COMMENT 'PK de casos',
+  `nombre` varchar(255) NOT NULL,
   `documento` varchar(20) NOT NULL COMMENT 'FK para relacionar casos y usuarios ',
   `id_proceso` int(11) NOT NULL,
-  `fecha_inicio` datetime NOT NULL COMMENT 'Fecha en la que se realiza el caso',
+  `fecha_inicio` datetime NOT NULL DEFAULT current_timestamp() COMMENT 'Fecha en la que se realiza el caso',
   `fecha_cierre` datetime DEFAULT NULL,
-  `id_estado` int(11) NOT NULL COMMENT 'FK de la tabla estados de los casos',
+  `id_estado` int(11) NOT NULL DEFAULT 2 COMMENT 'FK de la tabla estados de los casos',
   `id_tipo_caso` int(11) NOT NULL COMMENT 'FK de la tabla tipo de los casos',
   `descripcion` text NOT NULL COMMENT 'contenido de los casos'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -538,26 +525,8 @@ CREATE TABLE `caso` (
 -- Volcado de datos para la tabla `caso`
 --
 
-INSERT INTO `caso` (`id_caso`, `documento`, `id_proceso`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
-(1, '112233', 2, '2025-12-02 15:27:39', NULL, 2, 2, 'bla bla bla bla bla bla'),
-(2, '112233', 3, '2025-11-26 15:59:35', NULL, 1, 4, 'bla bla bla bla bla bla'),
-(3, '123456', 1, '2018-10-10 16:01:22', NULL, 1, 3, 'blo blo blo bla bla bla'),
-(4, '123456', 2, '2025-12-02 16:14:23', NULL, 3, 1, 'example example example'),
-(5, '123456', 2, '2022-05-17 16:15:18', NULL, 3, 1, 'SDSADWQD QW 12 E12 1E ASD'),
-(7, '11223344', 4, '2025-12-02 17:04:52', NULL, 2, 1, '3123131dasda dad w g<AW fw ege hd hgg'),
-(55, '3001', 1, '2026-01-14 08:00:00', '2026-01-14 09:30:00', 1, 1, 'Caso atendido en la mañana'),
-(56, '3001', 1, '2026-01-14 10:15:00', NULL, 2, 2, 'Caso en proceso'),
-(57, '3002', 1, '2026-01-14 09:00:00', '2026-01-14 11:00:00', 1, 1, 'Caso cerrado correctamente'),
-(58, '3002', 1, '2026-01-14 13:00:00', NULL, 3, 3, 'Caso no atendido'),
-(59, '3003', 1, '2026-01-14 07:45:00', '2026-01-14 08:50:00', 1, 2, 'Caso resuelto rápidamente'),
-(60, '3003', 1, '2026-01-14 14:30:00', NULL, 2, 1, 'Caso pendiente de atención'),
-(61, '2222222222', 6, '2026-02-07 17:36:02', NULL, 2, 1, 'pidiendo algo importante'),
-(62, '2222222222', 2, '2026-02-09 00:00:00', NULL, 2, 3, 'example caso fecha'),
-(63, '2222222222', 4, '2026-02-09 00:00:00', '2026-02-09 00:00:00', 1, 4, 'example form dinamico'),
-(64, '2222222222', 6, '2026-02-09 00:00:00', '2026-02-09 00:00:00', 2, 2, 'example form interactivo 2'),
-(65, '2222222222', 3, '2026-02-09 00:00:00', '2026-02-19 00:00:00', 1, 4, 'example notificacion gmail'),
-(66, '2222222222', 5, '2026-02-09 22:12:00', '2026-02-26 22:12:00', 2, 2, 'example resend'),
-(67, '2222222222', 1, '2026-02-09 22:16:00', '2026-02-27 22:16:00', 2, 3, 'example resend');
+INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_proceso`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
+(80, 'prueba error 1', '2222222222', 12, '2026-02-11 23:17:37', NULL, 2, 1, 'dwadadadawdaawdadawda');
 
 -- --------------------------------------------------------
 
@@ -719,15 +688,11 @@ CREATE TABLE `procesoorganizacional` (
 --
 
 INSERT INTO `procesoorganizacional` (`id_proceso`, `fecha_creacion`, `descripcion`, `documento_usuario`, `nombre`, `estado`) VALUES
-(1, '2018-09-03 15:11:55', 'Proceso para las peticiones sobre mejorar los computadores', '98674523', 'Nuevos computadores', 1),
-(2, '2020-07-16 15:15:14', 'Proceso para las quejas sobre la ropa de trabajo', '98674523', 'ropa de trabajo', 1),
-(3, '2025-10-17 15:15:49', 'Proceso sobre la reparacion del centro', '98674523', 'reparacion del centro', 1),
-(4, '2025-12-02 15:16:55', 'Proceso sobre el ruido del centro', '98674523', 'queja de ruido', 1),
-(5, '2026-01-14 17:45:11', 'Gestión de PQRSD', '98674523', 'PQRSD', 1),
-(6, '2026-01-14 17:45:11', 'Trámites internos administrativos', '98674523', 'TRÁMITE INTERNO', 1),
-(7, '2026-01-15 22:59:08', 'Mesas para los salones', '98674523', 'example name', 1),
-(8, '2026-01-19 19:11:07', 'example description', '654321', 'example name', 0),
-(9, '2026-01-19 19:19:44', 'example description', '98674523', 'example name', 0);
+(10, '2026-02-11 22:43:31', 'N/a', '1111111111', 'Bienestar Social', 1),
+(11, '2026-02-11 22:43:58', 'N/a', '1111111111', 'SSEMI', 1),
+(12, '2026-02-11 22:44:36', 'N/a', '1111111111', 'Ropa de Trabajo', 1),
+(13, '2026-02-11 22:45:22', 'N/a', '1111111111', 'Plan de incentivos', 1),
+(14, '2026-02-11 22:45:37', 'N/a', '1111111111', 'SST', 1);
 
 -- --------------------------------------------------------
 
@@ -778,11 +743,10 @@ CREATE TABLE `tipo_caso` (
 --
 
 INSERT INTO `tipo_caso` (`id_tipo_caso`, `nombre_caso`) VALUES
-(1, 'peticion'),
-(2, 'queja'),
-(3, 'reclamo'),
-(4, 'sugerencia'),
-(5, 'denuncia');
+(1, 'Denuncia'),
+(2, 'Solicitud'),
+(3, 'Derecho de Petición'),
+(4, 'Acción de Tutela');
 
 -- --------------------------------------------------------
 
@@ -808,13 +772,13 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
 ('1020304010', 'Isaac', 'Carvajal', 'zacki@hotmail.com', 2, '$2y$10$XJPcDeP8NIq87Z1wuKvrreLIUkUzNqyfY1yOD0K46Bi70jMs3AImi', '2025-11-24 06:54:17', '2025-12-10 11:26:13', 1),
-('1111111111', 'Admin', 'Tester', 'tester.admin@example.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-11 01:04:46', 1),
+('1111111111', 'Admin', 'Tester', 'tester.admin@example.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-11 22:42:20', 1),
 ('112233', 'pepito', 'perez', 'pepito@perez.com', 2, '$2y$10$0RrhJZXlddSMRJGTKJCs3.Vd6GpJTSgLvjb2X2mn73dRVm1oNKf9m', '2025-12-01 17:43:14', NULL, 1),
 ('11223344', 'Pepo', 'Peraz', 'pepito@hola.com', 2, '$2y$10$Zt/ebqk4NLWfRf0wIOaOrOPG1T4gFW0h7j11ZIkUo8yjlREos8P/a', '2025-12-01 18:08:24', NULL, 1),
 ('123456', 'Kory', 'Carrera', 'Kory@carrera.com', 2, '$2y$10$gQ6trQAwy.dl3XF8i3PPieem3.wauWb.daIwa3VWCMsXlojO7z9dO', '2025-12-01 18:11:51', NULL, 1),
 ('123456789', 'Juan', 'Galvis', 'juan@galvis.com', 1, '$2y$10$O/YRYjCjYN09us2MOEpPT.c.GYNWs7/arm/aeShBQry/zG8b/BiMS', '2025-12-01 18:10:06', '2025-12-05 15:50:48', 1),
 ('12345678910', 'floppy', 'carrera', 'floppy.carrera@gmail.com', 1, '$2y$10$3KpsnHx05KaGQIqS6EmeDO7K.zLZ8TcWff5H.tbvXsi0YzmXqSsEa', '2025-12-03 17:56:38', NULL, 1),
-('2222222222', 'Comisionado', 'Tester', 'tester.comi@example.com', 2, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-10 02:38:35', 1),
+('2222222222', 'Comisionado', 'Tester', 'tester.comi@example.com', 2, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-11 23:07:21', 1),
 ('3001', 'Ana', 'Perez', 'ana@correo.com', 2, '$2y$10$vzXg/V5raMW7lgm6S0dbT.KkK5xtVQRm8sEwXBQoO7YH9dprCRdge', '2026-01-14 18:51:42', NULL, 1),
 ('3002', 'Juan', 'Diaz', 'juan@correo.com', 2, '$2y$10$8ONAl./BZNqfZQ6wzzm12.jleYO.G5oj7bi20gIiVbweBeFABWrpG', '2026-01-14 18:51:42', NULL, 1),
 ('3003', 'Laura', 'Gomez', 'laura@correo.com', 2, '$2y$10$VE2n6FX32T1ahxghvQc/N.CutKcmngjWgcH0Bwpm5iLGhd2kjiccS', '2026-01-14 18:51:42', NULL, 1),
@@ -931,7 +895,7 @@ ALTER TABLE `archivo`
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
-  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=68;
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`
@@ -967,7 +931,7 @@ ALTER TABLE `notificacion`
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
 --
 ALTER TABLE `procesoorganizacional`
-  MODIFY `id_proceso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=10;
+  MODIFY `id_proceso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
@@ -1047,4 +1011,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-SET FOREIGN_KEY_CHECKS = 1;
