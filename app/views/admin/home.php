@@ -57,7 +57,7 @@
           </a>
           <div>
             <form action="/logout" method="POST">
-              <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
+              <button type="submit" name="logout" value="logout">Cerrar Sesión</button>
               <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
             </form>
           </div>
@@ -96,7 +96,7 @@
          <li class="nav-item my-1">
           <a href="/procesoOrganizacional" class="nav-link text-none">
             <i class="bi bi-person-fill-gear usuarios"></i>
-            <span>procesos</span>
+            <span>Procesos</span>
           </a>
         </li>
 

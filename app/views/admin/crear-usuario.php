@@ -48,7 +48,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
             <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
           </a>
           <form action="/logout" method="POST">
-            <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
+            <button type="submit" name="logout" value="logout">Cerrar Sesión</button>
             <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
           </form>
         </div>
@@ -85,7 +85,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
         <li class="nav-item my-1">
           <a href="/procesoOrganizacional" class="nav-link text-none">
             <i class="bi bi-person-fill-gear usuarios"></i>
-            <span>procesos</span>
+            <span>Procesos</span>
           </a>
         </li>
         <li class="nav-item-my-1 active">
@@ -122,11 +122,11 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
 
         <input type="text" id="nombre" name="nombre" required placeholder="Nombre" class="formulario">
         <input type="text" id="apellido" name="apellido" required placeholder="Apellido" class="formulario">
-        <input type="text" id="documento" name="documento" required placeholder="documento" class="formulario">
-        <input type="text" id="email" name="email" required placeholder="email" class="formulario">
+        <input type="text" id="documento" name="documento" required placeholder="Documento" class="formulario">
+        <input type="text" id="email" name="email" required placeholder="Email" class="formulario">
         <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" class="formulario">
 
-        <button type="button" class="btn-usuario" id="btn-usuario">siguiente</button>
+        <button type="button" class="btn-usuario" id="btn-usuario">Siguiente</button>
       </form>
     </section>
     <section class="tabla-usuarios">

@@ -154,14 +154,14 @@ Una vez levantados los contenedores:
 
 #### Administrador
 ```
-Documento: 1111111111
+Documento: 1487569254
 Contraseña: 123456
 ```
 
 #### Comisionado
 ```
-Documento: 2222222222
-Contraseña: 123456
+Documento: 1456333298
+Contraseña: galvis123
 ```
 
 ### Flujo de Uso
