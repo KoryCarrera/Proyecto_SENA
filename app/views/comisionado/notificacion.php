@@ -40,13 +40,13 @@
                                 <?php echo $_SESSION['user']['username']; ?>
                             </h2>
                         <?php endif; ?>
-                        <h4 class="mb-0 d-none d-md-block">comisionado</h4>
+                        <h4 class="mb-0 d-none d-md-block">Comisionado</h4>
                     </div>
                     <a href="#">
                         <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
                     </a>
                     <form action="/logout" method="POST">
-                        <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
+                        <button type="submit" name="logout" value="logout">Cerrar Sesión</button>
                         <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
                     </form>
                 </div>

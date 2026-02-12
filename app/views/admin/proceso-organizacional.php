@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>proceso organizacional</title>
+    <title>Proceso organizacional</title>
 
     <!--Icon de la pagina-->
     <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
@@ -55,7 +55,7 @@
                         <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
                     </a>
                     <form action="/logout" method="POST">
-                        <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
+                        <button type="submit" name="logout" value="logout">Cerrar Sesión</button>
                         <input type="hidden" name="csrf_token" id="csrf_token"
                             value="<?php echo htmlspecialchars($token); ?>">
                     </form>
@@ -93,7 +93,7 @@
                 <li class="nav-item my-1">
                     <a href="/procesoOrganizacional" class="nav-link text-none">
                         <i class="bi bi-person-fill-gear usuarios"></i>
-                        <span>procesos</span>
+                        <span>Procesos</span>
                     </a>
                 </li>
 
@@ -115,15 +115,15 @@
         </div>
     </div>
     <main class="main">
-        <button type="button" id="abrirModal" class="btn-modal">crear proceso</button>
+        <button type="button" id="abrirModal" class="btn-modal">Crear proceso</button>
        <section class="tabla-procesos">
     <table>
         <thead>
             <tr class="cabecera-tabla">
                 <th scope="col">Nombre<br>Proceso</th>
-                <th scope="col">descripcion</th>
-                <th scope="col">Fecha de<br>Creacion</th>
-                <th scope="col">documento</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Fecha de<br>Creación</th>
+                <th scope="col">Documento</th>
                 <th scope="col">Creador del<br>Proceso</th>
                 <th scope="col">Gestionar</th>
             </tr>
@@ -135,15 +135,15 @@
     </main>
     <div id="modal" class="modal">
         <div class="contenido-modal">
-            <h2 class="titulo-modal">crear proceso</h2>
+            <h2 class="titulo-modal">Crear proceso</h2>
             <div id="formProceso" class="formulario">
                 <input type="text" id="nombre-proceso" name="nombre-proceso" placeholder="Nombre de proceso"
                     class="contenido">
                 <textarea name="descripcion" id="descripcion" cols="30" rows="4" placeholder="Descripcion"
                     class="contenido"></textarea>
                 <div class="botones">
-                    <button type="button" id="btnRegistrarProceso" class="boton">crear proceso</button>
-                    <button type="button" id="cerrar-modal" class="boton">cerrar</button>
+                    <button type="button" id="btnRegistrarProceso" class="boton">Crear proceso</button>
+                    <button type="button" id="cerrar-modal" class="boton">Cerrar</button>
                 </div>
             </div>
         </div>
