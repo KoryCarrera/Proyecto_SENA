@@ -1,229 +1,194 @@
-.top-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  }
-.top-bar .container-fluid{
-    background-color: #214554;
-    font-family: "roboto", sans-serif;
-    position: static;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Global Styles */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #020617;
+    /* Slate 950 */
+    color: #e2e8f0;
+    /* Slate 200 */
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
 }
-.top-bar .container-fluid h2 {
-    font-size: 26px;
-    color: white;
-    }
-.top-bar .container-fluid h4 {
-    font-size: 24px;
-    color: white;
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
-.side-bar {
-		background-color: #2E6076;
+
+::-webkit-scrollbar-track {
+    background: #020617;
 }
-.side-bar {
-    position: fixed;
-    top: 100px;
-    left: 0;
-    width: 160px;
-    height: calc(100vh - 100px);
-    background-color: #2E6076;
-    overflow-y: auto; /* permite desplazarse */
-    scrollbar-width: none; /* Oculta scroll en Firefox */
-    -ms-overflow-style: none; /* Oculta scroll en IE y Edge antiguos */
-    font-family: "Roboto", sans-serif;
-    color: #C0C0C0;
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
+
+/* Glassmorphism Utilities */
+.glass-nav {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 1000;
+}
+
+.glass-sidebar {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     z-index: 900;
 }
-.sidebar .nav-item.active .nav-link span{
-		color: white;
-  }
-.sidebar .nav-item.active .nav-link .bi-file-earmark-text-fill{
-		color: white;
-	}
-/* Oculta la barra en Chrome, Edge y Safari */
-.side-bar::-webkit-scrollbar {
-    display: none;
+
+.glass-card {
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-radius: 1rem;
+    transition: transform 0.2s ease-in-out;
 }
 
-/* Elimina el scroll interno para evitar conflicto */
-.side-bar .container-fluid {
-    background-color: #2E6076;
-    color: #C0C0C0;
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    overflow: visible;
-    height: auto;
-}
-/*CSS icono casa*/
-.side-bar .home-icon{
-    font-size: 40px;
-    color: #C0C0C0;
-}
-/*CSS icono crear notificacion*/
-.side-bar .crear-notificacion{
-    font-size: 40px;
-    color: #C0C0C0;
-}
-/*CSS icono ver caso*/
-.side-bar .ver-caso{
-    font-size: 40px;
-    color: #C0C0C0;
-}
-/*CSS icono procesos icono*/
-.side-bar .procesos{
-    font-size: 40px;
-    color: #C0C0C0;
-}
-/*CSS icono crear usuarios icono*/
-.side-bar .usuarios{
-    font-size: 40px;
-    color: #C0C0C0;
-    text-align: center;
-}
-/*CSS icono notificaciones icono*/
-.side-bar .notificacion{
-    font-size: 40px;
-    color: #C0C0C0;
-    text-align: center;
-}
-.side-bar span {
-		color: #C0C0C0;
-}
-/*Fonts del contenido interno de la pagina*/
-.main-content {
-  margin-left: 160px;
-  margin-top: 100px;
-  min-height: calc(100vh - 100px);
-  background-image: url("/assets/img/logo_sena.png");
-  background-size: 500px;
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-/*Configuracion del div que tiene el contenido*/
-.contenido {
-  font-family: "ADLaM Display", system-ui;
-  font-weight: 400;
-  font-style: normal;
-  text-align: center;
-  
-}
-/*Configuración del background la img*/
-.main-content::before {
-  content: "";
-  position: absolute;
-  top: 100px;
-  left: 160px;
-  width: calc(100% - 160px);
-  height: calc(100% - 100px);
-  background-image: url("/assets/img/logo_sena.png");
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.08;
-  z-index: 0;
-}
-.main-content > * {
-  position: relative;
-  z-index: 1;
-}
-/*Form del contenido*/
-
-/* contenedor del form*/
-.custom-form-box {
-    max-width: 450px;
-    padding: 20px 40px; 
-    background-color: #EBEBEB; 
-    border: 1px solid #000000; 
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
-    position: relative;
-}
-
-.custom-form-box h2 {
-    color: #4A4A4A; 
-    font-weight: 700;
-    font-size: 1.5rem;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #ccc;
-    margin-bottom: 30px !important;
-}
-
-/* Estilo para todo el grupo de input (para el fondo blanco redondeado) */
-.custom-input-group {
-    background-color: white;
-    border-radius: 10px; /* Bordes redondeados del contenedor blanco */
-    padding: 5px 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil para el input */
-}
-
-/* Estilo para el campo de entrada real */
-.custom-input {
-    /* El borde y el fondo de Bootstrap se eliminan */
-    border: none;
-    background-color: transparent;
-    font-size: 1rem;
-    font-weight: 600; /* Hace que el texto se vea más legible */
-    padding: 8px 0;
-    color: #4A4A4A; /* Color del texto ingresado */
-}
-
-/* Mantiene el color del placeholder (el texto de ejemplo) */
-.custom-input::placeholder {
-    color: #6c757d; /* Un gris para el texto del placeholder */
-    opacity: 1; 
-}
-
-/* Estilo del icono (solo para el campo de Usuario) */
-.custom-icon {
-    border: none;
-    background-color: transparent;
-    color: #4A4A4A; /* Color del icono */
-    font-size: 1.5rem;
-    padding-right: 10px;
-}
-
-/* Estilo del botón SIGUIENTE */
-.btn-siguiente {
-    background-color: #388e3c;
+.glass-input {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
     color: white;
-    font-weight: bold;
-    padding: 12px 0;
-    border-radius: 10px;
-    margin-top: 20px;
-    font-size: 1.2rem;
+}
+
+.glass-input:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+    outline: none;
+}
+
+.glass-input::placeholder {
+    color: #94a3b8;
+}
+
+/* Background Blobs */
+.blob-bg {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.4;
+    animation: blob 10s infinite alternate;
+}
+
+@keyframes blob {
+    0% {
+        transform: translate(0px, 0px) scale(1);
+    }
+
+    33% {
+        transform: translate(30px, -50px) scale(1.1);
+    }
+
+    66% {
+        transform: translate(-20px, 20px) scale(0.9);
+    }
+
+    100% {
+        transform: translate(0px, 0px) scale(1);
+    }
+}
+
+/* Sidebar Navigation */
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #94a3b8;
+    /* Slate 400 */
+    transition: all 0.2s;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+    flex-direction: column;
+    text-align: center;
+}
+
+.nav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-link.active {
+    color: #fff;
+    background: rgba(99, 102, 241, 0.2);
+    /* Indigo-500/20 */
+    border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.nav-link i {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.nav-link span {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Custom Form Box Styles (replacing old styles) */
+.custom-form-box {
+    max-width: 600px;
+}
+
+/* Button Styles */
+.btn-siguiente {
+    background-color: #10b981;
+    /* Emerald 500 */
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    border-radius: 0.75rem;
+    font-size: 1rem;
     border: none;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
 }
 
 .btn-siguiente:hover {
-    background-color: #2e7d32;
+    background-color: #059669;
+    /* Emerald 600 */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px -1px rgba(16, 185, 129, 0.4);
     color: white;
 }
 
-.btn-IMPORTAR {
-    background-color: #EBEBEB;
-    color: black;
-    font-weight: bold;
-    padding: 12px 0;
-    border-radius: 10px;
-    margin-top: 20px;
-    font-size: 1.2rem;
-    border: none;
-    transition: background-color 0.3s;
-    border: 1px solid black;
+/* Form Sections */
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-.btn-IMPORTAR:hover {
-    background-color: #EBEBEB;
-    color: white;
+.custom-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
-/* Oculta los bordes por defecto del input-group de Bootstrap */
-.input-group:not(.has-validation) > .form-control:not(:last-child) {
-    border-radius: 0 10px 10px 0;
+.custom-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    z-index: 10;
+    pointer-events: none;
 }

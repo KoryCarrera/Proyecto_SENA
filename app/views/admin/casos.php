@@ -6,194 +6,214 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Administrador</title>
+  <title>Administrador | Casos</title>
 
   <!--Icon de la pagina-->
   <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
 
-  <!--Este es el enlace entre el proyecto y bootstrap-->
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Bootstrap CSS (Required for JS compatibility with Modals/Table classes used in JS) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  
+  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
   <!--CSS propio para colores y fonts-->
-
   <link rel="stylesheet" href="/assets/css/casos-admin.css">
 
-  <!--Link de google fonts-->
+  <script src="/assets/js/jquery-3.7.1.min.js"></script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=ADLaM+Display&family=Roboto:ital,wght@0,100..900;1,100..900&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-    rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet">
+  <style>
+    /* Override Bootstrap defaults to match Tailwind/Glass theme */
+    .table {
+        --bs-table-bg: transparent;
+        --bs-table-color: #e2e8f0;
+        --bs-table-border-color: rgba(255,255,255,0.1);
+        --bs-table-hover-bg: rgba(255,255,255,0.05);
+    }
+  </style>
 
 </head>
 
-<body>
-  <!--Barra de navegación superior-->
-  <div class="top-bar">
-    <nav class="navbar m-0 p-0 bg-body-tertiary">
-      <div class="container-fluid d-flex align-items-center justify-content-between">
-        <img class="ms-3" src="/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
-        <div class="d-flex align-items-center">
-          <div class="text-end me-3">
+<body class="antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Decorative Background Elements -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
+        <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
+        <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+    </div>
+
+  <div class="flex h-screen overflow-hidden relative z-10">
+
+    <!-- Sidebar -->
+    <aside class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
+      
+      <!-- Logo Area -->
+      <div class="h-20 flex items-center justify-center border-b border-white/5">
+        <img src="/assets/img/logo_sena.png" alt="SENA" class="w-10 h-10 object-contain group-hover:block">
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
+        
+        <a href="/dashboardAdmin" class="nav-link">
+          <i class="bi bi-house-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Inicio</span>
+        </a>
+
+        <a href="/generarInforme" class="nav-link">
+          <i class="bi bi-file-earmark-text-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Generar Informe</span>
+        </a>
+
+        <a href="/casosAdmin" class="nav-link active">
+          <i class="bi bi-eye-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Casos</span>
+        </a>
+
+        <a href="/procesoOrganizacional" class="nav-link">
+          <i class="bi bi-diagram-3-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Procesos</span>
+        </a>
+
+        <a href="/usuarios" class="nav-link">
+          <i class="bi bi-person-fill-gear"></i>
+          <span class="text-[10px] mt-1 font-medium">Usuarios</span>
+        </a>
+
+        <a href="/notificacionesAdmin" class="nav-link">
+          <i class="bi bi-bell-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Notificación</span>
+        </a>
+
+      </nav>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 flex flex-col ml-20 h-full">
+      
+      <!-- Top Bar -->
+      <header class="h-20 glass-nav flex items-center justify-between px-6 sticky top-0 z-40">
+        
+        <h2 class="text-xl font-semibold text-white tracking-tight">Gestión de Casos</h2>
+
+        <div class="flex items-center gap-6">
+          <div class="text-right hidden md:block">
             <?php if (isset($_SESSION['user']['username'])): ?>
-              <h2 class='mb-0 d-none d-md-block'>
+              <p class="text-sm font-medium text-white">
                 <?php echo $_SESSION['user']['username']; ?>
-              </h2>
+              </p>
             <?php endif; ?>
-            <h4 class="mb-0 d-none d-md-block">Administrador</h4>
+            <p class="text-xs text-slate-400">Administrador</p>
           </div>
-          <a href="#">
-            <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
-          </a>
-          <form action="/logout" method="POST">
-            <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
-            <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
-          </form>
+
+          <div class="flex items-center gap-4">
+            <a href="#" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+               <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
+            </a>
+            
+            <form action="/logout" method="POST">
+              <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+              <button type="submit" name="logout" value="logout" class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
+                Cerrar Sesión
+              </button>
+            </form>
+          </div>
         </div>
+      </header>
+      
+      <!-- Filter Bar (Secondary Nav Replacement) -->
+      <div class="px-6 py-4 glass-nav z-30 flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div class="flex items-center gap-2 w-full md:w-auto">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle bg-slate-800/50 border-slate-700 text-slate-200 hover:bg-slate-700/50" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-funnel"></i> Filtrar por
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark bg-slate-800 border-slate-700">
+                        <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Nombre Del Caso</a></li>
+                        <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Fecha de registro</a></li>
+                        <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Tipo de Caso</a></li>
+                        <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Fecha de respuesta</a></li>
+                        <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Estado</a></li>
+                        <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Proceso</a></li>
+                        <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Comisionado Encargado</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <form class="flex gap-2 w-full md:w-auto" role="search">
+                <div class="relative w-full md:w-64">
+                    <input class="glass-search w-full px-4 py-2 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all" type="search" placeholder="Buscar palabras clave..." aria-label="Search">
+                    <i class="bi bi-search absolute right-3 top-2.5 text-slate-400"></i>
+                </div>
+                <button class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors" type="submit">Buscar</button>
+            </form>
       </div>
-    </nav>
-  </div>
-  <!--Barra de navegación secundaria-->
-  <div class="second-bar">
-    <nav class="navbar navbar-expand-lg second-bar">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Seguimiento</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Filtrar
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Nombre Del Caso</a></li>
-                <li><a class="dropdown-item" href="#">Fecha de registro</a></li>
-                <li><a class="dropdown-item" href="#">Tipo de Caso</a></li>
-                <li><a class="dropdown-item" href="#">Fecha de respuesta</a></li>
-                <li><a class="dropdown-item" href="#">Estado</a></li>
-                <li><a class="dropdown-item" href="#">Proceso</a></li>
-                <li><a class="dropdown-item" href="#">Comisionado Encargado</a></li>
-              </ul>
-            </li>
-          </ul>
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Palabras Claves" aria-label="Search" />
-            <button class="btn btn-outline-success" type="submit">Buscar</button>
-          </form>
+
+      <!-- Content -->
+      <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
+        <div class="max-w-7xl mx-auto">
+            
+            <div class="glass-card p-0 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="glass-table w-full text-left text-sm text-slate-300">
+                        <thead class="bg-slate-800/50 text-xs uppercase text-slate-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-4 font-medium tracking-wider"># Id</th>
+                                <th scope="col" class="px-6 py-4 font-medium tracking-wider">Fecha de Registro</th>
+                                <th scope="col" class="px-6 py-4 font-medium tracking-wider">Tipo de Caso</th>
+                                <th scope="col" class="px-6 py-4 font-medium tracking-wider">Fecha de respuesta</th>
+                                <th scope="col" class="px-6 py-4 font-medium tracking-wider">Estado</th>
+                                <th scope="col" class="px-6 py-4 font-medium tracking-wider">Proceso</th>
+                                <th scope="col" class="px-6 py-4 font-medium tracking-wider">Comisionado</th>
+                                <th scope="col" class="px-6 py-4 font-medium tracking-wider text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaCasos" class="divide-y divide-slate-700/50">
+                            <!-- JS Injected Rows go here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
-      </div>
-    </nav>
-  </div>
-  <!--SlideBar-->
-
-  <div class="side-bar">
-    <div class="sidebar container-fluid">
-      <ul class="nav flex-column text-center">
-
-        <li class="nav-item my-1">
-          <a href="/dashboardAdmin" class="nav-link text-none">
-            <i class="bi bi-house-fill home-icon d-block"></i>
-            <span>Inicio</span>
-          </a>
-        </li>
-
-        <li class="nav-item my-1">
-          <a href="/generarInforme" class="nav-link text-none">
-            <i class="bi bi-file-earmark-text-fill crear-notificacion"></i>
-            <br>
-            <span>Generar<br>Informe</span>
-          </a>
-        </li>
-
-        <li class="nav-item my-1 active">
-          <a href="/casosAdmin" class="nav-link text-none">
-            <i class="bi bi-eye-fill ver-caso d-block"></i>
-            <span>Casos</span>
-          </a>
-        </li>
-         <li class="nav-item my-1">
-          <a href="/procesoOrganizacional" class="nav-link text-none">
-            <i class="bi bi-person-fill-gear usuarios"></i>
-            <span>procesos</span>
-          </a>
-        </li>
-
-        <li class="nav-item my-1">
-          <a href="/usuarios" class="nav-link text-none">
-            <i class="bi bi-person-fill-gear usuarios"></i>
-            <span>Usuarios</span>
-          </a>
-        </li>
-
-        <li class="nav-item my-1">
-          <a href="/notificacionesAdmin" class="nav-link text-none">
-            <i class="bi bi-bell-fill notificacion"></i>
-            <span>Notificación</span>
-          </a>
-        </li>
-
-      </ul>
+      </main>
     </div>
   </div>
-  <div class="main-content">
-    <div class="contenido">
-      <table class="table table-striped table-hover">
-        <thead>
-          <tr>
-            <th scope="col"># Id</th>
-            <th scope="col">Fecha de Registro</th>
-            <th scope="col">Tipo de Caso</th>
-            <th scope="col">Fecha de respuesta</th>
-            <th scope="col">Estado</th>
-            <th scope="col">Proceso</th>
-            <th scope="col">Comisionado Encargado</th>
-            <th scope="col">Gestionar</th>
-          </tr>
-        </thead>
-        <tbody id="tablaCasos">
 
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <!--Modal de supervisar-->
+  <!-- Modal Wrapper (Maintains Bootstrap compatibility but styled) -->
   <div class="modal fade" id="modalCaso" tabindex="-1" aria-labelledby="modalCasoLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalCasoLabel">Detalles del Caso</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content glass-card border-slate-700">
+        <div class="modal-header border-slate-700 p-6">
+          <h5 class="modal-title text-xl font-bold text-white flex items-center gap-2" id="modalCasoLabel">
+            <i class="bi bi-file-earmark-text text-indigo-400"></i> Detailles del Caso
+          </h5>
+          <button type="button" class="btn-close btn-close-white opacity-50 hover:opacity-100" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body" id="modalCasoBody">
+        <div class="modal-body p-6 text-slate-300" id="modalCasoBody">
           <!-- El contenido se carga dinámicamente con JavaScript -->
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <!--<button type="button" class="btn btn-primary" onclick="editarCaso()">
-            <i class="bi bi-pencil"></i> Editar Caso
-          </button>-->
+        <div class="modal-footer border-slate-700 p-6 bg-slate-900/20">
+          <button type="button" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm font-medium" data-bs-dismiss="modal">Cerrar</button>
         </div>
       </div>
     </div>
   </div>
-  <!--JS de bootstrap-->
 
+
+  <!-- Bootstrap Bundle JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
 
   <script src="/assets/js/casosAdmin.js"></script>
   <script src="/assets/js/cache.js"></script>
+
 </body>
 
 </html>

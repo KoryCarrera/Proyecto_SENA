@@ -1,350 +1,268 @@
-* {
-    box-sizing: border-box;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Global Styles */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #020617;
+    /* Slate 950 */
+    color: #e2e8f0;
+    /* Slate 200 */
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
 }
 
-body {
-    overflow-x: hidden;
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
 
-.main-content {
-    overflow-x: hidden;
-    max-width: 100%;
+::-webkit-scrollbar-track {
+    background: #020617;
 }
-body {
-    padding: none;
-    margin: none;
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
 }
-.top-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  }
-.top-bar .container-fluid{
-    background-color: #214554;
-    font-family: "roboto", sans-serif;
-    position: static;
+
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
 }
-.top-bar .container-fluid h2 {
-    font-size: 26px;
-    color: white;
-    }
-.top-bar .container-fluid h4 {
-    font-size: 24px;
-    color: white;
+
+/* Glassmorphism Utilities */
+.glass-nav {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 1000;
 }
-.side-bar {
-		background-color: #2E6076;
-}
-.side-bar {
-    position: fixed;
-    top: 100px;
-    left: 0;
-    width: 160px;
-    height: calc(100vh - 100px);
-    background-color: #2E6076;
-    overflow-y: auto; /* permite desplazarse */
-    scrollbar-width: none; /* Oculta scroll en Firefox */
-    -ms-overflow-style: none; /* Oculta scroll en IE y Edge antiguos */
-    font-family: "Roboto", sans-serif;
-    color: #C0C0C0;
+
+.glass-sidebar {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     z-index: 900;
 }
-.sidebar .nav-item.active .nav-link span{
-		color: white;
-  }
-.sidebar .nav-item.active .nav-link .home-icon{
-		color: white;
-	}
-/* Oculta la barra en Chrome, Edge y Safari */
-.side-bar::-webkit-scrollbar {
-    display: none;
+
+.glass-card {
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-radius: 1rem;
+    transition: transform 0.2s ease-in-out;
 }
 
-/* Elimina el scroll interno para evitar conflicto */
-.side-bar .container-fluid {
-    background-color: #2E6076;
-    color: #C0C0C0;
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    overflow: visible;
-    height: auto;
+.glass-input,
+.contenido,
+.contenido-modal input,
+.contenido-modal textarea {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    color: white;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    outline: none;
+    font-family: 'Inter', sans-serif;
 }
-/*CSS icono casa*/
-.side-bar .home-icon{
-    font-size: 40px;
-    color: #C0C0C0;
+
+.glass-input:focus,
+.contenido:focus,
+.contenido-modal input:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(99, 102, 241, 0.5);
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
 }
-/*CSS icono crear notificacion*/
-.side-bar .crear-notificacion{
-    font-size: 40px;
-    color: #C0C0C0;
+
+.glass-input::placeholder,
+.contenido::placeholder {
+    color: #94a3b8;
 }
-/*CSS icono ver caso*/
-.side-bar .ver-caso{
-    font-size: 40px;
-    color: #C0C0C0;
+
+/* Background Blobs */
+.blob-bg {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.4;
+    animation: blob 10s infinite alternate;
 }
-/*CSS icono procesos icono*/
-.side-bar .procesos{
-    font-size: 40px;
-    color: #C0C0C0;
-}
-/*CSS icono crear usuarios icono*/
-.side-bar .usuarios{
-    font-size: 40px;
-    color: #C0C0C0;
-    text-align: center;
-}
-/*CSS icono notificaciones icono*/
-.side-bar .notificacion{
-    font-size: 40px;
-    color: #C0C0C0;
-    text-align: center;
-}
-.side-bar span {
-		color: #C0C0C0;
+
+@keyframes blob {
+    0% {
+        transform: translate(0px, 0px) scale(1);
     }
 
+    33% {
+        transform: translate(30px, -50px) scale(1.1);
+    }
 
+    66% {
+        transform: translate(-20px, 20px) scale(0.9);
+    }
 
-.main{
-  margin-left: 160px;
-  margin-top: 100px;
-  min-height: calc(100vh - 100px);
-  min-width: calc(100vw - 160px);
-  background-color: #fff9f9;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    100% {
+        transform: translate(0px, 0px) scale(1);
+    }
 }
-.tabla-procesos{
-        /* Quitar flex para usar el modelo de tabla tradicional */
-    table-layout: fixed;
-    /* Esto fuerza a que las columnas tengan el ancho fijo que definamos */
-    width: 90%;
-    background-color: #fff;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
-    border-radius: 15px;
-    overflow: hidden;
-    border-collapse: collapse;
-    /* Añadir esto */
+
+/* Sidebar Navigation */
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #94a3b8;
+    /* Slate 400 */
+    transition: all 0.2s;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+    flex-direction: column;
+    text-align: center;
 }
-table{
-    /* Quitar flex para usar el modelo de tabla tradicional */
-    display: table;
-    table-layout: fixed;
-    /* Esto fuerza a que las columnas tengan el ancho fijo que definamos */
-    width: 100%;
-    background-color: #fff;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
-    border-radius: 15px;
-    overflow: hidden;
-    border-collapse: collapse;
-    /* Añadir esto */
-}
-.cabecera-tabla{
-    background-color: #09a949;
+
+.nav-link:hover {
     color: #fff;
-    width: 110%;
-}
-.tabla-procesos th,
-.tabla-procesos td {
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid #8e8c8c;
-    /* Definir anchos basados en el contenido de las 7 columnas */
-    width: 14%;
-    /* 100% / 7 */
+    background: rgba(255, 255, 255, 0.05);
 }
 
-/* Ajuste de anchos para contenido específico: */
-table th:nth-child(1),
-table td:nth-child(1) {
-    width: 12%;
+.nav-link.active {
+    color: #fff;
+    background: rgba(99, 102, 241, 0.2);
+    /* Indigo-500/20 */
+    border: 1px solid rgba(99, 102, 241, 0.3);
 }
 
-/* Documento */
-table th:nth-child(2),
-table td:nth-child(2) {
-    width: 14%;
+.nav-link i {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
 }
 
-/* Nombre */
-table th:nth-child(3),
-table td:nth-child(3) {
-    width: 14%;
+.nav-link span {
+    font-size: 0.75rem;
+    font-weight: 500;
 }
 
-/* Apellido */
-table th:nth-child(4),
-table td:nth-child(4) {
-    width: 20%;
+/* Table Styles */
+.glass-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: #e2e8f0;
 }
 
-/* Correo (el más largo) */
-table th:nth-child(5),
-table td:nth-child(5) {
-    width: 10%;
-}
-
-/* Estado */
-table th:nth-child(6),
-table td:nth-child(6) {
-    width: 10%;
-}
-
-/* Rol */
-table th:nth-child(7),
-table td:nth-child(7) {
-    width: 20%;
-}
-
-/* Gestionar (botón necesita más espacio) */
-
-
-thead {
-    /* Quitar flex */
-    background-color: #ffffff;
-    color: #000000;
-    font-size: 1.2rem;
-    padding: 5px 0;
-    /* padding 0 ya que las celdas tienen padding */
-}
-
-/* Quitar flex del encabezado */
-.head-tabla {
-    background-color: white;
-    color: #000000;
-    font-size: 1.2rem;
-}
-
-/* son las filas de la tabla */
-.cont-tabla {
-    /* tbody, no necesita flex */
-    background-color: #ffffff;
-    color: #000000;
-    font-size: 1.2rem;
-}
-
-/* Contenido de la tabla (filas tr) - Quitar flex */
-.cont-tabla tr {
-    /* Asegurar que las filas no usen flex si se usó la clase .ejemplos antes */
-    display: table-row;
-}
-
-/* Borrar clase .ejemplos para evitar conflictos si se usa en el <tr> */
-/* .ejemplos{
-    display: flex; 
-    justify-content: space-evenly;
-} */
-
-
-/* línea separatoria entre las filas */
-.head-tabla,
-.ejemplos {
-    padding: 0;
-    /* El padding está en el TH/TD */
-    border-bottom: none;
-    /* Las celdas manejan el borde */
-}
-.btn-gestionar {
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    text-decoration: none !important;
-
-}
-
- .modal{
-    position: fixed;
-    display:none;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - 100px);
-    min-width: calc(100% - 160px);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #000000;
-    font-size: 1.2rem;
-    z-index: 9999;
-    transition: opacity 0.3s ease;
-}
-.contenido-modal{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .3rem;
-    justify-content: center;
+.glass-table thead th {
+    background: rgba(30, 41, 59, 0.6);
     padding: 1rem;
-    margin: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-table tbody tr {
+    transition: background-color 0.2s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.glass-table tbody td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Modal Custom Styles (Preserving IDs logic but with glass UI) */
+.modal {
+    display: none;
+    /* JS will toggle this */
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.contenido-modal {
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.titulo-modal {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
     text-align: center;
-     background-color: #ffffff;
-     border-radius: 25px;
-     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
-     color: #000000;
-     font-size: 1.2rem; 
-     height: 70vh;
-     width: 35%; 
+    margin-bottom: 1.5rem;
 }
-.formulario{
+
+.botones {
     display: flex;
-    flex-direction: column;
-    color: #000000;
-    font-size: 1.2rem;
-    position: relative;
-    overflow: hidden;
-      margin: .5rem;
-      justify-content:center;
-      align-items: center;
-      gap: 1rem;
-}
-.contenido{
-    display: flex;
-    flex-direction: column;
-    color: #000000;
-    font-size: 1.2rem;
-    position: relative;
-    overflow: hidden;
-      margin: .5rem;
-      justify-content:center;
-      align-items: center;
-      gap: 1rem;
-      border-radius: 25px;
-      background-color: #EBEBEB;
-      border: none;
-}
-::placeholder{
-    color:#000;
-    opacity: 1;
-    text-align: center;
-}
-.btn-gestionar{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: end;
+    justify-content: flex-end;
     gap: 1rem;
+    margin-top: 1.5rem;
 }
-.btn-desactivar {
-    background-color: #dc3545; 
+
+.boton,
+.btn-modal {
+    background-color: #6366f1;
+    /* Indigo 500 */
     color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-.btn-desactivar:hover {
-    background-color: #c82333;
+.boton:hover,
+.btn-modal:hover {
+    background-color: #4f46e5;
 }
 
-.btn-reactivar {
-    background-color: #28a745; 
-    color: white;
+#cerrar-modal {
+    background-color: #ef4444;
+    /* Red 500 */
 }
 
-.btn-reactivar:hover {
-    background-color: #218838;
+#cerrar-modal:hover {
+    background-color: #dc2626;
+}
+
+/* Override existing form styles if any conflict */
+.formulario {
+    display: block;
+}
+
+textarea.contenido {
+    min-height: 100px;
+    margin-top: 1rem;
+}
+
+input.contenido {
+    margin-bottom: 0.5rem;
 }
