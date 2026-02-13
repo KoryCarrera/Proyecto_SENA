@@ -123,16 +123,6 @@
               </button>
             </form>
           </div>
-<<<<<<< HEAD
-=======
-          <a href="#">
-            <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
-          </a>
-          <form action="/logout" method="POST">
-            <button type="submit" name="logout" value="logout">Cerrar Sesión</button>
-            <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
-          </form>
->>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
         </div>
       </header>
       
@@ -191,62 +181,7 @@
             </div>
 
         </div>
-<<<<<<< HEAD
       </main>
-=======
-      </div>
-    </nav>
-  </div>
-  <!--SlideBar-->
-
-  <div class="side-bar">
-    <div class="sidebar container-fluid">
-      <ul class="nav flex-column text-center">
-
-        <li class="nav-item my-1">
-          <a href="/dashboardAdmin" class="nav-link text-none">
-            <i class="bi bi-house-fill home-icon d-block"></i>
-            <span>Inicio</span>
-          </a>
-        </li>
-
-        <li class="nav-item my-1">
-          <a href="/generarInforme" class="nav-link text-none">
-            <i class="bi bi-file-earmark-text-fill crear-notificacion"></i>
-            <br>
-            <span>Generar<br>Informe</span>
-          </a>
-        </li>
-
-        <li class="nav-item my-1 active">
-          <a href="/casosAdmin" class="nav-link text-none">
-            <i class="bi bi-eye-fill ver-caso d-block"></i>
-            <span>Casos</span>
-          </a>
-        </li>
-         <li class="nav-item my-1">
-          <a href="/procesoOrganizacional" class="nav-link text-none">
-            <i class="bi bi-person-fill-gear usuarios"></i>
-            <span>Procesos</span>
-          </a>
-        </li>
-
-        <li class="nav-item my-1">
-          <a href="/usuarios" class="nav-link text-none">
-            <i class="bi bi-person-fill-gear usuarios"></i>
-            <span>Usuarios</span>
-          </a>
-        </li>
-
-        <li class="nav-item my-1">
-          <a href="/notificacionesAdmin" class="nav-link text-none">
-            <i class="bi bi-bell-fill notificacion"></i>
-            <span>Notificación</span>
-          </a>
-        </li>
-
-      </ul>
->>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
     </div>
   </div>
 

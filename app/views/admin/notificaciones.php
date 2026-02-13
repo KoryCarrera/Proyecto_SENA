@@ -28,7 +28,6 @@
 
 </head>
 
-<<<<<<< HEAD
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
 
     <!-- Decorative Background Elements -->
@@ -46,48 +45,15 @@
       <!-- Logo Area -->
       <div class="h-20 flex items-center justify-center border-b border-white/5">
         <img src="/assets/img/logo_sena.png" alt="SENA" class="w-10 h-10 object-contain group-hover:block">
-=======
-<body>
-  <div class="top-bar">
-    <nav class="navbar_m-0_p-0">
-      <div class="container-fluid d-flex align-items-center justify-content-between">
-        <img class="ms-3" src="/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
-        <div class="d-flex align-items-center">
-          <div class="text-end me-3">
-            <?php if (isset($_SESSION['user']['username'])): ?>
-              <h2 class='mb-0 d-none d-md-block'>
-                <?php echo $_SESSION['user']['username']; ?>
-              </h2>
-            <?php endif; ?>
-            <h4 class="mb-0 d-none d-md-block">Administrador</h4>
-          </div>
-          <a href="#">
-            <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
-          </a>
-          <form action="/logout" method="POST">
-            <button type="submit" name="logout" value="logout">Cerrar Sesión</button>
-            <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
-          </form>
-        </div>
->>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
       </div>
 
       <!-- Navigation -->
       <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
         
-<<<<<<< HEAD
         <a href="/dashboardAdmin" class="nav-link">
           <i class="bi bi-house-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Inicio</span>
         </a>
-=======
-         <li class="nav-item my-1">
-          <a href="/procesoOrganizacional" class="nav-link text-none">
-            <i class="bi bi-person-fill-gear usuarios"></i>
-            <span>Procesos</span>
-          </a>
-        </li>
->>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
 
         <a href="/generarInforme" class="nav-link">
           <i class="bi bi-file-earmark-text-fill"></i>

@@ -104,10 +104,6 @@
             </a>
             
             <form action="/logout" method="POST">
-<<<<<<< HEAD
-=======
-              <button type="submit" name="logout" value="logout">Cerrar Sesión</button>
->>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
               <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
               <button type="submit" name="logout" value="logout" class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
                 Cerrar Sesión
@@ -160,33 +156,7 @@
             </div>
 
         </div>
-
-<<<<<<< HEAD
       </main>
-=======
-         <li class="nav-item my-1">
-          <a href="/procesoOrganizacional" class="nav-link text-none">
-            <i class="bi bi-person-fill-gear usuarios"></i>
-            <span>Procesos</span>
-          </a>
-        </li>
-
-        <li class="nav-item my-1">
-          <a href="/usuarios" class="nav-link text-none">
-            <i class="bi bi-person-fill-gear usuarios"></i>
-            <span>Usuarios</span>
-          </a>
-        </li>
-
-        <li class="nav-item my-1">
-          <a href="/notificacionesAdmin" class="nav-link text-none">
-            <i class="bi bi-bell-fill notificacion"></i>
-            <span>Notificación</span>
-          </a>
-        </li>
-
-      </ul>
->>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
     </div>
   </div>
 

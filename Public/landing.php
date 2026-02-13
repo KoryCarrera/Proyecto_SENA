@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 <head>
-<<<<<<< HEAD
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión PQRS | Proyecto SENA</title>
@@ -48,7 +47,7 @@
         }
         
         .glass-nav {
-            background: rgba(15, 23, 42, 0.4); /* Much more transparent dark blue */
+            background: rgba(15, 23, 42, 0.4);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -69,7 +68,7 @@
             height: 100%;
             background: linear-gradient(
                 to bottom right,
-                rgba(255, 255, 255, 0.05) 0%, /* Very subtle white */
+                rgba(255, 255, 255, 0.05) 0%,
                 rgba(255, 255, 255, 0.01) 40%,
                 rgba(255, 255, 255, 0) 50%,
                 rgba(255, 255, 255, 0.01) 60%,
@@ -78,12 +77,6 @@
             transform: skewX(-20deg);
             pointer-events: none;
         }
-=======
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/assets/css/inicio-entrada-cartas.css">
-  <title>Página de Inicio del Sistema de Gestión</title>
->>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
 
         .glass-card {
             background: rgba(30, 41, 59, 0.4);
@@ -96,7 +89,7 @@
         .glass-card:hover {
             background: rgba(30, 41, 59, 0.6);
             transform: translateY(-4px);
-            border-color: rgba(99, 102, 241, 0.2); /* Indigo-500 with opacity */
+            border-color: rgba(99, 102, 241, 0.2);
             box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
         }
 
@@ -133,7 +126,6 @@
 </head>
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
 
-<<<<<<< HEAD
     <!-- Decorative Background Elements -->
     <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
         <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20"></div>
@@ -205,7 +197,7 @@
             <div class="mt-20 relative animate-[fadeInUp_1s_ease-out_0.8s_forwards] opacity-0">
                 <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl blur opacity-20"></div>
                 <div class="relative rounded-2xl overflow-hidden glass-card border border-slate-700/50 shadow-2xl">
-                   <!-- Placeholder for hero visual, using a gradient for now to look abstract and cool -->
+                   <!-- Placeholder for hero visual -->
                     <div class="aspect-[16/9] w-full bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-900/20 flex items-center justify-center group overflow-hidden">
                         <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-40 mix-blend-overlay"></div>
                         <div class="w-3/4 h-3/4 bg-indigo-500/10 rounded-full blur-3xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 group-hover:bg-indigo-500/20 transition-all duration-700"></div>
@@ -222,95 +214,6 @@
             </div>
         </div>
     </section>
-=======
-<body>
-  <!--barra de navegacion extraida de bootstrap-->
-  <section class="menu">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">SENA</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavDropdown"
-          aria-controls="navbarNavDropdown"
-          aria-expanded="false"
-          aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Inicio</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="./pages/nosotros.php">Nosotros</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Cuentas</a>
-            </li>
-            <li class="nav-item dropdown">
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  </section>
-
-  <!--contenedores con los los tipos de usuarios,estaprimera es la del comisionado-->
-  <main class="contenedor">
-    <section class="tipos_usuarios">
-      <h2>Selecciona tu tipo de cuenta</h2>
-      <div class="cartas_usuarios">
-        <!--esta es la carta del comisionado-->
-        <div class="carta_comisionado">
-          <a href="/entradaComi" class="link-cartas">
-            <i class="fa-solid fa-user-tie"></i>
-            <h3>Comisionado</h3>
-          </a>
-        </div>
-        <!--esta es la carta del administrador-->
-        <div class="carta_administrador" id="admin_login">
-          <a href="/entradaAdmin" class="link-cartas">
-            <i class="fa-solid fa-user-gear"></i>
-            <h3>Administrador</h3>
-          </a>
-        </div>
-        <!--se crea una tercera carta que permanecera oculta,esta sera el formulario que
-          pedira los datos para el ingreso al sistema de gestions segun su tipo de usuario-->
-      </div>
-    </section>
-  </main>
-  <!--pie de pagina, toca segir buscando que tipos de lincks y contenido pondremos-->
-  <footer>
-    <div class="links_paginas">
-      <ul class="links">
-        <li><a href="#">Servicios</a></li>
-        <li><a href="#">Mapas de sitio</a></li>
-        <li><a href="#">Términos"</a></li>
-      </ul>
-    </div>
-    <!--los separe en tres div para presentarlo como columnas,cosa que no aparecia en el mockup-->
-    <div class="a_cerca_de">
-      <ul class="links">
-        <li><a href="#">Acerca de nosotros</a></li>
-        <li><a href="#">Contáctanos</a></li>
-      </ul>
-    </div>
-    <div class="servicio_al_cliente">
-      <ul class="links">
-        <li><a href="#">Servicio al cliente</a></li>
-        <li><a href="#">Ayuda</a></li>
-      </ul>
-    </div>
-  </footer>
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-    crossorigin="anonymous"></script>
-</body>
->>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
 
     <!-- Features Section -->
     <section class="py-24 relative z-10">

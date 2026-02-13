@@ -6,11 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
     <title>Gestión de Usuarios | Administrador</title>
-=======
-    <title>Gestión de usuarios</title>
->>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
 
     <!--Icon de la pagina-->
     <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
@@ -111,10 +107,6 @@
             </a>
             
             <form action="/logout" method="POST">
-<<<<<<< HEAD
-=======
-              <button type="submit" name="logout" value="logout">Cerrar Sesión</button>
->>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
               <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
               <button type="submit" name="logout" value="logout" class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
                 Cerrar Sesión
@@ -152,7 +144,7 @@
                       <option value="inactivo" class="bg-slate-800">Inactivo</option>
                     </select>
 
-                    <input type="text" id="contraseña" name="contraseña" required placeholder="Contraseña de usuario" class="glass-input col-span-1 md:col-span-2">
+                    <input type="text" id="contraseña" name="contraseña" required placeholder="Contraseña de usuario" class="glass-input col-span-1 md:col-span-2">
                     
                     <button class="btn-actualizar flex items-center justify-center gap-2" id="btn-actualizar" name="btn-actualizar">
                         <i class="bi bi-arrow-repeat"></i> Actualizar
@@ -167,75 +159,6 @@
 
   <script src="/assets/js/cache.js"></script>
 
-<<<<<<< HEAD
 </body>
 
 </html>
-=======
-          <li class="nav-item-my-1">
-            <a href="/generarInforme" class="nav-link text-none">
-              <i class="bi bi-file-earmark-text-fill crear-notificacion"></i>
-              <br>
-              <span>Generar<br>Informe</span>
-            </a>
-          </li>
-          <div>
-            <li class="nav-item-my-1">
-              <a href="/casosAdmin" class="nav-link text-none">
-                <i class="bi bi-eye-fill ver-caso d-block"></i>
-                <span>Casos</span>
-              </a>
-            </li>
-          </div>
-           <li class="nav-item my-1">
-          <a href="/procesoOrganizacional" class="nav-link text-none">
-            <i class="bi bi-person-fill-gear usuarios"></i>
-            <span>Procesos</span>
-          </a>
-        </li>
-          <li class="nav-item-my-1">
-            <a href="/usuarios" class="nav-link text-none">
-              <i class="bi bi-person-fill-gear usuarios"></i>
-              <br>
-              <span>Usuarios</span>
-            </a>
-          </li>
-
-          <li class="nav-item-my-1">
-            <a href="/notificacionesAdmin" class="nav-link text-none">
-              <i class="bi bi-bell-fill notificacion"></i>
-              <br>
-              <span>Notificación</span>
-            </a>
-          </li>
-
-        </ul>
-      </div>
-    </div>
-    <main class="main">
-      <div class="formulario">
-        <h2>Gestion de usuarios</h2>
-        <input type="text" id="nombre" name="nombre" required placeholder="Nombre de usuario" class="formulario-gestion">
-        <input type="text" id="apellido" name="apellido" required placeholder="Apellido de usuario" class="formulario-gestion">
-        <input type="text" id="documento" name="documento" required placeholder="Documento de usuario" class="formulario-gestion">
-        <select id="rol" name="rol">
-          <option value="" disabled selected hidden>Rol del usuario</option>
-          <option value="admin">Administrador</option>
-          <option value="usuario">Usuario</option>
-        </select>
-        <input type="text" id="correo" name="correo" required placeholder="Correo de usuario" class="formulario-gestion">
-        <input type="text" id="fecha_registro" name="fecha_registro" required placeholder="Fecha de registro" class="formulario-gestion">
-        <select name="estado" id="estado" placeholder="Estado">
-          <option value="" disabled selected hidden>Estado del usuario</option>
-          <option value="activo">Activo</option>
-          <option value="inactivo">Inactivo</option>
-        </select>
-        <input type="text" id="contraseña" name="contraseña" required placeholder="Contraseña de usuario" class="formulario-gestion">
-        <button class="btn-actualizar" id="btn-actualizar" name="btn-actualizar">Actualizar</button>
-      </div>
-    </main>
-    <script src="/assets/js/cache.js"></script>
-  </body>
-
-  </html>
->>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f

@@ -55,7 +55,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
         
         <a href="/dashboardAdmin" class="nav-link">
           <i class="bi bi-house-fill"></i>
-          <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap hidden group-hover:inline-block">Inicio</span>
+          <span class="text-[10px] mt-1 font-medium">Inicio</span>
         </a>
 
         <a href="/generarInforme" class="nav-link">
