@@ -123,7 +123,7 @@ function loginUsuario($pdo, $documento, $contrasena)
         } else {
             return [
                 'status' => 'error',
-                'mensaje' => 'Credenciales inválidas'
+                'mensaje' => 'No se ha encontrado el usuario, credenciles invalidas'
             ]; //Retornamos error en caso de algun dato false
         }
     } catch (PDOException $e) { //Cualquier error sql se captura dentro del catch 

@@ -27,7 +27,6 @@ function validarCsrfToken($token)
     if(hash_equals($tokenSesion, $token)) {
         // Validación segura (hash_equals) exitosa.
         // ELIMINACIÓN DEL TOKEN DE SESIÓN PARA EVITAR REUTILIZACIÓN (one-time token).
-        unset($_SESSION['csrf_token']);
         return true;
     }
     // Fallo de coincidencia entre los tokens

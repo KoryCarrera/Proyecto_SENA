@@ -10,21 +10,21 @@ require_once __DIR__ . "/../models/seguridad.php";
 
 //SOLO PERMITIR SOLICITUDES POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
+
     //CAPTURA DE CREDENCIALES Y TOKEN DE SEGURIDAD
     $documentoInseguro = $_POST['documento'] ?? '';
     $contrasena = $_POST['password'] ?? '';
     $csrf_token = $_POST['csrf_token'] ?? '';
 
     // VALIDACIÓN DEL TOKEN CSRF
-    if (!validarCsrfToken($csrf_token)){ 
+    if (!validarCsrfToken($csrf_token)) {
         session_destroy();
         echo json_encode([
             'status' => 'error',
             'mensaje' => 'Error de seguridad, recargue la pagina'
         ]);
         exit;
-    }
+    } 
 
     // VERIFICACIÓN DE QUE LOS CAMPOS NO ESTÉN VACÍOS
     if ($documentoInseguro && $contrasena) {
@@ -36,13 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $verificacion = loginUsuario($pdo, $documento, $contrasena);
         //SI SE ENCONTRO UN USUARIO EN LA BASE DE DATOS STATUS ES OK
         if ($verificacion['status'] === 'ok') {
-            
+
             //VALIDACIÓN DE ROL: ADMINISTRADOR
             if ($verificacion['data']['id_rol'] == 1) {
 
                 //REGENERACIÓN DE ID DE SESIÓN
                 session_regenerate_id(true);
-                
+
                 //CONFIGURACIÓN DE VARIABLES DE SESIÓN DEL USUARIO
                 $_SESSION['user'] = [
                     'documento' => $verificacion['data']['documento'],
@@ -56,26 +56,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 //ELIMINAR EL TOKEN CSRF USADO
                 unset($_SESSION['csrf_token']);
-                
+
                 //RESPUESTA EXITOSA Y REDIRECCIÓN A VISTA DE ADMINISTRADOR
                 echo json_encode([
                     'status' => 'ok',
                     'redirect' => '/dashboardAdmin'
                 ]);
                 exit;
+            //VALIDACIÓN DE ROL: COMISIONADO
+            } else if ($verificacion['data']['id_rol'] == 2) {
+
+                //REGENERACIÓN DE ID DE SESIÓN
+                session_regenerate_id(true);
+
+                //CONFIGURACIÓN DE VARIABLES DE SESIÓN DEL USUARIO
+                $_SESSION['user'] = [
+                    'documento' => $verificacion['data']['documento'],
+                    'username' => $verificacion['data']['username'],
+                    'id_rol' => $verificacion['data']['id_rol'],
+                    'email' => $verificacion['data']['email']
+                ];
+
+                //MARCA DE TIEMPO PARA CONTROL DE INACTIVIDAD
+                $_SESSION['ultima_actividad'] = time();
+
+                //ELIMINAR EL TOKEN CSRF USADO
+                unset($_SESSION['csrf_token']);
+
+                //RESPUESTA EXITOSA Y REDIRECCIÓN A VISTA DE ADMINISTRADOR
+                echo json_encode([
+                    'status' => 'ok',
+                    'redirect' => '/dashboardComi'
+                ]);
+                exit;
             } else {
                 // FALLO: El usuario existe pero no tiene el rol de administrador.
                 echo json_encode([
                     'status' => 'error',
-                    'mensaje' => 'No eres Administrador'
+                    'mensaje' => 'No se ha encontrado el usuario en del sistema, verifica tus credenciales'
                 ]);
             }
         } else {
-             // FALLO: Las credenciales no coinciden.
-             echo json_encode([
-                 'status' => 'error',
-                 'mensaje' => 'Credenciales Invalidas'
-             ]);
+            // FALLO: Las credenciales no coinciden.
+            echo json_encode([
+                'status' => 'error',
+                'mensaje' => 'Credenciales Invalidas'
+            ]);
         }
     } else {
         // FALLO: Se enviaron valores vacíos.
