@@ -122,6 +122,8 @@ docker run --rm -v $(pwd):/app composer install --ignore-platform-reqs
 
 #Windows
 docker run --rm -v ${PWD}:/app composer install --ignore-platform-reqs
+#En caso de fallo del anterior usar el siguiente para windows
+docker run --rm -v %cd%:/app composer install --ignore-platform-reqs
 ```
 
 ### 3️⃣ Levantar contenedores con Docker
@@ -154,14 +156,14 @@ Una vez levantados los contenedores:
 
 #### Administrador
 ```
-Documento: 1111111111
+Documento: 1487569254
 Contraseña: 123456
 ```
 
 #### Comisionado
 ```
-Documento: 2222222222
-Contraseña: 123456
+Documento: 1456333298
+Contraseña: galvis123
 ```
 
 ### Flujo de Uso

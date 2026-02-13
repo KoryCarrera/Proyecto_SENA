@@ -6,7 +6,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <title>Proceso Organizacional | Administrador</title>
+=======
+    <title>Proceso organizacional</title>
+>>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
 
     <!--Icon de la pagina-->
     <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
@@ -26,6 +30,7 @@
 
 </head>
 
+<<<<<<< HEAD
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
 
     <!-- Decorative Background Elements -->
@@ -33,6 +38,34 @@
         <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
         <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
         <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+=======
+<body>
+    <!--NavBar admin-->
+    <div class="top-bar">
+        <nav class="navbar m-0 p-0 bg-body-tertiary">
+            <div class="container-fluid d-flex align-items-center justify-content-between">
+                <img class="ms-3" src="/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
+                <div class="d-flex align-items-center">
+                    <div class="text-end me-3">
+                        <?php if (isset($_SESSION['user']['username'])): ?>
+                            <h2 class='mb-0 d-none d-md-block'>
+                                <?php echo $_SESSION['user']['username']; ?>
+                            </h2>
+                        <?php endif; ?>
+                        <h4 class="mb-0 d-none d-md-block">Administrador</h4>
+                    </div>
+                    <a href="#">
+                        <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
+                    </a>
+                    <form action="/logout" method="POST">
+                        <button type="submit" name="logout" value="logout">Cerrar Sesión</button>
+                        <input type="hidden" name="csrf_token" id="csrf_token"
+                            value="<?php echo htmlspecialchars($token); ?>">
+                    </form>
+                </div>
+            </div>
+        </nav>
+>>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
     </div>
 
   <div class="flex h-screen overflow-hidden relative z-10">
@@ -53,10 +86,25 @@
           <span class="text-[10px] mt-1 font-medium">Inicio</span>
         </a>
 
+<<<<<<< HEAD
         <a href="/generarInforme" class="nav-link">
           <i class="bi bi-file-earmark-text-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Generar Informe</span>
         </a>
+=======
+                <li class="nav-item my-1">
+                    <a href="/casosAdmin" class="nav-link text-none">
+                        <i class="bi bi-eye-fill ver-caso d-block"></i>
+                        <span>Casos</span>
+                    </a>
+                </li>
+                <li class="nav-item my-1">
+                    <a href="/procesoOrganizacional" class="nav-link text-none">
+                        <i class="bi bi-person-fill-gear usuarios"></i>
+                        <span>Procesos</span>
+                    </a>
+                </li>
+>>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
 
         <a href="/casosAdmin" class="nav-link">
           <i class="bi bi-eye-fill"></i>
@@ -150,6 +198,7 @@
         </div>
       </main>
     </div>
+<<<<<<< HEAD
   </div>
 
     <!-- Custom Modal (Preserved Structure) -->
@@ -160,6 +209,38 @@
                 
                 <div class="mb-4">
                     <input type="text" id="nombre-proceso" name="nombre-proceso" placeholder="Nombre de proceso" class="contenido glass-input">
+=======
+    <main class="main">
+        <button type="button" id="abrirModal" class="btn-modal">Crear proceso</button>
+       <section class="tabla-procesos">
+    <table>
+        <thead>
+            <tr class="cabecera-tabla">
+                <th scope="col">Nombre<br>Proceso</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Fecha de<br>Creación</th>
+                <th scope="col">Documento</th>
+                <th scope="col">Creador del<br>Proceso</th>
+                <th scope="col">Gestionar</th>
+            </tr>
+        </thead>
+        <tbody class="cont-tabla" id="tablaProcesos">
+        </tbody>
+    </table>
+</section>
+    </main>
+    <div id="modal" class="modal">
+        <div class="contenido-modal">
+            <h2 class="titulo-modal">Crear proceso</h2>
+            <div id="formProceso" class="formulario">
+                <input type="text" id="nombre-proceso" name="nombre-proceso" placeholder="Nombre de proceso"
+                    class="contenido">
+                <textarea name="descripcion" id="descripcion" cols="30" rows="4" placeholder="Descripcion"
+                    class="contenido"></textarea>
+                <div class="botones">
+                    <button type="button" id="btnRegistrarProceso" class="boton">Crear proceso</button>
+                    <button type="button" id="cerrar-modal" class="boton">Cerrar</button>
+>>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
                 </div>
                 
                 <div class="mb-4">
@@ -178,8 +259,12 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 
 
+=======
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+>>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="assets/js/procesos-modal.js"></script>
     <script src="assets/js/registrarProceso.js"></script>

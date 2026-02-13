@@ -28,6 +28,7 @@
 
 </head>
 
+<<<<<<< HEAD
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
 
     <!-- Decorative Background Elements -->
@@ -35,6 +36,33 @@
         <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
         <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
         <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+=======
+<body>
+    <!--NavBar admin-->
+    <div class="top-bar">
+        <nav class="navbar m-0 p-0 bg-body-tertiary">
+            <div class="container-fluid d-flex align-items-center justify-content-between">
+                <img class="ms-3" src="/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
+                <div class="d-flex align-items-center">
+                    <div class="text-end me-3">
+                        <?php if (isset($_SESSION['user']['username'])): ?>
+                            <h2 class='mb-0 d-none d-md-block'>
+                                <?php echo $_SESSION['user']['username']; ?>
+                            </h2>
+                        <?php endif; ?>
+                        <h4 class="mb-0 d-none d-md-block">Administrador</h4>
+                    </div>
+                    <a href="#">
+                        <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
+                    </a>
+                    <form action="/logout" method="POST">
+                        <button type="submit" name="logout" value="logout">Cerrar Sesión</button>
+                        <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+                    </form>
+                </div>
+            </div>
+        </nav>
+>>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
     </div>
 
   <div class="flex h-screen overflow-hidden relative z-10">
@@ -123,6 +151,7 @@
             <div class="glass-card p-8 md:p-10">
                 <h2 class="text-2xl font-bold text-white text-center mb-6">Datos de Informe</h2>
                 
+<<<<<<< HEAD
                 <div id="seccion1" class="form-section space-y-6">
                     
                     <div class="relative">
@@ -131,6 +160,48 @@
                             <option selected disabled>Selecione el tipo de archivo</option>
                             <option value="1" class="bg-slate-800">PDF</option>
                             <option value="2" class="bg-slate-800">EXCEL</option>
+=======
+                 <li class="nav-item my-1">
+          <a href="/procesoOrganizacional" class="nav-link text-none">
+            <i class="bi bi-person-fill-gear usuarios"></i>
+            <span>Procesos</span>
+          </a>
+        </li>
+
+                <li class="nav-item my-1">
+                    <a href="/usuarios" class="nav-link text-none">
+                        <i class="bi bi-person-fill-gear usuarios"></i>
+                        <span>Usuarios</span>
+                    </a>
+                </li>
+
+                <li class="nav-item my-1">
+                    <a href="/notificacionesAdmin" class="nav-link text-none">
+                        <i class="bi bi-bell-fill notificacion"></i>
+                        <span>Notificación</span>
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <!--Contenido de la pagina-->
+    <div class="main-content">
+
+        <div class="container mt-5">
+            <h1 class="text-center mb-4">Generación de Informe</h1>
+            <div class="custom-form-box mx-auto">
+                <h2 class="text-center mb-4">Datos de Informe</h2>
+                <div id="seccion1" class="form-section">
+                    <div class="input-group mb-4 custom-input-group">
+                        <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
+
+                        <select class="form-select custom-input" id="formato">
+                            <option selected selected value="">Selecione el tipo de archivo</option>
+                            <option value="1">PDF</option>
+                            <option value="2">EXCEL</option>
+>>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
                         </select>
                         <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
                     </div>
@@ -161,6 +232,7 @@
   </div>
 
 
+<<<<<<< HEAD
     <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
@@ -170,6 +242,12 @@
     <script src="/assets/js/cache.js"></script>
     <script src="/assets/js/generarInforme.js"></script>
 
+=======
+        <!--JS propio-->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/assets/js/cache.js"></script>
+        <script src="/assets/js/generarInforme.js"></script>
+>>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
 </body>
 
 </html>

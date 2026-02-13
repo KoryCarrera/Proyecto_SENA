@@ -37,16 +37,12 @@ function cargarOpciones() {
     });
 }
 
-// ============================================
 // EJECUTAR AL CARGAR LA PÁGINA
-// ============================================
 $(document).ready(function () {
     cargarOpciones();
 });
 
-// ============================================
 // CONTADOR DE CARACTERES DE LA DESCRIPCIÓN
-// ============================================
 document.addEventListener("DOMContentLoaded", function () {
     const descripcion = document.getElementById('descripcion');
     const contador = document.getElementById('contadorCaracteres');
@@ -54,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (descripcion && contador) {
         descripcion.addEventListener('input', function () {
             contador.textContent = this.value.length;
-            
+
             // Cambiar color según la cantidad de caracteres
             if (this.value.length > 1900) {
                 contador.style.color = '#dc3545'; // Rojo
@@ -106,7 +102,7 @@ if (inputArchivos) {
 // ============================================
 function mostrarPreviewArchivos(archivos) {
     if (!vistaArchivos) return;
-    
+
     vistaArchivos.innerHTML = '';
 
     archivos.forEach((archivo, index) => {
@@ -228,37 +224,57 @@ if (btnRegistrar) {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
-        .then(respuesta => {
-            if (respuesta.status === 'ok') {
-                alert(respuesta.mensaje);
+            .then(response => response.json())
+            .then(respuesta => {
+                if (respuesta.status === 'ok') {
 
-                // Limpiar formulario
-                document.getElementById("nombreCaso").value = '';
-                document.getElementById("proceso").value = '';
-                document.getElementById("tipoCaso").value = '';
-                document.getElementById("descripcion").value = '';
-                document.getElementById("archivos").value = '';
-                vistaArchivos.innerHTML = '';
-                document.getElementById("contadorCaracteres").textContent = '0';
+                    //Alerta estetica
+                    Swal.fire({
+                        icon: 'success',
+                        titel: `${respuesta.mensaje}`,
+                        theme: 'dark',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
 
-                // Recargar opciones de los selects
-                cargarOpciones();
+                    // Limpiar formulario
+                    document.getElementById("nombreCaso").value = '';
+                    document.getElementById("proceso").value = '';
+                    document.getElementById("tipoCaso").value = '';
+                    document.getElementById("descripcion").value = '';
+                    document.getElementById("archivos").value = '';
+                    vistaArchivos.innerHTML = '';
+                    document.getElementById("contadorCaracteres").textContent = '0';
 
-                setTimeout(function () {
-                    restaurarBoton();
-                }, 2000);
+                    // Recargar opciones de los selects
+                    cargarOpciones();
 
-            } else {
-                alert(respuesta.mensaje);
+                    setTimeout(() => {
+                        restaurarBoton();
+                    }, 1500);
+
+                } else {
+
+                    //Mostrar alerta estetica
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: `${respuesta.mensaje}`,
+                        theme: 'dark',
+                        showConfirmButton: false,
+                        timer: 1000,
+                    })
+
+                    setTimeout(() => {
+                        restaurarBoton();
+                    }, 1500);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Error de conexión con el servidor");
                 restaurarBoton();
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            alert("Error de conexión con el servidor");
-            restaurarBoton();
-        });
+            });
     });
 }
 

@@ -1,38 +1,57 @@
 const generarInforme = document.getElementById("informe");
 
-    const formato = document.getElementById("formato");
-    const tituloObservacion = document.getElementById("titulo");
-    const contenidoObservacion = document.getElementById("descripcion");
-    const conclusiones = document.getElementById("conclusion");
-    const inputsAocultar = document.querySelectorAll(".input-group.mb-4.custom-input-group");
+const formato = document.getElementById("formato");
+const tituloObservacion = document.getElementById("titulo");
+const contenidoObservacion = document.getElementById("descripcion");
+const conclusiones = document.getElementById("conclusion");
+const inputsAocultar = document.querySelectorAll(".input-group.mb-4.custom-input-group");
 
-    formato.addEventListener('change', function () { //Agregamos un evento de "cambio" en el select
-        if (this.value === "2") { //Validamos que si la elección es excel
-            inputsAocultar.forEach((grupo, index) => { //Recorremos el array que nos devolió el querySelector
-                if (index > 0) { //Validamos que haya mas de 0 elementos con esa clase
-                    grupo.style.display = 'none'; //le cambiamos la propiedad para ocultarlo
-                }
-            });
-        } else { //si cambia de opcion volvemos a buscar
-            inputsAocultar.forEach((grupo) => {
-                grupo.style.display = 'flex';
-            });
-        }
-    });
+formato.addEventListener('change', function () { //Agregamos un evento de "cambio" en el select
+    if (this.value === "2") { //Validamos que si la elección es excel
+        inputsAocultar.forEach((grupo, index) => { //Recorremos el array que nos devolió el querySelector
+            if (index > 0) { //Validamos que haya mas de 0 elementos con esa clase
+                grupo.style.display = 'none'; //le cambiamos la propiedad para ocultarlo
+            }
+        });
+    } else { //si cambia de opcion volvemos a buscar
+        inputsAocultar.forEach((grupo) => {
+            grupo.style.display = 'flex';
+        });
+    }
+});
 
-generarInforme.addEventListener('click', function() {
-    
+generarInforme.addEventListener('click', function () {
+
     // Validación
-    if (!tituloObservacion || !contenidoObservacion || !conclusiones) {
-        alert('Por favor completa todos los campos');
-        return;
+    if (formato.value != 2) {
+        if (!tituloObservacion.value || !contenidoObservacion.value || !conclusiones.value || !formato.value) {
+
+            Swal.fire({
+                title: '¡Por favor rellena los campos!',
+                theme: 'dark',
+                icon: 'info',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+            return;
+        }
     }
 
     let ENDPOINT;
-    if (formato.value !== "2") {
+    if (formato.value == "1") {
         ENDPOINT = '/generarPDF';
-    } else {
+    } else if (formato.value == "2") {
         ENDPOINT = '/generarExcel';
+    } else {
+
+        Swal.fire({
+            title: '¡Por favor selecciona un formato!',
+            theme: 'dark',
+            icon: 'info',
+            showConfirmButton: false,
+            timer: 1500,
+        });
+        
     }
 
     // Creamos un formulario temporal y enviarlo en nueva ventana
@@ -59,6 +78,6 @@ generarInforme.addEventListener('click', function() {
     document.body.appendChild(form);
     form.submit();
     document.body.removeChild(form);
-    
+
     alert('Generando Reporte...');
 });

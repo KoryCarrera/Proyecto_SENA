@@ -13,8 +13,16 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
   <!--Icon de la pagina-->
   <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
 
+<<<<<<< HEAD
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+=======
+  <link rel="stylesheet" href="/assets/css/crear-usuario.css">
+  <!--Google fonts-->
+  <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+>>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
 
   <!-- Bootstrap CSS (Required for JS compatibility with Modals) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -22,6 +30,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
   
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<<<<<<< HEAD
 
   <!--CSS propio-->
   <link rel="stylesheet" href="/assets/css/crear-usuario.css">
@@ -57,6 +66,40 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
       <!-- Logo Area -->
       <div class="h-20 flex items-center justify-center border-b border-white/5">
         <img src="/assets/img/logo_sena.png" alt="SENA" class="w-10 h-10 object-contain group-hover:block">
+=======
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!--CSS propio para colores y fonts-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+</head>
+
+<body>
+  <div class="top-bar">
+    <nav class="navbar_m-0_p-0">
+      <div class="container-fluid d-flex align-items-center justify-content-between">
+        <img class="ms-3" src="/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
+        <div class="d-flex align-items-center">
+          <div class="text-end me-3">
+            <?php if (isset($_SESSION['user']['username'])): ?>
+              <h2 class='mb-0 d-none d-md-block'>
+                <?php echo $_SESSION['user']['username']; ?>
+              </h2>
+            <?php endif; ?>
+            <h4 class="mb-0 d-none d-md-block">Administrador</h4>
+          </div>
+          <a href="#">
+            <img src="/assets/img/icon account.png" alt="User" width="76" height="76">
+          </a>
+          <form action="/logout" method="POST">
+            <button type="submit" name="logout" value="logout">Cerrar Sesión</button>
+            <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+          </form>
+        </div>
+>>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
       </div>
 
       <!-- Navigation -->
@@ -128,6 +171,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
         </div>
       </header>
 
+<<<<<<< HEAD
       <!-- Content -->
       <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
         <div class="max-w-7xl mx-auto space-y-8">
@@ -158,6 +202,21 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
                     </form>
                 </div>
             </section>
+=======
+        <li class="nav-item my-1">
+          <a href="/procesoOrganizacional" class="nav-link text-none">
+            <i class="bi bi-person-fill-gear usuarios"></i>
+            <span>Procesos</span>
+          </a>
+        </li>
+        <li class="nav-item-my-1 active">
+          <a href="/usuarios" class="nav-link text-none">
+            <i class="bi bi-person-fill-gear usuarios"></i>
+            <br>
+            <span>Usuarios</span>
+          </a>
+        </li>
+>>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
 
             <!-- Users Table -->
             <section class="tabla-usuarios">
@@ -187,7 +246,51 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
     </div>
   </div>
 
+<<<<<<< HEAD
   <!-- Modal Wrapper -->
+=======
+  <main class="main">
+    <section class="formulario-crear-usuario">
+
+      <form action="" method="POST">
+        <h2>Crear Usuario</h2>
+
+        <select id="rol" name="rol" required class="formulario">
+          <option value="" disabled selected>Escoge un rol</option>
+          <option value="1">Administrador</option>
+          <option value="2">Comisionado</option>
+        </select>
+
+        <input type="text" id="nombre" name="nombre" required placeholder="Nombre" class="formulario">
+        <input type="text" id="apellido" name="apellido" required placeholder="Apellido" class="formulario">
+        <input type="text" id="documento" name="documento" required placeholder="Documento" class="formulario">
+        <input type="text" id="email" name="email" required placeholder="Email" class="formulario">
+        <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" class="formulario">
+
+        <button type="button" class="btn-usuario" id="btn-usuario">Siguiente</button>
+      </form>
+    </section>
+    <section class="tabla-usuarios">
+      <table>
+        <thead>
+          <tr class="head-tabla">
+            <th scope="col">Documento</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Correo</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Rol</th>
+            <th scope="col">Gestionar</th>
+          </tr>
+        </thead>
+        <tbody class="cont-tabla" id="tablaUsuarios">
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+  <!--Modal de supervisar-->
+>>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
   <div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content glass-card border-slate-700">
@@ -206,6 +309,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
           <button type="button" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-colors text-sm font-medium ml-2" onclick="habilitarEdicion()">
              <i class="bi bi-pencil"></i> Editar Usuario
           </button>
+<<<<<<< HEAD
         </div>
       </div>
     </div>
@@ -222,6 +326,16 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
 
   <script src="/assets/js/usuariosAdmin.js"></script>
   <script src="/assets/js/cache.js"></script>
+=======
+          <a href="/editarUsuario">a</a>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+            crossorigin="anonymous"></script>
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+          <script src="/assets/js/jquery-3.7.1.min.js"></script>
+          <script src="/assets/js/usuariosAdmin.js"></script>
+          <script src="/assets/js/cache.js"></script>
+>>>>>>> 14b1a0e7eeb1f674fa202f7107fe4806a4e2378f
 
 </body>
 
