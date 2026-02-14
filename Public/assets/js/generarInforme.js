@@ -1,10 +1,49 @@
+//definimos las urls en constantes para evitar errores de tipeo
+const ENDPOINT_CASOS = '';
+const ENDPOINT_USUARIOS = '';
+const ENDPOINT_PROCESOS = '';
+const ENDPOINT_EXCEL = '';
+
 const generarInforme = document.getElementById("informe");
 
 const formato = document.getElementById("formato");
 const tituloObservacion = document.getElementById("titulo");
 const contenidoObservacion = document.getElementById("descripcion");
-const conclusiones = document.getElementById("conclusion");
-const inputsAocultar = document.querySelectorAll(".input-group.mb-4.custom-input-group");
+const tipo = document.getElementById("tipoReporte");
+const tituloForm = document.getElementById("tituloForm");
+const inputsAocultar = document.querySelectorAll(".relative:not(#excluido)"); //Seleccionamos los elementos con la clase "relative" que no tengan la clase "excluid"
+
+//capturamos los contadores de caracteres
+const contadorTitulo = document.getElementById("contadorTitulo");
+const contadorDescripcion = document.getElementById("contadorDescripcion");
+
+//Agregamos eventos de input para actualizar los contadores
+tituloObservacion.addEventListener('input', function () {
+    contadorTitulo.textContent = `${this.value.length}/125`;
+});
+
+contenidoObservacion.addEventListener('input', function () {
+    contadorDescripcion.textContent = `${this.value.length}/500`;
+});
+
+//Insertamos el titulo por defecto
+tituloForm.innerHTML = "Datos para tu informe";
+
+tipo.addEventListener('change', function () { //Agregamos un evento de "cambio" en el select
+    switch (tipo.value) {
+        case "1":
+            tituloForm.innerHTML = "Reporte por Casos";
+            break;
+        case "2":
+            tituloForm.innerHTML = "Reporte por Usuarios";
+            break;
+        case "3":
+            tituloForm.innerHTML = "Reporte por Procesos Organizacionales";
+            break;
+        default:
+            tituloForm.innerHTML = "Reporte";
+    };
+});
 
 formato.addEventListener('change', function () { //Agregamos un evento de "cambio" en el select
     if (this.value === "2") { //Validamos que si la elección es excel
@@ -13,6 +52,7 @@ formato.addEventListener('change', function () { //Agregamos un evento de "cambi
                 grupo.style.display = 'none'; //le cambiamos la propiedad para ocultarlo
             }
         });
+        tituloForm.innerHTML = "Reporte general anual en Excel"; //Cambiamos el titulo del formulario
     } else { //si cambia de opcion volvemos a buscar
         inputsAocultar.forEach((grupo) => {
             grupo.style.display = 'flex';
@@ -38,11 +78,22 @@ generarInforme.addEventListener('click', function () {
     }
 
     let ENDPOINT;
-    if (formato.value == "1") {
-        ENDPOINT = '/generarPDF';
-    } else if (formato.value == "2") {
-        ENDPOINT = '/generarExcel';
-    } else {
+
+    switch (tipo.value) {
+        case "1":
+            ENDPOINT = ENDPOINT_CASOS;
+            break;
+        case "2":
+            ENDPOINT = ENDPOINT_USUARIOS;
+            break;
+        case "3":
+            ENDPOINT = ENDPOINT_PROCESOS;
+            break;
+        default:
+            ENDPOINT = '';
+    };
+
+    if (!formato.value) {
 
         Swal.fire({
             title: '¡Por favor selecciona un formato!',
@@ -51,7 +102,7 @@ generarInforme.addEventListener('click', function () {
             showConfirmButton: false,
             timer: 1500,
         });
-        
+
     }
 
     // Creamos un formulario temporal y enviarlo en nueva ventana
@@ -64,7 +115,6 @@ generarInforme.addEventListener('click', function () {
     const campos = {
         'titulo': tituloObservacion.value,
         'contenidoObservacion': contenidoObservacion.value,
-        'conclusiones': conclusiones.value
     };
     //Metemos los valores en el input del form creado
     for (let key in campos) {
@@ -79,5 +129,9 @@ generarInforme.addEventListener('click', function () {
     form.submit();
     document.body.removeChild(form);
 
-    alert('Generando Reporte...');
+    Swal.fire({
+        title: '¡Se ha generado tu informe exitosamente!',
+        theme: 'dark',
+        icon: 'success',
+    });
 });

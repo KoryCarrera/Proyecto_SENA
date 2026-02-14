@@ -111,7 +111,14 @@ const supervisarCaso = async (id_caso) => {
 
     } catch (error) {
         console.error(error);
-        alert('Error al supervisar el caso');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al supervisar el caso',
+            text: 'Ocurrió un error al intentar supervisar el caso.',
+            theme: 'dark',
+            showConfirmButton: false,
+            timer: 1000,
+        });
     }   
 };
 document.addEventListener('DOMContentLoaded', CargarCasos);

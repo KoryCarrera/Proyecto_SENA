@@ -109,15 +109,35 @@ const desactivarProceso = async (id_Proceso) => {
         const data = await response.json(); //transformamos la respuesta a json
         
         if (data.status === 'ok') { //validamos el estado
-            alert('Proceso ha sido desactivado'); //mandamos un alert para validar la accion exitosa
+            Swal.fire({
+                icon: 'success',
+                title: 'Proceso desactivado exitosamente',
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
             cargarProcesos();
         } else {
-            alert('Error: ' + data.mensaje); //en caso de error mostrar el mensaje
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al desactivar el proceso',
+                text: data.mensaje,
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
         }
         
     } catch (error) { //capturamos errores
         console.error('Error:', error); //capturamos el error en la consola
-        alert(' Error al desactivar el proceso');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al desactivar el proceso',
+            text: 'Ocurrió un error al intentar desactivar el proceso.',
+            theme: 'dark',
+            showConfirmButton: false,
+            timer: 1000,
+        });
     }
 };
 
@@ -138,15 +158,35 @@ const reactivarProceso = async (id_Proceso) => {
         const data = await response.json();
         
         if (data.status === 'ok') {
-            alert('Proceso reactivado exitosamente');
+            Swal.fire({
+                icon: 'success',
+                title: 'Proceso reactivado exitosamente',
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
             cargarProcesos();
         } else {
-            alert('Error: ' + data.mensaje);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al reactivar el proceso',
+                text: data.mensaje,
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
         }
         
     } catch (error) {
         console.error('Error:', error);
-        alert('Error al reactivar el proceso');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al reactivar el proceso',
+            text: 'Ocurrió un error al intentar reactivar el proceso.',
+            theme: 'dark',
+            showConfirmButton: false,
+            timer: 1000,
+        });
     }
 };
 
@@ -211,13 +251,25 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Verifica los campos se hayan llenado
         if (!nombreProceso.trim()) {
-            alert(' Por favor ingresa el nombre del proceso');
+            Swal.fire({
+                icon: 'error',
+                title: 'Por favor ingresa el nombre del proceso',
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
             document.getElementById('nombre-proceso').focus();
             return;
         }
         
         if (!descripcion.trim()) {
-            alert(' Por favor ingresa la descripción');
+            Swal.fire({
+                icon: 'error',
+                title: 'Por favor ingresa la descripción',
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
             document.getElementById('descripcion').focus();
             return;
         }
@@ -245,8 +297,14 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (data.status === 'ok') {
                 console.log(' Proceso creado');
-                alert('Proceso creado exitosamente');
-                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Proceso creado exitosamente',
+                    theme: 'dark',
+                    showConfirmButton: false,
+                    timer: 1000,
+                });
+
                 // Cierra el modal cambiando el estilo a none 
                 modal.style.display = 'none';
                 document.body.style.overflow = 'auto';
@@ -260,7 +318,14 @@ document.addEventListener('DOMContentLoaded', () => {
             
         } catch (error) {
             console.error('Error:', error);
-            alert(` Error: ${error.message}`);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al crear el proceso',
+                text: `Error: ${error.message}`,
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
         } finally {
             botonGuardar.disabled = false;
             botonGuardar.textContent = 'crear proceso';
