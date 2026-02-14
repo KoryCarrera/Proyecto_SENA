@@ -485,7 +485,7 @@ function listarCasosComi ($pdo, $documento)
 
 	try {
         $stmt->execute();
-        $listarCasosComi = $stmt->fetch(PDO::FETCH_ASSOC);
+        $listarCasosComi = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
 
         if ($listarCasosComi) {

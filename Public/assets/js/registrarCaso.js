@@ -138,9 +138,7 @@ function mostrarPreviewArchivos(archivos) {
     });
 }
 
-// ============================================
 // ELIMINAR ARCHIVO DE LA SELECCIÓN
-// ============================================
 function eliminarArchivo(index) {
     const dt = new DataTransfer();
     const archivos = Array.from(inputArchivos.files);
@@ -154,9 +152,7 @@ function eliminarArchivo(index) {
     mostrarPreviewArchivos(archivosSeleccionados);
 }
 
-// ============================================
 // FORMATEAR BYTES A KB, MB
-// ============================================
 function formatBytes(bytes) {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -165,21 +161,19 @@ function formatBytes(bytes) {
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
 }
 
-// ============================================
 // ENVIAR FORMULARIO CON VALIDACIONES
-// ============================================
 const btnRegistrar = document.getElementById("btnRegistrarcaso");
 
 if (btnRegistrar) {
     btnRegistrar.addEventListener('click', function () {
 
-        // ===== CAPTURAR VALORES =====
+        //CAPTURAR VALORES
         const nombreCaso = document.getElementById("nombreCaso").value.trim();
         const proceso = document.getElementById("proceso").value;
         const tipoCaso = document.getElementById("tipoCaso").value;
         const descripcion = document.getElementById("descripcion").value.trim();
 
-        // ===== VALIDACIONES =====
+        //VALIDACIONES
         if (!nombreCaso) {
             alert('El nombre del caso es obligatorio');
             return;
@@ -200,13 +194,13 @@ if (btnRegistrar) {
             return;
         }
 
-        // ===== DESHABILITAR BOTÓN =====
+        //DESHABILITAR BOTÓN
         btnRegistrar.disabled = true;
         btnRegistrar.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Enviando...';
         btnRegistrar.style.opacity = "0.6";
         btnRegistrar.style.cursor = "not-allowed";
 
-        // ===== CREAR FORMDATA =====
+        //CREAR FORMDATA
         const formData = new FormData();
         formData.append('nombreCaso', nombreCaso);
         formData.append('proceso', proceso);
@@ -219,7 +213,7 @@ if (btnRegistrar) {
             formData.append('archivos[]', archivos[i]);
         }
 
-        // ===== ENVIAR CON FETCH =====
+        //ENVIAR CON FETCH
         fetch(ENDPOINT_ENVIAR, {
             method: 'POST',
             body: formData
@@ -231,7 +225,7 @@ if (btnRegistrar) {
                     //Alerta estetica
                     Swal.fire({
                         icon: 'success',
-                        titel: `${respuesta.mensaje}`,
+                        title: 'Caso registrado exitosamente',
                         theme: 'dark',
                         showConfirmButton: false,
                         timer: 1000
@@ -259,7 +253,7 @@ if (btnRegistrar) {
 
                     Swal.fire({
                         icon: 'error',
-                        title: `${respuesta.mensaje}`,
+                        title: 'Error al registrar el caso',
                         theme: 'dark',
                         showConfirmButton: false,
                         timer: 1000,
@@ -272,15 +266,19 @@ if (btnRegistrar) {
             })
             .catch(error => {
                 console.error("Error:", error);
-                alert("Error de conexión con el servidor");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de conexión con el servidor',
+                    theme: 'dark',
+                    showConfirmButton: false,
+                    timer: 1000,
+                });
                 restaurarBoton();
             });
     });
 }
 
-// ============================================
-// RESTAURAR ESTADO DEL BOTÓN
-// ============================================
+//RESTAURAR ESTADO DEL BOTÓN
 function restaurarBoton() {
     if (btnRegistrar) {
         btnRegistrar.disabled = false;

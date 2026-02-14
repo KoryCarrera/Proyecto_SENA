@@ -6,123 +6,8 @@
     <title>Gestión PQRS | Proyecto SENA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        slate: {
-                            850: '#151e2e',
-                        }
-                    },
-                    animation: {
-                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
-                        'blob': 'blob 7s infinite',
-                    },
-                    keyframes: {
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #020617; /* Slate 950 */
-            color: #e2e8f0; /* Slate 200 */
-            overflow-x: hidden;
-        }
-        
-        .glass-nav {
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .mirror-effect {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .mirror-effect::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -50%;
-            width: 200%;
-            height: 100%;
-            background: linear-gradient(
-                to bottom right,
-                rgba(255, 255, 255, 0.05) 0%,
-                rgba(255, 255, 255, 0.01) 40%,
-                rgba(255, 255, 255, 0) 50%,
-                rgba(255, 255, 255, 0.01) 60%,
-                rgba(255, 255, 255, 0.05) 100%
-            );
-            transform: skewX(-20deg);
-            pointer-events: none;
-        }
-
-        .glass-card {
-            background: rgba(30, 41, 59, 0.4);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-card:hover {
-            background: rgba(30, 41, 59, 0.6);
-            transform: translateY(-4px);
-            border-color: rgba(99, 102, 241, 0.2);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
-        }
-
-        .text-glow {
-            text-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
-        }
-
-        .blob-bg {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: linear-gradient(180deg, rgba(79, 70, 229, 0.15) 0%, rgba(147, 51, 234, 0.15) 100%);
-            filter: blur(80px);
-            border-radius: 50%;
-            z-index: -1;
-            animation: blob 10s infinite alternate;
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #020617; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569; 
-        }
-    </style>
+    <script src="/assets/js/landing.js"></script>
+    <link rel="stylesheet" href="/assets/css/landing.css">
 </head>
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
 
@@ -153,7 +38,7 @@
 
             <!-- CTA Button -->
             <div class="relative z-10">
-                <a href="login.php" class="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-medium text-white transition duration-300 ease-out border border-white/20 rounded-full hover:bg-white/10 group">
+                <a href="/login" class="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-medium text-white transition duration-300 ease-out border border-white/20 rounded-full hover:bg-white/10 group">
                     <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-indigo-600/80 group-hover:translate-x-0 ease">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </span>
@@ -168,13 +53,6 @@
     <section class="relative z-10 pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-900/30 border border-indigo-500/30 text-indigo-300 text-sm font-medium mb-8 animate-[fadeInUp_0.8s_ease-out_forwards]">
-                <span class="relative flex h-2 w-2">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-                </span>
-            </div>
-
             <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-8 animate-[fadeInUp_0.8s_ease-out_0.2s_forwards] opacity-0 text-glow">
                 Gestión Eficiente de <br class="hidden md:block"/>
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">PQRS</span>
@@ -185,7 +63,7 @@
             </p>
             
             <div class="mt-10 flex gap-4 justify-center animate-[fadeInUp_0.8s_ease-out_0.6s_forwards] opacity-0">
-                <a href="entrada.php" class="px-8 py-4 rounded-full bg-slate-100 text-slate-900 font-semibold hover:bg-white hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                <a href="/login" class="px-8 py-4 rounded-full bg-slate-100 text-slate-900 font-semibold hover:bg-white hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)]">
                     Comenzar Ahora
                 </a>
                 <a href="#" class="px-8 py-4 rounded-full glass-card hover:bg-slate-800/50 text-white font-medium transition-all duration-300">
@@ -263,7 +141,7 @@
                     <p class="text-slate-400 text-sm">© 2024 Proyecto SENA. Todos los derechos reservados.</p>
                 </div>
                 <div class="flex space-x-6">
-                    <a href="#" class="text-slate-400 hover:text-white transition-colors">
+                    <a href="https://github.com/KoryCarrera/Proyecto_SENA" target="_blank" class="text-slate-400 hover:text-white transition-colors">
                         <span class="sr-only">GitHub</span>
                         <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
                     </a>

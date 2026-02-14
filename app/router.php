@@ -50,8 +50,6 @@ $router -> map('GET', '/notificacionesComi', 'views/comisionado/notificacion.php
 
 //Rutas views inicio
 
-$router -> map('GET', '/entradaAdmin', '../Public/pages/entrada_administrador.php');
-$router -> map('GET', '/entradaComi', '../Public/pages/entrada_comisionado.php');
-$router -> map('GET','/landing','../Public/pages/landing.php');
+$router -> map('GET', '/login', '../Public/pages/entrada.php');
 return $router;
 ?>
