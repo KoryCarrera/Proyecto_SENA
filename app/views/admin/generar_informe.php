@@ -122,31 +122,35 @@
         <div class="max-w-2xl mx-auto">
 
           <div class="glass-card p-8 md:p-10">
-            <h2 class="text-2xl font-bold text-white text-center mb-6">Datos de Informe</h2>
+            <h2 class="text-2xl font-bold text-white text-center mb-6" id="tituloForm"></h2>
 
             <div id="seccion1" class="form-section space-y-6">
 
-              <div class="relative">
-                <i class="bi bi-file-earmark-arrow-down custom-icon text-indigo-400 absolute left-4 top-1/2 -translate-y-1/2 text-lg"></i>
+              <div class="relative" id="excluido">
                 <select class="glass-input w-full p-3 pl-12 rounded-lg text-white appearance-none cursor-pointer" id="formato">
-                  <option selected disabled>Selecione el tipo de archivo</option>
+                  <option selected disabled class="bg-slate-800">Selecione el tipo de archivo</option>
                   <option value="1" class="bg-slate-800">PDF</option>
                   <option value="2" class="bg-slate-800">EXCEL</option>
                 </select>
-                <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
               </div>
 
               <div class="relative">
-                <i class="bi bi-type-h1 custom-icon text-indigo-400 absolute left-4 top-1/2 -translate-y-1/2 text-lg"></i>
-                <input type="text" class="glass-input w-full p-3 pl-12 rounded-lg text-white placeholder-slate-400" placeholder="Titulo de la observación" id="titulo">
+                <select class="glass-input w-full p-3 pl-12 rounded-lg text-white appearance-none cursor-pointer" id="tipoReporte">
+                  <option selected disabled class="bg-slate-800">Selecione el tipo de reporte anual</option>
+                  <option value="1" class="bg-slate-800">Reporte de Casos</option>
+                  <option value="2" class="bg-slate-800">Reporte de Usuarios</option>
+                  <option value="3" class="bg-slate-800">Reporte de Procesos Organizacionales</option>
+                </select>
               </div>
 
               <div class="relative">
-                <textarea class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400 min-h-[120px]" placeholder="Contenido De La Observación/es" id="descripcion"></textarea>
+                <input maxlength="125" type="text" class="glass-input w-full p-3 pl-12 rounded-lg text-white placeholder-slate-400" placeholder="Titulo de la observación" id="titulo">
+                <small id="contadorTitulo" class="absolute right-3 bottom-3 text-xs text-slate-400"></small>
               </div>
 
               <div class="relative">
-                <textarea class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400 min-h-[100px]" placeholder="Conclusiones Respectiva" id="conclusion"></textarea>
+                <textarea maxlength="500" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400 min-h-[120px]" placeholder="Contenido De La Observación/es" id="descripcion"></textarea>
+                <small id="contadorDescripcion" class="absolute right-3 bottom-3 text-xs text-slate-400"></small>
               </div>
 
               <button type="button" class="btn-siguiente w-full flex items-center justify-center gap-2 mt-4" id="informe">

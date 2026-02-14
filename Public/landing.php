@@ -59,7 +59,7 @@
             </h1>
             
             <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-slate-400 leading-relaxed animate-[fadeInUp_0.8s_ease-out_0.4s_forwards] opacity-0">
-                Administra peticiones, quejas, reclamos y sugerencias de manera ágil y transparente. La solución integral para mejorar la atención al ciudadano.
+                Administra peticiones, quejas, reclamos y sugerencias de manera ágil y transparente. La solución integral para mejorar la atención al personal interno.
             </p>
             
             <div class="mt-10 flex gap-4 justify-center animate-[fadeInUp_0.8s_ease-out_0.6s_forwards] opacity-0">

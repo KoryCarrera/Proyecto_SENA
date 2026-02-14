@@ -32,7 +32,14 @@ function cargarOpciones() {
             }
         },
         error: function () {
-            alert("No se pudieron cargar las opciones del formulario. Verifique su conexión.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de conexión',
+                text: 'No se pudieron cargar las opciones del formulario. Verifique su conexión.',
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
         }
     });
 }
@@ -76,7 +83,13 @@ if (inputArchivos) {
 
         // Validación de la cantidad de archivos (máximo 3)
         if (archivos.length > 3) {
-            alert('Solo puede subir 3 archivos como máximo');
+            Swal.fire({
+                icon: 'error',
+                title: 'Solo puede subir 3 archivos como máximo',
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
             this.value = '';
             return;
         }
@@ -86,7 +99,14 @@ if (inputArchivos) {
         const archivosGrandes = archivos.filter(f => f.size > MAX_SIZE);
 
         if (archivosGrandes.length > 0) {
-            alert(`Los siguientes archivos superan el límite de 10 MB:\n${archivosGrandes.map(f => f.name).join('\n')}`);
+            Swal.fire({
+                icon: 'error',
+                title: 'Algunos archivos exceden el tamaño máximo permitido (10MB)',
+                text: `Los siguientes archivos superan el límite de 10 MB:\n${archivosGrandes.map(f => f.name).join('\n')}`,
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
             this.value = '';
             return;
         }
@@ -175,22 +195,46 @@ if (btnRegistrar) {
 
         //VALIDACIONES
         if (!nombreCaso) {
-            alert('El nombre del caso es obligatorio');
+            Swal.fire({
+                icon: 'error',
+                title: 'El nombre del caso es obligatorio',
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
             return;
         }
 
         if (!proceso) {
-            alert('Debe seleccionar un proceso');
+            Swal.fire({
+                icon: 'error',
+                title: 'Debe seleccionar un proceso',
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
             return;
         }
 
         if (!tipoCaso) {
-            alert('Debe seleccionar un tipo de caso');
+            Swal.fire({
+                icon: 'error',
+                title: 'Debe seleccionar un tipo de caso',
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
             return;
         }
 
         if (!descripcion) {
-            alert('La descripción es obligatoria');
+            Swal.fire({
+                icon: 'error',
+                title: 'La descripción es obligatoria',
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
             return;
         }
 

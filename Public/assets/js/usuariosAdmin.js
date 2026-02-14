@@ -331,7 +331,12 @@ const cambiarEstadoUsuario = (nuevoDocumento, nuevoEstado) => {
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
-                alert("Ocurrió un error de conexión.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de conexión',
+                    text: 'Ocurrió un error al intentar cambiar el estado del usuario.',
+                    theme: 'dark'
+                });
             }
         });
 

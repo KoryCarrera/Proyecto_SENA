@@ -28,6 +28,7 @@ btnRegistrar.addEventListener('click', function registrarProceso() { //le agrega
                     icon: 'success',
                     title: `${respuesta.mensaje}`,
                     showConfirmButton: false,
+                    timer: 1500,
                 });
 
                 //Vaciamos los inputs
@@ -36,14 +37,25 @@ btnRegistrar.addEventListener('click', function registrarProceso() { //le agrega
 
             } else if (respuesta.status === 'error') { //Si recibimos una response con status error
 
-                alert(respuesta.mensaje); //Imprimimos el mensaje en una alert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al registrar proceso',
+                    text: `${respuesta.mensaje}`,
+                });
             }
         },
 
 
         error: function (jqXHR, textStatus, errorThrown) { //En caso de error capturamos en consola
             console.error("Error de conexión:", textStatus, errorThrown);
-            alert("Error de conexión con el servidor");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de conexión',
+                text: 'Ocurrió un error al intentar registrar el proceso.',
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
+            });
         }
     });
 });
