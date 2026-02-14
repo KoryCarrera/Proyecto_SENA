@@ -93,8 +93,8 @@ try {
     // Respuesta exitosa
     echo json_encode([
         'status' => 'ok',
-        'mensaje' => 'Caso registrado exitosamente' . (isset($resultadoArchivos) && $resultadoArchivos['success'] ? ' con archivos adjuntos' : '')
-    ]);
+        'mensaje' => 'Caso registrado exitosamente'
+        ]);
 
 } catch (Exception $e) {
     error_log("Error en registrarCasos.php: " . $e->getMessage());

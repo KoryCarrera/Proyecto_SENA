@@ -16,11 +16,12 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
   <!-- Bootstrap CSS (Required for consistency with other pages) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  
+
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
@@ -33,18 +34,18 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
 
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
 
-    <!-- Decorative Background Elements -->
-    <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
-        <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
-        <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
-    </div>
+  <!-- Decorative Background Elements -->
+  <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+    <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
+    <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
+    <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+  </div>
 
   <div class="flex h-screen overflow-hidden relative z-10">
 
     <!-- Sidebar -->
     <aside class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
-      
+
       <!-- Logo Area -->
       <div class="h-20 flex items-center justify-center border-b border-white/5">
         <img src="/assets/img/logo_sena.png" alt="SENA" class="w-10 h-10 object-contain group-hover:block">
@@ -52,7 +53,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
 
       <!-- Navigation -->
       <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
-        
+
         <a href="/dashboardAdmin" class="nav-link">
           <i class="bi bi-house-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Inicio</span>
@@ -88,10 +89,10 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
 
     <!-- Main Content Wrapper -->
     <div class="flex-1 flex flex-col ml-20 h-full">
-      
+
       <!-- Top Bar -->
       <header class="h-20 glass-nav flex items-center justify-between px-6 sticky top-0 z-40">
-        
+
         <h2 class="text-xl font-semibold text-white tracking-tight">Actualizar Usuario</h2>
 
         <div class="flex items-center gap-6">
@@ -106,9 +107,9 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
 
           <div class="flex items-center gap-4">
             <a href="#" class="p-2 rounded-full hover:bg-white/5 transition-colors">
-               <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
+              <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
             </a>
-            
+
             <form action="/logout" method="POST">
               <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
               <button type="submit" name="logout" value="logout" class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
@@ -122,58 +123,58 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
       <!-- Content -->
       <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
         <div class="max-w-3xl mx-auto">
-            
-            <!-- Update User Form -->
-            <section class="formulario-crear-usuario">
-                <div class="glass-card p-8 md:p-10 relative">
-                    
-                    <div class="absolute top-4 right-4">
-                        <a href="inhabilitar-usuario.php" class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20 flex items-center gap-1">
-                            <i class="bi bi-person-x-fill"></i> Inhabilitar Usuario
-                        </a>
-                    </div>
 
-                    <form action="" method="POST" class="grid grid-cols-1 gap-6 pt-6">
-                        <h2 class="text-2xl font-bold text-white text-center mb-2">Editor de Usuario</h2>
-                        
-                        <div>
-                            <label for="documento" class="block text-sm font-medium text-slate-300 mb-2">Documento</label>
-                            <input type="text" name="documento" id="documento" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400 form-control-plaintext">
-                        </div>
+          <!-- Update User Form -->
+          <section class="formulario-crear-usuario">
+            <div class="glass-card p-8 md:p-10 relative">
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label for="nombre" class="block text-sm font-medium text-slate-300 mb-2">Nombre</label>
-                                <input type="text" name="nombre" id="nombre" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400">
-                            </div>
-                            <div>
-                                <label for="apellido" class="block text-sm font-medium text-slate-300 mb-2">Apellido</label>
-                                <input type="text" name="apellido" id="apellido" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400">
-                            </div>
-                        </div>
+              <div class="absolute top-4 right-4">
+                <a href="inhabilitar-usuario.php" class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20 flex items-center gap-1">
+                  <i class="bi bi-person-x-fill"></i> Inhabilitar Usuario
+                </a>
+              </div>
 
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-slate-300 mb-2">Correo Electrónico</label>
-                            <input type="text" name="email" id="email" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400">
-                        </div>
+              <form action="" method="POST" class="grid grid-cols-1 gap-6 pt-6">
+                <h2 class="text-2xl font-bold text-white text-center mb-2">Editor de Usuario</h2>
 
-                        <div>
-                            <label for="rol" class="block text-sm font-medium text-slate-300 mb-2">Rol</label>
-                            <select name="rol" id="rol" class="glass-input w-full p-3 rounded-lg text-white appearance-none">
-                                <option selected disabled>Seleccione un Rol</option>
-                                <option value="1" class="bg-slate-800">Administrador</option>
-                                <option value="2" class="bg-slate-800">Comisionado</option>
-                            </select>
-                        </div>
-                        
-                        <div class="flex justify-center mt-4">
-                            <button type="submit" class="btn-usuario w-full md:w-auto min-w-[200px]" id="btn-usuario">
-                                <i class="bi bi-save mr-2"></i> Actualizar
-                            </button>
-                        </div>
-                    </form>
+                <div>
+                  <label for="documento" class="block text-sm font-medium text-slate-300 mb-2">Documento</label>
+                  <input type="text" name="documento" id="documento" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400 form-control-plaintext">
                 </div>
-            </section>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label for="nombre" class="block text-sm font-medium text-slate-300 mb-2">Nombre</label>
+                    <input type="text" name="nombre" id="nombre" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400">
+                  </div>
+                  <div>
+                    <label for="apellido" class="block text-sm font-medium text-slate-300 mb-2">Apellido</label>
+                    <input type="text" name="apellido" id="apellido" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400">
+                  </div>
+                </div>
+
+                <div>
+                  <label for="email" class="block text-sm font-medium text-slate-300 mb-2">Correo Electrónico</label>
+                  <input type="text" name="email" id="email" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400">
+                </div>
+
+                <div>
+                  <label for="rol" class="block text-sm font-medium text-slate-300 mb-2">Rol</label>
+                  <select name="rol" id="rol" class="glass-input w-full p-3 rounded-lg text-white appearance-none">
+                    <option selected disabled>Seleccione un Rol</option>
+                    <option value="1" class="bg-slate-800">Administrador</option>
+                    <option value="2" class="bg-slate-800">Comisionado</option>
+                  </select>
+                </div>
+
+                <div class="flex justify-center mt-4">
+                  <button type="submit" class="btn-usuario w-full md:w-auto min-w-[200px]" id="btn-usuario">
+                    <i class="bi bi-save mr-2"></i> Actualizar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
 
         </div>
       </main>
