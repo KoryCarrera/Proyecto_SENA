@@ -82,7 +82,7 @@ Sistema web que proporciona:
 - **[PhpSpreadsheet](https://phpspreadsheet.readthedocs.io/)** - Generación de reportes Excel
 - **[phpdotenv](https://github.com/vlucas/phpdotenv)** - Lectura de variables de entorno
 - **[Resend](https://resend.com/php)** - Envios de notificaciones a gmail automaticamente
-- **[SweetAlert2] (https://sweetalert2.github.io/)** - Alertas y pequeños modales esteticos
+- **[SweetAlert2](https://sweetalert2.github.io/)** - Alertas y pequeños modales esteticos
 
 ### DevOps
 - **Docker** - Contenedorización
