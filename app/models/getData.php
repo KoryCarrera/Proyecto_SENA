@@ -632,3 +632,26 @@ function listarEstadosCaso($pdo)
     }
 }
 
+function gestionarProceso($pdo, $nombre){
+
+    $stmt = $pdo->prepare("CALL sp_traer_proceso(?)");
+    $stmt->bindParam(1, $nombre, PDO::PARAM_STR);
+
+    try {
+        $stmt->execute();
+        $procesoGestionar = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($procesoGestionar){
+            return [
+                'status' => 'ok',
+                'data' => $procesoGestionar
+            ];
+        } else {
+            return false;
+        }
+    }  catch (PDOException $e) {
+        error_log("Error al obtener el proceso solicitado " . $e->getMessage());
+        return false;
+    }
+}
