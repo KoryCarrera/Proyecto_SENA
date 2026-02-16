@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 16-02-2026 a las 03:15:43
+-- Tiempo de generación: 16-02-2026 a las 16:12:08
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -500,6 +500,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_resumen_productividad_comisionad
     GROUP BY u.documento, u.nombre, u.apellido;
 END$$
 
+CREATE DEFINER=`root`@`%` PROCEDURE `sp_traer_proceso` (IN `p_nombre` VARCHAR(100))   BEGIN
+SELECT id_proceso, fecha_creacion, descripcion, documento_usuario, nombre, estado FROM procesoorganizacional WHERE nombre = TRIM(p_nombre COLLATE utf8mb4_general_ci); 
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_traer_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
 
 SELECT documento, nombre, apellido, email, id_rol, id_estado FROM usuario WHERE documento = TRIM(p_documento COLLATE utf8mb4_general_ci);
@@ -656,7 +660,8 @@ INSERT INTO `informe` (`id_informe`, `documento`, `fecha_generacion`, `tipo_info
 (62, '1487569254', '2026-02-15 02:19:00', 'PDF', 'Reporte Usuarios'),
 (63, '1487569254', '2026-02-15 02:21:55', 'PDF', 'Reporte Usuarios'),
 (64, '1487569254', '2026-02-15 02:23:32', 'PDF', 'Reporte Usuarios'),
-(65, '1487569254', '2026-02-15 02:25:38', 'PDF', 'Reporte Casos');
+(65, '1487569254', '2026-02-15 02:25:38', 'PDF', 'Reporte Casos'),
+(66, '1487569254', '2026-02-16 11:48:23', 'PDF', 'Reporte Usuarios');
 
 -- --------------------------------------------------------
 
@@ -711,6 +716,21 @@ INSERT INTO `procesoorganizacional` (`id_proceso`, `fecha_creacion`, `descripcio
 (12, '2026-02-11 22:44:36', 'N/a', '1487569254', 'Ropa de Trabajo', 1),
 (13, '2026-02-11 22:45:22', 'N/a', '1487569254', 'Plan de incentivos', 1),
 (14, '2026-02-11 22:45:37', 'N/a', '1487569254', 'SST', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `registro_cambios`
+--
+
+CREATE TABLE `registro_cambios` (
+  `id_cambio` int(11) NOT NULL,
+  `seguimiento` varchar(255) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `nombre` varchar(255) DEFAULT NULL,
+  `documento` varchar(55) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -789,9 +809,9 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
-('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', 1, '$2y$10$y3oetIixLCkpaVJi06/6Uu8GAobFx0laScAzWdA6LCEIosKnFzKPu', '2026-02-12 14:18:58', '2026-02-13 22:28:15', 1),
+('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', 1, '$2y$10$y3oetIixLCkpaVJi06/6Uu8GAobFx0laScAzWdA6LCEIosKnFzKPu', '2026-02-12 14:18:58', '2026-02-16 15:58:21', 1),
 ('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', 2, '$2y$10$HqefV0KBECI0kGZF/Ibtq./nElgxTqfrmxrQLAu0Mm1BbsJoUgaay', '2026-02-12 14:22:31', '2026-02-13 22:29:11', 1),
-('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-15 02:21:28', 1),
+('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-16 12:04:43', 1),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-02-12 15:01:09', 1),
 ('1756664828', 'Isaac', 'Carvajal', 'zackycarvajal@gmail.com', 2, '$2y$10$3vRK9ALJ8K/ffOvJMqDb9.giktCYmj9zHUwUAAvboirCOekDFGot2', '2026-02-12 14:20:29', '2026-02-12 14:58:47', 0);
 
@@ -861,7 +881,14 @@ ALTER TABLE `notificacion`
 --
 ALTER TABLE `procesoorganizacional`
   ADD PRIMARY KEY (`id_proceso`),
+  ADD UNIQUE KEY `nombre` (`nombre`),
   ADD KEY `fk_usuario_proceso` (`documento_usuario`);
+
+--
+-- Indices de la tabla `registro_cambios`
+--
+ALTER TABLE `registro_cambios`
+  ADD PRIMARY KEY (`id_cambio`);
 
 --
 -- Indices de la tabla `rol`
@@ -922,7 +949,7 @@ ALTER TABLE `estado`
 -- AUTO_INCREMENT de la tabla `informe`
 --
 ALTER TABLE `informe`
-  MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=66;
+  MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT de la tabla `monitoreo`
@@ -941,6 +968,12 @@ ALTER TABLE `notificacion`
 --
 ALTER TABLE `procesoorganizacional`
   MODIFY `id_proceso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT de la tabla `registro_cambios`
+--
+ALTER TABLE `registro_cambios`
+  MODIFY `id_cambio` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`

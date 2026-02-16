@@ -17,6 +17,7 @@ $router -> map('POST', '/loginComisionado/auth', 'controllers/loginComisionado.p
 $router -> map('POST', '/logout', 'controllers/logout.php');
 $router -> map('POST', '/modalCasoAdmin', 'controllers/modalCasoAdmin.php');
 $router -> map('POST', '/modalUsuario', 'controllers/modalUsuario.php');
+$router -> map('POST', '/modalProceso', 'controllers/modalProceso.php');
 $router -> map('POST', '/CasosPDF', 'controllers/reporteCasosPDF.php');
 $router -> map('POST', '/UsuariosPDF', 'controllers/reporteUsuariosPDF.php');
 $router -> map('POST', '/procesosPDF', 'controllers/reporteProcesosPDF.php');
