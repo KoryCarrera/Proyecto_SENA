@@ -262,6 +262,64 @@ function casosPorEstado($pdo)
     }
 }
 
+function usuariosPorRol($pdo) {
+    try {
+        $stmt = $pdo->prepare("CALL sp_reporte_usuarios_rol()");
+        $stmt->execute();
+
+        $usuariosRol = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        $roles = [];
+        $totales = [];
+        $totalGeneral = 0;
+
+        foreach ($usuariosRol as $temp) {
+            $roles[] = $temp['rol'];
+            $totales[] = $temp['total'];
+            $totalGeneral += $temp['total'];
+        }
+
+        return [
+            "rol" => $roles,
+            "usuarios" => $totales,
+            "total" => $totalGeneral
+        ];
+
+    } catch (PDOException $e) {
+        return false;
+    }
+}
+
+function usuariosPorEstado($pdo) {
+    try {
+        $stmt = $pdo->prepare("CALL sp_reporte_usuarios_estado()");
+        $stmt->execute();
+
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        $estados = [];
+        $totales = [];
+        $totalGeneral = 0;
+
+        foreach ($data as $row) {
+            $estados[] = $row['estado'];
+            $totales[] = $row['total'];
+            $totalGeneral += $row['total'];
+        }
+
+        return [
+            "estado" => $estados,
+            "usuarios" => $totales,
+            "total" => $totalGeneral
+        ];
+
+    } catch (PDOException $e) {
+        return false;
+    }
+}
+
 
 function casosPorProceso($pdo)
 {
