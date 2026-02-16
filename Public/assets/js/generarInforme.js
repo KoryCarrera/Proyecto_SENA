@@ -2,7 +2,7 @@
 const ENDPOINT_CASOS = '/CasosPDF';
 const ENDPOINT_USUARIOS = '/UsuariosPDF';
 const ENDPOINT_PROCESOS = '/ProcesosPDF';
-const ENDPOINT_EXCEL = '';
+const ENDPOINT_EXCEL = '/generarExcel';
 
 const generarInforme = document.getElementById("informe");
 
@@ -90,22 +90,43 @@ generarInforme.addEventListener('click', function () {
 
     }
 
-    // Creamos un formulario temporal y enviarlo en nueva ventana
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = ENDPOINT;
-    form.target = '_blank'; // Abrir en nueva pestaña
+    if (formato.value != 2) {
+        // Creamos un formulario temporal y enviarlo en nueva ventana
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = ENDPOINT;
+        form.target = '_blank'; // Abrir en nueva pestaña
 
-    //Metemos los valores en el input del form creado
+        //Metemos los valores en el input del form creado
 
-    //Ponemos el form y lo quitamos rapidamente
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
+        //Ponemos el form y lo quitamos rapidamente
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
 
-    Swal.fire({
-        title: '¡Se ha generado tu informe exitosamente!',
-        theme: 'dark',
-        icon: 'success',
-    });
+        Swal.fire({
+            title: '¡Se ha generado tu informe exitosamente!',
+            theme: 'dark',
+            icon: 'success',
+        });
+    } else {
+        // Creamos un formulario temporal y enviarlo en nueva ventana
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = ENDPOINT_EXCEL;
+        form.target = '_blank'; // Abrir en nueva pestaña
+
+        //Metemos los valores en el input del form creado
+
+        //Ponemos el form y lo quitamos rapidamente
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+
+        Swal.fire({
+            title: '¡Se ha generado tu informe exitosamente!',
+            theme: 'dark',
+            icon: 'success',
+        });
+    };
 });
