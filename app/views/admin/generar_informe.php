@@ -143,16 +143,6 @@
                 </select>
               </div>
 
-              <div class="relative">
-                <input maxlength="125" type="text" class="glass-input w-full p-3 pl-12 rounded-lg text-white placeholder-slate-400" placeholder="Titulo de la observación" id="titulo">
-                <small id="contadorTitulo" class="absolute right-3 bottom-3 text-xs text-slate-400"></small>
-              </div>
-
-              <div class="relative">
-                <textarea maxlength="500" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400 min-h-[120px]" placeholder="Contenido De La Observación/es" id="descripcion"></textarea>
-                <small id="contadorDescripcion" class="absolute right-3 bottom-3 text-xs text-slate-400"></small>
-              </div>
-
               <button type="button" class="btn-siguiente w-full flex items-center justify-center gap-2 mt-4" id="informe">
                 <i class="bi bi-download"></i> DESCARGAR
               </button>

@@ -223,7 +223,7 @@ function registrarMonitoreo($pdo, $documento, $tipo, $descripcion)
 }
 
 //FUNCIÔN: REGISTRAR GENERACION DE UN INFORME
-function registrarInforme($pdo, $documento, $formato, $conclusiones)
+function registrarInforme($pdo, $documento, $formato, $descripcion)
 {
     //Preparamos la llamada y ejecución del sp
     $stmt = $pdo->prepare("CALL sp_registrar_informe(?, ?, ?)");
@@ -231,7 +231,7 @@ function registrarInforme($pdo, $documento, $formato, $conclusiones)
     //Asignamos valores a los parametros
     $stmt->bindParam(1, $documento, PDO::PARAM_STR);
     $stmt->bindParam(2, $formato, PDO::PARAM_STR);
-    $stmt->bindParam(3, $conclusiones, PDO::PARAM_STR);
+    $stmt->bindParam(3, $descripcion, PDO::PARAM_STR);
 
     //Ejecucion y manejo de errores (PDOException)
     try {

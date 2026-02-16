@@ -21,20 +21,15 @@ use Dompdf\Dompdf;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    //Capturamos los datos por metodo post
-    $tituloObservacion = $_POST['titulo'];
-    $contenidoObservacion = $_POST['contenidoObservacion'];
-    $conclusion = $_POST['conclusiones'];
-
     //Llamamos las funciones necesarias
     $estados = casosPorEstado($pdo);
     $casosListados = listarCasos($pdo);
-    $datosInforme = registrarInforme($pdo, $_SESSION['user']['documento'], 'PDF', $conclusion);
+    $datosInforme = registrarInforme($pdo, $_SESSION['user']['documento'], 'PDF', 'Reporte Casos');
 
-    //Validamos el retorno datos de todas las funcione
+    //Validamos el retorno datos de todas las funciones
     if ($estados && $casosListados && $datosInforme) {
 
-        //Se buscara el indice donde estan los estados para luego usar ese indice pra mostrar el total  por estado
+        //Se buscara el indice donde estan los estados para luego usar ese indice para mostrar el total  por estado
         $indiceAtendidos = array_search('Atendido', $estados['estado']);
         $indicePorAtender = array_search('Por atender', $estados['estado']);
         $indiceNoAtendido = array_search('No atendido', $estados['estado']);
@@ -42,19 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //Se limita unicamente a los ultimos 10 casos para reutilizar el sp de listar casos con limit 30
         $casosListados['data'] = array_slice($casosListados['data'], 0, 10);
 
-        //Se valida si los indices devolvieron el indice esperado
-        if ($indiceAtendidos !== false && $indicePorAtender !== false && $indiceNoAtendido !== false) {
-
-            //Usamos el indice encontrado para encontrar el total del estado
-            $totalAtendidos = $estados['casos'][$indiceAtendidos];
-            $totalPorAtender = $estados['casos'][$indicePorAtender];
-            $totalNoAtendido = $estados['casos'][$indiceNoAtendido];
-        } else {
-            $totalAtendidos = 0;
-            $totalPorAtender = 0;
-            $totalNoAtendido = 0;
-        }
-
+        $totalAtendidos = ($indiceAtendidos !== false) ? $estados['casos'][$indiceAtendidos] : 0;
+        $totalPorAtender = ($indicePorAtender !== false) ? $estados['casos'][$indicePorAtender] : 0;
+        $totalNoAtendido = ($indiceNoAtendido !== false) ? $estados['casos'][$indiceNoAtendido] : 0;
+        
         //Conseguimos el porcentaje de la cantidad de casos por cada tipo de estado en relacion al total
         if ($totalAtendidos > 0 && $estados['total'] > 0) {
             $porcentajeAtendidos = number_format((($totalAtendidos / $estados['total']) * 100), 1);
@@ -369,8 +355,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <td class='company-info-cell'>
                             <div class='company-name'>SENA</div>
                             <div class='company-details'>
-                                NIT: 900.123.456-7<br>
-                                Dirección: Calle 123 #45-67, Medellín, Antioquia<br>
                                 Email: <?php echo $_SESSION['user']['email']; ?>
                             </div>
                         </td>
@@ -379,7 +363,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class='report-title'>
-                Reporte de Administrador
+                Reporte de Casos
             </div>
 
             <div class='report-info'>
@@ -403,12 +387,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <table class='stats-table'>
                 <tr>
                     <td class='stat-box-td'>
-                        <span class='stat-number'><?php echo $estados['total']; ?></span>
+                        <span class='stat-number'><?php echo $estados['total']; ?></span> <!-- Aqui -->
                         <span class='stat-label'>Total de Casos</span>
                     </td>
                     <td class='stat-gap-td'>&nbsp;</td>
                     <td class='stat-box-td'>
-                        <span class='stat-number'><?php echo $totalAtendidos ?></span>
+                        <span class='stat-number'><?php echo $totalAtendidos ?></span> <!-- Aqui -->
                         <span class='stat-label'>Casos Atendidos</span>
                     </td>
                 </tr>
@@ -417,25 +401,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </tr>
                 <tr>
                     <td class='stat-box-td'>
-                        <span class='stat-number'><?php echo $totalPorAtender ?></span>
+                        <span class='stat-number'><?php echo $totalPorAtender ?></span> <!-- Aqui no -->
                         <span class='stat-label'>Por atender</span>
                     </td>
                     <td class='stat-gap-td'>&nbsp;</td>
                     <td class='stat-box-td'>
-                        <span class='stat-number'><?php echo $totalNoAtendido ?></span>
+                        <span class='stat-number'><?php echo $totalNoAtendido ?></span> <!-- Aqui no -->
                         <span class='stat-label'>No Atendidos</span>
                     </td>
                 </tr>
             </table>
-
+            <br>
             <div class='section-title'>1. RESUMEN EJECUTIVO</div>
+            <br>
             <div class='content-box'>
                 Durante el ciclo analizado, se registró un volumen global de <strong><?php echo $estados['total']; ?></strong> casos de PQRSD en el transcurso del año <strong><?php echo date('Y'); ?></strong>.
                 De este total, el <strong><?php echo $porcentajeAtendidos; ?>%</strong> corresponde a solicitudes que ya han sido <strong>atendidas</strong> formalmente.
                 Por otro lado, se identifica que un <strong><?php echo $porcentajePorAtender; ?>%</strong> de los casos se encuentra actualmente en estado <strong>por atender</strong>,
                 mientras que el <strong><?php echo $porcentajeNoAtendidos; ?>%</strong> restante se clasifica bajo el estatus de <strong>no atendido</strong> en relación con el consolidado general.
             </div>
-
+            <br>
+            <br>
+            <br>
+            <br>
             <div class='section-title'>2. Ultimos 10 Casos Registrados En El Transcurso Del Año</div>
             <table class='data-table'>
                 <thead>
@@ -467,16 +455,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ?>
                 </tbody>
             </table>
-
-            <div class='section-title'>3. OBSERVACIONES Y SEGUIMIENTO</div>
-            <div class='observation-box'>
-                <strong><?php echo $tituloObservacion ?> </strong> <?php echo $contenidoObservacion ?>
-            </div>
-
-            <div class='section-title'>4. CONCLUSIONES Y RECOMENDACIONES</div>
-            <div class='content-box'>
-                <?php echo $conclusion ?>
-            </div>
 
             <table class='signature-table'>
                 <tr>

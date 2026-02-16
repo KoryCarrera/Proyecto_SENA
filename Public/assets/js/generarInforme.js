@@ -1,30 +1,15 @@
 //definimos las urls en constantes para evitar errores de tipeo
-const ENDPOINT_CASOS = '';
-const ENDPOINT_USUARIOS = '';
-const ENDPOINT_PROCESOS = '';
+const ENDPOINT_CASOS = '/CasosPDF';
+const ENDPOINT_USUARIOS = '/UsuariosPDF';
+const ENDPOINT_PROCESOS = '/ProcesosPDF';
 const ENDPOINT_EXCEL = '';
 
 const generarInforme = document.getElementById("informe");
 
 const formato = document.getElementById("formato");
-const tituloObservacion = document.getElementById("titulo");
-const contenidoObservacion = document.getElementById("descripcion");
 const tipo = document.getElementById("tipoReporte");
 const tituloForm = document.getElementById("tituloForm");
-const inputsAocultar = document.querySelectorAll(".relative:not(#excluido)"); //Seleccionamos los elementos con la clase "relative" que no tengan la clase "excluid"
-
-//capturamos los contadores de caracteres
-const contadorTitulo = document.getElementById("contadorTitulo");
-const contadorDescripcion = document.getElementById("contadorDescripcion");
-
-//Agregamos eventos de input para actualizar los contadores
-tituloObservacion.addEventListener('input', function () {
-    contadorTitulo.textContent = `${this.value.length}/125`;
-});
-
-contenidoObservacion.addEventListener('input', function () {
-    contadorDescripcion.textContent = `${this.value.length}/500`;
-});
+const inputsAocultar = document.querySelectorAll(".relative:not(#excluido)"); //Seleccionamos los elementos con la clase "relative" que no tengan la clase "excluido"
 
 //Insertamos el titulo por defecto
 tituloForm.innerHTML = "Datos para tu informe";
@@ -64,7 +49,7 @@ generarInforme.addEventListener('click', function () {
 
     // Validación
     if (formato.value != 2) {
-        if (!tituloObservacion.value || !contenidoObservacion.value || !conclusiones.value || !formato.value) {
+        if (!formato.value) {
 
             Swal.fire({
                 title: '¡Por favor rellena los campos!',
@@ -111,19 +96,8 @@ generarInforme.addEventListener('click', function () {
     form.action = ENDPOINT;
     form.target = '_blank'; // Abrir en nueva pestaña
 
-    // Agregamos campos
-    const campos = {
-        'titulo': tituloObservacion.value,
-        'contenidoObservacion': contenidoObservacion.value,
-    };
     //Metemos los valores en el input del form creado
-    for (let key in campos) {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = campos[key];
-        form.appendChild(input);
-    }
+
     //Ponemos el form y lo quitamos rapidamente
     document.body.appendChild(form);
     form.submit();
