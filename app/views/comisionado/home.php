@@ -31,14 +31,18 @@
   <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
     <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
     <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
-    <div class="blob-bg top-[40%] left-[20%] bg-cyan-500/10 w-[400px] h-[400px] blur-[100px] animation-delay-4000"></div>
-    <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+    <div class="blob-bg top-[40%] left-[20%] bg-cyan-500/10 w-[400px] h-[400px] blur-[100px] animation-delay-4000">
+    </div>
+    <div
+      class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay">
+    </div>
   </div>
 
   <div class="flex h-screen overflow-hidden relative z-10">
 
     <!-- Sidebar -->
-    <aside class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
+    <aside
+      class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
 
       <!-- Logo Area -->
       <div class="h-20 flex items-center justify-center border-b border-white/5">
@@ -101,7 +105,8 @@
 
             <form action="/logout" method="POST">
               <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
-              <button type="submit" name="logout" value="logout" class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
+              <button type="submit" name="logout" value="logout"
+                class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
                 Cerrar Sesión
               </button>
             </form>
@@ -115,11 +120,15 @@
         <div class="max-w-7xl mx-auto">
           <!-- Welcome Section -->
           <div class="glass-card p-8 mb-8 relative overflow-hidden">
-            <div class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div
+              class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
+            </div>
             <h1 class="text-3xl font-bold text-white mb-4">¡Bienvenido al Sistema de Gestión SENA!</h1>
             <p class="text-slate-300 max-w-3xl leading-relaxed">
-              Como comisionado, cuentas con acceso a las funciones necesarias para cumplir tu labor dentro de la plataforma.
-              Desde aquí podrás revisar y evaluar solicitudes, participar en la toma de decisiones, consultar información
+              Como comisionado, cuentas con acceso a las funciones necesarias para cumplir tu labor dentro de la
+              plataforma.
+              Desde aquí podrás revisar y evaluar solicitudes, participar en la toma de decisiones, consultar
+              información
               relevante y hacer seguimiento a los casos asignados.
               Tu rol es fundamental para garantizar la transparencia, objetividad y el adecuado funcionamiento de la
               Comisión de Personal.
@@ -130,7 +139,19 @@
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <!-- Chart 1 -->
             <div class="glass-card p-6 flex flex-col items-center justify-center min-h-[300px]">
-              <h3 class="text-sm font-semibold text-slate-400 mb-4 w-full text-left uppercase tracking-wider">Estadísticas Generales</h3>
+              <div class="flex items-center justify-between p-2 m-2 min-w-full">
+                <h3 class="text-sm font-semibold text-slate-400 mb-4 w-full text-left uppercase tracking-wider">
+                  Estadísticas Generales</h3>
+                <div class="rounded">
+                  <select name="" id=""
+                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                    <option selected disabled class="bg-slate-900">Filtrar por... </option>
+                    <option class="bg-slate-900" value="semana">esta semana</option>
+                    <option class="bg-slate-900" value="mes">este mes</option>
+                    <option class="bg-slate-900" value="anual">este año</option>
+                  </select>
+                </div>
+              </div>
               <div class="w-full h-full flex items-center justify-center">
                 <canvas id="polarChart"></canvas>
               </div>
@@ -138,15 +159,40 @@
 
             <!-- Chart 2 -->
             <div class="glass-card p-6 flex flex-col items-center justify-center min-h-[300px]">
-              <h3 class="text-sm font-semibold text-slate-400 mb-4 w-full text-left uppercase tracking-wider">Distribución de Casos</h3>
+              <div class="flex items-center justify-between p-2 m-2 min-w-full">
+                <h3 class="text-sm font-semibold text-slate-400 mb-4 w-full text-left uppercase tracking-wider">
+                  Distribución de Casos</h3>
+                <div class="rounded">
+                  <select name="" id=""
+                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                    <option selected disabled class="bg-slate-900">Filtrar por... </option>
+                    <option class="bg-slate-900" value="semana">esta semana</option>
+                    <option class="bg-slate-900" value="mes">este mes</option>
+                    <option class="bg-slate-900" value="anual">este año</option>
+                  </select>
+                </div>
+              </div>
               <div class="w-full h-full flex items-center justify-center">
                 <canvas id="pieChart"></canvas>
               </div>
             </div>
 
             <!-- Chart 3 (Full Width) -->
-            <div class="glass-card p-6 col-span-1 lg:col-span-2 flex flex-col items-center justify-center min-h-[300px]">
-              <h3 class="text-sm font-semibold text-slate-400 mb-4 w-full text-left uppercase tracking-wider">Rendimiento Mensual</h3>
+            <div
+              class="glass-card p-6 col-span-1 lg:col-span-2 flex flex-col items-center justify-center min-h-[300px]">
+              <div class="flex items-center justify-between p-2 m-2 min-w-full">
+                <h3 class="text-sm font-semibold text-slate-400 mb-4 w-full text-left uppercase tracking-wider">
+                  Rendimiento Mensual</h3>
+                <div class="rounded">
+                  <select name="" id=""
+                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                    <option selected disabled class="bg-slate-900">Filtrar por... </option>
+                    <option class="bg-slate-900" value="semana">esta semana</option>
+                    <option class="bg-slate-900" value="mes">este mes</option>
+                    <option class="bg-slate-900" value="anual">este año</option>
+                  </select>
+                </div>
+              </div>
               <div class="w-full h-full flex items-center justify-center">
                 <canvas id="barChart"></canvas>
               </div>

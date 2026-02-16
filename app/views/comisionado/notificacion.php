@@ -110,7 +110,7 @@
       </header>
 
       <!-- Filter Bar -->
-      <div class="glass-nav px-6 py-3 flex items-center justify-between border-b border-white/5">
+      <div class="glass-nav px-6 py-3 flex items-center justify-between border-b border-white/5 z-10">
         <div class="flex items-center gap-4">
           <div class="dropdown">
             <button class="btn-filter dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
