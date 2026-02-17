@@ -1,11 +1,13 @@
 const ENDPOINT = '/graficasComi'; 
 
+Chart.defaults.color = '#ffffff';
+
 const CHART_COLORS = [
-    'rgb(79, 70, 229)',     
-    'rgb(239, 68, 68)',     
-    'rgb(245, 158, 11)',   
-    'rgb(16, 185, 129)',    
-    'rgb(54, 162, 235)'     
+    'rgb(56, 189, 248)',   // Sky Blue
+    'rgb(45, 212, 191)',   // Teal/Turquesa
+    'rgb(147, 197, 253)',  // Azul Pastel
+    'rgb(79, 70, 229)',    // Tu Índigo Original
+    'rgb(192, 132, 252)'   // Lavanda suave
 ];
 
 const MONTH_NAMES_ES = [
@@ -23,9 +25,14 @@ const drawChart = (canvasElement, type, labels, data) => {
     
     const options = {
         responsive: true,
+        plugins: {
+            legend: {
+                display: false,
+            },
+        },
         maintainAspectRatio: false,
         scales: type === 'polarArea' ? { r: { beginAtZero: true, display: false } } : 
-                type === 'bar' ? { y: { beginAtZero: true } } : {}
+                type === 'bar' ? { y: { beginAtZero: true } } : {} || type === 'line' ? { y: { beginAtZero: true} } : {}
     };
 
     canvasElement.chart = new Chart(canvasElement, {
@@ -38,8 +45,9 @@ const drawChart = (canvasElement, type, labels, data) => {
                 backgroundColor: CHART_COLORS.slice(0, labels.length).map(color => 
                     type === 'polarArea' ? `${color.substring(0, color.length - 1)}, 0.7)` : color 
                 ),
-                borderColor: 'black', 
-                borderWidth: 1.5
+                borderColor: type === 'line' ? '#ADD8E6' : 'black',
+                borderWidth: 1.5,
+                tension: 0.3
             }]
         },
         options: options
@@ -93,14 +101,14 @@ const loadAllChartData = async () => {
             canvasId: 'barChart',
             container: document.getElementById('barChart')?.parentElement,
             id: 'bar', 
-            type: 'bar', 
+            type: 'line', 
             name: 'Casos por Mes' 
         },
         { 
             canvasId: 'pieChart',
             container: document.getElementById('pieChart')?.parentElement,
             id: 'pie', 
-            type: 'pie', 
+            type: 'bar', 
             name: 'Casos por Comisionado' 
         },
         { 

@@ -32,6 +32,7 @@ $router -> map('GET', '/opcionesRegistro', 'controllers/listarOpcionesRegistro.p
 $router -> map('POST', '/editarUsuario', '/controllers/editarUsuario.php');
 $router -> map('POST', '/cambiarEstadoUsuario', '/controllers/cambiarEstadoUsuario.php');
 $router -> map ('GET','/listarCasosComi','/controllers/listarCasosComi.php');
+$router -> map('GET', '/estadisticasGenerales', 'controllers/conteoGeneral.php');
 
 //Rutas hacia views admin
 

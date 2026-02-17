@@ -112,7 +112,7 @@ function registrarCasos($pdo, $documento, $proceso, $tipoCaso, $descripcion, $no
                                 <table width="100%" cellpadding="0" cellspacing="0" style="margin: 30px 0;">
                                     <tr>
                                         <td align="center">
-                                            <a href="http://localhost:8000/entradaAdmin" style="display: inline-block; padding: 14px 35px; background-color: #667eea; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: 600; font-size: 15px;">
+                                            <a href="http://localhost:8000/" style="display: inline-block; padding: 14px 35px; background-color: #667eea; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: 600; font-size: 15px;">
                                                 Ver Detalles en el Sistema
                                             </a>
                                         </td>

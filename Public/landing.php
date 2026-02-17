@@ -26,7 +26,7 @@
                 <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform duration-300">
                     S
                 </div>
-                <span class="font-semibold text-xl tracking-tight text-white group-hover:text-indigo-300 transition-colors">Sistema PQRS</span>
+                <span class="font-semibold text-xl tracking-tight text-white group-hover:text-indigo-300 transition-colors">Sistema De Gestion De Casos</span>
             </div>
             
             <!-- Desktop Menu -->
@@ -55,11 +55,11 @@
             
             <h1 class="text-5xl md:text-7xl font-bold tracking-tight mb-8 animate-[fadeInUp_0.8s_ease-out_0.2s_forwards] opacity-0 text-glow">
                 Gestión Eficiente de <br class="hidden md:block"/>
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">PQRS</span>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">Casos</span>
             </h1>
             
             <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-slate-400 leading-relaxed animate-[fadeInUp_0.8s_ease-out_0.4s_forwards] opacity-0">
-                Administra peticiones, quejas, reclamos y sugerencias de manera ágil y transparente. La solución integral para mejorar la atención al personal interno.
+                Administra peticiones y situaciones que generan riesgo en los funcionarios del SENA para ser tramitados por la comisión de personal
             </p>
             
             <div class="mt-10 flex gap-4 justify-center animate-[fadeInUp_0.8s_ease-out_0.6s_forwards] opacity-0">

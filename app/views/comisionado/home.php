@@ -135,76 +135,154 @@
             </p>
           </div>
 
-          <!-- Charts Grid -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <!-- Chart 1 -->
-            <div class="glass-card p-6 flex flex-col items-center justify-center min-h-[300px]">
-              <div class="flex items-center justify-between p-2 m-2 min-w-full">
-                <h3 class="text-sm font-semibold text-slate-400 mb-4 w-full text-left uppercase tracking-wider">
-                  Estadísticas Generales</h3>
-                <div class="rounded">
-                  <select name="" id=""
-                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                    <option selected disabled class="bg-slate-900">Filtrar por... </option>
-                    <option class="bg-slate-900" value="semana">esta semana</option>
-                    <option class="bg-slate-900" value="mes">este mes</option>
-                    <option class="bg-slate-900" value="anual">este año</option>
-                  </select>
-                </div>
-              </div>
-              <div class="w-full h-full flex items-center justify-center">
-                <canvas id="polarChart"></canvas>
-              </div>
-            </div>
-
-            <!-- Chart 2 -->
-            <div class="glass-card p-6 flex flex-col items-center justify-center min-h-[300px]">
-              <div class="flex items-center justify-between p-2 m-2 min-w-full">
-                <h3 class="text-sm font-semibold text-slate-400 mb-4 w-full text-left uppercase tracking-wider">
-                  Distribución de Casos</h3>
-                <div class="rounded">
-                  <select name="" id=""
-                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                    <option selected disabled class="bg-slate-900">Filtrar por... </option>
-                    <option class="bg-slate-900" value="semana">esta semana</option>
-                    <option class="bg-slate-900" value="mes">este mes</option>
-                    <option class="bg-slate-900" value="anual">este año</option>
-                  </select>
-                </div>
-              </div>
-              <div class="w-full h-full flex items-center justify-center">
-                <canvas id="pieChart"></canvas>
-              </div>
-            </div>
-
-            <!-- Chart 3 (Full Width) -->
+          <div class="glass-card p-8 mb-8 relative overflow-hidden">
             <div
-              class="glass-card p-6 col-span-1 lg:col-span-2 flex flex-col items-center justify-center min-h-[300px]">
-              <div class="flex items-center justify-between p-2 m-2 min-w-full">
-                <h3 class="text-sm font-semibold text-slate-400 mb-4 w-full text-left uppercase tracking-wider">
-                  Rendimiento Mensual</h3>
-                <div class="rounded">
-                  <select name="" id=""
-                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                    <option selected disabled class="bg-slate-900">Filtrar por... </option>
-                    <option class="bg-slate-900" value="semana">esta semana</option>
-                    <option class="bg-slate-900" value="mes">este mes</option>
-                    <option class="bg-slate-900" value="anual">este año</option>
-                  </select>
-                </div>
+              class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
+            </div>
+            <h1 class="text-3xl font-bold text-white mb-4">Estadísticas generales anuales</h1>
+
+            <div class="rounded">
+              <select name="" id=""
+                class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                <option selected disabled class="bg-slate-900">Mostrar por...</option>
+                <option class="bg-slate-900" value="Propios">Propios</option>
+                <option class="bg-slate-900" value="Generales">Generales</option>
+              </select>
+            </div>
+
+            <section class="flex flex-wrap justify-evenly items-center gap-4 mb-8">
+
+
+
+              <div
+                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all group">
+                <i class="bi bi-collection-fill text-indigo-400 text-xl mb-2"></i>
+                <h2 id="total" class="text-2xl font-bold text-white"></h2>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Total</p>
               </div>
-              <div class="w-full h-full flex items-center justify-center">
-                <canvas id="barChart"></canvas>
+
+              <div
+                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+                <i class="bi bi-megaphone-fill text-red-400 text-xl mb-2"></i>
+                <h2 id="denuncia" class="text-2xl font-bold text-white"></h2>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Denuncias</p>
               </div>
+
+              <div
+                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+                <i class="bi bi-envelope-paper-fill text-amber-400 text-xl mb-2"></i>
+                <h2 id="solicitud" class="text-2xl font-bold text-white"></h2>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Solicitudes</p>
+              </div>
+
+              <div
+                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+                <i class="bi bi-shield-lock-fill text-cyan-400 text-xl mb-2"></i>
+                <h2 id="tutela" class="text-2xl font-bold text-white"></h2>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Tutelas</p>
+              </div>
+
+              <div
+                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+                <i class="bi bi-check-circle-fill text-emerald-400 text-xl mb-2"></i>
+                <h2 id="atendido" class="text-2xl font-bold text-white"></h2>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Atendidos</p>
+              </div>
+
+              <div
+                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+                <i class="bi bi-clock-history text-rose-400 text-xl mb-2"></i>
+                <h2 id="porAtender" class="text-2xl font-bold text-white"></h2>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Por Atender</p>
+              </div>
+
+              <div
+                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+                <i class="bi bi-x-circle-fill text-red-500 text-xl mb-2"></i>
+                <h2 id="noAtendidos" class="text-2xl font-bold text-white"></h2>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">No Atendidos</p>
+              </div>
+
+            </section>
+          </div>
+
+          <!-- Chart 3 (Full Width) -->
+          <div
+            class="glass-card p-6 col-span-1 lg:col-span-2 flex flex-col items-center justify-center min-h-[300px] mb-8">
+
+            <div class="flex items-center justify-between w-full mb-4">
+              <h3 class="text-3xl font-bold text-white mb-4">
+                Casos por proceso organizacional
+              </h3>
+
+              <div class="relative">
+                <select
+                  class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                  <option selected disabled class="bg-slate-900">Filtrar por... </option>
+                  <option class="bg-slate-900" value="semana">esta semana</option>
+                  <option class="bg-slate-900" value="mes">este mes</option>
+                  <option class="bg-slate-900" value="anual">este año</option>
+                </select>
+                <i
+                  class="bi bi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-white pointer-events-none"></i>
+              </div>
+            </div>
+
+            <div class="w-full h-full flex items-center justify-center">
+              <canvas id="barChart"></canvas>
             </div>
           </div>
 
-        </div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+            <!-- Charts Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              <!-- Chart 1 -->
+              <div class="glass-card p-6 flex flex-col items-center justify-center min-h-[300px]">
+                <div class="flex items-center justify-between p-2 m-2 min-w-full">
+                  <h3 class="text-3xl font-bold text-white mb-4">
+                    Estadísticas por tipo</h3>
+                  <div class="rounded">
+                    <select name="" id=""
+                      class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                      <option selected disabled class="bg-slate-900">Filtrar por... </option>
+                      <option class="bg-slate-900" value="semana">esta semana</option>
+                      <option class="bg-slate-900" value="mes">este mes</option>
+                      <option class="bg-slate-900" value="anual">este año</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="w-full h-full flex items-center justify-center">
+                  <canvas id="polarChart"></canvas>
+                </div>
+              </div>
+
+              <!-- Chart 2 -->
+              <div class="glass-card p-6 flex flex-col items-center justify-center min-h-[300px]">
+                <div class="flex items-center justify-between p-2 m-2 min-w-full">
+                  <h3 class="text-3xl font-bold text-white mb-4">
+                    Estadísticas por estado</h3>
+                  <div class="rounded">
+                    <select name="" id=""
+                      class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                      <option selected disabled class="bg-slate-900">Filtrar por... </option>
+                      <option class="bg-slate-900" value="semana">esta semana</option>
+                      <option class="bg-slate-900" value="mes">este mes</option>
+                      <option class="bg-slate-900" value="anual">este año</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="w-full h-full flex items-center justify-center">
+                  <canvas id="pieChart"></canvas>
+                </div>
+              </div>
       </main>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <script src="/assets/js/generalesComi.js"></script>
   <script src="/assets/js/dashboard_comi.js"></script>
   <script src="/assets/js/cache.js"></script>
 

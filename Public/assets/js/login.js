@@ -44,6 +44,11 @@ tailwind.config = {
     }
 }
 
+//Se capturan los inputs
+var documento = document.getElementById("documento")
+var contraseña = document.getElementById("password")
+var csrfToken = document.getElementById("csrf_token")
+
 //Se captura el boton de enviar para darle un evento
 var enviar = document.getElementById("ingresar");
 
@@ -51,16 +56,17 @@ var enviar = document.getElementById("ingresar");
 var olvidarContrasena = document.getElementById("olvidarContrasena");
 
 enviar.addEventListener('click', function login() { //Se le agrega el evento click y una función
-    //Se capturan los inputs del usuario
-    var documento = document.getElementById("documento").value;
-    var contraseña = document.getElementById("password").value;
-    var csrfToken = document.getElementById("csrf_token").value;
+
+    //Se capturan el valor de los inputs
+    const documentUser = documento.value;
+    const passUser = contraseña.value;
+    const tokenUSer = csrfToken.value;
 
     //Se asignan a un objeto para manejarlo mas facilmente
     var parametros = {
-        'documento': documento,
-        'password': contraseña,
-        'csrf_token': csrfToken
+        'documento': documentUser,
+        'password': passUser,
+        'csrf_token': tokenUSer
     }
     $.ajax({ //utilizamos AJAX para la request
         data: parametros, //Enviamos en data el objeto
@@ -76,13 +82,13 @@ enviar.addEventListener('click', function login() { //Se le agrega el evento cli
                     icon: 'success',
                     theme: 'dark',
                     showConfirmButton: false,
-                    timer: 1000
+                    timer: 500
                 });
 
                 //Redireccionamos utilizando la ruta proporcionada por el controller
                 setTimeout(() => {
                     window.location.href = respuesta.redirect;
-                }, 1000);
+                }, 500);
 
                 //Si el estatus es error mostrará una alerta dando el mensaje
             } else if (respuesta.status === 'error') {
