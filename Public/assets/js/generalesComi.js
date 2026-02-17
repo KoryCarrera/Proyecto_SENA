@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
             tutelas.textContent = `${respuesta.tutelas}`;
             atendidos.textContent = `${respuesta.atendidos}`;
             porAtender.textContent = `${respuesta.porAtender}`;
-            noAtendidos.textContent = `${respuesta.noAtendidos}`;
+            noAtendidos.textContent = `${respuesta.noAtendidos ?? 0}`;
 
 
         },

@@ -33,7 +33,7 @@ const drawChart = (canvasElement, type, labels, data) => {
             }
         },
         scales: type === 'polarArea' ? { r: { beginAtZero: true, display: false } } :
-            type === 'bar' ? { y: { beginAtZero: true } } : {}
+            type === 'bar' ? { y: { beginAtZero: true } } : {} || type === 'line' ? { y: { beginAtZero: true} } : {}
     };
 
     canvasElement.chart = new Chart(canvasElement, {
@@ -46,6 +46,7 @@ const drawChart = (canvasElement, type, labels, data) => {
                 backgroundColor: CHART_COLORS.slice(0, labels.length).map(color =>
                     type === 'polarArea' ? `${color.substring(0, color.length - 1)}, 0.7)` : color
                 ),
+                borderColor: type === 'line' ? '#ADD8E6' : 'black',
                 borderColor: 'black',
                 borderWidth: 1.5
             }]

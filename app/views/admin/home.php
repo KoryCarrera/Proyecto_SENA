@@ -184,7 +184,14 @@
                 class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-clock-history text-rose-400 text-xl mb-2"></i>
                 <h2 id="porAtender" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Pendientes</p>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Por Atender</p>
+              </div>
+
+              <div
+                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+                <i class="bi bi-x-circle-fill text-red-500 text-xl mb-2"></i>
+                <h2 id="noAtendidos" class="text-2xl font-bold text-white"></h2>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">No Atendidos</p>
               </div>
 
             </section>

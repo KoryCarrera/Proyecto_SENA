@@ -150,7 +150,7 @@ function casosPorTipo($pdo)
 
             foreach ($conteo as $temp) {
                 $nombres[] = $temp['nombre_caso'];  // 
-                $totales[] = (int)$temp['total'];    // 
+                $totales[] = (int) $temp['total'];    // 
             }
             return [
                 'tipos' => $nombres,
@@ -181,7 +181,7 @@ function casosPorComisionado($pdo)
 
             foreach ($casosComisionados as $temp) {
                 $comisionado[] = $temp['comisionado'];
-                $total[] = (int)$temp['total_casos'];
+                $total[] = (int) $temp['total_casos'];
             }
 
             return [
@@ -213,7 +213,7 @@ function casosPorMes($pdo)
 
             foreach ($mesesCasos as $temp) { //Se recorren los arrays con la palaba reservada
                 $mes[] = $temp['mes']; //Guardamos los valores de mes dentro de su variable
-                $casos[] = (int)$temp['total_casos']; //Especificamos el tipo de dato y guardamos casos dentro de su variable
+                $casos[] = (int) $temp['total_casos']; //Especificamos el tipo de dato y guardamos casos dentro de su variable
             }
 
             return [
@@ -244,7 +244,7 @@ function casosPorEstado($pdo)
 
             foreach ($casosEstado as $temp) { //Palabra reservada para recorrer arrays
                 $estados[] = $temp['nombre_estado'];
-                $casos[] = (int)$temp['total_casos'];
+                $casos[] = (int) $temp['total_casos'];
             }
 
             return [
@@ -262,7 +262,8 @@ function casosPorEstado($pdo)
     }
 }
 
-function usuariosPorRol($pdo) {
+function usuariosPorRol($pdo)
+{
     try {
         $stmt = $pdo->prepare("CALL sp_reporte_usuarios_rol()");
         $stmt->execute();
@@ -291,7 +292,8 @@ function usuariosPorRol($pdo) {
     }
 }
 
-function usuariosPorEstado($pdo) {
+function usuariosPorEstado($pdo)
+{
     try {
         $stmt = $pdo->prepare("CALL sp_reporte_usuarios_estado()");
         $stmt->execute();
@@ -336,7 +338,7 @@ function casosPorProceso($pdo)
 
             foreach ($casosProceso as $temp) {
                 $proceso[] = $temp['proceso'];           // ← Coincide con el SP
-                $casos[] = (int)$temp['total_casos'];    // ← Coincide con el SP
+                $casos[] = (int) $temp['total_casos'];    // ← Coincide con el SP
             }
 
             return [
@@ -462,7 +464,8 @@ function obtenerCaracterizacionUsuarios($pdo)
 
 //Funciona para mostrarnos un análasis de los tipos de PQRS del sistema
 
-function obtenerAnalisisDemanda($pdo) {
+function obtenerAnalisisDemanda($pdo)
+{
     try {
         $stmt = $pdo->prepare("CALL sp_analisis_demanda()");
         $stmt->execute();
@@ -474,9 +477,9 @@ function obtenerAnalisisDemanda($pdo) {
     } catch (PDOException $e) {
         error_log("Error en obtener el analisis de las demandas: " . $e->getMessage());
         return false;
-        }
-        }
-        
+    }
+}
+
 function listarProceso($pdo)
 {
     // 1. Preparamos la llamada al procedimiento
@@ -488,7 +491,7 @@ function listarProceso($pdo)
 
         // 3. Traemos TODAS las filas
         $procesos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         // Limpiamos el cursor para permitir futuras consultas en la misma conexión
         $stmt->closeCursor();
 
@@ -514,7 +517,7 @@ function listarProceso($pdo)
     }
 }
 
-function tablaBaseExcel ($pdo)
+function tablaBaseExcel($pdo)
 {
     $stmt = $pdo->prepare("CALL sp_reporte_pqrs_excel()");
 
@@ -525,23 +528,23 @@ function tablaBaseExcel ($pdo)
 
         $stmt->closeCursor();
 
-        if($data !== false) {
+        if ($data !== false) {
             return $data;
         } else {
             return false;
         }
-    }catch(PDOException){
+    } catch (PDOException) {
 
     }
 }
 
-function listarCasosComi ($pdo, $documento)
+function listarCasosComi($pdo, $documento)
 {
-	$stmt = $pdo->prepare("CALL sp_listar_caso_por_comisionado(?)");
-	
-	$stmt->bindParam(1, $documento, PDO::PARAM_STR);
+    $stmt = $pdo->prepare("CALL sp_listar_caso_por_comisionado(?)");
 
-	try {
+    $stmt->bindParam(1, $documento, PDO::PARAM_STR);
+
+    try {
         $stmt->execute();
         $listarCasosComi = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
@@ -558,9 +561,9 @@ function listarCasosComi ($pdo, $documento)
         error_log("Error al listar caso " . $e->getMessage());
         return false;
     }
-	}
-	
-	function listarProcesosActivos($pdo)
+}
+
+function listarProcesosActivos($pdo)
 {
     $stmt = $pdo->prepare("CALL sp_listar_procesos_activos()");
 
@@ -632,7 +635,8 @@ function listarEstadosCaso($pdo)
     }
 }
 
-function gestionarProceso($pdo, $nombre){
+function gestionarProceso($pdo, $nombre)
+{
 
     $stmt = $pdo->prepare("CALL sp_traer_proceso(?)");
     $stmt->bindParam(1, $nombre, PDO::PARAM_STR);
@@ -642,7 +646,7 @@ function gestionarProceso($pdo, $nombre){
         $procesoGestionar = $stmt->fetch(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
 
-        if ($procesoGestionar){
+        if ($procesoGestionar) {
             return [
                 'status' => 'ok',
                 'data' => $procesoGestionar
@@ -650,8 +654,32 @@ function gestionarProceso($pdo, $nombre){
         } else {
             return false;
         }
-    }  catch (PDOException $e) {
+    } catch (PDOException $e) {
         error_log("Error al obtener el proceso solicitado " . $e->getMessage());
         return false;
+    }
+}
+;
+
+function conteoGeneral($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_resumen_casos_global");
+
+    try {
+        $stmt->execute();
+        $conteoGeneral = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if (!$conteoGeneral) {
+            return false;
+        }
+
+        return $conteoGeneral;
+
+    } catch (PDOException $e) {
+
+        error_log("Error al obtener el conteo general " . $e->getMessage());
+        return false;
+
     }
 }

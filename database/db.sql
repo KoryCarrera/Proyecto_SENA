@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 17-02-2026 a las 01:54:52
+-- Tiempo de generación: 17-02-2026 a las 16:08:51
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -20,8 +20,543 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `proyectosena_db`
 --
-CREATE DATABASE IF NOT EXISTS `proyectosena_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `proyectosena_db`;
+
+DELIMITER $$
+--
+-- Procedimientos
+--
+CREATE PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estado` INT)   BEGIN
+    IF NOT EXISTS (SELECT 1 FROM caso WHERE id_caso = p_id_caso) THEN
+		SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = 'EL caso no existe';
+	END IF;
+    
+    UPDATE caso SET id_estado = p_id_estado WHERE id_caso = p_id_caso;
+    
+    END$$
+
+CREATE PROCEDURE `sp_analisis_demanda` ()   BEGIN
+    SELECT
+        tc.nombre_caso,
+
+        COUNT(c.id_caso) AS total_casos_ultimo_mes,
+
+        (SELECT COUNT(*)
+         FROM caso
+         WHERE DATE(fecha_inicio) = CURDATE()
+        ) AS total_casos_hoy,
+
+        (SELECT COUNT(*)
+         FROM caso c2
+         JOIN estado e2 ON e2.id_estado = c2.id_estado
+         WHERE e2.estado = 'NO ATENDIDO'
+           AND TIMESTAMPDIFF(HOUR, c2.fecha_inicio, NOW()) > 168
+           AND c2.fecha_inicio >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+        ) AS casos_criticos
+
+    FROM caso c
+    JOIN tipo_caso tc ON tc.id_tipo_caso = c.id_tipo_caso
+    WHERE c.fecha_inicio >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+    GROUP BY tc.id_tipo_caso, tc.nombre_caso
+    ORDER BY total_casos_ultimo_mes DESC
+    LIMIT 5;
+END$$
+
+CREATE PROCEDURE `sp_buscar_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
+
+SELECT u.documento, CONCAT(u.nombre, ' ', u.apellido) as nombre, u.email, r.rol FROM usuario u INNER JOIN rol r ON u.id_rol = r.id_rol WHERE documento = p_documento;
+
+END$$
+
+CREATE PROCEDURE `sp_cambiar_estado_usuario` (IN `p_documento` VARCHAR(50), IN `p_estado` INT)   BEGIN 	
+
+UPDATE usuario SET id_estado = p_estado WHERE documento = p_documento;
+
+END$$
+
+CREATE PROCEDURE `sp_caracterizacion_usuarios` ()   BEGIN
+    SELECT
+        r.nombre_rol,
+        COUNT(c.id_caso) AS total_pqrsd_mes
+    FROM caso c
+    JOIN usuario u ON u.documento = c.documento
+    JOIN rol r ON r.id_rol = u.id_rol
+    WHERE u.id_rol = 2
+      AND c.fecha_inicio >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+    GROUP BY r.id_rol, r.nombre_rol;
+END$$
+
+CREATE PROCEDURE `sp_casos_por_comisionado` ()   BEGIN
+
+SELECT 
+    CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
+    COUNT(c.id_caso) AS total_casos
+FROM usuario u
+LEFT JOIN caso c ON u.documento = c.documento
+WHERE u.id_rol = 2
+GROUP BY u.documento, u.nombre, u.apellido
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_estado` ()   BEGIN
+
+SELECT 
+    e.estado AS nombre_estado,
+    COUNT(c.id_caso) AS total_casos,
+    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
+FROM caso c
+JOIN estado e ON c.id_estado = e.id_estado
+WHERE YEAR(c.fecha_inicio) = YEAR(CURDATE())
+GROUP BY e.estado
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_mes` ()   BEGIN
+
+SELECT 
+    MONTH(fecha_inicio) AS mes,
+    COUNT(*) AS total_casos
+FROM caso
+GROUP BY MONTH(fecha_inicio)
+ORDER BY mes;
+
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_proceso` ()   BEGIN
+
+SELECT 
+    p.nombre AS proceso,
+    COUNT(c.id_caso) AS total_casos
+FROM procesoorganizacional p
+LEFT JOIN caso c ON c.id_proceso = p.id_proceso
+GROUP BY p.id_proceso, p.nombre
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_contear_casos_tipo` ()   BEGIN
+
+SELECT 
+    tc.nombre_caso,
+    COUNT(c.id_caso) AS total
+FROM caso c
+INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
+GROUP BY tc.nombre_caso
+ORDER BY tc.nombre_caso;
+
+END$$
+
+CREATE PROCEDURE `sp_desactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
+	UPDATE procesoorganizacional SET estado = 0 WHERE id_proceso = p_id_proceso;
+END$$
+
+CREATE PROCEDURE `sp_editar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_rol` INT, IN `p_contraseña` VARCHAR(255))   BEGIN
+    UPDATE usuario 
+    SET 
+        nombre = p_nombre,
+        apellido = p_apellido,
+        email = p_email,
+        id_rol = p_rol,
+        contraseña = CASE 
+            WHEN p_contraseña IS NULL OR p_contraseña = '' THEN contraseña 
+            ELSE p_contraseña 
+        END
+    WHERE documento = p_documento;
+END$$
+
+CREATE PROCEDURE `sp_listar_casos` ()   BEGIN
+	SELECT 
+			c.id_caso,
+			CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
+			c.fecha_inicio,
+			c.fecha_cierre,
+			e.estado AS estado,
+			t.nombre_caso AS tipo_caso,
+			p.nombre AS proceso,
+			c.descripcion
+		FROM caso c
+		LEFT JOIN usuario u ON c.documento = u.documento
+		JOIN estado e ON c.id_estado = e.id_estado
+		JOIN tipo_caso t ON c.id_tipo_caso = t.id_tipo_caso
+		JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
+		ORDER BY c.fecha_inicio DESC LIMIT 20;
+	END$$
+
+CREATE PROCEDURE `sp_listar_caso_por_comisionado` (IN `p_documento` VARCHAR(50))   BEGIN
+    SELECT 
+			c.id_caso,
+			CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
+			c.fecha_inicio,
+			c.fecha_cierre,
+			e.estado AS estado,
+			t.nombre_caso AS tipo_caso,
+			p.nombre AS proceso,
+			c.descripcion
+		FROM caso c
+		JOIN usuario u ON c.documento = u.documento
+		JOIN estado e ON c.id_estado = e.id_estado
+		JOIN tipo_caso t ON c.id_tipo_caso = t.id_tipo_caso
+		JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
+        WHERE u.documento = p_documento
+		ORDER BY c.fecha_inicio DESC LIMIT 30;
+    END$$
+
+CREATE PROCEDURE `sp_listar_estados_caso` ()   BEGIN
+    SELECT 
+        id_estado,
+        estado
+    FROM estado
+    ORDER BY id_estado ASC;
+END$$
+
+CREATE PROCEDURE `sp_listar_procesos_activos` ()   BEGIN
+    SELECT 
+        id_proceso,
+        nombre
+    FROM procesoorganizacional
+    WHERE estado = 1
+    ORDER BY nombre ASC;
+END$$
+
+CREATE PROCEDURE `sp_listar_proceso_organizacional` ()   BEGIN 
+	SELECT p.id_proceso, p.nombre AS nombre_proceso, p.descripcion, p.fecha_creacion, p.estado, CONCAT(u.nombre, ' ', u.apellido) AS nombre_creador, u.documento, u.email
+ 	FROM procesoorganizacional p INNER JOIN usuario u ON p.documento_usuario = u.documento ORDER BY p.fecha_creacion DESC;
+END$$
+
+CREATE PROCEDURE `sp_listar_seguimientos_por_caso` (`p_caso` INT)   BEGIN
+    
+    SELECT 
+        s.id_seguimiento,
+        s.fecha_seguimiento,
+        s.observacion
+    FROM seguimiento s
+    WHERE s.id_caso = p_caso
+    ORDER BY s.fecha_seguimiento DESC
+    LIMIT 20;
+    
+    END$$
+
+CREATE PROCEDURE `sp_listar_tipos_caso` ()   BEGIN
+    SELECT 
+        id_tipo_caso,
+        nombre_caso
+    FROM tipo_caso
+    ORDER BY nombre_caso ASC;
+END$$
+
+CREATE PROCEDURE `sp_listar_usuarios` ()   BEGIN
+
+ SELECT documento, nombre, apellido, email, id_rol, id_estado FROM usuario;
+
+END$$
+
+CREATE PROCEDURE `sp_login_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
+    SELECT
+        documento,
+        CONCAT(nombre, ' ', apellido) AS     
+        username,
+        email,
+        id_rol,
+        contraseña
+    FROM
+        usuario
+    WHERE
+        documento = p_documento COLLATE utf8mb4_general_ci 
+AND id_estado = 1 
+        LIMIT 1;
+
+    IF FOUND_ROWS() > 0 THEN
+        UPDATE usuario
+        SET ultimo_inicio_sesion = NOW()
+        WHERE documento = p_documento COLLATE utf8mb4_general_ci;
+    END IF;
+END$$
+
+CREATE PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
+    SELECT 
+        c.id_caso,
+        CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
+        c.fecha_inicio,
+        c.fecha_cierre,
+        e.estado AS estado,
+        t.nombre_caso AS tipo_caso,
+        p.nombre AS proceso,
+        c.descripcion
+    FROM caso c
+    LEFT JOIN usuario u ON c.documento = u.documento
+    INNER JOIN estado e ON c.id_estado = e.id_estado
+    INNER JOIN tipo_caso t ON c.id_tipo_caso = t.id_tipo_caso
+    INNER JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
+    WHERE c.id_caso = p_id_caso
+    LIMIT 1;
+END$$
+
+CREATE PROCEDURE `sp_reactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
+    UPDATE procesoorganizacional 
+    SET estado = 1 
+    WHERE id_proceso = p_id_proceso;
+END$$
+
+CREATE PROCEDURE `sp_registrar_caso` (IN `p_documento` VARCHAR(20), IN `p_id_proceso` INT, IN `p_id_tipo_caso` INT, IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(255))   BEGIN
+DECLARE v_id_caso INT;
+    
+INSERT INTO caso (documento, id_proceso, id_tipo_caso, descripcion, nombre) VALUES (p_documento, p_id_proceso, p_id_tipo_caso, p_descripcion, p_nombre);
+    
+    SET v_id_caso = LAST_INSERT_ID();
+
+	SELECT 
+    	c.id_caso, 
+        c.nombre,
+        c.documento,
+        c.fecha_inicio,
+        c.fecha_cierre,
+        e.estado,
+        t.nombre_caso AS tipo_caso,
+        p.nombre AS proceso,
+        c.descripcion,
+        CONCAT(u.nombre, ' ', u.apellido) AS comisionado
+        FROM caso c
+        INNER JOIN estado e ON c.id_estado = e.id_estado
+        INNER JOIN tipo_caso t ON c.id_tipo_caso = t.id_tipo_caso
+        INNER JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
+        LEFT JOIN usuario u ON c.documento = u.documento
+        WHERE c.id_caso = v_id_caso;
+
+END$$
+
+CREATE PROCEDURE `sp_registrar_informe` (IN `p_documento` VARCHAR(50), IN `p_formato` VARCHAR(10), IN `p_contenido` TEXT)   BEGIN
+
+
+
+    DECLARE v_fecha_actual DATETIME;
+
+    DECLARE v_ultimo_id INT;
+
+
+
+    SET v_fecha_actual = NOW();
+
+
+
+    INSERT INTO informe (documento, fecha_generacion, tipo_informe, contenido)
+
+    VALUES (p_documento, v_fecha_actual, p_formato, p_contenido);
+
+    
+
+    SET v_ultimo_id = LAST_INSERT_ID();
+
+
+
+    SELECT v_ultimo_id AS id_generado, v_fecha_actual AS fecha_registro;
+
+
+
+END$$
+
+CREATE PROCEDURE `sp_registrar_monitoreo` (IN `p_documento` VARCHAR(50), IN `p_tipo` ENUM('inicio_sesion','accion'), IN `p_descripcion` TEXT)   BEGIN
+INSERT INTO usuario (documento, fecha, tipo, descripcion) VALUES (p_documento, NOW(), p_tipo, p_descripcion);
+END$$
+
+CREATE PROCEDURE `sp_registrar_proceso_organizacional` (IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(100), IN `p_documento_usuario` VARCHAR(50))   BEGIN
+    INSERT INTO procesoorganizacional (descripcion, nombre, documento_usuario)
+    VALUES (p_descripcion, p_nombre, p_documento_usuario);
+END$$
+
+CREATE PROCEDURE `sp_registrar_seguimiento` (`p_observacion` TEXT, `p_caso` INT)   BEGIN
+    
+    IF NOT EXISTS (SELECT 1 FROM caso WHERE p_caso = caso.id_caso)
+    	THEN SIGNAL SQLSTATE '45000'
+        	SET MESSAGE_TEXT = 'No existe el caso buscado.';
+	END IF;
+    
+    INSERT INTO seguimiento (fecha_seguimiento, observacion, id_caso) 
+    VALUES (
+    	NOW(),
+        p_observacion,
+        p_caso
+    );
+    
+    END$$
+
+CREATE PROCEDURE `sp_registrar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(50), IN `p_apellido` VARCHAR(50), IN `p_email` VARCHAR(100), IN `p_id_rol` INT(11), IN `p_contraseña` VARCHAR(255))   BEGIN 
+
+INSERT INTO usuario (documento, nombre, apellido, email, id_rol, contraseña, fecha_registro, ultimo_inicio_sesion) 
+VALUES (p_documento, p_nombre, p_apellido, p_email, p_id_rol, p_contraseña, NOW(), NULL);
+
+END$$
+
+CREATE PROCEDURE `sp_reporte_pqrs_excel` ()   BEGIN
+    DECLARE anio_actual INT;
+    SET anio_actual = YEAR(CURDATE());
+
+    SELECT
+        u.documento                                           AS Documento,
+        c.id_caso                                             AS Id,
+        CONCAT(u.nombre, ' ', u.apellido)                     AS Comisionado,
+
+        CASE 
+            WHEN u.id_estado = 1 THEN 'Activo'
+            ELSE 'Inactivo'
+        END                                                   AS `Estado Usuario`,
+
+        
+        CASE MONTH(c.fecha_inicio)
+            WHEN 1 THEN 'enero'
+            WHEN 2 THEN 'febrero'
+            WHEN 3 THEN 'marzo'
+            WHEN 4 THEN 'abril'
+            WHEN 5 THEN 'mayo'
+            WHEN 6 THEN 'junio'
+            WHEN 7 THEN 'julio'
+            WHEN 8 THEN 'agosto'
+            WHEN 9 THEN 'septiembre'
+            WHEN 10 THEN 'octubre'
+            WHEN 11 THEN 'noviembre'
+            WHEN 12 THEN 'diciembre'
+        END                                                   AS Mes,
+
+        tc.nombre_caso                                        AS Tipo,
+        e.estado                                              AS Estado,
+        po.nombre                                             AS Proceso,
+
+        c.fecha_inicio                                        AS `Fecha de Registro`,
+        c.fecha_cierre                                        AS `Fecha de Radicado`
+
+    FROM caso c
+    INNER JOIN usuario u 
+        ON c.documento = u.documento
+
+    INNER JOIN tipo_caso tc 
+        ON c.id_tipo_caso = tc.id_tipo_caso
+
+    INNER JOIN estado e 
+        ON c.id_estado = e.id_estado
+
+    INNER JOIN procesoorganizacional po 
+        ON c.id_proceso = po.id_proceso
+
+    WHERE YEAR(c.fecha_inicio) = anio_actual
+    ORDER BY c.fecha_inicio ASC;
+
+END$$
+
+CREATE DEFINER=`root`@`%` PROCEDURE `sp_reporte_usuarios_estado` ()   BEGIN
+    SELECT 
+        e.estado_usuario AS estado,
+        COUNT(u.documento) AS total
+    FROM usuario u
+    INNER JOIN estado_usuario e ON u.id_estado = e.id_estado
+    GROUP BY e.estado_usuario
+    ORDER BY total DESC;
+END$$
+
+CREATE DEFINER=`root`@`%` PROCEDURE `sp_reporte_usuarios_rol` ()   BEGIN
+    SELECT 
+        r.nombre_rol AS rol,
+        COUNT(u.documento) AS total
+    FROM usuario u
+    INNER JOIN rol r ON u.id_rol = r.id_rol
+    GROUP BY r.nombre_rol
+    ORDER BY total DESC;
+END$$
+
+CREATE DEFINER=`root`@`%` PROCEDURE `sp_resumen_casos_global` ()   BEGIN
+    SELECT
+        -- Total general
+        COUNT(c.id_caso) AS total_casos,
+
+        -- Por tipo de caso
+        SUM(CASE WHEN tc.nombre_caso = 'Denuncia'          THEN 1 ELSE 0 END) AS total_denuncias,
+        SUM(CASE WHEN tc.nombre_caso = 'Solicitud'         THEN 1 ELSE 0 END) AS total_solicitudes,
+        SUM(CASE WHEN tc.nombre_caso = 'Acción de Tutela'  THEN 1 ELSE 0 END) AS total_acciones_tutela,
+        SUM(CASE WHEN tc.nombre_caso = 'Derecho de Petición' THEN 1 ELSE 0 END) AS total_derechos_peticion,
+
+        -- Por estado
+        SUM(CASE WHEN e.estado = 'Atendido'   THEN 1 ELSE 0 END) AS total_atendidos,
+        SUM(CASE WHEN e.estado = 'Por atender' THEN 1 ELSE 0 END) AS total_pendientes,
+        SUM(CASE WHEN e.estado = 'No atendido' THEN 1 ELSE 0 END) AS total_no_atendidos
+
+    FROM caso c
+    INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
+    INNER JOIN estado    e  ON c.id_estado    = e.id_estado;
+END$$
+
+CREATE DEFINER=`root`@`%` PROCEDURE `sp_resumen_casos_por_documento` (IN `p_documento` VARCHAR(50))   BEGIN
+    IF NOT EXISTS (SELECT 1 FROM usuario WHERE documento = p_documento) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'El documento no corresponde a ningun usuario registrado.';
+    END IF;
+
+    SELECT
+        COUNT(c.id_caso)                                                          AS total_casos,
+
+        SUM(CASE WHEN tc.nombre_caso = 'Denuncia'            THEN 1 ELSE 0 END)  AS total_denuncias,
+        SUM(CASE WHEN tc.nombre_caso = 'Solicitud'           THEN 1 ELSE 0 END)  AS total_solicitudes,
+        SUM(CASE WHEN tc.nombre_caso = 'Acción de Tutela'    THEN 1 ELSE 0 END)  AS total_acciones_tutela,
+        SUM(CASE WHEN tc.nombre_caso = 'Derecho de Petición' THEN 1 ELSE 0 END)  AS total_derechos_peticion,
+
+        SUM(CASE WHEN e.estado = 'Atendido'    THEN 1 ELSE 0 END)                AS total_atendidos,
+        SUM(CASE WHEN e.estado = 'Por atender' THEN 1 ELSE 0 END)                AS total_pendientes,
+        SUM(CASE WHEN e.estado = 'No atendido' THEN 1 ELSE 0 END)                AS total_no_atendidos
+
+    FROM caso c
+    INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
+    INNER JOIN estado    e  ON c.id_estado    = e.id_estado
+    WHERE c.documento = p_documento;
+    
+END$$
+
+CREATE PROCEDURE `sp_resumen_productividad_comisionados` ()   BEGIN
+    SELECT
+        u.documento,
+        u.nombre,
+        u.apellido,
+
+        SUM(CASE WHEN e.estado = 'ATENDIDO' THEN 1 ELSE 0 END) AS casos_atendidos,
+
+        SUM(CASE WHEN e.estado = 'POR ATENDER' THEN 1 ELSE 0 END) AS casos_en_proceso,
+
+        ROUND(
+            IFNULL(
+                (SUM(CASE WHEN e.estado = 'ATENDIDO' THEN 1 ELSE 0 END) 
+                 / NULLIF(COUNT(c.id_caso), 0)) * 100,
+            0),
+        2) AS tasa_resolucion,
+
+        IFNULL(
+            AVG(
+                CASE 
+                    WHEN c.fecha_cierre IS NOT NULL 
+                    THEN TIMESTAMPDIFF(HOUR, c.fecha_inicio, c.fecha_cierre)
+                END
+            ),
+        0) AS tiempo_promedio_cierre_horas
+
+    FROM usuario u
+    LEFT JOIN caso c 
+        ON c.documento = u.documento
+       AND DATE(c.fecha_inicio) = CURDATE()
+    LEFT JOIN estado e 
+        ON e.id_estado = c.id_estado
+
+    GROUP BY u.documento, u.nombre, u.apellido;
+END$$
+
+CREATE DEFINER=`root`@`%` PROCEDURE `sp_traer_proceso` (IN `p_nombre` VARCHAR(100))   BEGIN
+SELECT id_proceso, fecha_creacion, descripcion, documento_usuario, nombre, estado FROM procesoorganizacional WHERE nombre = TRIM(p_nombre COLLATE utf8mb4_general_ci); 
+END$$
+
+CREATE PROCEDURE `sp_traer_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
+
+SELECT documento, nombre, apellido, email, id_rol, id_estado FROM usuario WHERE documento = TRIM(p_documento COLLATE utf8mb4_general_ci);
+
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -61,11 +596,11 @@ CREATE TABLE `caso` (
 --
 
 INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_proceso`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
-(81, 'Solicitud de dotación pendiente 2026', '1020304050', 12, '2026-02-10 14:58:00', NULL, 1, 2, 'Por medio de la presente solicito la entrega de la dotación correspondiente al periodo 2026, la cual no me ha sido suministrada a la fecha. Cumplo con los requisitos establecidos para la asignación y no he recibido notificación sobre retrasos o inconvenientes. Agradezco se revise mi caso y se informe el estado del proceso.'),
-(82, 'Reporte de accidente laboral en oficina administrativa', '1756664828', 14, '2026-02-18 14:59:17', NULL, 2, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
-(83, 'Denuncia por presunto acoso laboral', '1456333298', 11, '2025-02-03 15:00:31', NULL, 2, 1, 'Presento denuncia formal por presuntas conductas reiteradas de descalificación y trato irrespetuoso por parte de mi superior inmediato. Los hechos han ocurrido en varias ocasiones frente a compañeros de trabajo, afectando mi desempeño y ambiente laboral. Solicito se adelante la investigación correspondiente garantizando confidencialidad.'),
+(81, 'Solicitud de dotación pendiente 2026', '1020304050', 12, '2026-02-12 14:58:00', NULL, 1, 2, 'Por medio de la presente solicito la entrega de la dotación correspondiente al periodo 2026, la cual no me ha sido suministrada a la fecha. Cumplo con los requisitos establecidos para la asignación y no he recibido notificación sobre retrasos o inconvenientes. Agradezco se revise mi caso y se informe el estado del proceso.'),
+(82, 'Reporte de accidente laboral en oficina administrativa', '1756664828', 14, '2026-02-12 14:59:17', NULL, 2, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
+(83, 'Denuncia por presunto acoso laboral', '1456333298', 11, '2026-02-12 15:00:31', NULL, 2, 1, 'Presento denuncia formal por presuntas conductas reiteradas de descalificación y trato irrespetuoso por parte de mi superior inmediato. Los hechos han ocurrido en varias ocasiones frente a compañeros de trabajo, afectando mi desempeño y ambiente laboral. Solicito se adelante la investigación correspondiente garantizando confidencialidad.'),
 (84, 'Derecho de petición – Estado de incentivo institucional', '1656966633', 13, '2026-02-12 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
-(85, 'Solicitud de apoyo por calamidad doméstica', '1020304050', 10, '2026-01-15 15:02:44', NULL, 2, 2, 'Solicito apoyo institucional por calamidad doméstica debido a una situación familiar imprevista ocurrida el 8 de febrero de 2026. Adjunto los documentos que soportan la situación. Agradezco se evalúe la posibilidad de otorgar el beneficio contemplado en el programa de bienestar social.');
+(85, 'Solicitud de apoyo por calamidad doméstica', '1020304050', 10, '2026-02-12 15:02:44', NULL, 2, 2, 'Solicito apoyo institucional por calamidad doméstica debido a una situación familiar imprevista ocurrida el 8 de febrero de 2026. Adjunto los documentos que soportan la situación. Agradezco se evalúe la posibilidad de otorgar el beneficio contemplado en el programa de bienestar social.');
 
 -- --------------------------------------------------------
 
@@ -172,7 +707,10 @@ INSERT INTO `informe` (`id_informe`, `documento`, `fecha_generacion`, `tipo_info
 (63, '1487569254', '2026-02-15 02:21:55', 'PDF', 'Reporte Usuarios'),
 (64, '1487569254', '2026-02-15 02:23:32', 'PDF', 'Reporte Usuarios'),
 (65, '1487569254', '2026-02-15 02:25:38', 'PDF', 'Reporte Casos'),
-(66, '1487569254', '2026-02-16 11:48:23', 'PDF', 'Reporte Usuarios');
+(66, '1487569254', '2026-02-16 11:48:23', 'PDF', 'Reporte Usuarios'),
+(67, '1487569254', '2026-02-17 13:25:28', 'PDF', 'Reporte Casos'),
+(68, '1487569254', '2026-02-17 13:26:37', 'PDF', 'Reporte Usuarios'),
+(69, '1487569254', '2026-02-17 13:26:55', 'EXCEL', NULL);
 
 -- --------------------------------------------------------
 
@@ -321,8 +859,8 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
 ('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', 1, '$2y$10$y3oetIixLCkpaVJi06/6Uu8GAobFx0laScAzWdA6LCEIosKnFzKPu', '2026-02-12 14:18:58', '2026-02-16 15:58:21', 1),
-('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', 2, '$2y$10$HqefV0KBECI0kGZF/Ibtq./nElgxTqfrmxrQLAu0Mm1BbsJoUgaay', '2026-02-12 14:22:31', '2026-02-13 22:29:11', 1),
-('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-17 00:34:15', 1),
+('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', 2, '$2y$10$HqefV0KBECI0kGZF/Ibtq./nElgxTqfrmxrQLAu0Mm1BbsJoUgaay', '2026-02-12 14:22:31', '2026-02-17 15:39:02', 1),
+('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-17 15:15:46', 1),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-02-12 15:01:09', 1),
 ('1756664828', 'Isaac', 'Carvajal', 'zackycarvajal@gmail.com', 2, '$2y$10$3vRK9ALJ8K/ffOvJMqDb9.giktCYmj9zHUwUAAvboirCOekDFGot2', '2026-02-12 14:20:29', '2026-02-12 14:58:47', 0);
 
@@ -460,7 +998,7 @@ ALTER TABLE `estado`
 -- AUTO_INCREMENT de la tabla `informe`
 --
 ALTER TABLE `informe`
-  MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=67;
+  MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT de la tabla `monitoreo`
@@ -478,7 +1016,7 @@ ALTER TABLE `notificacion`
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
 --
 ALTER TABLE `procesoorganizacional`
-  MODIFY `id_proceso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=15;
+  MODIFY `id_proceso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `registro_cambios`
