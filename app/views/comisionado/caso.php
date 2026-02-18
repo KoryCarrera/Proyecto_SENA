@@ -72,6 +72,11 @@
           <span class="text-[10px] mt-1 font-medium">Crear Notificación</span>
         </a>
 
+        <a href="/perfil" class="nav-link">
+          <i class="bi bi-person-circle"></i>
+          <span class="text-[10px] mt-1 font-medium">Mi Perfil</span>
+        </a>
+
       </nav>
     </aside>
 
@@ -94,7 +99,7 @@
           </div>
 
           <div class="flex items-center gap-4">
-            <a href="#" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+            <a href="/perfil" class="p-2 rounded-full hover:bg-white/5 transition-colors">
                <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
             </a>
             
