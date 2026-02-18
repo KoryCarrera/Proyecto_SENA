@@ -11,17 +11,13 @@ const CHART_COLORS = [
     'rgb(192, 132, 252)'   // Lavanda suave
 ];
 
-// Mapa de colores para etiquetas conocidas (casos de uso)
+// Mapa de colores para etiquetas conocidas
 const COLOR_MAP = {
-    // Tipos de Caso (Polar Area)
     'Denuncia': CHART_COLORS[4],
     'Solicitud': CHART_COLORS[2],
     'Derecho de Petición': CHART_COLORS[0],
     'Queja': CHART_COLORS[3],
     'Reclamo': CHART_COLORS[1],
-
-    // Comisionados (Pie Chart) – puedes agregar nombres específicos si lo deseas
-    // Si no están, se asignará un color por índice automáticamente
 };
 
 const MONTH_NAMES_ES = [
@@ -58,12 +54,34 @@ const drawChart = (canvasElement, type, labels, data) => {
         borderColors = 'black'; // Borde negro para segmentos
     }
 
+    // Construcción base del dataset
+    const dataset = {
+        label: (type === 'pie' || type === 'polarArea' ? 'Cantidad' : 'Casos Registrados'),
+        data: data,
+        backgroundColor: backgroundColors,
+        borderColor: borderColors,
+        borderWidth: 1.5,
+    };
+
+    // Configuración específica para línea (point style circle)
+    if (type === 'line') {
+        dataset.pointStyle = 'circle';           // Explícitamente círculo
+        dataset.pointRadius = 5;                  // Tamaño del punto
+        dataset.pointHoverRadius = 7;             // Tamaño al hacer hover
+        dataset.pointBorderWidth = 2;              // Borde del punto
+        dataset.pointBackgroundColor = '#ffffff';  // Fondo blanco
+        dataset.pointBorderColor = borderColors;   // Borde del color de la línea
+        dataset.tension = 0.3;                      // Suavizado de la línea
+        dataset.fill = false;
+    } else {
+        dataset.fill = true;
+    }
+
     const options = {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
             legend: {
-                // Mostrar leyenda solo en gráficos circulares/polares (no en barras/líneas)
                 display: type !== 'bar' && type !== 'line',
                 position: 'bottom',
                 labels: { color: '#ffffff' }
@@ -78,8 +96,8 @@ const drawChart = (canvasElement, type, labels, data) => {
                           beginAtZero: true,
                           ticks: {
                               color: '#ffffff',
-                              stepSize: 1,       // Saltos de 1 en 1
-                              precision: 0,      // Sin decimales
+                              stepSize: 1,
+                              precision: 0,
                               callback: function (value) {
                                   if (Number.isInteger(value)) return value;
                               }
@@ -92,21 +110,7 @@ const drawChart = (canvasElement, type, labels, data) => {
 
     canvasElement.chart = new Chart(canvasElement, {
         type: type,
-        data: {
-            labels: labels,
-            datasets: [{
-                label: type === 'doughnut' || type === 'polarArea' ? 'Cantidad' : 'Casos Registrados',
-                data: data,
-                backgroundColor: backgroundColors,
-                borderColor: borderColors,
-                borderWidth: 1.5,
-                // Propiedades específicas de línea
-                pointBackgroundColor: type === 'line' ? '#ffffff' : undefined,
-                pointBorderColor: type === 'line' ? borderColors : undefined,
-                tension: 0.3,
-                fill: type === 'line' ? false : true
-            }]
-        },
+        data: { labels: labels, datasets: [dataset] },
         options: options
     });
 };
