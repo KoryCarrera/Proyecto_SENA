@@ -1,4 +1,4 @@
-const ENDPOINT = '/graficasComi'; 
+const ENDPOINT = '/graficasComi';
 
 Chart.defaults.color = '#ffffff';
 
@@ -18,7 +18,7 @@ const COLOR_MAP = {
     'Por atender': CHART_COLORS[0], // Sky Blue
     'Atendido': CHART_COLORS[1],    // Teal
     'No atendido': CHART_COLORS[3], // Índigo
-    
+
     // Tipos de Caso (Polar Area)
     'Denuncia': CHART_COLORS[4],            // Lavanda
     'Solicitud': CHART_COLORS[2],           // Azul Pastel
@@ -58,78 +58,75 @@ const drawChart = (canvasElement, type, labels, data) => {
     if (canvasElement.chart) {
         canvasElement.chart.destroy();
     }
-    
+
     // Lógica para definir colores
     let backgroundColors;
     let borderColors;
 
     if (type === 'line') {
-        // REQUERIMIENTO: Gráfica de línea de un solo color
-        // Usamos el primer color de la paleta (Sky Blue) como principal
-        backgroundColors = CHART_COLORS[0]; 
+        backgroundColors = CHART_COLORS[0];
         borderColors = CHART_COLORS[0];
     } else {
-        // Para otros gráficos, mapeamos cada label a su color específico
         const baseColors = labels.map(label => getColorForLabel(label));
-        
-        // Ajuste para PolarArea (transparencia)
-        backgroundColors = baseColors.map(color => 
+        backgroundColors = baseColors.map(color =>
             type === 'polarArea' ? color.replace('rgb', 'rgba').replace(')', ', 0.7)') : color
         );
-        borderColors = 'black'; // Borde negro para separar segmentos en tortas/barras
+        borderColors = 'black';
+    }
+
+    // Construcción del dataset
+    const dataset = {
+        label: (type === 'pie' || type === 'polarArea' ? 'Cantidad' : 'Casos Registrados'),
+        data: data,
+        backgroundColor: backgroundColors,
+        borderColor: borderColors,
+        borderWidth: 1.5
+    };
+
+    // Configuración específica para línea (point style circle)
+    if (type === 'line') {
+        dataset.pointStyle = 'circle';          // Estilo circular explícito
+        dataset.pointRadius = 5;                // Tamaño del punto
+        dataset.pointHoverRadius = 7;           // Tamaño al hacer hover
+        dataset.pointBackgroundColor = '#ffffff';
+        dataset.pointBorderColor = borderColors;
+        dataset.pointBorderWidth = 2;            // Borde del punto
+        dataset.tension = 0.3;                   // Suavizado de la línea
+        dataset.fill = false;
+    } else {
+        dataset.fill = true;                      // Relleno para áreas (polar, etc.)
     }
 
     const options = {
         responsive: true,
         plugins: {
             legend: {
-                // En Line charts a veces es util ver la leyenda, en polar/pie a veces no. 
-                // Lo dejo false como lo tenías, o true si quieres ver qué es cada color.
-                display: type !== 'bar' && type !== 'line', 
+                display: type !== 'bar' && type !== 'line',
                 position: 'bottom',
                 labels: { color: '#ffffff' }
             },
         },
         maintainAspectRatio: false,
-        scales: type === 'polarArea' ? { r: { beginAtZero: true, display: false } } : 
-                (type === 'bar' || type === 'line') ? { 
-    y: { 
-        beginAtZero: true,
-        ticks: { 
-            color: '#ffffff',
-            stepSize: 1,               // 🔥 Solo saltos de 1
-            precision: 0,              // 🔥 Sin decimales
-            callback: function(value) {
-                if (Number.isInteger(value)) {
-                    return value;      // 🔥 Solo mostrar enteros
-                }
-            }
-        }
-    }, 
-    x: { 
-        ticks: { color: '#ffffff'} 
-    } 
-} : {}
-
+        scales: type === 'polarArea' ? { r: { beginAtZero: true, display: false } } :
+            (type === 'bar' || type === 'line') ? {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#ffffff',
+                        stepSize: 1,
+                        precision: 0,
+                        callback: function (value) {
+                            if (Number.isInteger(value)) return value;
+                        }
+                    }
+                },
+                x: { ticks: { color: '#ffffff' } }
+            } : {}
     };
 
     canvasElement.chart = new Chart(canvasElement, {
         type: type,
-        data: {
-            labels: labels,
-            datasets: [{
-                label: (type === 'pie' || type === 'polarArea' ? 'Cantidad' : 'Casos Registrados'),
-                data: data,
-                backgroundColor: backgroundColors,
-                borderColor: borderColors,
-                borderWidth: 1.5,
-                // Propiedades específicas de línea
-                pointBackgroundColor: type === 'line' ? '#ffffff' : undefined, // Puntos blancos en la línea
-                pointBorderColor: type === 'line' ? borderColors : undefined,
-                tension: 0.3,
-                fill: type === 'line' ? false : true
-            }]
-        },
+        data: { labels: labels, datasets: [dataset] },
         options: options
     });
 };
@@ -138,9 +135,9 @@ const drawChart = (canvasElement, type, labels, data) => {
  * Función que gestiona la representación de un gráfico.
  */
 const renderChartFromResponse = (canvasId, container, apiResponse, chartId, chartType, chartName) => {
-    
+
     const chartIdCapitalized = chartId.charAt(0).toUpperCase() + chartId.slice(1);
-    let labels = apiResponse[`labels${chartIdCapitalized}`]; 
+    let labels = apiResponse[`labels${chartIdCapitalized}`];
     const data = apiResponse[`data${chartIdCapitalized}`];
 
     // Convertir etiquetas numéricas de meses a strings (Solo si es mes)
@@ -150,24 +147,24 @@ const renderChartFromResponse = (canvasId, container, apiResponse, chartId, char
         labels = labels.map(monthNum => MONTH_NAMES_ES[monthNum - 1] || `Mes ${monthNum}`);
     }
 
-    const errorMessage = apiResponse.errors?.[chartId]; 
+    const errorMessage = apiResponse.errors?.[chartId];
 
     // Manejo de errores o datos vacíos
     if (errorMessage || !labels || !data || labels.length === 0 || data.length === 0) {
-        const errorText = errorMessage 
+        const errorText = errorMessage
             ? `⚠️ Error en ${chartName}: ${errorMessage}`
             : `✅ No hay datos de ${chartName} registrados para mostrar.`;
-            
+
         container.innerHTML = `<p class="text-center p-4 text-warning">${errorText}</p>`;
         return;
     }
 
     // Crear nuevo canvas
-    container.innerHTML = ''; 
+    container.innerHTML = '';
     const newCanvas = document.createElement('canvas');
-    newCanvas.id = canvasId; 
+    newCanvas.id = canvasId;
     container.appendChild(newCanvas);
-    
+
     // Dibujar el gráfico
     drawChart(newCanvas, chartType, labels, data);
 };
@@ -176,34 +173,34 @@ const renderChartFromResponse = (canvasId, container, apiResponse, chartId, char
  * Función principal que realiza UNA SOLA petición a la API y distribuye los datos.
  */
 const loadAllChartData = async () => {
-    
+
     // Obtener referencias a los contenedores
     const charts = [
-        { 
+        {
             canvasId: 'barChart',
             container: document.getElementById('barChart')?.parentElement,
-            id: 'bar', 
+            id: 'bar',
             type: 'line',  // Aquí definiste que 'bar' (del json) se pinte como LINEA
             name: 'Casos por Procesos' // Cambié el nombre según tu JSON (trae Ropa, SST, etc)
         },
-        { 
+        {
             canvasId: 'pieChart',
             container: document.getElementById('pieChart')?.parentElement,
-            id: 'pie', 
+            id: 'pie',
             type: 'bar', // Aquí definiste que 'pie' (del json) se pinte como BARRA
             name: 'Casos por Estado' // Cambié el nombre según tu JSON (trae Por atender)
         },
-        { 
+        {
             canvasId: 'polarChart',
             container: document.getElementById('polarChart')?.parentElement,
-            id: 'polar', 
-            type: 'polarArea', 
-            name: 'Casos por Tipo' 
+            id: 'polar',
+            type: 'polarArea',
+            name: 'Casos por Tipo'
         }
     ].filter(c => c.container);
-    
+
     console.log('Charts encontrados:', charts.length);
-    
+
     // Mostrar indicador de carga
     charts.forEach(c => {
         c.container.innerHTML = `<p class="text-center p-4 text-muted">Cargando datos de ${c.name}...</p>`;
@@ -211,19 +208,19 @@ const loadAllChartData = async () => {
 
     try {
         console.log('Haciendo fetch a:', ENDPOINT);
-        
+
         const response = await fetch(ENDPOINT);
-        
+
         console.log('Response status:', response.status);
-        
+
         if (!response.ok) {
             throw new Error(`Error HTTP ${response.status}`);
         }
-        
+
         const apiResponse = await response.json();
-        
+
         console.log('Respuesta completa del servidor:', apiResponse);
-        
+
         if (apiResponse.status !== 'ok' && apiResponse.status !== 'partial_error') {
             throw new Error(apiResponse.mensaje || 'Error del servidor');
         }
@@ -236,9 +233,9 @@ const loadAllChartData = async () => {
 
     } catch (error) {
         console.error("Error crítico:", error);
-        
+
         charts.forEach(c => {
-            if(c.container) {
+            if (c.container) {
                 c.container.innerHTML = `<p class="text-center p-4 text-danger">
                     <strong>Error:</strong> ${error.message}
                 </p>`;

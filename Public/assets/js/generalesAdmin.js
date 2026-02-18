@@ -5,6 +5,7 @@ const ENDPOINT_DATOS = '/estadisticasGenerales';
 const total = document.getElementById('total');
 const denuncia = document.getElementById('denuncia');
 const solicitudes = document.getElementById('solicitud');
+const peticion = document.getElementById('peticion');
 const tutelas = document.getElementById('tutela');
 const atendidos = document.getElementById('atendido');
 const porAtender = document.getElementById('porAtender');
@@ -14,6 +15,7 @@ const noAtendidos = document.getElementById('noAtendidos')
 total.textContent = `Cargando...`;
 denuncia.textContent = `Cargando...`;
 solicitudes.textContent = `Cargando...`;
+peticion.textContent = `Cargando...`;
 tutelas.textContent = `Cargando...`;
 atendidos.textContent = `Cargando...`;
 porAtender.textContent = `Cargando...`;
@@ -45,9 +47,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 total.textContent = `0`;
                 denuncia.textContent = `0`;
                 solicitudes.textContent = `0`;
+                peticion.textContent = `0`;
                 tutelas.textContent = `0`;
                 atendidos.textContent = `0`;
                 porAtender.textContent = `0`;
+                noAtendidos.textContent = `0`;
                 return;
             };
 
@@ -68,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
             total.textContent = `${respuesta.total}`;
             denuncia.textContent = `${respuesta.denuncias}`;
             solicitudes.textContent = `${respuesta.solicitudes}`;
+            peticion.textContent = `${respuesta.peticion}`;
             tutelas.textContent = `${respuesta.tutelas}`;
             atendidos.textContent = `${respuesta.atendidos}`;
             porAtender.textContent = `${respuesta.porAtender}`;
