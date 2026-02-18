@@ -133,32 +133,12 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
       <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
         <div class="max-w-7xl mx-auto space-y-8">
 
-          <!-- Create User Form -->
-          <section class="formulario-crear-usuario">
-            <div class="glass-card p-8 md:p-10">
-              <form action="" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <h2 class="text-2xl font-bold text-white col-span-1 md:col-span-2 mb-4 text-center">Crear Nuevo Usuario</h2>
-
-                <div class="col-span-1 md:col-span-2">
-                  <select id="rol" name="rol" required class="glass-input w-full p-3 rounded-lg text-slate-300 appearance-none">
-                    <option value="" disabled selected>Escoge un rol</option>
-                    <option value="1" class="bg-slate-800">Administrador</option>
-                    <option value="2" class="bg-slate-800">Comisionado</option>
-                  </select>
-                </div>
-
-                <input type="text" id="nombre" name="nombre" required placeholder="Nombre" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400">
-                <input type="text" id="apellido" name="apellido" required placeholder="Apellido" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400">
-                <input type="text" id="documento" name="documento" required placeholder="Documento" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400">
-                <input type="email" id="email" name="email" required placeholder="Correo Electrónico" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400">
-                <input type="password" id="contrasena" name="contrasena" required placeholder="Contraseña" class="glass-input w-full p-3 rounded-lg text-white placeholder-slate-400 col-span-1 md:col-span-2">
-
-                <button type="button" class="btn-usuario mt-4 w-full md:w-auto" id="btn-usuario">
-                  <i class="bi bi-person-plus-fill mr-2"></i> Crear Usuario
-                </button>
-              </form>
-            </div>
-          </section>
+          <!-- Botón para abrir el modal de crear usuario -->
+          <div class="flex justify-end">
+            <button type="button" id="abrirModalCrear" class="btn-usuario flex items-center gap-2">
+              <i class="bi bi-person-plus-fill"></i> Crear Nuevo Usuario
+            </button>
+          </div>
 
           <!-- Users Table -->
           <section class="tabla-usuarios">
@@ -212,6 +192,53 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
     </div>
   </div>
 
+  <!-- Modal Crear Usuario (Custom Modal) -->
+  <div id="modalCrearUsuario" class="modal">
+    <div class="contenido-modal">
+      <h2 class="titulo-modal">Crear Nuevo Usuario</h2>
+      <form id="formCrearUsuario" class="formulario-crear">
+
+        <div class="mb-4">
+          <select id="crearRol" name="rol" required class="contenido glass-input">
+            <option value="" disabled selected>Escoge un rol</option>
+            <option value="1" class="bg-slate-800">Administrador</option>
+            <option value="2" class="bg-slate-800">Comisionado</option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <input type="text" id="crearNombre" name="nombre" required placeholder="Nombre" class="contenido glass-input">
+        </div>
+
+        <div class="mb-4">
+          <input type="text" id="crearApellido" name="apellido" required placeholder="Apellido" class="contenido glass-input">
+        </div>
+
+        <div class="mb-4">
+          <input type="text" id="crearDocumento" name="documento" required placeholder="Documento" class="contenido glass-input">
+        </div>
+
+        <div class="mb-4">
+          <input type="email" id="crearEmail" name="email" required placeholder="Correo Electrónico" class="contenido glass-input">
+        </div>
+
+        <div class="mb-4">
+          <input type="password" id="crearContrasena" name="contrasena" required placeholder="Contraseña" class="contenido glass-input">
+        </div>
+
+        <div class="botones">
+          <button type="submit" id="guardar-modal-crear" class="boton flex items-center gap-2">
+            <i class="bi bi-person-plus-fill"></i> Crear Usuario
+          </button>
+          <button type="button" id="cerrar-modal-crear" class="boton flex items-center gap-2">
+            <i class="bi bi-x-lg"></i> Cerrar
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
   <!-- Hidden anchor tag preservation from original file -->
   <a href="/editarUsuario" style="display:none;">a</a>
 
@@ -222,6 +249,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="/assets/js/logout.js"></script>
   <script src="/assets/js/usuariosAdmin.js"></script>
+  <script src="/assets/js/modal_usuarios_Admin.js"></script>
   <script src="/assets/js/cache.js"></script>
 
 </body>

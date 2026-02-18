@@ -34,3 +34,19 @@ function reactivarProceso($pdo, $id_proceso){
         return false;
     }
 }
+
+function actualizarEstadoCaso($pdo, $idCaso, $idEstado)
+{
+    $stmt = $pdo->prepare("CALL sp_actualizar_estado_caso(?, ?)");
+    $stmt->bindParam(1, $idCaso, PDO::PARAM_INT);
+    $stmt->bindParam(2, $idEstado, PDO::PARAM_INT);
+
+    try {
+        $stmt->execute();
+        $stmt->closeCursor();
+        return true;
+    } catch (PDOException $e) {
+        error_log("Error en actualizarEstadoCaso: " . $e->getMessage());
+        return false;
+    }
+}

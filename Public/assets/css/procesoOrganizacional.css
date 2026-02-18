@@ -208,6 +208,8 @@ body {
     border-radius: 1rem;
     width: 90%;
     max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
@@ -260,7 +262,9 @@ body {
 
 textarea.contenido {
     min-height: 100px;
+    max-height: 200px;
     margin-top: 1rem;
+    resize: vertical;
 }
 
 input.contenido {

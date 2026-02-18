@@ -190,7 +190,155 @@ body {
     box-shadow: 0 6px 8px -1px rgba(99, 102, 241, 0.4);
 }
 
-/* Modal Styling via override */
+/* Modal Custom Styles — Enhanced Glassmorphism UI */
+.modal {
+    display: none;
+    /* JS will toggle this to 'flex' */
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+    animation: modalOverlayIn 0.3s ease;
+}
+
+@keyframes modalOverlayIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.contenido-modal {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.97), rgba(15, 23, 42, 0.95));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    color: #e2e8f0;
+    margin: auto;
+    padding: 2.5rem;
+    border-radius: 1.25rem;
+    width: 90%;
+    max-width: 520px;
+    box-shadow:
+        0 25px 60px -15px rgba(0, 0, 0, 0.6),
+        0 0 40px -10px rgba(99, 102, 241, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    animation: modalSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.titulo-modal {
+    font-size: 1.6rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff, #a5b4fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+    margin-bottom: 2rem;
+    letter-spacing: -0.02em;
+}
+
+.contenido {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+    color: white;
+    width: 100%;
+    padding: 0.85rem 1.1rem;
+    border-radius: 0.65rem;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.925rem;
+}
+
+.contenido:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(99, 102, 241, 0.6);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.15), 0 0 0 3px rgba(99, 102, 241, 0.08);
+}
+
+.contenido::placeholder {
+    color: #64748b;
+    font-weight: 400;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.botones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.boton {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    padding: 0.65rem 1.6rem;
+    border-radius: 0.6rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    letter-spacing: 0.01em;
+}
+
+.boton:hover {
+    background: linear-gradient(135deg, #818cf8, #6366f1);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+.boton:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+#cerrar-modal-crear {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+#cerrar-modal-crear:hover {
+    background: linear-gradient(135deg, #f87171, #ef4444);
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
+}
+
+.formulario-crear {
+    display: block;
+}
+
+/* Bootstrap Modal Styling via override (for modal de gestionar usuario) */
 .modal-content {
     background: rgba(30, 41, 59, 0.95) !important;
     backdrop-filter: blur(16px) !important;
@@ -232,29 +380,4 @@ body {
 
 .fw-bold {
     font-weight: 700 !important;
-}
-
-/* Form Layout */
-.formulario-crear-usuario form {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-}
-
-@media (min-width: 768px) {
-    .formulario-crear-usuario form {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .formulario-crear-usuario h2 {
-        grid-column: 1 / -1;
-    }
-
-    .btn-usuario {
-        grid-column: 1 / -1;
-        justify-self: center;
-        /* Center the button */
-        width: auto;
-        min-width: 200px;
-    }
 }

@@ -5,95 +5,7 @@ const ENDPOINT_INSERTAR = '/registrarUsuario';
 const ENDPOINT_EDITAR = '/editarUsuario'
 const ENDPOINT_ESTADO = '/cambiarEstadoUsuario'
 
-//capturamos el boton para añadirle un evento
-const botonEnviar = document.getElementById('btn-usuario');
-
-//se le agrega el evento click
-botonEnviar.addEventListener('click', function insertarUsuario() {
-    const documento = document.getElementById('documento').value;
-    const rol = document.getElementById('rol').value;
-    const nombre = document.getElementById('nombre').value;
-    const apellido = document.getElementById('apellido').value;
-    const email = document.getElementById('email').value;
-    const contrasena = document.getElementById('contrasena').value;
-
-    const parametros = {
-        'documento': documento,
-        'rol': rol,
-        'nombre': nombre,
-        'apellido': apellido,
-        'email': email,
-        'contrasena': contrasena
-    };
-
-    if (!parametros) {
-
-        Swal.fire({
-            icon: 'info',
-            title: 'Recuerda rellenar todos los campos',
-            showConfirmButton: false,
-            theme: 'dark',
-            timer: 1000,
-        });
-    }
-    try {
-        $.ajax({
-            data: parametros,
-            url: ENDPOINT_INSERTAR,
-            type: 'POST',
-            dataType: 'json',
-            success: function mostrarResultado(response) {
-
-                //Mostramos una alerta estetica con SweetAlert2
-
-                if (response.status !== 'ok') {
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: '¡Algo ha salido mal!',
-                        text: `${response.mensaje}`,
-                        showConfirmButton: false,
-                        timer: 1000,
-                        theme: 'dark',
-                    });
-
-                } else {
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: `${response.mensaje}`,
-                        showConfirmButton: false,
-                        timer: 1000,
-                        theme: 'dark',
-                    })
-                };
-
-                renderizarTablaUsuarios(data.usuarios, cuerpoTabla);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
-
-                SwaL.fire({
-                    icon: 'error',
-                    title: '¡Ha ocurrido un error interno!',
-                    showConfirmButton: false,
-                    timer: 1000,
-                    theme: 'dark',
-                });
-            },
-        });
-    } catch (error) {
-        throw new Error(`Ha ocurrido un error al ingresar al usuario ${error}`);
-    }
-
-    //limpiamos los inputs
-    document.getElementById('documento').value = '';
-    document.getElementById('rol').value = '';
-    document.getElementById('nombre').value = '';
-    document.getElementById('apellido').value = '';
-    document.getElementById('email').value = '';
-    document.getElementById('contrasena').value = '';
-});
+// La lógica de crear usuario ahora está en modal_usuarios_Admin.js
 
 
 const cargarUsuarios = async () => { //Realizamos una async function
@@ -454,7 +366,7 @@ const guardarCambios = () => {
 
                 //mostramos el mensaje en una alerta
                 Swal.fire({
-                    icon:'success',
+                    icon: 'success',
                     title: `${response.mensaje}`,
                     showConfirmButton: false,
                     theme: 'dark',
