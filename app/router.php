@@ -8,12 +8,11 @@ $router->map('GET', '/', '../Public/landing.php');
 
 //Rutas hacia controladores
 
-$router -> map('POST', '/loginAdmin/auth', 'controllers/loginAdmin.php');
+$router -> map('POST', '/login/auth', 'controllers/login.php');
 $router -> map('GET', '/graficasAdmin', 'controllers/dashboardAdmin.php');
 $router -> map('GET', '/graficasComi', 'controllers/dashboardComi.php');
 $router -> map('GET', '/listarCasos', 'controllers/listarCasos.php');
 $router -> map('GET', '/listarUsuarios', 'controllers/listarUsuariosAdmin.php');
-$router -> map('POST', '/loginComisionado/auth', 'controllers/loginComisionado.php');
 $router -> map('POST', '/logout', 'controllers/logout.php');
 $router -> map('POST', '/modalCasoAdmin', 'controllers/modalCasoAdmin.php');
 $router -> map('POST', '/modalUsuario', 'controllers/modalUsuario.php');
@@ -32,7 +31,8 @@ $router -> map('GET', '/opcionesRegistro', 'controllers/listarOpcionesRegistro.p
 $router -> map('POST', '/editarUsuario', '/controllers/editarUsuario.php');
 $router -> map('POST', '/cambiarEstadoUsuario', '/controllers/cambiarEstadoUsuario.php');
 $router -> map ('GET','/listarCasosComi','/controllers/listarCasosComi.php');
-$router -> map('GET', '/estadisticasGenerales', 'controllers/conteoGeneral.php');
+$router -> map('GET', '/estadisticasGenerales', '/controllers/conteoGeneral.php');
+$router -> map('GET', '/estadisticasUsuario', '/controllers/conteoPorUsuario.php');
 
 //Rutas hacia views admin
 

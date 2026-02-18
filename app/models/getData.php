@@ -683,3 +683,27 @@ function conteoGeneral($pdo)
 
     }
 }
+
+function conteoPorUsuario($pdo, $documento)
+{
+    $stmt = $pdo->prepare("CALL sp_resumen_casos_por_documento(?)");
+
+    try {
+        $stmt->bindParam(1, $documento, PDO::PARAM_STR);
+        $stmt->execute();
+        $conteoPorUsuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if (!$conteoPorUsuario) {
+            return false;
+        }
+
+        return $conteoPorUsuario;
+
+    } catch (PDOException $e) {
+
+        error_log("Error al obtener el conteo por usuario " . $e->getMessage());
+        return false;
+
+    }
+}

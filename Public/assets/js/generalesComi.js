@@ -1,5 +1,9 @@
 //Definimos el endpoint en una constante para facilidad
-const ENDPOINT_DATOS = '/estadisticasGenerales';
+const ENDPOINT_GENERALES = '/estadisticasGenerales';
+const ENDPOINT_USUARIOS = '/estadisticasUsuario';
+
+//capturamos el select de seleccion de estadisticas
+const select = document.getElementById('selectEstadisticas');
 
 //Capturamos los h2 donde mostraremos los datos
 const total = document.getElementById('total');
@@ -17,12 +21,12 @@ solicitudes.textContent = `Cargando...`;
 tutelas.textContent = `Cargando...`;
 atendidos.textContent = `Cargando...`;
 porAtender.textContent = `Cargando...`;
+noAtendidos.textContent = `Cargando...`;
 
-//Agregamos el evento para que cuando cargue todo el dom ejecutar la funcion anonima
-document.addEventListener('DOMContentLoaded', function () {
+function cargarDatos(ENDPOINT_DATOS) {
 
-    //utilizamos ajax para pedir los datos que necesitamos
-    $.ajax({
+    //Utilizamos AJAX para pedir los datos que necesitamos
+        $.ajax({
         url: ENDPOINT_DATOS, //url donde haremos la peticion
         type: 'GET', //Protocolo http que usaremos
         dataType: 'json', //Tipo de respuesta
@@ -100,4 +104,26 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
     });
+}
+
+let ENDPOINT_DATOS = ENDPOINT_GENERALES;
+
+select.addEventListener('change', function () {
+    
+    if (select.value == 'propios') {
+        ENDPOINT_DATOS = ENDPOINT_USUARIOS;
+
+            cargarDatos(ENDPOINT_DATOS);
+
+    } else {
+        ENDPOINT_DATOS = ENDPOINT_GENERALES;
+
+            cargarDatos(ENDPOINT_DATOS);
+    }
+
+});
+
+//Agregamos el evento para que cuando cargue todo el dom ejecutar la funcion anonima
+document.addEventListener('DOMContentLoaded', function () {
+    cargarDatos(ENDPOINT_DATOS);
 });

@@ -142,11 +142,11 @@
             <h1 class="text-3xl font-bold text-white mb-4">Estadísticas generales anuales</h1>
 
             <div class="rounded">
-              <select name="" id=""
+              <select id="selectEstadisticas"
                 class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
                 <option selected disabled class="bg-slate-900">Mostrar por...</option>
-                <option class="bg-slate-900" value="Propios">Propios</option>
-                <option class="bg-slate-900" value="Generales">Generales</option>
+                <option class="bg-slate-900" value="propios">Propios</option>
+                <option class="bg-slate-900" value="generales">Generales</option>
               </select>
             </div>
 

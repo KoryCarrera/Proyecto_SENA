@@ -70,7 +70,7 @@ enviar.addEventListener('click', function login() { //Se le agrega el evento cli
     }
     $.ajax({ //utilizamos AJAX para la request
         data: parametros, //Enviamos en data el objeto
-        url: '/loginAdmin/auth', //Definimos url (usando la del enrutador)
+        url: '/login/auth', //Definimos url (usando la del enrutador)
         type: 'POST', //Definimos el metodo http
         dataType: 'json',  //definimos el formato esperado
         success: function redireccion(respuesta) { //Definimos lo que pasa si el evento fue success
@@ -82,13 +82,13 @@ enviar.addEventListener('click', function login() { //Se le agrega el evento cli
                     icon: 'success',
                     theme: 'dark',
                     showConfirmButton: false,
-                    timer: 500
+                    timer: 1000
                 });
 
                 //Redireccionamos utilizando la ruta proporcionada por el controller
                 setTimeout(() => {
                     window.location.href = respuesta.redirect;
-                }, 500);
+                }, 1000);
 
                 //Si el estatus es error mostrará una alerta dando el mensaje
             } else if (respuesta.status === 'error') {
