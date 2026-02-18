@@ -23,7 +23,6 @@
 
   <!--CSS propio-->
   <link rel="stylesheet" href="/assets/css/casos-comisionado.css">
-
 </head>
 
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
@@ -164,6 +163,28 @@
 
         </div>
       </main>
+    </div>
+  </div>
+
+  <!-- Modal Detalles del Caso -->
+  <div id="modalCaso" class="modal">
+    <div class="contenido-modal">
+      <div class="titulo-modal" id="modalCasoLabel">Gestionar Caso</div>
+      
+      <form id="formGestionarCaso">
+        <div class="modal-body p-0" id="modalCasoBody">
+          <!-- Contenido dinámico via JS -->
+        </div>
+
+        <div class="botones">
+          <button type="button" id="cerrar-modal" class="boton bg-slate-600 hover:bg-slate-700">
+            <i class="bi bi-x-lg"></i> Cerrar
+          </button>
+          <button type="submit" class="boton flex items-center gap-2">
+            <i class="bi bi-check-circle"></i> Guardar Cambios
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
