@@ -23,6 +23,7 @@
 
   <!--CSS propio-->
   <link rel="stylesheet" href="/assets/css/home-admin.css">
+  <script src="/assets/js/jquery-3.7.1.min.js"></script>
 </head>
 
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
@@ -94,11 +95,10 @@
             <a href="/perfilAdmin" class="p-2 rounded-full hover:bg-white/5 transition-colors border border-indigo-500/30">
                <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
             </a>
-            <form action="/logout" method="POST">
-              <button type="submit" name="logout" value="logout" class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
-                Cerrar Sesión
-              </button>
-            </form>
+            <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+            <button type="submit" name="logout" id="logoutButton" value="logout" class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
+              Cerrar Sesión
+            </button>
           </div>
         </div>
       </header>
@@ -190,6 +190,7 @@
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
   <script src="/assets/js/cache.js"></script>
+  <script src="/assets/js/logout.js"></script>
 
 </body>
 

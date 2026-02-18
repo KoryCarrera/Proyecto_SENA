@@ -113,13 +113,12 @@
               <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
             </a>
 
-            <form action="/logout" method="POST">
-              <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
-              <button type="submit" name="logout" value="logout"
-                class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
-                Cerrar Sesión
-              </button>
-            </form>
+            <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+            <button type="submit" name="logout" id="logoutButton" value="logout"
+              class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
+              Cerrar Sesión
+            </button>
+            
           </div>
         </div>
       </header>
@@ -148,58 +147,68 @@
               class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
             </div>
             <h1 class="text-3xl font-bold text-white mb-4">Estadísticas generales anuales</h1>
-            <section class="flex flex-wrap justify-evenly items-center gap-4 mb-8">
 
-              <div
-                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all group">
-                <i class="bi bi-collection-fill text-indigo-400 text-xl mb-2"></i>
-                <h2 id="total" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Total</p>
-              </div>
+            <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
 
-              <div
-                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <a href="/casosAdmin">
+                <!-- Tarjeta Total -->
+                <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+                  <i class="bi bi-collection-fill text-indigo-400 text-xl mb-2"></i>
+                  <h2 id="total" class="text-2xl font-bold text-white"></h2>
+                  <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Total</p>
+                </div>
+              </a>
+
+              <!-- Denuncias -->
+              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-megaphone-fill text-red-400 text-xl mb-2"></i>
                 <h2 id="denuncia" class="text-2xl font-bold text-white"></h2>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Denuncias</p>
               </div>
 
-              <div
-                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <!-- Solicitudes -->
+              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-envelope-paper-fill text-amber-400 text-xl mb-2"></i>
                 <h2 id="solicitud" class="text-2xl font-bold text-white"></h2>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Solicitudes</p>
               </div>
 
-              <div
-                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <!-- Peticiones -->
+              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+                <i class="bi bi-file-text-fill text-blue-400 text-xl mb-2"></i>
+                <h2 id="peticion" class="text-2xl font-bold text-white"></h2>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Peticiones</p>
+              </div>
+
+              <!-- Tutelas -->
+              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-shield-lock-fill text-cyan-400 text-xl mb-2"></i>
                 <h2 id="tutela" class="text-2xl font-bold text-white"></h2>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Tutelas</p>
               </div>
 
-              <div
-                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <!-- Atendidos -->
+              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-check-circle-fill text-emerald-400 text-xl mb-2"></i>
                 <h2 id="atendido" class="text-2xl font-bold text-white"></h2>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Atendidos</p>
               </div>
 
-              <div
-                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <!-- Por Atender -->
+              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-clock-history text-rose-400 text-xl mb-2"></i>
                 <h2 id="porAtender" class="text-2xl font-bold text-white"></h2>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Por Atender</p>
               </div>
 
-              <div
-                class="glass-card flex-1 min-w-[140px] p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <!-- No Atendidos -->
+              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-x-circle-fill text-red-500 text-xl mb-2"></i>
                 <h2 id="noAtendidos" class="text-2xl font-bold text-white"></h2>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">No Atendidos</p>
               </div>
-
             </section>
+
           </div>
 
 
@@ -280,7 +289,7 @@
   <script src="/assets/js/generalesAdmin.js"></script>
   <script src="/assets/js/dashboard_admin.js"></script>
   <script src="/assets/js/cache.js"></script>
-  <script src="/assets/js/jquery-3.7.1.min.js"></script>
+  <script src="/assets/js/logout.js"></script>
 
 </body>
 

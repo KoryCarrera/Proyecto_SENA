@@ -112,12 +112,12 @@
               <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
             </a>
 
-            <form action="/logout" method="POST">
-              <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
-              <button type="submit" name="logout" value="logout" class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
-                Cerrar Sesión
-              </button>
-            </form>
+            <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+            <button type="submit" name="logout" id="logoutButton" value="logout"
+              class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
+              Cerrar Sesión
+            </button>
+
           </div>
         </div>
       </header>
@@ -163,6 +163,8 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/assets/js/logout.js"></script>
   <script src="/assets/js/cache.js"></script>
 
 </body>

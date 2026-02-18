@@ -1,5 +1,6 @@
 <?php
 
+header('Content-Type: application/json; charset=utf-8');
 // INCLUSIÓN DE SEGURIDAD 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -23,6 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // REDIRECCIÓN FINAL AL INICIO
         header("Location: /");
+
         exit;
     }
 } else {

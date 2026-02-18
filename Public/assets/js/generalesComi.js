@@ -14,6 +14,7 @@ const total = document.getElementById('total');
 const denuncia = document.getElementById('denuncia');
 const solicitudes = document.getElementById('solicitud');
 const tutelas = document.getElementById('tutela');
+const peticion = document.getElementById('peticion');
 const atendidos = document.getElementById('atendido');
 const porAtender = document.getElementById('porAtender');
 const noAtendidos = document.getElementById('noAtendidos')
@@ -25,6 +26,7 @@ title.textContent = `Estadísticas generales anuales`;
 total.textContent = `Cargando...`;
 denuncia.textContent = `Cargando...`;
 solicitudes.textContent = `Cargando...`;
+peticion.textContent = `Cargando...`;
 tutelas.textContent = `Cargando...`;
 atendidos.textContent = `Cargando...`;
 porAtender.textContent = `Cargando...`;
@@ -56,9 +58,11 @@ function cargarDatos(ENDPOINT_DATOS) {
                 total.textContent = `0`;
                 denuncia.textContent = `0`;
                 solicitudes.textContent = `0`;
+                peticion.textContent = `0`;
                 tutelas.textContent = `0`;
                 atendidos.textContent = `0`;
                 porAtender.textContent = `0`;
+                noAtendidos.textContent = `0`;
                 return;
             };
 
@@ -79,6 +83,7 @@ function cargarDatos(ENDPOINT_DATOS) {
             total.textContent = `${respuesta.total}`;
             denuncia.textContent = `${respuesta.denuncias}`;
             solicitudes.textContent = `${respuesta.solicitudes}`;
+            peticion.textContent = `${respuesta.peticion}`;
             tutelas.textContent = `${respuesta.tutelas}`;
             atendidos.textContent = `${respuesta.atendidos}`;
             porAtender.textContent = `${respuesta.porAtender}`;
@@ -89,7 +94,7 @@ function cargarDatos(ENDPOINT_DATOS) {
         //en caso de error
         error: function (jqXHR, textStatus, errorThrown) {
             //Enviamos el error a consola para su manejo
-            console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
+            console.error("Error en la comunicación con el servidor: ", textStatus, errorThrown);
 
             //Enviamos una alerta para validar el error
             Swal.fire({
@@ -104,6 +109,7 @@ function cargarDatos(ENDPOINT_DATOS) {
             total.textContent = `¡Error!`;
             denuncia.textContent = `¡Error!`;
             solicitudes.textContent = `¡Error!`;
+            peticion.textContent = `¡Error!`;
             tutelas.textContent = `¡Error!`;
             atendidos.textContent = `¡Error!`;
             porAtender.textContent = `¡Error!`;
