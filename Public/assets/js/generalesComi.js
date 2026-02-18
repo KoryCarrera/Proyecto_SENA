@@ -2,6 +2,10 @@
 const ENDPOINT_GENERALES = '/estadisticasGenerales';
 const ENDPOINT_USUARIOS = '/estadisticasUsuario';
 
+//Capturamos el titulo de las estadisticas generales para mostrar mas claridad al usuario
+
+const title = document.getElementById('tituloEstadisticas');
+
 //capturamos el select de seleccion de estadisticas
 const select = document.getElementById('selectEstadisticas');
 
@@ -13,6 +17,9 @@ const tutelas = document.getElementById('tutela');
 const atendidos = document.getElementById('atendido');
 const porAtender = document.getElementById('porAtender');
 const noAtendidos = document.getElementById('noAtendidos')
+
+//asignamos el por defecto al titulo
+title.textContent = `Estadísticas generales anuales`;
 
 //asignamos a cargando mientras llega el ajax
 total.textContent = `Cargando...`;
@@ -113,10 +120,14 @@ select.addEventListener('change', function () {
     if (select.value == 'propios') {
         ENDPOINT_DATOS = ENDPOINT_USUARIOS;
 
+        title.textContent = `Estadísticas personales anuales`;
+
             cargarDatos(ENDPOINT_DATOS);
 
     } else {
         ENDPOINT_DATOS = ENDPOINT_GENERALES;
+        
+        title.textContent = `Estadísticas generales anuales`;
 
             cargarDatos(ENDPOINT_DATOS);
     }
