@@ -139,7 +139,7 @@
             <div
               class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
             </div>
-            <h1 class="text-3xl font-bold text-white mb-4">Estadísticas generales anuales</h1>
+            <h2 class="text-3xl font-bold text-white mb-4" id="tituloEstadisticas"></h2>
 
             <div class="rounded">
               <select id="selectEstadisticas"
@@ -207,75 +207,63 @@
           </div>
 
           <!-- Chart 3 (Full Width) -->
-          <div
-            class="glass-card p-6 col-span-1 lg:col-span-2 flex flex-col items-center justify-center min-h-[300px] mb-8">
-
+          <!-- Chart 3 (Full Width) -->
+          <div class="glass-card p-6 col-span-1 lg:col-span-2 flex flex-col items-center justify-center h-96 mb-8">
             <div class="flex items-center justify-between w-full mb-4">
-              <h3 class="text-3xl font-bold text-white mb-4">
-                Casos por proceso organizacional
-              </h3>
-
+              <h3 class="text-3xl font-bold text-white mb-4">Casos por proceso organizacional</h3>
               <div class="relative">
-                <select
-                  class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                  <option selected disabled class="bg-slate-900">Filtrar por... </option>
+                <select class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                  <option selected disabled class="bg-slate-900">Filtrar por...</option>
                   <option class="bg-slate-900" value="semana">esta semana</option>
                   <option class="bg-slate-900" value="mes">este mes</option>
                   <option class="bg-slate-900" value="anual">este año</option>
                 </select>
-                <i
-                  class="bi bi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-white pointer-events-none"></i>
+                <i class="bi bi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-white pointer-events-none"></i>
               </div>
             </div>
-
             <div class="w-full h-full flex items-center justify-center">
               <canvas id="barChart"></canvas>
             </div>
           </div>
 
+          <!-- Grid para los dos gráficos inferiores -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-
-            <!-- Charts Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              <!-- Chart 1 -->
-              <div class="glass-card p-6 flex flex-col items-center justify-center min-h-[300px]">
-                <div class="flex items-center justify-between p-2 m-2 min-w-full">
-                  <h3 class="text-3xl font-bold text-white mb-4">
-                    Estadísticas por tipo</h3>
-                  <div class="rounded">
-                    <select name="" id=""
-                      class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                      <option selected disabled class="bg-slate-900">Filtrar por... </option>
-                      <option class="bg-slate-900" value="semana">esta semana</option>
-                      <option class="bg-slate-900" value="mes">este mes</option>
-                      <option class="bg-slate-900" value="anual">este año</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="w-full h-full flex items-center justify-center">
-                  <canvas id="polarChart"></canvas>
+            <!-- Chart 1 (Polar) -->
+            <div class="glass-card p-6 flex flex-col items-center justify-center h-96">
+              <div class="flex items-center justify-between p-2 m-2 min-w-full">
+                <h3 class="text-3xl font-bold text-white mb-4">Estadísticas por tipo</h3>
+                <div class="rounded">
+                  <select class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                    <option selected disabled class="bg-slate-900">Filtrar por...</option>
+                    <option class="bg-slate-900" value="semana">esta semana</option>
+                    <option class="bg-slate-900" value="mes">este mes</option>
+                    <option class="bg-slate-900" value="anual">este año</option>
+                  </select>
                 </div>
               </div>
+              <div class="w-full h-full flex items-center justify-center">
+                <canvas id="polarChart"></canvas>
+              </div>
+            </div>
 
-              <!-- Chart 2 -->
-              <div class="glass-card p-6 flex flex-col items-center justify-center min-h-[300px]">
-                <div class="flex items-center justify-between p-2 m-2 min-w-full">
-                  <h3 class="text-3xl font-bold text-white mb-4">
-                    Estadísticas por estado</h3>
-                  <div class="rounded">
-                    <select name="" id=""
-                      class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                      <option selected disabled class="bg-slate-900">Filtrar por... </option>
-                      <option class="bg-slate-900" value="semana">esta semana</option>
-                      <option class="bg-slate-900" value="mes">este mes</option>
-                      <option class="bg-slate-900" value="anual">este año</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="w-full h-full flex items-center justify-center">
-                  <canvas id="pieChart"></canvas>
+            <!-- Chart 2 (Pie) -->
+            <div class="glass-card p-6 flex flex-col items-center justify-center h-96">
+              <div class="flex items-center justify-between p-2 m-2 min-w-full">
+                <h3 class="text-3xl font-bold text-white mb-4">Estadísticas por estado</h3>
+                <div class="rounded">
+                  <select class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                    <option selected disabled class="bg-slate-900">Filtrar por...</option>
+                    <option class="bg-slate-900" value="semana">esta semana</option>
+                    <option class="bg-slate-900" value="mes">este mes</option>
+                    <option class="bg-slate-900" value="anual">este año</option>
+                  </select>
                 </div>
               </div>
+              <div class="w-full h-full flex items-center justify-center">
+                <canvas id="pieChart"></canvas>
+              </div>
+            </div>
+          </div>
       </main>
     </div>
   </div>
