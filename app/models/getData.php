@@ -166,6 +166,69 @@ function casosPorTipo($pdo)
     }
 }
 
+function casosPorTipoMesComi($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_contear_casos_tipo_mes_comi");
+
+    try {
+        $stmt->execute();
+        $conteo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($conteo && count($conteo) > 0) {
+            $nombres = [];
+            $totales = [];
+
+            foreach ($conteo as $temp) {
+                $nombres[] = $temp['nombre_caso'];  // 
+                $totales[] = (int) $temp['total'];    // 
+            }
+            return [
+                'tipos' => $nombres,
+                'casos' => $totales
+            ];
+        } else {
+            error_log("sp_contear_casos_tipo no devolvió filas");
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Error SQL en casosPorTipo: " . $e->getMessage());
+        return false;
+    }
+}
+
+function casosPorTipoSemanaComi($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_contear_casos_tipo_semana_comi");
+
+    try {
+        $stmt->execute();
+        $conteo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($conteo && count($conteo) > 0) {
+            $nombres = [];
+            $totales = [];
+
+            foreach ($conteo as $temp) {
+                $nombres[] = $temp['nombre_caso'];  // 
+                $totales[] = (int) $temp['total'];    // 
+            }
+            return [
+                'tipos' => $nombres,
+                'casos' => $totales
+            ];
+        } else {
+            error_log("sp_contear_casos_tipo no devolvió filas");
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Error SQL en casosPorTipo: " . $e->getMessage());
+        return false;
+    }
+}
+
+
 function casosPorTipoMes($pdo)
 {
     $stmt = $pdo->prepare("CALL sp_contear_casos_tipo_mes");
@@ -448,6 +511,139 @@ function casosPorEstado($pdo)
     }
 }
 
+function casosPorEstadoMesComi($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_casos_por_estado_mes_comi");
+
+    try {
+        $stmt->execute();
+        $casosEstado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($casosEstado && count($casosEstado) > 0) { //Este if valida que casosEstados no sea false y sus registros sean mayor a 0
+            $estados = [];
+            $casos = [];
+
+            foreach ($casosEstado as $temp) { //Palabra reservada para recorrer arrays
+                $estados[] = $temp['nombre_estado'];
+                $casos[] = (int) $temp['total_casos'];
+            }
+
+            return [
+                'estado' => $estados,
+                'casos' => $casos,
+                'total' => $casosEstado[0]['gran_total']
+            ];
+        } else {
+            error_log("sp_casos_por_estado no devolvió filas");
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Ha ocurrido un error al obtener los casos por estado: " . $e->getMessage());
+        return false;
+    }
+}
+
+function casosPorEstadoSemanaComi($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_casos_por_estado_semana_comi");
+
+    try {
+        $stmt->execute();
+        $casosEstado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($casosEstado && count($casosEstado) > 0) { //Este if valida que casosEstados no sea false y sus registros sean mayor a 0
+            $estados = [];
+            $casos = [];
+
+            foreach ($casosEstado as $temp) { //Palabra reservada para recorrer arrays
+                $estados[] = $temp['nombre_estado'];
+                $casos[] = (int) $temp['total_casos'];
+            }
+
+            return [
+                'estado' => $estados,
+                'casos' => $casos,
+                'total' => $casosEstado[0]['gran_total']
+            ];
+        } else {
+            error_log("sp_casos_por_estado no devolvió filas");
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Ha ocurrido un error al obtener los casos por estado: " . $e->getMessage());
+        return false;
+    }
+}
+
+
+function casosPorEstadoMes($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_casos_por_estado_mes");
+
+    try {
+        $stmt->execute();
+        $casosEstado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($casosEstado && count($casosEstado) > 0) { //Este if valida que casosEstados no sea false y sus registros sean mayor a 0
+            $estados = [];
+            $casos = [];
+
+            foreach ($casosEstado as $temp) { //Palabra reservada para recorrer arrays
+                $estados[] = $temp['nombre_estado'];
+                $casos[] = (int) $temp['total_casos'];
+            }
+
+            return [
+                'estado' => $estados,
+                'casos' => $casos,
+                'total' => $casosEstado[0]['gran_total']
+            ];
+        } else {
+            error_log("sp_casos_por_estado no devolvió filas");
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Ha ocurrido un error al obtener los casos por estado: " . $e->getMessage());
+        return false;
+    }
+}
+
+function casosPorEstadoSemana($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_casos_por_estado_semana");
+
+    try {
+        $stmt->execute();
+        $casosEstado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($casosEstado && count($casosEstado) > 0) { //Este if valida que casosEstados no sea false y sus registros sean mayor a 0
+            $estados = [];
+            $casos = [];
+
+            foreach ($casosEstado as $temp) { //Palabra reservada para recorrer arrays
+                $estados[] = $temp['nombre_estado'];
+                $casos[] = (int) $temp['total_casos'];
+            }
+
+            return [
+                'estado' => $estados,
+                'casos' => $casos,
+                'total' => $casosEstado[0]['gran_total']
+            ];
+        } else {
+            error_log("sp_casos_por_estado no devolvió filas");
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Ha ocurrido un error al obtener los casos por estado: " . $e->getMessage());
+        return false;
+    }
+}
+
 function usuariosPorRol($pdo)
 {
     try {
@@ -512,6 +708,70 @@ function usuariosPorEstado($pdo)
 function casosPorProceso($pdo)
 {
     $stmt = $pdo->prepare("CALL sp_casos_por_proceso");
+
+    try {
+        $stmt->execute();
+        $casosProceso = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($casosProceso && count($casosProceso) > 0) {
+            $proceso = [];
+            $casos = [];
+
+            foreach ($casosProceso as $temp) {
+                $proceso[] = $temp['proceso'];           // ← Coincide con el SP
+                $casos[] = (int) $temp['total_casos'];    // ← Coincide con el SP
+            }
+
+            return [
+                'proceso' => $proceso,
+                'casos' => $casos
+            ];
+        } else {
+            error_log("sp_casos_por_proceso no devolvió filas");
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Error al obtener los casos por proceso: " . $e->getMessage());
+        return false;
+    }
+}
+
+function casosPorProcesoMesComi($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_casos_por_proceso_mes_comi");
+
+    try {
+        $stmt->execute();
+        $casosProceso = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($casosProceso && count($casosProceso) > 0) {
+            $proceso = [];
+            $casos = [];
+
+            foreach ($casosProceso as $temp) {
+                $proceso[] = $temp['proceso'];           // ← Coincide con el SP
+                $casos[] = (int) $temp['total_casos'];    // ← Coincide con el SP
+            }
+
+            return [
+                'proceso' => $proceso,
+                'casos' => $casos
+            ];
+        } else {
+            error_log("sp_casos_por_proceso no devolvió filas");
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Error al obtener los casos por proceso: " . $e->getMessage());
+        return false;
+    }
+}
+
+function casosPorProcesoSemanaComi($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_casos_por_proceso_semana");
 
     try {
         $stmt->execute();
