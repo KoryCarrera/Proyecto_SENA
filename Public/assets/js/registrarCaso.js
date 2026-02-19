@@ -1,9 +1,6 @@
 const ENDPOINT_ENVIAR = '/registrarCaso';
 const ENDPOINT_OBTENER = '/opcionesRegistro';
 
-// ============================================
-// CARGAR OPCIONES (Procesos y Tipos de Caso)
-// ============================================
 function cargarOpciones() {
     $.ajax({
         url: ENDPOINT_OBTENER,
@@ -117,9 +114,6 @@ if (inputArchivos) {
     });
 }
 
-// ============================================
-// MOSTRAR PREVIEW DE ARCHIVOS SELECCIONADOS
-// ============================================
 function mostrarPreviewArchivos(archivos) {
     if (!vistaArchivos) return;
 
@@ -189,6 +183,7 @@ if (btnRegistrar) {
 
         //CAPTURAR VALORES
         const nombreCaso = document.getElementById("nombreCaso").value.trim();
+        const radicadoSena = document.getElementById('radicado').value;
         const proceso = document.getElementById("proceso").value;
         const tipoCaso = document.getElementById("tipoCaso").value;
         const descripcion = document.getElementById("descripcion").value.trim();
@@ -236,7 +231,7 @@ if (btnRegistrar) {
                 timer: 1000,
             });
             return;
-        }
+        };
 
         //DESHABILITAR BOTÓN
         btnRegistrar.disabled = true;
@@ -247,6 +242,7 @@ if (btnRegistrar) {
         //CREAR FORMDATA
         const formData = new FormData();
         formData.append('nombreCaso', nombreCaso);
+        formData.append('radicadoSena', radicadoSena);
         formData.append('proceso', proceso);
         formData.append('tipoCaso', tipoCaso);
         formData.append('descripcion', descripcion);
@@ -277,6 +273,7 @@ if (btnRegistrar) {
 
                     // Limpiar formulario
                     document.getElementById("nombreCaso").value = '';
+                    document.getElementById("radicadoSena").value = '';
                     document.getElementById("proceso").value = '';
                     document.getElementById("tipoCaso").value = '';
                     document.getElementById("descripcion").value = '';

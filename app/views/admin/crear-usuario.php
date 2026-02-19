@@ -220,7 +220,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
         </div>
 
         <div class="mb-4">
-          <input type="text" id="crearDocumento" name="documento" required placeholder="Documento" class="contenido glass-input">
+          <input type="number" id="crearDocumento" name="documento" required placeholder="Documento" class="contenido glass-input">
         </div>
 
         <div class="mb-4">
