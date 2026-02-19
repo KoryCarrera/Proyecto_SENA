@@ -44,6 +44,7 @@ $router -> map('GET', '/casosAdmin', 'views/admin/casos.php');
 $router -> map('GET', '/generarInforme', 'views/admin/generar_informe.php');
 $router -> map('GET', '/usuarios', 'views/admin/crear-usuario.php');
 $router -> map('GET', '/notificacionesAdmin', 'views/admin/notificaciones.php');
+$router -> map('GET', '/perfilAdmin', 'views/admin/perfil.php');
 $router -> map('GET', '/gestionar', 'views/admin/gestionar.php');
 $router -> map('GET', '/procesoOrganizacional', 'views/admin/proceso-organizacional.php');
 $router -> map('GET', '/editarUsuario', 'views/admin/editar-usuario.php');
@@ -54,6 +55,7 @@ $router -> map('GET', '/dashboardComi', 'views/comisionado/home.php');
 $router -> map('GET', '/casos', 'views/comisionado/caso.php');
 $router -> map('GET', '/registrarCasos', 'views/comisionado/Reg-caso.php');
 $router -> map('GET', '/notificacionesComi', 'views/comisionado/notificacion.php');
+$router -> map('GET', '/perfil', 'views/comisionado/perfil.php');
 
 //Rutas views inicio
 
