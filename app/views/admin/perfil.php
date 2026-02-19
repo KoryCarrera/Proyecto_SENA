@@ -28,17 +28,20 @@
 
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
 
-    <!-- Decorative Background Elements -->
-    <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
-        <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
-        <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+  <!-- Decorative Background Elements -->
+  <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+    <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
+    <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
+    <div
+      class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay">
     </div>
+  </div>
 
   <div class="flex h-screen overflow-hidden relative z-10">
 
     <!-- Sidebar -->
-    <aside class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
+    <aside
+      class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
       <!-- Logo Area -->
       <div class="h-20 flex items-center justify-center border-b border-white/5">
         <img src="/assets/img/logo_sena.png" alt="SENA" class="w-10 h-10 object-contain group-hover:block">
@@ -92,13 +95,17 @@
             <p class="text-xs text-slate-400">Administrador</p>
           </div>
           <div class="flex items-center gap-4">
-            <a href="/perfilAdmin" class="p-2 rounded-full hover:bg-white/5 transition-colors border border-indigo-500/30">
-               <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
+            <a href="/perfilAdmin"
+              class="p-2 rounded-full hover:bg-white/5 transition-colors border border-indigo-500/30">
+              <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
             </a>
+
             <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
-            <button type="submit" name="logout" id="logoutButton" value="logout" class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
+            <button type="submit" name="logout" id="logoutButton" value="logout"
+              class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
               Cerrar Sesión
             </button>
+
           </div>
         </div>
       </header>
@@ -106,16 +113,20 @@
       <!-- Content -->
       <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
         <div class="max-w-4xl mx-auto">
-          
+
           <div class="glass-card p-8 md:p-10">
             <div class="flex flex-col md:flex-row gap-10">
-              
+
               <!-- Avatar Section -->
               <div class="flex flex-col items-center text-center space-y-4">
                 <div class="relative group">
-                  <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                  <img src="/assets/img/icon account.png" alt="Profile" class="relative w-32 h-32 rounded-full border-4 border-slate-900 object-cover shadow-2xl">
-                  <button class="absolute bottom-0 right-0 p-2 bg-indigo-600 rounded-full text-white hover:bg-indigo-500 transition-colors shadow-lg">
+                  <div
+                    class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200">
+                  </div>
+                  <img src="/assets/img/icon account.png" alt="Profile"
+                    class="relative w-32 h-32 rounded-full border-4 border-slate-900 object-cover shadow-2xl">
+                  <button
+                    class="absolute bottom-0 right-0 p-2 bg-indigo-600 rounded-full text-white hover:bg-indigo-500 transition-colors shadow-lg">
                     <i class="bi bi-camera-fill"></i>
                   </button>
                 </div>
@@ -131,29 +142,34 @@
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Documento </label>
-                      <input type="text" name="documento" class="glass-input w-full p-3 rounded-lg text-white opacity-60" 
-                             value="<?php echo $_SESSION['user']['documento'] ?? ''; ?>" readonly>
+                      <input type="text" name="documento"
+                        class="glass-input w-full p-3 rounded-lg text-white opacity-60"
+                        value="<?php echo $_SESSION['user']['documento'] ?? ''; ?>" readonly>
                     </div>
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Rol</label>
-                      <input type="text" class="glass-input w-full p-3 rounded-lg text-white opacity-60" value="Administrador" readonly>
+                      <input type="text" class="glass-input w-full p-3 rounded-lg text-white opacity-60"
+                        value="Administrador" readonly>
                     </div>
                   </div>
 
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Nombre</label>
-                      <input type="text" name="nombre" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Nombre completo">
+                      <input type="text" name="nombre" class="glass-input w-full p-3 rounded-lg text-white"
+                        placeholder="Nombre completo">
                     </div>
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Apellido</label>
-                      <input type="text" name="apellido" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Apellidos completos">
+                      <input type="text" name="apellido" class="glass-input w-full p-3 rounded-lg text-white"
+                        placeholder="Apellidos completos">
                     </div>
                   </div>
 
                   <div>
                     <label class="block text-sm font-medium text-slate-300 mb-2">Email de Administración</label>
-                    <input type="email" name="email" class="glass-input w-full p-3 rounded-lg text-white" placeholder="admin@sena.edu.co">
+                    <input type="email" name="email" class="glass-input w-full p-3 rounded-lg text-white"
+                      placeholder="admin@sena.edu.co">
                   </div>
 
                   <div class="pt-4 border-t border-white/5">
@@ -161,18 +177,20 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">Nueva Contraseña</label>
-                        <input type="password" name="password" class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••">
+                        <input type="password" name="password" class="glass-input w-full p-3 rounded-lg text-white"
+                          placeholder="••••••••">
                       </div>
                       <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">Confirmar Contraseña</label>
-                        <input type="password" name="confirm_password" class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••">
+                        <input type="password" name="confirm_password"
+                          class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••">
                       </div>
                     </div>
                   </div>
 
                   <div class="flex justify-end pt-6">
                     <button type="button" class="btn-usuario px-10 py-3 rounded-xl font-bold flex items-center gap-2">
-                       Actualizar Perfil
+                      Actualizar Perfil
                     </button>
                   </div>
                 </form>
@@ -186,11 +204,13 @@
   </div>
 
   <!--JS de bootstrap-->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
-  <script src="/assets/js/cache.js"></script>
   <script src="/assets/js/logout.js"></script>
+  <script src="/assets/js/cache.js"></script>
+
 
 </body>
 
