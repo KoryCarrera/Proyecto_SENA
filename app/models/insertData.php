@@ -162,12 +162,13 @@ function registrarCasos($pdo, $documento, $proceso, $tipoCaso, $descripcion, $no
 }
 
 //FUNCIÓN: REGISTRAR UN SEGUIMIENTO
-function registrarSeguimiento($pdo, $observacion, $idCaso)
+function registrarSeguimiento($pdo, $observacion, $idCaso, $documento)
 {
     // PREPARACIÓN DE LA LLAMADA AL PROCEDIMIENTO ALMACENADO
-    $stmt = $pdo->prepare("CALL sp_registrar_seguimiento(?, ?)");
+    $stmt = $pdo->prepare("CALL sp_registrar_seguimiento(?, ?, ?)");
     $stmt->bindParam(1, $observacion, PDO::PARAM_STR);
     $stmt->bindParam(2, $idCaso, PDO::PARAM_INT);
+    $stmt->bindParam(3, $documento, PDO::PARAM_STR);
 
     // EJECUCIÓN Y MANEJO DE ERRORES (PDOException)
     try {
