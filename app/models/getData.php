@@ -166,6 +166,68 @@ function casosPorTipo($pdo)
     }
 }
 
+function casosPorTipoMes($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_contear_casos_tipo_mes");
+
+    try {
+        $stmt->execute();
+        $conteo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($conteo && count($conteo) > 0) {
+            $nombres = [];
+            $totales = [];
+
+            foreach ($conteo as $temp) {
+                $nombres[] = $temp['nombre_caso'];  // 
+                $totales[] = (int) $temp['total'];    // 
+            }
+            return [
+                'tipos' => $nombres,
+                'casos' => $totales
+            ];
+        } else {
+            error_log("sp_contear_casos_tipo no devolvió filas");
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Error SQL en casosPorTipo: " . $e->getMessage());
+        return false;
+    }
+}
+
+function casosPorTipoSemana($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_contear_casos_tipo_semana");
+
+    try {
+        $stmt->execute();
+        $conteo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($conteo && count($conteo) > 0) {
+            $nombres = [];
+            $totales = [];
+
+            foreach ($conteo as $temp) {
+                $nombres[] = $temp['nombre_caso'];  // 
+                $totales[] = (int) $temp['total'];    // 
+            }
+            return [
+                'tipos' => $nombres,
+                'casos' => $totales
+            ];
+        } else {
+            error_log("sp_contear_casos_tipo no devolvió filas");
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Error SQL en casosPorTipo: " . $e->getMessage());
+        return false;
+    }
+}
+
 function casosPorComisionado($pdo)
 {
     $stmt = $pdo->prepare("CALL sp_casos_por_comisionado");
@@ -197,6 +259,66 @@ function casosPorComisionado($pdo)
     }
 }
 
+function casosPorComisionadoMes($pdo){
+    $stmt = $pdo->prepare("CALL sp_casos_por_comi_mes");
+
+    try {
+        $stmt->execute();
+        $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        
+        if($datos){
+            $comisionado =[];
+            $total = [];
+
+            foreach ($datos as $temp){
+                $comisionado[] = $temp['comisionado'];
+                $total[] = (int)$temp['total_casos'];
+            }
+
+            return [
+                'comisionado' => $comisionado,
+                'casos' => $total
+            ];
+        } else {
+        return false;
+        }
+    } catch (PDOException $e) {
+        error_log("error en la obtención de casos por comisionado" . $e->getMessage());
+        return false;
+    }
+}
+
+function casosPorComisionadoSemana($pdo){
+    $stmt = $pdo->prepare("CALL sp_casos_por_comi_semana");
+
+    try {
+        $stmt->execute();
+        $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        
+        if($datos){
+            $comisionado =[];
+            $total = [];
+
+            foreach ($datos as $temp){
+                $comisionado[] = $temp['comisionado'];
+                $total[] = (int)$temp['total_casos'];
+            }
+
+            return [
+                'comisionado' => $comisionado,
+                'casos' => $total
+            ];
+        } else {
+        return false;
+        }
+    } catch (PDOException $e) {
+        error_log("error en la obtención de casos por comisionado" . $e->getMessage());
+        return false;
+    }
+}
+
 function casosPorMes($pdo)
 {
     $stmt = $pdo->prepare("CALL sp_casos_por_mes"); //Se llama al sp (storage procedure)
@@ -218,6 +340,70 @@ function casosPorMes($pdo)
 
             return [
                 'mes' => $mes,
+                'casos' => $casos
+            ]; //Retornamos en array asociativo con los datos corregidos
+        } else {
+            return false; //En caso de no retorno retornamos false
+        }
+    } catch (PDOException $e) { //Captura de errores sql e imprimirlos en el log del servidor
+        error_log("Error en la obtencion de los datos por mes " . $e->getMessage());
+        return false;
+    }
+}
+
+function casosPorUnMes($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_casos_por_un_mes"); //Se llama al sp (storage procedure)
+
+    try {
+        $stmt->execute(); //Se ejecuta dentro de un try/catch
+        $datos = $stmt->fetchAll(PDO::FETCH_ASSOC); //se almacenan los valores como un array asociativo dentro de la variable
+        $stmt->closeCursor();
+
+        if ($datos) { //Validamos el retorno de datos en la variable
+            //Se declaran arrays vacios para evitar undefined variable
+            $dia = [];
+            $casos = [];
+
+            foreach ($datos as $temp) { //Se recorren los arrays con la palaba reservada
+                $dia[] = $temp['dia']; //Guardamos los valores de mes dentro de su variable
+                $casos[] = (int) $temp['total_casos']; //Especificamos el tipo de dato y guardamos casos dentro de su variable
+            }
+
+            return [
+                'dia' => $dia,
+                'casos' => $casos
+            ]; //Retornamos en array asociativo con los datos corregidos
+        } else {
+            return false; //En caso de no retorno retornamos false
+        }
+    } catch (PDOException $e) { //Captura de errores sql e imprimirlos en el log del servidor
+        error_log("Error en la obtencion de los datos por mes " . $e->getMessage());
+        return false;
+    }
+}
+
+function casosPorSemana($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_casos_por_semana"); //Se llama al sp (storage procedure)
+
+    try {
+        $stmt->execute(); //Se ejecuta dentro de un try/catch
+        $datos = $stmt->fetchAll(PDO::FETCH_ASSOC); //se almacenan los valores como un array asociativo dentro de la variable
+        $stmt->closeCursor();
+
+        if ($datos) { //Validamos el retorno de datos en la variable
+            //Se declaran arrays vacios para evitar undefined variable
+            $dia = [];
+            $casos = [];
+
+            foreach ($datos as $temp) { //Se recorren los arrays con la palaba reservada
+                $dia[] = (int)$temp['dia_semana']; 
+                $casos[] = (int) $temp['casos_dia']; //Especificamos el tipo de dato y guardamos casos dentro de su variable
+            }
+
+            return [
+                'dia' => $dia,
                 'casos' => $casos
             ]; //Retornamos en array asociativo con los datos corregidos
         } else {
