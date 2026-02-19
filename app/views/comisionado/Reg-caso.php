@@ -158,6 +158,25 @@ require_once __DIR__ . "/../../models/insertData.php";
                   </small>
                 </div>
 
+                <!-- Radicado -->
+                <div>
+                  <label for="radicado" class="form-label text-sm font-semibold text-slate-300 mb-2 block">
+                    <i class="bi bi-hash me-1"></i> Radicado
+                  </label>
+                  <div class="input-group custom-input-group">
+                    <span class="input-group-text custom-icon">
+                      <i class="bi bi-123"></i>
+                    </span>
+                    <input
+                      type="number"
+                      name="radicado"
+                      id="radicado"
+                      class="form-control custom-input"
+                      placeholder="Ej: 123456789"
+                      maxlength="255"
+                      required>
+                  </div>
+                </div>
                 <!-- Proceso Organizacional -->
                 <div>
                   <label for="proceso" class="form-label text-sm font-semibold text-slate-300 mb-2 block">
