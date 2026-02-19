@@ -295,22 +295,22 @@ const mostrarDetallesUsuario = (usuario) => {
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Documento:</label>
-                <p class="form-control-plaintext">${usuario.documento}</p>
+                <p class="form-control-plaintext text-white">${usuario.documento}</p>
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Nombre Completo:</label>
-                <p class="form-control-plaintext">${usuario.nombre} ${usuario.apellido}</p>
+                <p class="form-control-plaintext text-white">${usuario.nombre} ${usuario.apellido}</p>
             </div>
         </div>
         
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Email:</label>
-                <p class="form-control-plaintext">${usuario.email}</p>
+                <p class="form-control-plaintext text-white">${usuario.email}</p>
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Rol:</label>
-                <p class="form-control-plaintext">${obtenerRolUsuario(usuario.id_rol)}</p>
+                <p class="form-control-plaintext text-white">${obtenerRolUsuario(usuario.id_rol)}</p>
             </div>
         </div>
         
@@ -404,24 +404,24 @@ const habilitarEdicion = () => {
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Nombre:</label>
-                <input type="text" class="form-control" id="nombreNuevo" value="${usarioEditable.nombre}">
+                <input type="text" class="form-control glass-input" id="nombreNuevo" value="${usarioEditable.nombre}">
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Apellido:</label>
-                <input type="text" class="form-control" id="apellidoNuevo" value="${usarioEditable.apellido}">
+                <input type="text" class="form-control glass-input" id="apellidoNuevo" value="${usarioEditable.apellido}">
             </div>
         </div>
         
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Email:</label>
-                <input type="email" class="form-control" id="emailNuevo" value="${usarioEditable.email}">
+                <input type="email" class="form-control glass-input" id="emailNuevo" value="${usarioEditable.email}">
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Rol:</label>
-                <select class="form-select" id="rolNuevo">
-                    <option value="1" ${usarioEditable.id_rol == 1 ? 'selected' : ''}>Administrador</option>
-                    <option value="2" ${usarioEditable.id_rol == 2 ? 'selected' : ''}>Comisionado</option>
+                <select class="form-select glass-input" id="rolNuevo">
+                    <option  class="bg-slate-900" value="1" class"bg-slate-900" ${usarioEditable.id_rol == 1 ? 'selected' : ''}>Administrador</option>
+                    <option class="bg-slate-900" value="2"  ${usarioEditable.id_rol == 2 ? 'selected' : ''}>Comisionado</option>
                 </select>
             </div>
             <input type="hidden" id="documentoBuscado" value="${usarioEditable.documento}">
@@ -434,7 +434,7 @@ const habilitarEdicion = () => {
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Nueva Contraseña:</label>
-                <input type="password" class="form-control" id="nuevaPassword">
+                <input type="password" class="form-control glass-input" id="nuevaPassword">
             </div>
         </div>
     `;
