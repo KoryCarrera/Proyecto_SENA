@@ -115,9 +115,6 @@
                 <div class="relative group">
                   <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
                   <img src="/assets/img/icon account.png" alt="Profile" class="relative w-32 h-32 rounded-full border-4 border-slate-900 object-cover shadow-2xl">
-                  <button class="absolute bottom-0 right-0 p-2 bg-indigo-600 rounded-full text-white hover:bg-indigo-500 transition-colors shadow-lg">
-                    <i class="bi bi-camera-fill"></i>
-                  </button>
                 </div>
                 <div>
                   <h3 class="text-lg font-bold text-white"><?php echo $_SESSION['user']['username'] ?? 'Admin'; ?></h3>
