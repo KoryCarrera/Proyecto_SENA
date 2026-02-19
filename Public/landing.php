@@ -29,13 +29,6 @@
                 <span class="font-semibold text-xl tracking-tight text-white group-hover:text-indigo-300 transition-colors">Sistema De Gestion De Casos</span>
             </div>
             
-            <!-- Desktop Menu -->
-            <div class="hidden md:flex items-center space-x-1 relative z-10">
-                <a href="#" class="text-slate-200 hover:text-white px-4 py-2 rounded-full text-sm font-medium transition-all hover:bg-white/5">Inicio</a>
-                <a href="#" class="text-slate-200 hover:text-white px-4 py-2 rounded-full text-sm font-medium transition-all hover:bg-white/5">Reportar</a>
-                <a href="#" class="text-slate-200 hover:text-white px-4 py-2 rounded-full text-sm font-medium transition-all hover:bg-white/5">Seguimiento</a>
-            </div>
-
             <!-- CTA Button -->
             <div class="relative z-10">
                 <a href="/login" class="relative inline-flex items-center justify-center px-6 py-2 overflow-hidden font-medium text-white transition duration-300 ease-out border border-white/20 rounded-full hover:bg-white/10 group">
