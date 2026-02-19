@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 19-02-2026 a las 14:53:52
+-- Tiempo de generación: 19-02-2026 a las 16:12:44
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -106,7 +106,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_comi_mes` ()   BEGIN
+CREATE CREATE PROCEDURE `sp_casos_por_comi_mes` ()   BEGIN
 	SELECT 
     CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
     COUNT(c.id_caso) AS total_casos
@@ -118,7 +118,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_comi_semana` ()   BEGIN
+CREATE CREATE PROCEDURE `sp_casos_por_comi_semana` ()   BEGIN
 SELECT 
     CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
     COUNT(c.id_caso) AS total_casos
@@ -139,6 +139,64 @@ SELECT
 FROM caso c
 JOIN estado e ON c.id_estado = e.id_estado
 WHERE YEAR(c.fecha_inicio) = YEAR(CURDATE()) 
+AND c.documento = p_documento
+GROUP BY e.estado
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE CREATE PROCEDURE `sp_casos_por_estado_mes` ()   BEGIN
+
+SELECT 
+    e.estado AS nombre_estado,
+    COUNT(c.id_caso) AS total_casos,
+    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
+FROM caso c
+JOIN estado e ON c.id_estado = e.id_estado
+WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE())
+GROUP BY e.estado
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE CREATE PROCEDURE `sp_casos_por_estado_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+
+SELECT 
+    e.estado AS nombre_estado,
+    COUNT(c.id_caso) AS total_casos,
+    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
+FROM caso c
+JOIN estado e ON c.id_estado = e.id_estado
+WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE())
+AND c.documento = p_documento
+GROUP BY e.estado
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE CREATE PROCEDURE `sp_casos_por_estado_semana` ()   BEGIN
+
+SELECT 
+    e.estado AS nombre_estado,
+    COUNT(c.id_caso) AS total_casos,
+    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
+FROM caso c
+JOIN estado e ON c.id_estado = e.id_estado
+WHERE YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) 
+GROUP BY e.estado
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE CREATE PROCEDURE `sp_casos_por_estado_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+
+SELECT 
+    e.estado AS nombre_estado,
+    COUNT(c.id_caso) AS total_casos,
+    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
+FROM caso c
+JOIN estado e ON c.id_estado = e.id_estado
+WHERE YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) 
 AND c.documento = p_documento
 GROUP BY e.estado
 ORDER BY total_casos DESC;
@@ -170,7 +228,60 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
+CREATE CREATE PROCEDURE `sp_casos_por_proceso_mes` ()   BEGIN
+
+SELECT 
+    p.nombre AS proceso,
+    COUNT(c.id_caso) AS total_casos
+FROM procesoorganizacional p
+LEFT JOIN caso c ON c.id_proceso = p.id_proceso
+WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE())
+GROUP BY p.id_proceso, p.nombre
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE CREATE PROCEDURE `sp_casos_por_proceso_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+
+SELECT 
+    p.nombre AS proceso,
+    COUNT(c.id_caso) AS total_casos
+FROM procesoorganizacional p
+LEFT JOIN caso c ON c.id_proceso = p.id_proceso
+WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE()) AND
+c.documento = p_documento
+GROUP BY p.id_proceso, p.nombre
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE CREATE PROCEDURE `sp_casos_por_proceso_semana` ()   BEGIN
+
+SELECT 
+    p.nombre AS proceso,
+    COUNT(c.id_caso) AS total_casos
+FROM procesoorganizacional p
+LEFT JOIN caso c ON c.id_proceso = p.id_proceso
+WHERE c.documento = p_documento AND YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) 
+GROUP BY p.id_proceso, p.nombre
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE CREATE PROCEDURE `sp_casos_por_proceso_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+
+SELECT 
+    p.nombre AS proceso,
+    COUNT(c.id_caso) AS total_casos
+FROM procesoorganizacional p
+LEFT JOIN caso c ON c.id_proceso = p.id_proceso
+WHERE c.documento = p_documento AND YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) 
+GROUP BY p.id_proceso, p.nombre
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
     SELECT 
     DAYOFWEEK(fecha_inicio) AS dia_semana,
         COUNT(*) AS casos_dia
@@ -180,7 +291,7 @@ CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
     ORDER BY dia_semana;
 END$$
 
-CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
+CREATE CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
     SELECT 
         DAY(fecha_inicio) AS dia,
         COUNT(*) AS total_casos
@@ -204,7 +315,7 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo_mes` ()   BEGIN
+CREATE CREATE PROCEDURE `sp_contear_casos_tipo_mes` ()   BEGIN
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -216,13 +327,36 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo_semana` ()   BEGIN
+CREATE CREATE PROCEDURE `sp_contear_casos_tipo_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+SELECT 
+    tc.nombre_caso,
+    COUNT(c.id_caso) AS total
+FROM caso c
+INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
+WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE()) AND c.documento = p_documento
+GROUP BY tc.nombre_caso
+ORDER BY tc.nombre_caso;
+
+END$$
+
+CREATE CREATE PROCEDURE `sp_contear_casos_tipo_semana` ()   BEGIN
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
 FROM caso c
 INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
 WHERE YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE())
+GROUP BY tc.nombre_caso
+ORDER BY tc.nombre_caso;
+END$$
+
+CREATE CREATE PROCEDURE `sp_contear_casos_tipo_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+SELECT 
+    tc.nombre_caso,
+    COUNT(c.id_caso) AS total
+FROM caso c
+INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
+WHERE YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) AND c.documento = p_documento
 GROUP BY tc.nombre_caso
 ORDER BY tc.nombre_caso;
 END$$
@@ -603,7 +737,7 @@ CREATE PROCEDURE `sp_resumen_productividad_comisionados` ()   BEGIN
     GROUP BY u.documento, u.nombre, u.apellido;
 END$$
 
-CREATE PROCEDURE `sp_taer_un_caso` (IN `p_id_caso` INT)   BEGIN
+CREATE CREATE PROCEDURE `sp_taer_un_caso` (IN `p_id_caso` INT)   BEGIN
 	SELECT * FROM caso
     WHERE id_caso = p_id_caso;
     END$$
@@ -654,11 +788,11 @@ CREATE TABLE `caso` (
 --
 
 INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_proceso`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
-(81, 'Solicitud de dotación pendiente 2026', '1020304050', 12, '2026-01-15 14:58:00', NULL, 3, 2, 'Por medio de la presente solicito la entrega de la dotación correspondiente al periodo 2026, la cual no me ha sido suministrada a la fecha. Cumplo con los requisitos establecidos para la asignación y no he recibido notificación sobre retrasos o inconvenientes. Agradezco se revise mi caso y se informe el estado del proceso.'),
+(81, 'Solicitud de dotación pendiente 2026', '1020304050', 12, '2026-02-20 14:58:00', NULL, 3, 2, 'Por medio de la presente solicito la entrega de la dotación correspondiente al periodo 2026, la cual no me ha sido suministrada a la fecha. Cumplo con los requisitos establecidos para la asignación y no he recibido notificación sobre retrasos o inconvenientes. Agradezco se revise mi caso y se informe el estado del proceso.'),
 (82, 'Reporte de accidente laboral en oficina administrativa', '1756664828', 14, '2026-02-12 14:59:17', NULL, 2, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
 (83, 'Denuncia por presunto acoso laboral', '1456333298', 11, '2026-02-17 15:00:31', NULL, 2, 1, 'Presento denuncia formal por presuntas conductas reiteradas de descalificación y trato irrespetuoso por parte de mi superior inmediato. Los hechos han ocurrido en varias ocasiones frente a compañeros de trabajo, afectando mi desempeño y ambiente laboral. Solicito se adelante la investigación correspondiente garantizando confidencialidad.'),
 (84, 'Derecho de petición – Estado de incentivo institucional', '1656966633', 13, '2026-02-12 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
-(85, 'Solicitud de apoyo por calamidad doméstica', '1020304050', 10, '2026-02-16 15:02:44', NULL, 2, 2, 'Solicito apoyo institucional por calamidad doméstica debido a una situación familiar imprevista ocurrida el 8 de febrero de 2026. Adjunto los documentos que soportan la situación. Agradezco se evalúe la posibilidad de otorgar el beneficio contemplado en el programa de bienestar social.');
+(85, 'Solicitud de apoyo por calamidad doméstica', '1020304050', 10, '2026-02-11 15:02:44', NULL, 2, 2, 'Solicito apoyo institucional por calamidad doméstica debido a una situación familiar imprevista ocurrida el 8 de febrero de 2026. Adjunto los documentos que soportan la situación. Agradezco se evalúe la posibilidad de otorgar el beneficio contemplado en el programa de bienestar social.');
 
 -- --------------------------------------------------------
 
