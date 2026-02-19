@@ -131,26 +131,37 @@ const mostrarDetallesCaso = (caso) => {
     modalBody.innerHTML = `
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="fw-bold text-white uppercase" style="font-size: 0.75rem; letter-spacing: 0.05em;">ID del Caso</label>
+                <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">ID del Caso</label>
                 <p class="text-slate-300 mb-0">${caso.id_caso}</p>
                 <input type="hidden" name="id_caso" value="${caso.id_caso}">
             </div>
             <div class="col-md-6 mb-3">
-                <label class="fw-bold text-white uppercase" style="font-size: 0.75rem; letter-spacing: 0.05em;">Tipo de Caso</label>
+                <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Tipo de Caso</label>
                 <p class="text-slate-300 mb-0">${caso.tipo_caso || 'N/A'}</p>
             </div>
         </div>
         
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="fw-bold text-white uppercase" style="font-size: 0.75rem; letter-spacing: 0.05em;">Fecha Inicio</label>
+                <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Fecha Inicio</label>
                 <p class="text-slate-300 mb-0">${formatearFecha(caso.fecha_inicio)}</p>
             </div>
             <div class="col-md-6 mb-3">
-                <label class="fw-bold text-white uppercase" style="font-size: 0.75rem; letter-spacing: 0.05em;">Proceso</label>
+                <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Proceso</label>
                 <p class="text-slate-300 mb-0">${caso.proceso || 'N/A'}</p>
             </div>
         </div>
+
+         ${caso.description || caso.descripcion ? `
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class=" bg-slate-800/40 rounded-lg">
+                    <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Descripción Original</label>
+                    <p class="descripcion text-slate-300 mb-0 mt-1" style="font-size: 1rem; white-space: pre-wrap;">${caso.description || caso.descripcion}</p>
+                </div>
+            </div>
+        </div>
+        ` : ''}
         
         <div class="mb-4">
             <label class="fw-bold text-indigo-400 uppercase mb-2" style="font-size: 0.75rem; letter-spacing: 0.05em;">
@@ -171,12 +182,7 @@ const mostrarDetallesCaso = (caso) => {
             </div>
         </div>
 
-        ${caso.description || caso.descripcion ? `
-        <div class="mb-2 p-3 bg-slate-800/40 rounded-lg border border-white/5">
-            <label class="fw-bold text-slate-400 uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">Descripción Original</label>
-            <p class="text-slate-400 mb-0 mt-1" style="font-size: 0.9rem; white-space: pre-wrap;">${caso.description || caso.descripcion}</p>
-        </div>
-        ` : ''}
+       
     `;
 
     cargarEstados(caso.estado);
