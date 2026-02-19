@@ -511,7 +511,7 @@ function casosPorEstado($pdo)
     }
 }
 
-function casosPorEstadoMesComi($pdo)
+function casosPorEstadoMesComi($pdo) // Filtra por mes
 {
     $stmt = $pdo->prepare("CALL sp_casos_por_estado_mes_comi");
 
