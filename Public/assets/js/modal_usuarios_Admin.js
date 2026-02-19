@@ -127,51 +127,59 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        var parametrosUsuarios = {
+            'documento': documento,
+            'rol': rol,
+            'nombre': nombre,
+            'apellido': apellido,
+            'email': email,
+            'contrasena': contrasena
+        }
+
         botonGuardar.disabled = true;
         botonGuardar.textContent = 'Creando...';
 
         try {
-            const response = await fetch(ENDPOINT_INSERTAR, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    rol: rol,
-                    nombre: nombre,
-                    apellido: apellido,
-                    documento: documento,
-                    email: email,
-                    contrasena: contrasena
-                })
+
+            $.ajax({
+                data: parametrosUsuarios,
+                url: ENDPOINT_INSERTAR,
+                type: 'POST',
+                dataType: 'json',
+
+                success: function (data) {
+
+                    if (data.status === 'ok') {
+                        console.log(' Usuario creado');
+                        Swal.fire({
+                            icon: 'success',
+                            title: `${data.mensaje}`,
+                            theme: 'dark',
+                            showConfirmButton: false,
+                            timer: 1000,
+                        });
+
+                        // Cierra el modal cambiando el estilo a none
+                        modal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                        formulario.reset();
+
+                        cargarUsuarios();
+                    } else {
+                        throw new Error(data.mensaje || 'Error al crear el usuario');
+                    }
+                }, error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "¡Ha ocurrido un error interno!",
+                        theme: 'dark',
+                        timer: 1500,
+                        showConfirmButton: false,
+                    });
+                }
             });
-
-            if (!response.ok) {
-                throw new Error(`Error HTTP ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            if (data.status === 'ok') {
-                console.log(' Usuario creado');
-                Swal.fire({
-                    icon: 'success',
-                    title: `${data.mensaje}`,
-                    theme: 'dark',
-                    showConfirmButton: false,
-                    timer: 1000,
-                });
-
-                // Cierra el modal cambiando el estilo a none
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-                formulario.reset();
-
-                cargarUsuarios();
-            } else {
-                throw new Error(data.mensaje || 'Error al crear el usuario');
-            }
-
         } catch (error) {
             console.error('Error:', error);
             Swal.fire({
