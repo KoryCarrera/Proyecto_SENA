@@ -182,8 +182,13 @@
         <div class="modal-body p-0" id="modalCasoBody">
           <!-- Contenido dinámico via JS -->
         </div>
+        <div class="div-boton-tabla mb-4 px-3">
 
+        </div>
         <div class="botones">
+                    <button type="button" class="boton-tabla">
+            <i class="bi bi-table"></i> Mostrar tabla de seguimiento
+          </button>
           <button type="button" id="cerrar-modal" class="boton bg-slate-600 hover:bg-slate-700">
             <i class="bi bi-x-lg"></i> Cerrar
           </button>
