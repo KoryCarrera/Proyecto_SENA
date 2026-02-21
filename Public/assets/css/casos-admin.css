@@ -162,8 +162,9 @@ body {
   background: rgba(255, 255, 255, 0.05);
 }
 
-.glass-table tbody td {
-  padding: 1rem;
+.glass-table tbody td,
+.glass-table tbody th {
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
