@@ -3,7 +3,7 @@
 function ActualizarUsuario($pdo, $documento, $nombre, $apellido, $email, $rol, $password)
 {
     $stmt = $pdo->prepare("CALL sp_editar_usuario(?, ?, ?, ?, ?, ?)");
-
+    //encriptar contraseña
     $passhash = password_hash($password, PASSWORD_BCRYPT);
 
     $stmt->bindParam(1, $documento, PDO::PARAM_STR);
