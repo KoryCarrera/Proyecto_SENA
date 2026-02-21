@@ -273,7 +273,7 @@ if (btnRegistrar) {
 
                     // Limpiar formulario
                     document.getElementById("nombreCaso").value = '';
-                    document.getElementById("radicadoSena").value = '';
+                    document.getElementById("radicado").value = '';
                     document.getElementById("proceso").value = '';
                     document.getElementById("tipoCaso").value = '';
                     document.getElementById("descripcion").value = '';
