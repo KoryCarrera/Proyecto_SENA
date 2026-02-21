@@ -186,8 +186,9 @@ body {
     background: rgba(255, 255, 255, 0.05);
 }
 
-.glass-table tbody td {
-    padding: 1rem;
+.glass-table tbody td,
+.glass-table tbody th {
+    padding: 1rem 1.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -287,7 +288,9 @@ body {
     padding: 2.5rem;
     border-radius: 1rem;
     width: 95%;
-    max-width: 700px;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
