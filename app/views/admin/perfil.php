@@ -131,59 +131,59 @@
 
               <!-- Form Section -->
               <div class="flex-1">
-                <form id="formPerfilAdmin" class="space-y-6">
+                                <form id="formPerfil" class="space-y-6">
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label class="block text-sm font-medium text-slate-300 mb-2">Documento </label>
-                      <input type="text" name="documento"
-                        class="glass-input w-full p-3 rounded-lg text-white opacity-60"
+                      <label class="block text-sm font-medium text-slate-300 mb-2">Documento de Identidad</label>
+                      <input type="text" name="documento" class="glass-input w-full p-3 rounded-lg text-white opacity-60"
                         value="<?php echo $_SESSION['user']['documento'] ?? ''; ?>" readonly>
+                      <span class="text-[10px] text-slate-500 mt-1 block">No editable por seguridad</span>
                     </div>
                     <div>
-                      <label class="block text-sm font-medium text-slate-300 mb-2">Rol</label>
-                      <input type="text" class="glass-input w-full p-3 rounded-lg text-white opacity-60"
-                        value="Administrador" readonly>
+                      <label class="block text-sm font-medium text-slate-300 mb-2">Cargo / Rol</label>
+                      <input type="text" class="glass-input w-full p-3 rounded-lg text-white opacity-60" value="Administrador" readonly>
+                      <span class="text-[10px] text-slate-500 mt-1 block">No editable por seguridad</span>
                     </div>
                   </div>
 
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label class="block text-sm font-medium text-slate-300 mb-2">Nombre</label>
-                      <input type="text" name="nombre" class="glass-input w-full p-3 rounded-lg text-white"
-                        placeholder="Nombre completo">
+                      <label class="block text-sm font-medium text-slate-300 mb-2">Nombre(s)</label>
+                      <input type="text" name="nombre" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Ingresa tu nuevo nombre" id="nuevoNombre">
                     </div>
                     <div>
-                      <label class="block text-sm font-medium text-slate-300 mb-2">Apellido</label>
-                      <input type="text" name="apellido" class="glass-input w-full p-3 rounded-lg text-white"
-                        placeholder="Apellidos completos">
+                      <label class="block text-sm font-medium text-slate-300 mb-2">Apellido(s)</label>
+                      <input type="text" name="apellido" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Ingresa tu nuevo apellido" id="nuevoApellido">
                     </div>
                   </div>
 
                   <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Email de Administración</label>
-                    <input type="email" name="email" class="glass-input w-full p-3 rounded-lg text-white"
-                      placeholder="admin@sena.edu.co">
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Numero de celular</label>
+                    <input type="number" name="numero" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Ejemplo: 3101234567" id="numeroNuevo">
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Correo Electrónico</label>
+                    <input type="email" name="email" class="glass-input w-full p-3 rounded-lg text-white" placeholder="ejemplo@sena.edu.co" id="nuevoEmail">
                   </div>
 
                   <div class="pt-4 border-t border-white/5">
-                    <label class="block text-sm font-medium text-indigo-400 mb-4">Credenciales de Acceso</label>
+                    <label class="block text-sm font-medium text-indigo-400 mb-4">Seguridad</label>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">Nueva Contraseña</label>
-                        <input type="password" name="password" class="glass-input w-full p-3 rounded-lg text-white"
-                          placeholder="••••••••">
+                        <input type="password" name="password" class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••" id="contrasenaNueva">
                       </div>
                       <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">Confirmar Contraseña</label>
-                        <input type="password" name="confirm_password"
-                          class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••">
+                        <input type="password" name="confirm_password" class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••" id="confirmarContrasena">
                       </div>
                     </div>
                   </div>
 
                   <div class="flex justify-end pt-6">
-                    <button type="button" class="btn-usuario px-10 py-3 rounded-xl font-bold flex items-center gap-2">
-                      Actualizar Perfil
+                    <button type="button" class="btn-search px-10 py-3 rounded-xl font-bold flex items-center gap-2" id="btnActualizar">
+                      <i class="bi bi-save2-fill"></i> Actualizar Perfil
                     </button>
                   </div>
                 </form>
@@ -201,6 +201,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
+  <script src="/assets/js/perfilUsuario.js"></script>
   <script src="/assets/js/logout.js"></script>
   <script src="/assets/js/cache.js"></script>
 
