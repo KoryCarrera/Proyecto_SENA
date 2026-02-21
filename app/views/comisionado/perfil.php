@@ -28,12 +28,12 @@
 
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
 
-    <!-- Decorative Background Elements -->
-    <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
-        <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
-        <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
-    </div>
+  <!-- Decorative Background Elements -->
+  <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+    <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
+    <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
+    <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+  </div>
 
   <div class="flex h-screen overflow-hidden relative z-10">
 
@@ -90,7 +90,7 @@
           </div>
           <div class="flex items-center gap-4">
             <a href="/perfil" class="p-2 rounded-full hover:bg-white/5 transition-colors border border-indigo-500/30">
-               <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
+              <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
             </a>
 
             <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
@@ -106,10 +106,10 @@
       <!-- Content -->
       <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
         <div class="max-w-4xl mx-auto">
-          
+
           <div class="glass-card p-8 md:p-10">
             <div class="flex flex-col md:flex-row gap-10">
-              
+
               <!-- Avatar Section -->
               <div class="flex flex-col items-center text-center space-y-4">
                 <div class="relative group">
@@ -128,30 +128,36 @@
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Documento de Identidad</label>
-                      <input type="text" name="documento" class="glass-input w-full p-3 rounded-lg text-white opacity-60" 
-                             value="<?php echo $_SESSION['user']['documento'] ?? ''; ?>" readonly>
+                      <input type="text" name="documento" class="glass-input w-full p-3 rounded-lg text-white opacity-60"
+                        value="<?php echo $_SESSION['user']['documento'] ?? ''; ?>" readonly>
                       <span class="text-[10px] text-slate-500 mt-1 block">No editable por seguridad</span>
                     </div>
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Cargo / Rol</label>
                       <input type="text" class="glass-input w-full p-3 rounded-lg text-white opacity-60" value="Comisionado" readonly>
+                      <span class="text-[10px] text-slate-500 mt-1 block">No editable por seguridad</span>
                     </div>
                   </div>
 
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Nombre(s)</label>
-                      <input type="text" name="nombre" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Ingresa tu nombre">
+                      <input type="text" name="nombre" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Ingresa tu nuevo nombre" id="nuevoNombre">
                     </div>
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Apellido(s)</label>
-                      <input type="text" name="apellido" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Ingresa tu apellido">
+                      <input type="text" name="apellido" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Ingresa tu nuevo apellido" id="nuevoApellido">
                     </div>
                   </div>
 
                   <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Numero de celular</label>
+                    <input type="number" name="numero" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Ejemplo: 3101234567" id="numeroNuevo">
+                  </div>
+
+                  <div>
                     <label class="block text-sm font-medium text-slate-300 mb-2">Correo Electrónico</label>
-                    <input type="email" name="email" class="glass-input w-full p-3 rounded-lg text-white" placeholder="ejemplo@sena.edu.co">
+                    <input type="email" name="email" class="glass-input w-full p-3 rounded-lg text-white" placeholder="ejemplo@sena.edu.co" id="nuevoEmail">
                   </div>
 
                   <div class="pt-4 border-t border-white/5">
@@ -159,17 +165,17 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">Nueva Contraseña</label>
-                        <input type="password" name="password" class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••">
+                        <input type="password" name="password" class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••" id="contrasenaNueva">
                       </div>
                       <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">Confirmar Contraseña</label>
-                        <input type="password" name="confirm_password" class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••">
+                        <input type="password" name="confirm_password" class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••" id="confirmarContrasena">
                       </div>
                     </div>
                   </div>
 
                   <div class="flex justify-end pt-6">
-                    <button type="button" class="btn-search px-10 py-3 rounded-xl font-bold flex items-center gap-2">
+                    <button type="button" class="btn-search px-10 py-3 rounded-xl font-bold flex items-center gap-2" id="btnActualizar">
                       <i class="bi bi-save2-fill"></i> Actualizar Perfil
                     </button>
                   </div>
@@ -178,14 +184,14 @@
 
             </div>
           </div>
-          
+
           <div class="mt-8 p-6 glass-card border-l-4 border-orange-500/50 bg-orange-500/5">
             <div class="flex gap-4">
               <i class="bi bi-info-circle-fill text-orange-400 text-xl"></i>
               <div>
                 <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-1">Información Importante</h4>
-                <p class="text-xs text-slate-400 leading-relaxed">
-                  Para cambios en tu número de documento o asignación de procesos, por favor contacta al administrador del sistema. La actualización de correo electrónico requiere validación institucional.
+                <p class="text-xs text-slate-400 leading-relaxed" id="infoImportante">
+
                 </p>
               </div>
             </div>
@@ -197,10 +203,11 @@
   </div>
 
   <!--JS de bootstrap-->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
+  <script src="/assets/js/perfilUsuario.js"></script>
   <script src="/assets/js/cache.js"></script>
   <script src="/assets/js/logout.js"></script>
 
