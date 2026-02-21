@@ -59,7 +59,7 @@
                 <a href="/login" class="px-8 py-4 rounded-full bg-slate-100 text-slate-900 font-semibold hover:bg-white hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.3)]">
                     Comenzar Ahora
                 </a>
-                <a href="#" class="px-8 py-4 rounded-full glass-card hover:bg-slate-800/50 text-white font-medium transition-all duration-300">
+                <a href="/saber-mas" class="px-8 py-4 rounded-full glass-card hover:bg-slate-800/50 text-white font-medium transition-all duration-300">
                     Saber Más
                 </a>
             </div>

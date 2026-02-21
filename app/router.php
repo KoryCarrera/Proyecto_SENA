@@ -60,5 +60,6 @@ $router -> map('GET', '/perfil', 'views/comisionado/perfil.php');
 //Rutas views inicio
 
 $router -> map('GET', '/login', '../Public/pages/entrada.php');
+$router -> map('GET', '/saber-mas', '../Public/pages/saber_mas.php');
 return $router;
 ?>
