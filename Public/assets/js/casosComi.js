@@ -1,6 +1,7 @@
 
 const ENDPOINT_LISTAR = '/listarCasosComi';
 const ENDPOINT_OBTENER = '/modalCasoAdmin';
+const ENDPOINT_GESTIONAR = '/gestionarCaso';
 const btnGuardarCambios = document.getElementById('guardarCambios');
 
 const CargarCasos = async () => {
@@ -221,11 +222,16 @@ const formatearFecha = (fecha) => {
 
 const obtenerBadgeEstado = (estado) => {
     const estadoLower = (estado || '').toLowerCase();
+
     switch (estadoLower) {
-        case 'por atender': return `<span class="badge bg-primary">${estado}</span>`;
-        case 'no atendido': return `<span class="badge bg-warning text-dark">${estado}</span>`;
-        case 'atendido': return `<span class="badge bg-success">${estado}</span>`;
-        default: return `<span class="badge bg-secondary">${estado}</span>`;
+        case 'por atender':
+            return `<span class="badge bg-primary">${estado}</span>`;
+        case 'no atendido':
+            return `<span class="badge bg-warning text-dark">${estado}</span>`;
+        case 'atendido':
+            return `<span class="badge bg-success">${estado}</span>`;
+        default:
+            return `<span class="badge bg-secondary">${estado}</span>`;
     }
 };
 
@@ -235,8 +241,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnGuardarCambios = document.getElementById('guardarCambios');
     const btnCerrar = document.getElementById('cerrar-modal');
 
-    btnGuardarCambios.addEventListener('click', () => {
+    btnGuardarCambios.addEventListener('click', (e) => {
 
+        e.preventDefault();
         const cambiosCasos = {
             'idCaso': document.getElementById('idCaso').value,
             'idEstado': document.getElementById('selectEstado').value,
@@ -244,12 +251,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         $.ajax({
-            url: '/actualizarCaso',
+            url: ENDPOINT_GESTIONAR,
             method: 'POST',
             data: cambiosCasos,
             success: function (response) {
 
                 if (response.status == 'ok') {
+                    //Se recarga la tabla para mostrar los cambios realizados
+                    CargarCasos();
 
                     // Después de guardar los cambios, puedes cerrar el modal
                     modal.style.display = 'none';
