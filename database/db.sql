@@ -106,7 +106,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE CREATE PROCEDURE `sp_casos_por_comi_mes` ()   BEGIN
+CREATE PROCEDURE `sp_casos_por_comi_mes` ()   BEGIN
 	SELECT 
     CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
     COUNT(c.id_caso) AS total_casos
@@ -118,7 +118,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE CREATE PROCEDURE `sp_casos_por_comi_semana` ()   BEGIN
+CREATE PROCEDURE `sp_casos_por_comi_semana` ()   BEGIN
 SELECT 
     CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
     COUNT(c.id_caso) AS total_casos
@@ -145,7 +145,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE CREATE PROCEDURE `sp_casos_por_estado_mes` ()   BEGIN
+CREATE PROCEDURE `sp_casos_por_estado_mes` ()   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -159,7 +159,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE CREATE PROCEDURE `sp_casos_por_estado_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `sp_casos_por_estado_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -174,7 +174,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE CREATE PROCEDURE `sp_casos_por_estado_semana` ()   BEGIN
+CREATE PROCEDURE `sp_casos_por_estado_semana` ()   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -188,7 +188,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE CREATE PROCEDURE `sp_casos_por_estado_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `sp_casos_por_estado_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -228,7 +228,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE CREATE PROCEDURE `sp_casos_por_proceso_mes` ()   BEGIN
+CREATE PROCEDURE `sp_casos_por_proceso_mes` ()   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -241,7 +241,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE CREATE PROCEDURE `sp_casos_por_proceso_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `sp_casos_por_proceso_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -255,7 +255,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE CREATE PROCEDURE `sp_casos_por_proceso_semana` ()   BEGIN
+CREATE PROCEDURE `sp_casos_por_proceso_semana` ()   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -268,7 +268,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE CREATE PROCEDURE `sp_casos_por_proceso_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `sp_casos_por_proceso_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -281,7 +281,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
+CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
     SELECT 
     DAYOFWEEK(fecha_inicio) AS dia_semana,
         COUNT(*) AS casos_dia
@@ -291,7 +291,7 @@ CREATE CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
     ORDER BY dia_semana;
 END$$
 
-CREATE CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
+CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
     SELECT 
         DAY(fecha_inicio) AS dia,
         COUNT(*) AS total_casos
@@ -315,7 +315,7 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
-CREATE CREATE PROCEDURE `sp_contear_casos_tipo_mes` ()   BEGIN
+CREATE PROCEDURE `sp_contear_casos_tipo_mes` ()   BEGIN
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -327,7 +327,7 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
-CREATE CREATE PROCEDURE `sp_contear_casos_tipo_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `sp_contear_casos_tipo_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -339,7 +339,7 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
-CREATE CREATE PROCEDURE `sp_contear_casos_tipo_semana` ()   BEGIN
+CREATE PROCEDURE `sp_contear_casos_tipo_semana` ()   BEGIN
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -350,7 +350,7 @@ GROUP BY tc.nombre_caso
 ORDER BY tc.nombre_caso;
 END$$
 
-CREATE CREATE PROCEDURE `sp_contear_casos_tipo_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `sp_contear_casos_tipo_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -737,7 +737,7 @@ CREATE PROCEDURE `sp_resumen_productividad_comisionados` ()   BEGIN
     GROUP BY u.documento, u.nombre, u.apellido;
 END$$
 
-CREATE CREATE PROCEDURE `sp_taer_un_caso` (IN `p_id_caso` INT)   BEGIN
+CREATE PROCEDURE `sp_taer_un_caso` (IN `p_id_caso` INT)   BEGIN
 	SELECT * FROM caso
     WHERE id_caso = p_id_caso;
     END$$
