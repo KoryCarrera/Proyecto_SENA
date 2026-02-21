@@ -62,11 +62,6 @@
           <i class="bi bi-envelope-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Notificaciones</span>
         </a>
-        <a href="#" class="nav-link">
-          <i class="bi bi-envelope-plus-fill"></i>
-          <span class="text-[10px] mt-1 font-medium">Crear Notificación</span>
-        </a>
-
         <a href="/perfil" class="nav-link active">
           <i class="bi bi-person-circle"></i>
           <span class="text-[10px] mt-1 font-medium">Mi Perfil</span>
