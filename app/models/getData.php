@@ -1,10 +1,7 @@
 <?php
 
-function listarCasos($pdo)
-{
-
+function listarCasos($pdo){
     $stmt = $pdo->prepare("CALL sp_listar_casos()");
-
 
     try {
         $stmt->execute();
@@ -825,6 +822,8 @@ function traerCaso($pdo, $idCaso)
     }
 }
 
+
+
 function listarUsuarios($pdo)
 {
     $stmt = $pdo->prepare("CALL sp_listar_usuarios()");
@@ -1081,6 +1080,31 @@ function listarEstadosCaso($pdo)
     }
 }
 
+function validarEstado($pdo, $idCaso)
+{
+    $stmt = $pdo->prepare("CALL sp_validacion_estado_caso(?)");
+
+    $stmt->bindParam(1, $idCaso, PDO::PARAM_INT);
+
+    try {
+        $stmt->execute();
+        $estado = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($estado) {
+            return [
+                'status' => 'ok',
+                'data' => $estado
+            ];
+        } else {
+            return false;
+        }
+
+    } catch (PDOException $e) {
+        error_log("Error al listar estados de caso: " . $e->getMessage());
+        return false;
+    }
+}
 function gestionarProceso($pdo, $nombre)
 {
 

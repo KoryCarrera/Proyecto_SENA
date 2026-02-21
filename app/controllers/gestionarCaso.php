@@ -2,6 +2,8 @@
 header('Content-Type: application/json');
 session_start();
 
+require_once __DIR__ . "/checkSessionComi.php";
+require_once __DIR__ . "/../models/getData.php";
 require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/updateData.php";
 require_once __DIR__ . "/../models/insertData.php";
@@ -15,9 +17,25 @@ try {
     $idCaso = $_POST['idCaso'] ?? null;
     $idEstado = $_POST['idEstado'] ?? null;
     $observacion = $_POST['observacion'] ?? '';
+    $documento =  $_SESSION['user']['documento'] ?? null;
 
     if (!$idCaso) {
         echo json_encode(['status' => 'error', 'mensaje' => 'Faltan datos obligatorios']);
+        exit;
+    }
+
+    $validarCaso = traerCaso($pdo, $idCaso);
+
+    if(!$validarCaso){
+        echo json_encode(['status' => 'error', 'mensaje' => 'El caso no existe']);
+        exit;
+    }
+
+    if ($validarCaso['documento'] !== $documento) {
+        echo json_encode([
+            'status' => 'error', 
+            'mensaje' => 'No tienes permiso de cambiar este caso, no eres el responsable asignado'
+        ]);
         exit;
     }
 
@@ -26,7 +44,14 @@ try {
 
     if ($idEstado) {
         // 1. Actualizar el estado del caso
-        $actualizado = actualizarEstadoCaso($pdo, $idCaso, $idEstado);
+        $validarEstado = validarEstado($pdo, $idCaso);
+
+        if($validarEstado == '2'){
+            echo json_encode(['status' => 'error', 'mensaje' => 'Solo el administrador puede cambiar el estado de un caso No atendido']);
+        exit;
+        }
+
+        $actualizado = actualizarEstadoCaso($pdo, $idCaso, $idEstado, $documento);
 
         if (!$actualizado) {
             $pdo->rollBack();
@@ -36,7 +61,7 @@ try {
     }
     // 2. Registrar el seguimiento si hay observación
     if (!empty(trim($observacion))) {
-        $seguimiento = registrarSeguimiento($pdo, $observacion, $idCaso, $_SESSION['user']['documento']);
+        $seguimiento = registrarSeguimiento($pdo, $observacion, $idCaso, $documento);
         if (!$seguimiento) {
             $pdo->rollBack();
             echo json_encode(['status' => 'error', 'mensaje' => 'Error al registrar el seguimiento']);
