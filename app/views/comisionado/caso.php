@@ -192,7 +192,7 @@
           <button type="button" id="cerrar-modal" class="boton bg-slate-600 hover:bg-slate-700">
             <i class="bi bi-x-lg"></i> Cerrar
           </button>
-          <button type="submit" class="boton flex items-center gap-2">
+          <button type="submit" class="boton flex items-center gap-2" id="guardarCambios">
             <i class="bi bi-check-circle"></i> Guardar Cambios
           </button>
         </div>
@@ -205,6 +205,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
+    <!--JS Propio-->
+  <script src="/assets/js/gestionarCasos.js"></script>
   <script src="/assets/js/cache.js"></script>
   <script src="/assets/js/casosComi.js"></script>
   <script src="/assets/js/logout.js"></script>

@@ -1,6 +1,7 @@
 
 const ENDPOINT_LISTAR = '/listarCasosComi';
 const ENDPOINT_OBTENER = '/modalCasoAdmin';
+const btnGuardarCambios = document.getElementById('guardarCambios');
 
 const CargarCasos = async () => {
     const cuerpoTabla = document.getElementById("tablaCasos");
@@ -129,28 +130,40 @@ const mostrarDetallesCaso = (caso) => {
     modalTitle.textContent = `Gestionar Caso #${caso.id_caso}`;
 
     modalBody.innerHTML = `
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">ID del Caso</label>
-                <p class="text-slate-300 mb-0">${caso.id_caso}</p>
-                <input type="hidden" name="id_caso" value="${caso.id_caso}">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Tipo de Caso</label>
-                <p class="text-slate-300 mb-0">${caso.tipo_caso || 'N/A'}</p>
-            </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">ID del Caso</label>
+            <p class="text-slate-300 mb-0">${caso.id_caso}</p>
+            <input type="hidden" name="id_caso" id="idCaso" value="${caso.id_caso}">
         </div>
-        
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Fecha Inicio</label>
-                <p class="text-slate-300 mb-0">${formatearFecha(caso.fecha_inicio)}</p>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Proceso</label>
-                <p class="text-slate-300 mb-0">${caso.proceso || 'N/A'}</p>
-            </div>
+        <div class="col-md-6 mb-3">
+            <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Tipo de Caso</label>
+            <p class="text-slate-300 mb-0">${caso.tipo_caso || 'N/A'}</p>
         </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Fecha Inicio</label>
+            <p class="text-slate-300 mb-0">${formatearFecha(caso.fecha_inicio)}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Proceso</label>
+            <p class="text-slate-300 mb-0">${caso.proceso || 'N/A'}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Estado</label>
+            <p class="text-slate-300 mb-0">${obtenerBadgeEstado(caso.estado)}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Seguimientos</label>
+            <p class="text-slate-300 mb-0">${caso.seguimientos || 'N/A'}</p>
+        </div>
+    </div>
 
          ${caso.description || caso.descripcion ? `
         <div class="row">
@@ -170,14 +183,17 @@ const mostrarDetallesCaso = (caso) => {
             <div class="row g-3">
                 <div class="col-md-12">
                     <label class="text-xs text-slate-400 mb-1 d-block">Actualizar Estado</label>
-                    <select name="id_estado" id="selectEstado" class="contenido" required>
-                        <option value="" disabled>Seleccione un estado</option>
-                        <!-- Opciones cargadas dinámicamente -->
+                    <select name="id_estado" id="selectEstado" class="contenido">
+                    <option value="" selected disabled class="bg-slate-900">Seleccione un estado</option>
+                    <option value="1" class="bg-slate-900">Atendido</option>
+                    <option value="2" class="bg-slate-900">Por Atender</option>
+                    <option value="3" class="bg-slate-900">No Atendido</option>
                     </select>
+                    <span class="badge bg-warning text-dark" id="mensajeEstado"></span>
                 </div>
                 <div class="col-md-12">
                     <label class="text-xs text-slate-400 mb-1 d-block">Agregar Observación / Seguimiento</label>
-                    <textarea name="observacion" class="contenido" rows="3" placeholder="Escriba aquí los avances o detalles de la gestión..."></textarea>
+                    <textarea name="observacion" class="contenido" rows="3" placeholder="Escriba aquí los avances o detalles de la gestión..." id="observacion"></textarea>
                 </div>
             </div>
         </div>
@@ -185,7 +201,13 @@ const mostrarDetallesCaso = (caso) => {
        
     `;
 
-    cargarEstados(caso.estado);
+    if (caso.estado === 'No atendido') {
+        const mensajeEstado = document.getElementById('mensajeEstado');
+        mensajeEstado.innerHTML = `Solo el administrador puede cambiar el estado de este caso.`;
+
+        const selectEstado = document.getElementById('selectEstado');
+        selectEstado.disabled = true;
+    }
 };
 
 const formatearFecha = (fecha) => {
@@ -208,80 +230,65 @@ const obtenerBadgeEstado = (estado) => {
 };
 
 // Eventos para cerrar el modal
-const cargarEstados = async (estadoActual) => {
-    const select = document.getElementById('selectEstado');
-    if (!select) return;
-
-    try {
-        const response = await fetch('/opcionesRegistro');
-        const data = await response.json();
-
-        if (data.status === 'ok' && data.estados) {
-            select.innerHTML = '<option value="" disabled>Seleccione un estado</option>';
-            data.estados.forEach(estado => {
-                const selected = estado.estado.toLowerCase() === estadoActual.toLowerCase() ? 'selected' : '';
-                select.innerHTML += `<option value="${estado.id_estado}" ${selected} class="bg-slate-800">${estado.estado}</option>`;
-            });
-        }
-    } catch (error) {
-        console.error('Error al cargar estados:', error);
-    }
-};
-
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('modalCaso');
-    const form = document.getElementById('formGestionarCaso');
+    const btnGuardarCambios = document.getElementById('guardarCambios');
     const btnCerrar = document.getElementById('cerrar-modal');
 
-    if (form) {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+    btnGuardarCambios.addEventListener('click', () => {
 
-            const formData = new FormData(form);
+        const cambiosCasos = {
+            'idCaso': document.getElementById('idCaso').value,
+            'idEstado': document.getElementById('selectEstado').value,
+            'observacion': document.getElementById('observacion').value
+        }
 
-            // Mostrar cargando con SweetAlert
-            Swal.fire({
-                title: 'Procesando...',
-                text: 'Actualizando la gestión del caso',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
+        $.ajax({
+            url: '/actualizarCaso',
+            method: 'POST',
+            data: cambiosCasos,
+            success: function (response) {
 
-            try {
-                const response = await fetch('/gestionarCaso', {
-                    method: 'POST',
-                    body: formData
-                });
+                if (response.status == 'ok') {
 
-                const data = await response.json();
-
-                if (data.status === 'ok') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Éxito!',
-                        text: data.mensaje,
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-
+                    // Después de guardar los cambios, puedes cerrar el modal
                     modal.style.display = 'none';
                     document.body.style.overflow = 'auto';
-                    CargarCasos(); // Recargar la tabla
-                } else {
-                    throw new Error(data.mensaje || 'Error al gestionar el caso');
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Caso actualizado',
+                        text: response.mensaje,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        theme: 'dark'
+                    });
                 }
-            } catch (error) {
+
+                if (response.status == 'error') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al actualizar',
+                        text: response.mensaje,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        theme: 'dark'
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error al actualizar el caso:', error);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error',
-                    text: error.message
+                    title: 'Error al actualizar',
+                    text: 'Error al actualizar el caso',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    theme: 'dark'
                 });
             }
-        });
-    }
-
+        })
+    });
     if (btnCerrar) {
         btnCerrar.addEventListener('click', () => {
             modal.style.display = 'none';
