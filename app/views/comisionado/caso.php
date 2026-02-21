@@ -206,7 +206,6 @@
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
     <!--JS Propio-->
-  <script src="/assets/js/gestionarCasos.js"></script>
   <script src="/assets/js/cache.js"></script>
   <script src="/assets/js/casosComi.js"></script>
   <script src="/assets/js/logout.js"></script>
