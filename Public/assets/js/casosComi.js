@@ -209,6 +209,24 @@ const mostrarDetallesCaso = (caso) => {
         const selectEstado = document.getElementById('selectEstado');
         selectEstado.disabled = true;
     }
+
+    // Auto-scroll del modal cuando se redimensiona el textarea
+    const textareaObservacion = document.getElementById('observacion');
+    if (textareaObservacion) {
+        const contenidoModal = document.querySelector('.contenido-modal');
+        let prevHeight = textareaObservacion.offsetHeight;
+
+        const observer = new ResizeObserver(() => {
+            const currentHeight = textareaObservacion.offsetHeight;
+            if (currentHeight > prevHeight) {
+                // Hacer scroll hacia abajo al agrandar el textarea
+                contenidoModal.scrollTop = contenidoModal.scrollHeight;
+            }
+            prevHeight = currentHeight;
+        });
+
+        observer.observe(textareaObservacion);
+    }
 };
 
 const formatearFecha = (fecha) => {
