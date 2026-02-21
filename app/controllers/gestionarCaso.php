@@ -53,8 +53,6 @@ try {
 
         $actualizado = actualizarEstadoCaso($pdo, $idCaso, $idEstado, $documento);
 
-
-
         if (!$actualizado) {
             $pdo->rollBack();
             echo json_encode(['status' => 'error', 'mensaje' => 'Error al actualizar el estado del caso']);

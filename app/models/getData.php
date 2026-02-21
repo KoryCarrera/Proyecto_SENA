@@ -1,10 +1,7 @@
 <?php
 
-function listarCasos($pdo)
-{
-
+function listarCasos($pdo){
     $stmt = $pdo->prepare("CALL sp_listar_casos()");
-
 
     try {
         $stmt->execute();
