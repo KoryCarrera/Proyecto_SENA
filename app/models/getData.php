@@ -319,6 +319,8 @@ function traerCaso($pdo, $idCaso)
     }
 }
 
+
+
 function listarUsuarios($pdo)
 {
     $stmt = $pdo->prepare("CALL sp_listar_usuarios()");
@@ -574,3 +576,100 @@ function listarEstadosCaso($pdo)
     }
 }
 
+function validarEstado($pdo, $idCaso)
+{
+    $stmt = $pdo->prepare("CALL sp_validacion_estado_caso(?)");
+
+    $stmt->bindParam(1, $idCaso, PDO::PARAM_INT);
+
+    try {
+        $stmt->execute();
+        $estado = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($estado) {
+            return [
+                'status' => 'ok',
+                'data' => $estado
+            ];
+        } else {
+            return false;
+        }
+
+    } catch (PDOException $e) {
+        error_log("Error al listar estados de caso: " . $e->getMessage());
+        return false;
+    }
+}
+function gestionarProceso($pdo, $nombre)
+{
+
+    $stmt = $pdo->prepare("CALL sp_traer_proceso(?)");
+    $stmt->bindParam(1, $nombre, PDO::PARAM_STR);
+
+    try {
+        $stmt->execute();
+        $procesoGestionar = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($procesoGestionar) {
+            return [
+                'status' => 'ok',
+                'data' => $procesoGestionar
+            ];
+        } else {
+            return false;
+        }
+    } catch (PDOException $e) {
+        error_log("Error al obtener el proceso solicitado " . $e->getMessage());
+        return false;
+    }
+}
+;
+
+function conteoGeneral($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_resumen_casos_global");
+
+    try {
+        $stmt->execute();
+        $conteoGeneral = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if (!$conteoGeneral) {
+            return false;
+        }
+
+        return $conteoGeneral;
+
+    } catch (PDOException $e) {
+
+        error_log("Error al obtener el conteo general " . $e->getMessage());
+        return false;
+
+    }
+}
+
+function conteoPorUsuario($pdo, $documento)
+{
+    $stmt = $pdo->prepare("CALL sp_resumen_casos_por_documento(?)");
+
+    try {
+        $stmt->bindParam(1, $documento, PDO::PARAM_STR);
+        $stmt->execute();
+        $conteoPorUsuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if (!$conteoPorUsuario) {
+            return false;
+        }
+
+        return $conteoPorUsuario;
+
+    } catch (PDOException $e) {
+
+        error_log("Error al obtener el conteo por usuario " . $e->getMessage());
+        return false;
+
+    }
+}

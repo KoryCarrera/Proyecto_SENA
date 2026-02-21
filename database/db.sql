@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 13-02-2026 a las 16:07:25
+-- Tiempo de generación: 21-02-2026 a las 21:31:50
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -25,17 +25,24 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estado` INT)   BEGIN
+CREATE PROCEDURE `sp_actualizar_caso` (IN `p_estado` INT, IN `p_caso` INT)   BEGIN
+	UPDATE caso
+    SET
+        id_estado = p_estado
+        WHERE id_caso = p_caso;
+        END$$
+
+CREATE PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estado` INT, IN `p_documento` VARCHAR(20))   BEGIN
     IF NOT EXISTS (SELECT 1 FROM caso WHERE id_caso = p_id_caso) THEN
 		SIGNAL SQLSTATE '45000'
 			SET MESSAGE_TEXT = 'EL caso no existe';
 	END IF;
     
-    UPDATE caso SET id_estado = p_id_estado WHERE id_caso = p_id_caso;
+    UPDATE caso SET id_estado = p_id_estado WHERE id_caso = p_id_caso AND documento = p_documento;
     
     END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_analisis_demanda` ()   BEGIN
+CREATE PROCEDURE `sp_analisis_demanda` ()   BEGIN
     SELECT
         tc.nombre_caso,
 
@@ -62,19 +69,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_analisis_demanda` ()   BEGIN
     LIMIT 5;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_buscar_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE PROCEDURE `sp_buscar_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
 
 SELECT u.documento, CONCAT(u.nombre, ' ', u.apellido) as nombre, u.email, r.rol FROM usuario u INNER JOIN rol r ON u.id_rol = r.id_rol WHERE documento = p_documento;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_cambiar_estado_usuario` (IN `p_documento` VARCHAR(50), IN `p_estado` INT)   BEGIN 	
+CREATE PROCEDURE `sp_cambiar_estado_usuario` (IN `p_documento` VARCHAR(50), IN `p_estado` INT)   BEGIN 	
 
 UPDATE usuario SET id_estado = p_estado WHERE documento = p_documento;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_caracterizacion_usuarios` ()   BEGIN
+CREATE PROCEDURE `sp_caracterizacion_usuarios` ()   BEGIN
     SELECT
         r.nombre_rol,
         COUNT(c.id_caso) AS total_pqrsd_mes
@@ -86,7 +93,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_caracterizacion_usuarios` ()   B
     GROUP BY r.id_rol, r.nombre_rol;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_comisionado` ()   BEGIN
+CREATE PROCEDURE `sp_casos_por_comisionado` ()   BEGIN
 
 SELECT 
     CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
@@ -99,7 +106,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_estado` ()   BEGIN
+CREATE PROCEDURE `sp_casos_por_estado` ()   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -113,7 +120,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_mes` ()   BEGIN
+CREATE PROCEDURE `sp_casos_por_mes` ()   BEGIN
 
 SELECT 
     MONTH(fecha_inicio) AS mes,
@@ -125,7 +132,7 @@ ORDER BY mes;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_proceso` ()   BEGIN
+CREATE PROCEDURE `sp_casos_por_proceso` ()   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -137,7 +144,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contear_casos_tipo` ()   BEGIN
+CREATE PROCEDURE `sp_contear_casos_tipo` ()   BEGIN
 
 SELECT 
     tc.nombre_caso,
@@ -149,11 +156,11 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_desactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
+CREATE PROCEDURE `sp_desactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
 	UPDATE procesoorganizacional SET estado = 0 WHERE id_proceso = p_id_proceso;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_editar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_rol` INT, IN `p_contraseña` VARCHAR(255))   BEGIN
+CREATE PROCEDURE `sp_editar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_rol` INT, IN `p_contraseña` VARCHAR(255))   BEGIN
     UPDATE usuario 
     SET 
         nombre = p_nombre,
@@ -167,7 +174,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_editar_usuario` (IN `p_documento
     WHERE documento = p_documento;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_casos` ()   BEGIN
+CREATE PROCEDURE `sp_listar_casos` ()   BEGIN
 	SELECT 
 			c.id_caso,
 			CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
@@ -185,7 +192,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_casos` ()   BEGIN
 		ORDER BY c.fecha_inicio DESC LIMIT 20;
 	END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_caso_por_comisionado` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE PROCEDURE `sp_listar_caso_por_comisionado` (IN `p_documento` VARCHAR(50))   BEGIN
     SELECT 
 			c.id_caso,
 			CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
@@ -204,7 +211,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_caso_por_comisionado` (IN
 		ORDER BY c.fecha_inicio DESC LIMIT 30;
     END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_estados_caso` ()   BEGIN
+CREATE PROCEDURE `sp_listar_estados_caso` ()   BEGIN
     SELECT 
         id_estado,
         estado
@@ -212,7 +219,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_estados_caso` ()   BEGIN
     ORDER BY id_estado ASC;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_procesos_activos` ()   BEGIN
+CREATE PROCEDURE `sp_listar_procesos_activos` ()   BEGIN
     SELECT 
         id_proceso,
         nombre
@@ -221,12 +228,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_procesos_activos` ()   BE
     ORDER BY nombre ASC;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_proceso_organizacional` ()   BEGIN 
+CREATE PROCEDURE `sp_listar_proceso_organizacional` ()   BEGIN 
 	SELECT p.id_proceso, p.nombre AS nombre_proceso, p.descripcion, p.fecha_creacion, p.estado, CONCAT(u.nombre, ' ', u.apellido) AS nombre_creador, u.documento, u.email
  	FROM procesoorganizacional p INNER JOIN usuario u ON p.documento_usuario = u.documento ORDER BY p.fecha_creacion DESC;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_seguimientos_por_caso` (`p_caso` INT)   BEGIN
+CREATE PROCEDURE `sp_listar_seguimientos_por_caso` (`p_caso` INT)   BEGIN
     
     SELECT 
         s.id_seguimiento,
@@ -239,7 +246,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_seguimientos_por_caso` (`
     
     END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_tipos_caso` ()   BEGIN
+CREATE PROCEDURE `sp_listar_tipos_caso` ()   BEGIN
     SELECT 
         id_tipo_caso,
         nombre_caso
@@ -247,13 +254,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_tipos_caso` ()   BEGIN
     ORDER BY nombre_caso ASC;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_usuarios` ()   BEGIN
+CREATE PROCEDURE `sp_listar_usuarios` ()   BEGIN
 
  SELECT documento, nombre, apellido, email, id_rol, id_estado FROM usuario;
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_login_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE PROCEDURE `sp_login_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
     SELECT
         documento,
         CONCAT(nombre, ' ', apellido) AS     
@@ -275,7 +282,7 @@ AND id_estado = 1
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
+CREATE PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
     SELECT 
         c.id_caso,
         CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
@@ -284,7 +291,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_c
         e.estado AS estado,
         t.nombre_caso AS tipo_caso,
         p.nombre AS proceso,
-        c.descripcion
+        c.descripcion,
+        c.documento
     FROM caso c
     LEFT JOIN usuario u ON c.documento = u.documento
     INNER JOIN estado e ON c.id_estado = e.id_estado
@@ -294,13 +302,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_c
     LIMIT 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_reactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
+CREATE PROCEDURE `sp_reactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
     UPDATE procesoorganizacional 
     SET estado = 1 
     WHERE id_proceso = p_id_proceso;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_caso` (IN `p_documento` VARCHAR(20), IN `p_id_proceso` INT, IN `p_id_tipo_caso` INT, IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(255))   BEGIN
+CREATE PROCEDURE `sp_registrar_caso` (IN `p_documento` VARCHAR(20), IN `p_id_proceso` INT, IN `p_id_tipo_caso` INT, IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(255))   BEGIN
 DECLARE v_id_caso INT;
     
 INSERT INTO caso (documento, id_proceso, id_tipo_caso, descripcion, nombre) VALUES (p_documento, p_id_proceso, p_id_tipo_caso, p_descripcion, p_nombre);
@@ -327,7 +335,7 @@ INSERT INTO caso (documento, id_proceso, id_tipo_caso, descripcion, nombre) VALU
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_informe` (IN `p_documento` VARCHAR(50), IN `p_formato` VARCHAR(10), IN `p_contenido` TEXT)   BEGIN
+CREATE PROCEDURE `sp_registrar_informe` (IN `p_documento` VARCHAR(50), IN `p_formato` VARCHAR(10), IN `p_contenido` TEXT)   BEGIN
 
 
 
@@ -357,16 +365,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_informe` (IN `p_docume
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_monitoreo` (IN `p_documento` VARCHAR(50), IN `p_tipo` ENUM('inicio_sesion','accion'), IN `p_descripcion` TEXT)   BEGIN
+CREATE PROCEDURE `sp_registrar_monitoreo` (IN `p_documento` VARCHAR(50), IN `p_tipo` ENUM('inicio_sesion','accion'), IN `p_descripcion` TEXT)   BEGIN
 INSERT INTO usuario (documento, fecha, tipo, descripcion) VALUES (p_documento, NOW(), p_tipo, p_descripcion);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_proceso_organizacional` (IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(100), IN `p_documento_usuario` VARCHAR(50))   BEGIN
+CREATE PROCEDURE `sp_registrar_proceso_organizacional` (IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(100), IN `p_documento_usuario` VARCHAR(50))   BEGIN
     INSERT INTO procesoorganizacional (descripcion, nombre, documento_usuario)
     VALUES (p_descripcion, p_nombre, p_documento_usuario);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_seguimiento` (`p_observacion` TEXT, `p_caso` INT)   BEGIN
+CREATE PROCEDURE `sp_registrar_seguimiento` (`p_observacion` TEXT, `p_caso` INT)   BEGIN
     
     IF NOT EXISTS (SELECT 1 FROM caso WHERE p_caso = caso.id_caso)
     	THEN SIGNAL SQLSTATE '45000'
@@ -382,14 +390,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_seguimiento` (`p_obser
     
     END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(50), IN `p_apellido` VARCHAR(50), IN `p_email` VARCHAR(100), IN `p_id_rol` INT(11), IN `p_contraseña` VARCHAR(255))   BEGIN 
+CREATE PROCEDURE `sp_registrar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(50), IN `p_apellido` VARCHAR(50), IN `p_email` VARCHAR(100), IN `p_id_rol` INT(11), IN `p_contraseña` VARCHAR(255))   BEGIN 
 
 INSERT INTO usuario (documento, nombre, apellido, email, id_rol, contraseña, fecha_registro, ultimo_inicio_sesion) 
 VALUES (p_documento, p_nombre, p_apellido, p_email, p_id_rol, p_contraseña, NOW(), NULL);
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_reporte_pqrs_excel` ()   BEGIN
+CREATE PROCEDURE `sp_reporte_pqrs_excel` ()   BEGIN
     DECLARE anio_actual INT;
     SET anio_actual = YEAR(CURDATE());
 
@@ -444,7 +452,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_reporte_pqrs_excel` ()   BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_resumen_productividad_comisionados` ()   BEGIN
+CREATE PROCEDURE `sp_resumen_productividad_comisionados` ()   BEGIN
     SELECT
         u.documento,
         u.nombre,
@@ -480,10 +488,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_resumen_productividad_comisionad
     GROUP BY u.documento, u.nombre, u.apellido;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_traer_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE PROCEDURE `sp_traer_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
 
 SELECT documento, nombre, apellido, email, id_rol, id_estado FROM usuario WHERE documento = TRIM(p_documento COLLATE utf8mb4_general_ci);
 
+END$$
+
+CREATE DEFINER=`root`@`%` PROCEDURE `sp_validacion_estado_caso` (IN `p_id_caso` INT)   BEGIN 
+	SELECT id_estado 
+	FROM caso WHERE id_caso = p_id_caso;
+    
 END$$
 
 DELIMITER ;
@@ -528,7 +542,7 @@ CREATE TABLE `caso` (
 INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_proceso`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
 (81, 'Solicitud de dotación pendiente 2026', '1020304050', 12, '2026-02-12 14:58:00', NULL, 2, 2, 'Por medio de la presente solicito la entrega de la dotación correspondiente al periodo 2026, la cual no me ha sido suministrada a la fecha. Cumplo con los requisitos establecidos para la asignación y no he recibido notificación sobre retrasos o inconvenientes. Agradezco se revise mi caso y se informe el estado del proceso.'),
 (82, 'Reporte de accidente laboral en oficina administrativa', '1756664828', 14, '2026-02-12 14:59:17', NULL, 2, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
-(83, 'Denuncia por presunto acoso laboral', '1456333298', 11, '2026-02-12 15:00:31', NULL, 2, 1, 'Presento denuncia formal por presuntas conductas reiteradas de descalificación y trato irrespetuoso por parte de mi superior inmediato. Los hechos han ocurrido en varias ocasiones frente a compañeros de trabajo, afectando mi desempeño y ambiente laboral. Solicito se adelante la investigación correspondiente garantizando confidencialidad.'),
+(83, 'Denuncia por presunto acoso laboral', '1456333298', 11, '2026-02-17 15:00:31', NULL, 3, 1, 'Presento denuncia formal por presuntas conductas reiteradas de descalificación y trato irrespetuoso por parte de mi superior inmediato. Los hechos han ocurrido en varias ocasiones frente a compañeros de trabajo, afectando mi desempeño y ambiente laboral. Solicito se adelante la investigación correspondiente garantizando confidencialidad.'),
 (84, 'Derecho de petición – Estado de incentivo institucional', '1656966633', 13, '2026-02-12 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
 (85, 'Solicitud de apoyo por calamidad doméstica', '1020304050', 10, '2026-02-12 15:02:44', NULL, 2, 2, 'Solicito apoyo institucional por calamidad doméstica debido a una situación familiar imprevista ocurrida el 8 de febrero de 2026. Adjunto los documentos que soportan la situación. Agradezco se evalúe la posibilidad de otorgar el beneficio contemplado en el programa de bienestar social.');
 
