@@ -12,11 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    $idCaso = $_POST['id_caso'] ?? null;
-    $idEstado = $_POST['id_estado'] ?? null;
+    $idCaso = $_POST['idCaso'] ?? null;
+    $idEstado = $_POST['idEstado'] ?? null;
     $observacion = $_POST['observacion'] ?? '';
 
-    if (!$idCaso || !$idEstado) {
+    if (!$idCaso) {
         echo json_encode(['status' => 'error', 'mensaje' => 'Faltan datos obligatorios']);
         exit;
     }
@@ -24,18 +24,19 @@ try {
     // Iniciar transacción si el motor lo soporta para asegurar consistencia
     $pdo->beginTransaction();
 
-    // 1. Actualizar el estado del caso
-    $actualizado = actualizarEstadoCaso($pdo, $idCaso, $idEstado);
-    
-    if (!$actualizado) {
-        $pdo->rollBack();
-        echo json_encode(['status' => 'error', 'mensaje' => 'Error al actualizar el estado del caso']);
-        exit;
-    }
+    if ($idEstado) {
+        // 1. Actualizar el estado del caso
+        $actualizado = actualizarEstadoCaso($pdo, $idCaso, $idEstado);
 
+        if (!$actualizado) {
+            $pdo->rollBack();
+            echo json_encode(['status' => 'error', 'mensaje' => 'Error al actualizar el estado del caso']);
+            exit;
+        }
+    }
     // 2. Registrar el seguimiento si hay observación
     if (!empty(trim($observacion))) {
-        $seguimiento = registrarSeguimiento($pdo, $observacion, $idCaso);
+        $seguimiento = registrarSeguimiento($pdo, $observacion, $idCaso, $_SESSION['user']['documento']);
         if (!$seguimiento) {
             $pdo->rollBack();
             echo json_encode(['status' => 'error', 'mensaje' => 'Error al registrar el seguimiento']);
@@ -49,7 +50,6 @@ try {
         'status' => 'ok',
         'mensaje' => 'Caso gestionado exitosamente'
     ]);
-
 } catch (Exception $e) {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
