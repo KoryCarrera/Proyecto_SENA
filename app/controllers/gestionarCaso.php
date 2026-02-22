@@ -31,7 +31,7 @@ try {
         exit;
     }
 
-    if ($validarCaso['documento'] !== $documento) {
+    if ($validarCaso['data']['documento'] !== $documento) {
         echo json_encode([
             'status' => 'error', 
             'mensaje' => 'No tienes permiso de cambiar este caso, no eres el responsable asignado'

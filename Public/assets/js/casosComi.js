@@ -2,7 +2,7 @@
 const ENDPOINT_LISTAR = '/listarCasosComi';
 const ENDPOINT_OBTENER = '/modalCasoAdmin';
 const ENDPOINT_GESTIONAR = '/gestionarCaso';
-const ENDPOINT_SEGUIMIENTOS = '';
+const ENDPOINT_SEGUIMIENTOS = '/listarSeguimientos';
 
 const btnGuardarCambios = document.getElementById('guardarCambios');
 
@@ -150,6 +150,9 @@ function llenarTablaSeguimientos(id_caso) {
             //validamos que el status sea ok y que existan seguimientos
             if (response.status === 'ok' && response.seguimientos && response.seguimientos.length > 0) {
 
+                //limpiamos la tabla
+                tablaBody.innerHTML = '';
+
                 //insertamos los seguimientos en la tabla
                 response.seguimientos.forEach(seg => {
                     tablaBody.innerHTML += `
@@ -164,14 +167,14 @@ function llenarTablaSeguimientos(id_caso) {
             } else {
                 tablaBody.innerHTML = `
                 <tr class="bg-transparent">
-                    <td colspan="4" class="text-center py-4 text-slate-500 bg-transparent">No hay seguimientos registrados para este caso.</td>
+                    <td colspan="4" class="text-center py-4 text-slate-500 bg-transparent">${response.mensaje}.</td>
                 </tr>`;
             }
 
             if (response.status === 'error') {
                 tablaBody.innerHTML = `
             <tr class="bg-transparent">
-                    <td colspan="4" class="text-center py-4 text-warning bg-transparent">No se pudieron cargar los seguimientos</td>
+                    <td colspan="4" class="text-center py-4 text-warning bg-transparent">${response.mensaje}.</td>
                 </tr>`;
             }
         }, error: function (xhr, status, error) {
@@ -302,7 +305,7 @@ const mostrarDetallesCaso = (caso) => {
             btnSeguimientos.innerHTML = `<i class="bi bi-eye-slash-fill me-1"></i> Ocultar Historial de Seguimientos`;
         } else {
             tablaSeguimientosContainer.style.display = 'none';
-            btnSeguimientos.innerHTML = `<i class="bi bi-eye-fill me-1"></i> Ver Historial de Seguimientos`;
+            btnSeguimientos.innerHTML = `<i class="bi bi-table"></i> Mostrar tabla de seguimiento`;
         }
 
         llenarTablaSeguimientos(caso.id_caso);
@@ -402,6 +405,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (response.status == 'error') {
+
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+
                     Swal.fire({
                         icon: 'error',
                         title: 'Error al actualizar',
@@ -413,6 +420,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             },
             error: function (xhr, status, error) {
+
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+
                 console.error('Error al actualizar el caso:', error);
                 Swal.fire({
                     icon: 'error',

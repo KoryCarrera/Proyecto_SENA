@@ -1,12 +1,13 @@
 //Definimos los endpoints en constantes para facilidad
 const ENDPOINT_LISTAR = '/listarCasos';
 const ENDPOINT_OBTENER = '/modalCasoAdmin';
+const ENDPOINT_SEGUIMIENTOS = '/listarSeguimientos';
 
 //Definimos una función Async de cargar casos
 const cargarCasos = async () => {
     //capturamos el cuerpo de la tabla
     const cuerpoTabla = document.getElementById('tablaCasos');
-    
+
     //validamos que exista
     if (!cuerpoTabla) {
         console.error('!No se encontró el cuerpo de la tabla¡');
@@ -33,10 +34,10 @@ const cargarCasos = async () => {
         if (!response.ok) {
             throw new Error(`Error HTTP ${response.status}: No se pudo conectar con el servidor`);
         }
-        
+
         //Transformamos a JSON
         const data = await response.json();
-        
+
         //Personalizacion de errores
         if (data.status !== 'ok') {
             throw new Error(data.mensaje || 'Error desconocido');
@@ -57,8 +58,8 @@ const cargarCasos = async () => {
 
         //declaramos una función que definiremos mas adelante
         renderizarTablaCasos(data.casos, cuerpoTabla);
-        
-    //personalizamos captacion de error catch
+
+        //personalizamos captacion de error catch
     } catch (error) {
         console.error('Error al cargar los casos:', error);
         cuerpoTabla.innerHTML = `
@@ -83,7 +84,7 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
             ? formatearFecha(caso.fecha_inicio) //Fecha estetica
             : 'No registrada';
 
-            //capturamos fecha de cierre del argumento
+        //capturamos fecha de cierre del argumento
         const fechaCierre = caso.fecha_cierre
             ? formatearFecha(caso.fecha_cierre) //estilizamos la fecha recibida
             : '<span class="badge bg-warning text-dark">Pendiente</span>';
@@ -129,7 +130,7 @@ const formatearFecha = (fecha) => {
 //funcion para estilizar estado segun tipo
 const obtenerBadgeEstado = (estado) => {
     const estadoLower = (estado || '').toLowerCase();
-    
+
     //Usamos switch para cada caso
     //utilizamos clases de bootstrap para estilizar con colores
     switch (estadoLower) {
@@ -144,9 +145,71 @@ const obtenerBadgeEstado = (estado) => {
     }
 };
 
+//Funcion para insertar datos en la tabla de seguimientos del modal
+function llenarTablaSeguimientos(id_caso) {
+
+    const tablaBody = document.getElementById('tablaSeguimientosBody');
+
+    //Insertamos el cargando
+    tablaBody.innerHTML = `
+<tr class="bg-transparent">
+        <td colspan="4" class="text-center py-4 text-slate-500 italic bg-transparent border-0">
+            <span class="spinner-border spinner-border-sm me-2"></span> Cargando historial...
+        </td>
+    </tr>
+    `;
+
+    //Hacemos la request para obtener los seguimientos del caso
+
+    $.ajax({
+        url: ENDPOINT_SEGUIMIENTOS,
+        method: 'POST',
+        data: { 'idcaso': id_caso },
+        success: function (response) {
+
+            //validamos que el status sea ok y que existan seguimientos
+            if (response.status === 'ok' && response.seguimientos && response.seguimientos.length > 0) {
+
+                //limpiamos la tabla
+                tablaBody.innerHTML = '';
+
+                //insertamos los seguimientos en la tabla
+                response.seguimientos.forEach(seg => {
+                    tablaBody.innerHTML += `
+                    <tr class="border-bottom border-slate-700/30 bg-transparent">
+                        <td class="bg-transparent text-indigo-300 fw-bold">${seg.id_seguimiento}</td>
+                        <td class="bg-transparent">${formatearFecha(seg.fecha_seguimiento)}</td>
+                        <td class="bg-transparent text-slate-200">${seg.usuario}</td>
+                        <td class="bg-transparent text-slate-400" style="white-space: pre-wrap;">${seg.observacion}</td>
+                    </tr>
+                    `;
+                });
+            } else {
+                tablaBody.innerHTML = `
+                <tr class="bg-transparent">
+                    <td colspan="4" class="text-center py-4 text-slate-500 bg-transparent">${response.mensaje}.</td>
+                </tr>`;
+            }
+
+            if (response.status === 'error') {
+                tablaBody.innerHTML = `
+            <tr class="bg-transparent">
+                    <td colspan="4" class="text-center py-4 text-warning bg-transparent">${response.mensaje}.</td>
+                </tr>`;
+            }
+        }, error: function (xhr, status, error) {
+            console.error('Error al cargar los seguimientos:', error);
+            tablaBody.innerHTML = `
+            <tr class="bg-transparent">
+                <td colspan="4" class="text-center py-4 text-danger bg-transparent font-bold">Error de conexión al servidor</td>
+            </tr>`;
+        }
+    });
+}
+
 //funcion para supervisar claso
 const supervisarCaso = async (idCaso) => {
-    
+
     //capturamos body del modal
     const modalElement = document.getElementById('modalCaso');
     //inicializamos clase de bootstrap
@@ -161,9 +224,9 @@ const supervisarCaso = async (idCaso) => {
             <p class="mt-3">Cargando detalles del caso...</p>
         </div>
     `;
-    
+
     modal.show(); //Renderizamos
-    
+
     try {
         //Hacemos fetch al endpoint donde devolverá el caso a supervisar
         const response = await fetch(ENDPOINT_OBTENER, {
@@ -173,15 +236,15 @@ const supervisarCaso = async (idCaso) => {
             },
             body: `id_caso=${idCaso}`
         });
-        
+
         //personalizacion de errores
         if (!response.ok) {
             throw new Error(`Error HTTP ${response.status}`);
         }
-        
+
         //transformamos a json la response
         const data = await response.json();
-        
+
         //Validamos que el status de la response ok
         if (data.status === 'ok' && data.caso) {
             //mostramos los detalles del caso con una función que declararemos más adelante
@@ -190,7 +253,7 @@ const supervisarCaso = async (idCaso) => {
             //Mandamos un error personalizado
             throw new Error(data.mensaje || 'No se pudo obtener el caso');
         }
-    //capturamos errores
+        //capturamos errores
     } catch (error) {
         document.getElementById('modalCasoBody').innerHTML = `
             <div class="alert alert-danger" role="alert">
@@ -206,10 +269,10 @@ const mostrarDetallesCaso = (caso) => {
     //capturamos partes del modal
     const modalBody = document.getElementById('modalCasoBody');
     const modalTitle = document.getElementById('modalCasoLabel');
-    
+
     //definimos el titulo
     modalTitle.textContent = `Caso #${caso.id_caso} - ${caso.tipo_caso}`;
-    
+
     //insertamos el html con los datos del caso
     modalBody.innerHTML = `
         <div class="row">
@@ -251,6 +314,32 @@ const mostrarDetallesCaso = (caso) => {
                 <p class="form-control-plaintext">${caso.comisionado || 'Sin asignar'}</p>
             </div>
         </div>
+
+<div class="row mb-4">
+            <div class="col-12">
+            <button type="button" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-indigo-400 bg-indigo-900/20 border border-indigo-500/30 rounded-lg hover:bg-indigo-500/20 transition-colors mb-4" id="btnMostrar">
+                <i class="bi bi-table text-lg"></i> Mostrar tabla de seguimiento
+            </button>
+
+<div id="tablaSeguimientosContainer" class="bg-slate-800/40 rounded-lg p-3 border border-slate-700/50 w-100" style="display: none;">
+    <label class="fw-bold text-indigo-400 uppercase mb-2 d-block" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+        <i class="bi bi-clock-history me-1"></i> Historial de Seguimientos
+    </label>
+    <div class="table-responsive w-100" style="max-height: 250px; overflow-y: auto;">
+        <table class="table table-dark table-borderless align-middle mb-0 bg-transparent w-100">
+            <thead class="text-slate-400 border-bottom border-slate-700 bg-transparent" style="font-size: 0.7rem;">
+                <tr>
+                    <th class="pb-2 bg-transparent">ID</th>
+                    <th class="pb-2 bg-transparent">FECHA</th>
+                    <th class="pb-2 bg-transparent">USUARIO</th>
+                    <th class="pb-2 bg-transparent">OBSERVACIÓN</th>
+                </tr>
+            </thead>
+            <tbody id="tablaSeguimientosBody" class="text-slate-300 bg-transparent" style="font-size: 0.85rem;">
+                </tbody>
+        </table>
+    </div>
+</div>
         
         ${caso.descripcion ? `
         <div class="row">
@@ -261,6 +350,26 @@ const mostrarDetallesCaso = (caso) => {
         </div>
         ` : ''}
     `;
+
+    //Capturamos el boton para mostrar el historial de seguimientos
+    const btnSeguimientos = document.getElementById('btnMostrar');
+
+    //capturamos el contenedor de la tabla de seguimientos
+    const tablaSeguimientosContainer = document.getElementById('tablaSeguimientosContainer');
+
+    btnSeguimientos.addEventListener('click', () => {
+
+        if (tablaSeguimientosContainer.style.display === 'none') {
+            tablaSeguimientosContainer.style.display = 'block';
+            btnSeguimientos.innerHTML = `<i class="bi bi-eye-slash-fill me-1"></i> Ocultar Historial de Seguimientos`;
+        } else {
+            tablaSeguimientosContainer.style.display = 'none';
+            btnSeguimientos.innerHTML = `<i class="bi bi-table"></i> Mostrar tabla de seguimiento`;
+        }
+
+        llenarTablaSeguimientos(caso.id_caso);
+
+    });
 };
 
 document.addEventListener('DOMContentLoaded', () => {
