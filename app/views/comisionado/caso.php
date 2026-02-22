@@ -172,7 +172,7 @@
   <div id="modalCaso" class="modal">
     <div class="contenido-modal">
       <div class="titulo-modal" id="modalCasoLabel">Gestionar Caso</div>
-      
+
       <form id="formGestionarCaso">
         <div class="modal-body p-0" id="modalCasoBody">
           <!-- Contenido dinámico via JS -->
@@ -181,9 +181,6 @@
 
         </div>
         <div class="botones">
-                    <button type="button" class="boton-tabla">
-            <i class="bi bi-table"></i> Mostrar tabla de seguimiento
-          </button>
           <button type="button" id="cerrar-modal" class="boton bg-slate-600 hover:bg-slate-700">
             <i class="bi bi-x-lg"></i> Cerrar
           </button>
@@ -200,7 +197,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
-    <!--JS Propio-->
+  <!--JS Propio-->
   <script src="/assets/js/cache.js"></script>
   <script src="/assets/js/casosComi.js"></script>
   <script src="/assets/js/logout.js"></script>
