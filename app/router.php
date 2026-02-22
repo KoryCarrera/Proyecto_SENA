@@ -9,7 +9,7 @@ $router->map('GET', '/', '../Public/landing.php');
 //Rutas hacia controladores
 
 $router -> map('POST', '/login/auth', 'controllers/login.php');
-$router -> map('POST', '/listarSeguimientos', 'controllers/listarSeguimientos.php');
+$router -> map('POST', '/listarSeguimientos', '/controllers/listarSeguimientos.php');
 $router -> map('GET', '/graficasAdmin', 'controllers/dashboardAdmin.php');
 $router -> map('GET', '/graficasAdminMes', 'controllers/dashboardAdminMes.php');
 $router -> map('GET', '/graficasAdminSemana', 'controllers/dashboardAdminSemana.php');

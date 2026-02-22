@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 22-02-2026 a las 00:35:37
+-- Tiempo de generación: 22-02-2026 a las 02:30:57
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -25,20 +25,13 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE PROCEDURE `sp_actualizar_caso` (IN `p_estado` INT, IN `p_caso` INT)   BEGIN
-	UPDATE caso
-    SET
-        id_estado = p_estado
-        WHERE id_caso = p_caso;
-        END$$
-
-CREATE PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estado` INT, IN `p_documento` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estado` INT)   BEGIN
     IF NOT EXISTS (SELECT 1 FROM caso WHERE id_caso = p_id_caso) THEN
 		SIGNAL SQLSTATE '45000'
 			SET MESSAGE_TEXT = 'EL caso no existe';
 	END IF;
     
-    UPDATE caso SET id_estado = p_id_estado WHERE id_caso = p_id_caso AND documento = p_documento;
+    UPDATE caso SET id_estado = p_id_estado WHERE id_caso = p_id_caso;
     
     END$$
 
@@ -71,7 +64,7 @@ END$$
 
 CREATE PROCEDURE `sp_buscar_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
 
-SELECT u.documento, CONCAT(u.nombre, ' ', u.apellido) as nombre, u.email, r.rol FROM usuario u INNER JOIN rol r ON u.id_rol = r.id_rol WHERE documento = p_documento;
+SELECT u.documento, CONCAT(u.nombre, ' ', u.apellido) as nombre, u.email, u.fecha_registro, u.ultimo_inicio_sesion, r.rol FROM usuario u INNER JOIN rol r ON u.id_rol = r.id_rol WHERE documento = p_documento;
 
 END$$
 
@@ -106,31 +99,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_comi_mes` ()   BEGIN
-	SELECT 
-    CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
-    COUNT(c.id_caso) AS total_casos
-FROM usuario u
-LEFT JOIN caso c ON u.documento = c.documento
-WHERE u.id_rol = 2 AND MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE())
-GROUP BY u.documento, u.nombre, u.apellido
-ORDER BY total_casos DESC;
-
-END$$
-
-CREATE PROCEDURE `sp_casos_por_comi_semana` ()   BEGIN
-SELECT 
-    CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
-    COUNT(c.id_caso) AS total_casos
-FROM usuario u
-LEFT JOIN caso c ON u.documento = c.documento
-WHERE u.id_rol = 2 AND YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE())
-GROUP BY u.documento, u.nombre, u.apellido
-ORDER BY total_casos DESC;
-
-END$$
-
-CREATE PROCEDURE `sp_casos_por_estado` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `sp_casos_por_estado` ()   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -138,66 +107,7 @@ SELECT
     (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
 FROM caso c
 JOIN estado e ON c.id_estado = e.id_estado
-WHERE YEAR(c.fecha_inicio) = YEAR(CURDATE()) 
-AND c.documento = p_documento
-GROUP BY e.estado
-ORDER BY total_casos DESC;
-
-END$$
-
-CREATE PROCEDURE `sp_casos_por_estado_mes` ()   BEGIN
-
-SELECT 
-    e.estado AS nombre_estado,
-    COUNT(c.id_caso) AS total_casos,
-    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
-FROM caso c
-JOIN estado e ON c.id_estado = e.id_estado
-WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE())
-GROUP BY e.estado
-ORDER BY total_casos DESC;
-
-END$$
-
-CREATE PROCEDURE `sp_casos_por_estado_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
-
-SELECT 
-    e.estado AS nombre_estado,
-    COUNT(c.id_caso) AS total_casos,
-    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
-FROM caso c
-JOIN estado e ON c.id_estado = e.id_estado
-WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE())
-AND c.documento = p_documento
-GROUP BY e.estado
-ORDER BY total_casos DESC;
-
-END$$
-
-CREATE PROCEDURE `sp_casos_por_estado_semana` ()   BEGIN
-
-SELECT 
-    e.estado AS nombre_estado,
-    COUNT(c.id_caso) AS total_casos,
-    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
-FROM caso c
-JOIN estado e ON c.id_estado = e.id_estado
-WHERE YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) 
-GROUP BY e.estado
-ORDER BY total_casos DESC;
-
-END$$
-
-CREATE PROCEDURE `sp_casos_por_estado_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
-
-SELECT 
-    e.estado AS nombre_estado,
-    COUNT(c.id_caso) AS total_casos,
-    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
-FROM caso c
-JOIN estado e ON c.id_estado = e.id_estado
-WHERE YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) 
-AND c.documento = p_documento
+WHERE YEAR(c.fecha_inicio) = YEAR(CURDATE())
 GROUP BY e.estado
 ORDER BY total_casos DESC;
 
@@ -215,150 +125,28 @@ ORDER BY mes;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_proceso` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `sp_casos_por_proceso` ()   BEGIN
 
 SELECT 
     p.nombre AS proceso,
     COUNT(c.id_caso) AS total_casos
 FROM procesoorganizacional p
 LEFT JOIN caso c ON c.id_proceso = p.id_proceso
-WHERE c.documento = p_documento
 GROUP BY p.id_proceso, p.nombre
 ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_proceso_mes` ()   BEGIN
-
-SELECT 
-    p.nombre AS proceso,
-    COUNT(c.id_caso) AS total_casos
-FROM procesoorganizacional p
-LEFT JOIN caso c ON c.id_proceso = p.id_proceso
-WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE())
-GROUP BY p.id_proceso, p.nombre
-ORDER BY total_casos DESC;
-
-END$$
-
-CREATE PROCEDURE `sp_casos_por_proceso_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
-
-SELECT 
-    p.nombre AS proceso,
-    COUNT(c.id_caso) AS total_casos
-FROM procesoorganizacional p
-LEFT JOIN caso c ON c.id_proceso = p.id_proceso
-WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE()) AND
-c.documento = p_documento
-GROUP BY p.id_proceso, p.nombre
-ORDER BY total_casos DESC;
-
-END$$
-
-CREATE PROCEDURE `sp_casos_por_proceso_semana` ()   BEGIN
-
-SELECT 
-    p.nombre AS proceso,
-    COUNT(c.id_caso) AS total_casos
-FROM procesoorganizacional p
-LEFT JOIN caso c ON c.id_proceso = p.id_proceso
-WHERE c.documento = p_documento AND YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) 
-GROUP BY p.id_proceso, p.nombre
-ORDER BY total_casos DESC;
-
-END$$
-
-CREATE PROCEDURE `sp_casos_por_proceso_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
-
-SELECT 
-    p.nombre AS proceso,
-    COUNT(c.id_caso) AS total_casos
-FROM procesoorganizacional p
-LEFT JOIN caso c ON c.id_proceso = p.id_proceso
-WHERE c.documento = p_documento AND YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) 
-GROUP BY p.id_proceso, p.nombre
-ORDER BY total_casos DESC;
-
-END$$
-
-CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
-    SELECT 
-    DAYOFWEEK(fecha_inicio) AS dia_semana,
-        COUNT(*) AS casos_dia
-    FROM caso
-    WHERE YEARWEEK(fecha_inicio, 0) = YEARWEEK(CURDATE(), 0)
-    GROUP BY WEEK(fecha_inicio, 0), DAYOFWEEK(fecha_inicio), DAYNAME(fecha_inicio)
-    ORDER BY dia_semana;
-END$$
-
-CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
-    SELECT 
-        DAY(fecha_inicio) AS dia,
-        COUNT(*) AS total_casos
-    FROM caso
-    WHERE MONTH(fecha_inicio) = MONTH(CURDATE())
-      AND YEAR(fecha_inicio) = YEAR(CURDATE())
-    GROUP BY MONTH(fecha_inicio), DAY(fecha_inicio)
-    ORDER BY dia;
-END$$
-
-CREATE PROCEDURE `sp_contear_casos_tipo` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `sp_contear_casos_tipo` ()   BEGIN
 
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
 FROM caso c
 INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
-WHERE c.documento = p_documento
 GROUP BY tc.nombre_caso
 ORDER BY tc.nombre_caso;
 
-END$$
-
-CREATE PROCEDURE `sp_contear_casos_tipo_mes` ()   BEGIN
-SELECT 
-    tc.nombre_caso,
-    COUNT(c.id_caso) AS total
-FROM caso c
-INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
-WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE())
-GROUP BY tc.nombre_caso
-ORDER BY tc.nombre_caso;
-
-END$$
-
-CREATE PROCEDURE `sp_contear_casos_tipo_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
-SELECT 
-    tc.nombre_caso,
-    COUNT(c.id_caso) AS total
-FROM caso c
-INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
-WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE()) AND c.documento = p_documento
-GROUP BY tc.nombre_caso
-ORDER BY tc.nombre_caso;
-
-END$$
-
-CREATE PROCEDURE `sp_contear_casos_tipo_semana` ()   BEGIN
-SELECT 
-    tc.nombre_caso,
-    COUNT(c.id_caso) AS total
-FROM caso c
-INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
-WHERE YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE())
-GROUP BY tc.nombre_caso
-ORDER BY tc.nombre_caso;
-END$$
-
-CREATE PROCEDURE `sp_contear_casos_tipo_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
-SELECT 
-    tc.nombre_caso,
-    COUNT(c.id_caso) AS total
-FROM caso c
-INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
-WHERE YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) AND c.documento = p_documento
-GROUP BY tc.nombre_caso
-ORDER BY tc.nombre_caso;
 END$$
 
 CREATE PROCEDURE `sp_desactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
@@ -439,14 +227,13 @@ CREATE PROCEDURE `sp_listar_proceso_organizacional` ()   BEGIN
 END$$
 
 CREATE PROCEDURE `sp_listar_seguimientos_por_caso` (IN `p_caso` INT)   BEGIN
-    SELECT
+    SELECT 
         s.id_seguimiento,
-        CONCAT(u.nombre, ' ', u.apellido) AS usuario,
         s.fecha_seguimiento,
-        s.observacion
-    FROM seguimiento s 
-    INNER JOIN caso c ON c.id_caso = s.id_caso 
-    INNER JOIN usuario u ON u.documento = c.documento
+        s.observacion,
+        CONCAT(u.nombre, ' ', u.apellido) AS usuario
+    FROM seguimiento s
+    JOIN usuario u ON s.documento = u.documento
     WHERE s.id_caso = p_caso
     ORDER BY s.fecha_seguimiento DESC
     LIMIT 20;
@@ -490,6 +277,7 @@ END$$
 
 CREATE PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
     SELECT 
+    	c.documento,
         c.id_caso,
         CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
         c.fecha_inicio,
@@ -497,15 +285,12 @@ CREATE PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
         e.estado AS estado,
         t.nombre_caso AS tipo_caso,
         p.nombre AS proceso,
-        c.descripcion,
-        c.documento,
-        COUNT(s.id_seguimiento) AS seguimientos
+        c.descripcion
     FROM caso c
     LEFT JOIN usuario u ON c.documento = u.documento
     INNER JOIN estado e ON c.id_estado = e.id_estado
     INNER JOIN tipo_caso t ON c.id_tipo_caso = t.id_tipo_caso
     INNER JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
-    INNER JOIN seguimiento s ON c.id_caso = s.id_caso
     WHERE c.id_caso = p_id_caso
     LIMIT 1;
 END$$
@@ -589,8 +374,9 @@ CREATE PROCEDURE `sp_registrar_seguimiento` (IN `p_observacion` TEXT, IN `p_caso
         	SET MESSAGE_TEXT = 'No existe el caso buscado.';
 	END IF;
     
-    INSERT INTO seguimiento (observacion, id_caso, documento) 
+    INSERT INTO seguimiento (fecha_seguimiento, observacion, id_caso, documento) 
     VALUES (
+    	NOW(),
         p_observacion,
         p_caso,
         p_documento
@@ -741,21 +527,10 @@ CREATE PROCEDURE `sp_resumen_productividad_comisionados` ()   BEGIN
     GROUP BY u.documento, u.nombre, u.apellido;
 END$$
 
-CREATE PROCEDURE `sp_taer_un_caso` (IN `p_id_caso` INT)   BEGIN
-	SELECT * FROM caso
-    WHERE id_caso = p_id_caso;
-    END$$
-
 CREATE PROCEDURE `sp_traer_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
 
 SELECT documento, nombre, apellido, email, id_rol, id_estado FROM usuario WHERE documento = TRIM(p_documento COLLATE utf8mb4_general_ci);
 
-END$$
-
-CREATE DEFINER=`root`@`%` PROCEDURE `sp_validacion_estado_caso` (IN `p_id_caso` INT)   BEGIN 
-	SELECT id_estado 
-	FROM caso WHERE id_caso = p_id_caso;
-    
 END$$
 
 DELIMITER ;
@@ -798,11 +573,11 @@ CREATE TABLE `caso` (
 --
 
 INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_proceso`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
-(81, 'Solicitud de dotación pendiente 2026', '1020304050', 12, '2026-02-20 14:58:00', NULL, 3, 2, 'Por medio de la presente solicito la entrega de la dotación correspondiente al periodo 2026, la cual no me ha sido suministrada a la fecha. Cumplo con los requisitos establecidos para la asignación y no he recibido notificación sobre retrasos o inconvenientes. Agradezco se revise mi caso y se informe el estado del proceso.'),
+(81, 'Solicitud de dotación pendiente 2026', '1020304050', 12, '2026-02-12 14:58:00', NULL, 2, 2, 'Por medio de la presente solicito la entrega de la dotación correspondiente al periodo 2026, la cual no me ha sido suministrada a la fecha. Cumplo con los requisitos establecidos para la asignación y no he recibido notificación sobre retrasos o inconvenientes. Agradezco se revise mi caso y se informe el estado del proceso.'),
 (82, 'Reporte de accidente laboral en oficina administrativa', '1756664828', 14, '2026-02-12 14:59:17', NULL, 2, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
-(83, 'Denuncia por presunto acoso laboral', '1456333298', 11, '2026-02-17 15:00:31', NULL, 3, 1, 'Presento denuncia formal por presuntas conductas reiteradas de descalificación y trato irrespetuoso por parte de mi superior inmediato. Los hechos han ocurrido en varias ocasiones frente a compañeros de trabajo, afectando mi desempeño y ambiente laboral. Solicito se adelante la investigación correspondiente garantizando confidencialidad.'),
+(83, 'Denuncia por presunto acoso laboral', '1456333298', 11, '2026-02-12 15:00:31', NULL, 2, 1, 'Presento denuncia formal por presuntas conductas reiteradas de descalificación y trato irrespetuoso por parte de mi superior inmediato. Los hechos han ocurrido en varias ocasiones frente a compañeros de trabajo, afectando mi desempeño y ambiente laboral. Solicito se adelante la investigación correspondiente garantizando confidencialidad.'),
 (84, 'Derecho de petición – Estado de incentivo institucional', '1656966633', 13, '2026-02-12 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
-(85, 'Solicitud de apoyo por calamidad doméstica', '1020304050', 10, '2026-02-11 15:02:44', NULL, 2, 2, 'Solicito apoyo institucional por calamidad doméstica debido a una situación familiar imprevista ocurrida el 8 de febrero de 2026. Adjunto los documentos que soportan la situación. Agradezco se evalúe la posibilidad de otorgar el beneficio contemplado en el programa de bienestar social.');
+(85, 'Solicitud de apoyo por calamidad doméstica', '1020304050', 10, '2026-02-12 15:02:44', NULL, 2, 2, 'Solicito apoyo institucional por calamidad doméstica debido a una situación familiar imprevista ocurrida el 8 de febrero de 2026. Adjunto los documentos que soportan la situación. Agradezco se evalúe la posibilidad de otorgar el beneficio contemplado en el programa de bienestar social.');
 
 -- --------------------------------------------------------
 
@@ -976,16 +751,9 @@ CREATE TABLE `seguimiento` (
   `id_seguimiento` int(11) NOT NULL COMMENT 'PK para encontrar y relacionar',
   `fecha_seguimiento` datetime NOT NULL DEFAULT current_timestamp() COMMENT 'Fecha en la que se inicia el seguimiento',
   `observacion` text NOT NULL COMMENT 'Observaciones del caso',
-  `id_caso` int(11) NOT NULL COMMENT 'Relación entre seguimiento y caso',
-  `documento` varchar(50) NOT NULL
+  `documento` varchar(50) NOT NULL,
+  `id_caso` int(11) NOT NULL COMMENT 'Relación entre seguimiento y caso'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `seguimiento`
---
-
-INSERT INTO `seguimiento` (`id_seguimiento`, `fecha_seguimiento`, `observacion`, `id_caso`, `documento`) VALUES
-(1, '2026-02-22 00:05:56', 'nose', 83, '1456333298');
 
 -- --------------------------------------------------------
 
@@ -1032,8 +800,8 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
 ('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', 2, '$2y$10$y3oetIixLCkpaVJi06/6Uu8GAobFx0laScAzWdA6LCEIosKnFzKPu', '2026-02-12 14:18:58', '2026-02-12 15:14:10', 1),
-('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', 2, '$2y$10$HqefV0KBECI0kGZF/Ibtq./nElgxTqfrmxrQLAu0Mm1BbsJoUgaay', '2026-02-12 14:22:31', '2026-02-22 00:03:20', 1),
-('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-22 00:02:46', 1),
+('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', 2, '$2y$10$HqefV0KBECI0kGZF/Ibtq./nElgxTqfrmxrQLAu0Mm1BbsJoUgaay', '2026-02-12 14:22:31', '2026-02-22 01:55:03', 1),
+('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-22 02:08:21', 1),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-02-12 15:01:09', 1),
 ('1756664828', 'Isaac', 'Carvajal', 'zackycarvajal@gmail.com', 2, '$2y$10$3vRK9ALJ8K/ffOvJMqDb9.giktCYmj9zHUwUAAvboirCOekDFGot2', '2026-02-12 14:20:29', '2026-02-12 14:58:47', 1);
 
@@ -1147,7 +915,7 @@ ALTER TABLE `archivo`
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
-  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=86;
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`
@@ -1195,7 +963,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `seguimiento`
 --
 ALTER TABLE `seguimiento`
-  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=2;
+  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_caso`
@@ -1256,8 +1024,7 @@ ALTER TABLE `procesoorganizacional`
 -- Filtros para la tabla `seguimiento`
 --
 ALTER TABLE `seguimiento`
-  ADD CONSTRAINT `seguimiento_ibfk_1` FOREIGN KEY (`id_caso`) REFERENCES `caso` (`id_caso`),
-  ADD CONSTRAINT `seguimiento_ibfk_2` FOREIGN KEY (`documento`) REFERENCES `usuario` (`documento`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `seguimiento_ibfk_1` FOREIGN KEY (`documento`) REFERENCES `usuario` (`documento`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `usuario`

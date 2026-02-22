@@ -8,23 +8,22 @@ session_start();
 //Llamamos la credenciales necesarias
 require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/getData.php";
-require_once __DIR__ . "/checkSessionComi.php";
 
 
 try {
-    $idCaso = $_POST['id_caso'];
+    $idCaso = $_POST['idcaso'];
 
 	$listarSeguimientos = obtenerSeguimientosPorCaso($pdo, $idCaso);
 	
-	if ($listarSeguimientos && $listarSeguimientos['status'] === 'ok') {
+	if ($listarSeguimientos) {
 		echo json_encode([
             'status' => 'ok',
-            'seg' => $listarSeguimientos['data']
+            'seguimientos' => $listarSeguimientos
         ]);
         } else {
         echo json_encode([
             'status' => 'error',
-            'mensaje' => $listarSeguimientos['mensaje'] ?? 'No hay seguimientos para listar'
+            'mensaje' => 'No hay seguimientos para listar'
         ]); 
     }
 } catch (Exception $e) { //captura de errores sql
