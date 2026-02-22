@@ -43,8 +43,8 @@ function filtrarPorComisionado($pdo, $document)
 function obtenerSeguimientosPorCaso($pdo, $idCaso)
 {
 
-    $stmt = $pdo->prepare("CALL sp_listar_seguimientos_por_caso(:id)");
-    $stmt->bindParam(':id', $idCaso, PDO::PARAM_INT);
+    $stmt = $pdo->prepare("CALL sp_listar_seguimientos_por_caso(?)");
+    $stmt->bindParam(1, $idCaso, PDO::PARAM_INT);
 
     try {
         $stmt->execute();

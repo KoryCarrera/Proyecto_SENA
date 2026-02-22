@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 21-02-2026 a las 22:06:02
+-- Tiempo de generación: 22-02-2026 a las 00:35:37
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -438,18 +438,19 @@ CREATE PROCEDURE `sp_listar_proceso_organizacional` ()   BEGIN
  	FROM procesoorganizacional p INNER JOIN usuario u ON p.documento_usuario = u.documento ORDER BY p.fecha_creacion DESC;
 END$$
 
-CREATE PROCEDURE `sp_listar_seguimientos_por_caso` (`p_caso` INT)   BEGIN
-    
-    SELECT 
+CREATE PROCEDURE `sp_listar_seguimientos_por_caso` (IN `p_caso` INT)   BEGIN
+    SELECT
         s.id_seguimiento,
+        CONCAT(u.nombre, ' ', u.apellido) AS usuario,
         s.fecha_seguimiento,
         s.observacion
-    FROM seguimiento s
+    FROM seguimiento s 
+    INNER JOIN caso c ON c.id_caso = s.id_caso 
+    INNER JOIN usuario u ON u.documento = c.documento
     WHERE s.id_caso = p_caso
     ORDER BY s.fecha_seguimiento DESC
     LIMIT 20;
-    
-    END$$
+END$$
 
 CREATE PROCEDURE `sp_listar_tipos_caso` ()   BEGIN
     SELECT 
@@ -497,12 +498,14 @@ CREATE PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
         t.nombre_caso AS tipo_caso,
         p.nombre AS proceso,
         c.descripcion,
-        c.documento
+        c.documento,
+        COUNT(s.id_seguimiento) AS seguimientos
     FROM caso c
     LEFT JOIN usuario u ON c.documento = u.documento
     INNER JOIN estado e ON c.id_estado = e.id_estado
     INNER JOIN tipo_caso t ON c.id_tipo_caso = t.id_tipo_caso
     INNER JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
+    INNER JOIN seguimiento s ON c.id_caso = s.id_caso
     WHERE c.id_caso = p_id_caso
     LIMIT 1;
 END$$
@@ -977,6 +980,13 @@ CREATE TABLE `seguimiento` (
   `documento` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `seguimiento`
+--
+
+INSERT INTO `seguimiento` (`id_seguimiento`, `fecha_seguimiento`, `observacion`, `id_caso`, `documento`) VALUES
+(1, '2026-02-22 00:05:56', 'nose', 83, '1456333298');
+
 -- --------------------------------------------------------
 
 --
@@ -1022,8 +1032,8 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
 ('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', 2, '$2y$10$y3oetIixLCkpaVJi06/6Uu8GAobFx0laScAzWdA6LCEIosKnFzKPu', '2026-02-12 14:18:58', '2026-02-12 15:14:10', 1),
-('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', 2, '$2y$10$HqefV0KBECI0kGZF/Ibtq./nElgxTqfrmxrQLAu0Mm1BbsJoUgaay', '2026-02-12 14:22:31', '2026-02-21 21:30:48', 1),
-('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-21 19:46:25', 1),
+('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', 2, '$2y$10$HqefV0KBECI0kGZF/Ibtq./nElgxTqfrmxrQLAu0Mm1BbsJoUgaay', '2026-02-12 14:22:31', '2026-02-22 00:03:20', 1),
+('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-22 00:02:46', 1),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-02-12 15:01:09', 1),
 ('1756664828', 'Isaac', 'Carvajal', 'zackycarvajal@gmail.com', 2, '$2y$10$3vRK9ALJ8K/ffOvJMqDb9.giktCYmj9zHUwUAAvboirCOekDFGot2', '2026-02-12 14:20:29', '2026-02-12 14:58:47', 1);
 
@@ -1185,7 +1195,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `seguimiento`
 --
 ALTER TABLE `seguimiento`
-  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar';
+  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_caso`
