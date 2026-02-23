@@ -99,17 +99,6 @@ ORDER BY total_casos DESC;
 
 END$$
 
-SELECT 
-    CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
-    COUNT(c.id_caso) AS total_casos
-FROM usuario u
-LEFT JOIN caso c ON u.documento = c.documento
-WHERE u.id_rol = 2
-GROUP BY u.documento, u.nombre, u.apellido
-ORDER BY total_casos DESC;
-
-END$$
-
 CREATE PROCEDURE `sp_casos_por_comi_mes` ()   BEGIN
 	SELECT 
     CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
