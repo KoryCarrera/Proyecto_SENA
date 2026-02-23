@@ -28,3 +28,38 @@ tailwind.config = {
         }
     }
 }
+
+// Lógica del carrusel de imágenes
+document.addEventListener('DOMContentLoaded', () => {
+    const carousel = document.getElementById('image-carousel');
+    if (carousel) {
+        let autoScrollInterval;
+
+        const startAutoScroll = () => {
+            autoScrollInterval = setInterval(() => {
+                const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+                // Da un margen de 10px por posibles decimales en el cálculo de scroll
+                if (carousel.scrollLeft >= maxScrollLeft - 10) {
+                    // Si llega al final, vuelve al inicio
+                    carousel.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    // Si no, avanza el tamaño del contenedor
+                    carousel.scrollBy({ left: carousel.clientWidth, behavior: 'smooth' });
+                }
+            }, 3000); // Cambia de imagen cada 3 segundos
+        };
+
+        const stopAutoScroll = () => {
+            clearInterval(autoScrollInterval);
+        };
+
+        // Iniciar auto-scroll
+        startAutoScroll();
+
+        // Pausar auto-scroll al interactuar
+        carousel.addEventListener('mouseenter', stopAutoScroll);
+        carousel.addEventListener('mouseleave', startAutoScroll);
+        carousel.addEventListener('touchstart', stopAutoScroll, { passive: true });
+        carousel.addEventListener('touchend', startAutoScroll, { passive: true });
+    }
+});
