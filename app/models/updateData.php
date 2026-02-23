@@ -22,6 +22,29 @@ function ActualizarUsuario($pdo, $documento, $nombre, $apellido, $email, $rol, $
     }
 }
 
+function ConfigurarInfoUsuario($pdo, $documento, $nombre, $apellido, $email, $password, $numero)
+{
+    $stmt = $pdo->prepare("CALL sp_configurar_usuario(?, ?, ?, ?, ?; ?)");
+    //encriptar contraseña
+    $passhash = password_hash($password, PASSWORD_BCRYPT);
+
+    $stmt->bindParam(1, $nombre, PDO::PARAM_STR);
+    $stmt->bindParam(2, $apellido, PDO::PARAM_STR);
+    $stmt->bindParam(3, $email, PDO::PARAM_STR);
+    $stmt->bindParam(4, $passhash, PDO::PARAM_STR);
+    $stmt->bindParam(5, $documento, PDO::PARAM_STR);
+    $stmt->bindParam(6, $numero, PDO::PARAM_STR);
+
+    try {
+        $stmt->execute();
+        $stmt->closeCursor();
+        return true;
+    } catch (PDOException $e) {
+        error_log("Error en SQL: " . $e->getMessage());
+        return false;
+    }
+}
+
 function reactivarProceso($pdo, $id_proceso)
 {
     $stmt = $pdo->prepare("CALL sp_reactivar_proceso(?)");
