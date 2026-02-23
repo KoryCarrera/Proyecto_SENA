@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 22-02-2026 a las 02:30:57
+-- Tiempo de generación: 23-02-2026 a las 14:35:48
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -123,7 +123,21 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_estado` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `sp_casos_por_estado` ()   BEGIN
+
+SELECT 
+    e.estado AS nombre_estado,
+    COUNT(c.id_caso) AS total_casos,
+    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
+FROM caso c
+JOIN estado e ON c.id_estado = e.id_estado
+WHERE YEAR(c.fecha_inicio) = YEAR(CURDATE()) 
+GROUP BY e.estado
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_estado_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -196,7 +210,6 @@ ORDER BY total_casos DESC;
 
 END$$
 
-
 CREATE PROCEDURE `sp_casos_por_mes` ()   BEGIN
 
 SELECT 
@@ -216,6 +229,19 @@ SELECT
     COUNT(c.id_caso) AS total_casos
 FROM procesoorganizacional p
 LEFT JOIN caso c ON c.id_proceso = p.id_proceso
+GROUP BY p.id_proceso, p.nombre
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_proceso_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+
+SELECT 
+    p.nombre AS proceso,
+    COUNT(c.id_caso) AS total_casos
+FROM procesoorganizacional p
+LEFT JOIN caso c ON c.id_proceso = p.id_proceso
+WHERE c.documento = p_documento
 GROUP BY p.id_proceso, p.nombre
 ORDER BY total_casos DESC;
 
@@ -295,7 +321,19 @@ CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
     ORDER BY dia;
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `sp_contear_casos_tipo` ()   BEGIN
+
+SELECT 
+    tc.nombre_caso,
+    COUNT(c.id_caso) AS total
+FROM caso c
+INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
+GROUP BY tc.nombre_caso
+ORDER BY tc.nombre_caso;
+
+END$$
+
+CREATE PROCEDURE `sp_contear_casos_tipo_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     tc.nombre_caso,
@@ -778,11 +816,19 @@ CREATE TABLE `caso` (
 --
 
 INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_proceso`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
-(81, 'Solicitud de dotación pendiente 2026', '1020304050', 12, '2026-02-12 14:58:00', NULL, 2, 2, 'Por medio de la presente solicito la entrega de la dotación correspondiente al periodo 2026, la cual no me ha sido suministrada a la fecha. Cumplo con los requisitos establecidos para la asignación y no he recibido notificación sobre retrasos o inconvenientes. Agradezco se revise mi caso y se informe el estado del proceso.'),
 (82, 'Reporte de accidente laboral en oficina administrativa', '1756664828', 14, '2026-02-12 14:59:17', NULL, 2, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
-(83, 'Denuncia por presunto acoso laboral', '1456333298', 11, '2026-02-12 15:00:31', NULL, 2, 1, 'Presento denuncia formal por presuntas conductas reiteradas de descalificación y trato irrespetuoso por parte de mi superior inmediato. Los hechos han ocurrido en varias ocasiones frente a compañeros de trabajo, afectando mi desempeño y ambiente laboral. Solicito se adelante la investigación correspondiente garantizando confidencialidad.'),
 (84, 'Derecho de petición – Estado de incentivo institucional', '1656966633', 13, '2026-02-12 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
-(85, 'Solicitud de apoyo por calamidad doméstica', '1020304050', 10, '2026-02-12 15:02:44', NULL, 2, 2, 'Solicito apoyo institucional por calamidad doméstica debido a una situación familiar imprevista ocurrida el 8 de febrero de 2026. Adjunto los documentos que soportan la situación. Agradezco se evalúe la posibilidad de otorgar el beneficio contemplado en el programa de bienestar social.');
+(93, 'Posible trato desigual en asignación de incentivos', '1020304050', 13, '2026-02-23 12:49:15', NULL, 2, 1, 'El funcionario manifiesta inconformidad debido a que considera que los criterios de evaluación no se aplicaron de manera equitativa en su área, afectando la asignación de incentivos.'),
+(94, 'Incumplimiento en entrega de dotación operativa', '1456333298', 12, '2026-02-23 12:50:03', NULL, 2, 1, 'Se informa que el personal del área operativa no ha recibido la dotación correspondiente al periodo vigente, lo que afecta el cumplimiento seguro de sus funciones.'),
+(95, 'Presunto maltrato laboral por parte de superior', '1456333298', 10, '2026-02-23 12:50:29', NULL, 2, 1, 'El colaborador reporta comportamientos reiterados de trato inapropiado y comunicación inadecuada por parte de su jefe inmediato, solicitando revisión del caso.'),
+(99, 'Programación de examen médico ocupacional', '1756664828', 11, '2026-02-23 12:53:33', NULL, 2, 2, 'El colaborador solicita la programación de su examen médico ocupacional periódico para seguimiento de su estado de salud laboral.'),
+(100, 'Capacitación en prevención de riesgos laborales', '1756664828', 14, '2026-02-23 12:53:57', NULL, 2, 2, 'Se solicita capacitación para el equipo de trabajo en temas de prevención de riesgos con el fin de fortalecer prácticas seguras.'),
+(103, 'Estado de solicitud de incentivo institucional', '1020304050', 13, '2026-02-23 14:11:57', NULL, 2, 3, 'El peticionario solicita conocer el estado actual de su solicitud de incentivo y los tiempos estimados de respuesta.'),
+(104, 'Copia de resultados de examen médico ocupacional', '1020304050', 11, '2026-02-23 14:12:24', NULL, 2, 3, 'Se solicita copia de los resultados del examen médico ocupacional realizado recientemente.'),
+(106, 'Solicitud de acceso al plan anual de SST', '1456333298', 14, '2026-02-23 14:15:09', NULL, 2, 3, 'Se solicita acceso o copia del plan anual de seguridad y salud en el trabajo para conocer las actividades programadas.'),
+(107, 'Demora en atención médica ocupacional', '1456333298', 11, '2026-02-23 14:15:31', NULL, 2, 4, 'El accionante manifiesta que la demora en la asignación de cita médica afecta su derecho fundamental a la salud, solicitando atención prioritaria.'),
+(110, 'Riesgo laboral no atendido oportunamente', '1756664828', 14, '2026-02-23 14:17:12', NULL, 2, 4, 'Se solicita protección de derechos fundamentales ante la persistencia de un riesgo laboral que no ha sido intervenido.'),
+(111, 'Negación de apoyo social en situación urgente', '1020304050', 10, '2026-02-23 14:17:51', NULL, 2, 4, 'El accionante solicita intervención inmediata al considerar vulnerados sus derechos por la negación de un apoyo social urgente.');
 
 -- --------------------------------------------------------
 
@@ -960,6 +1006,16 @@ CREATE TABLE `seguimiento` (
   `id_caso` int(11) NOT NULL COMMENT 'Relación entre seguimiento y caso'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `seguimiento`
+--
+
+INSERT INTO `seguimiento` (`id_seguimiento`, `fecha_seguimiento`, `observacion`, `documento`, `id_caso`) VALUES
+(8, '2026-02-23 14:01:18', 'Seguimiento del caso', '1020304050', 81),
+(9, '2026-02-23 14:03:02', 'Seguimiento del caso', '1020304050', 85),
+(10, '2026-02-23 14:03:26', 'Seguimiento del caso', '1020304050', 92),
+(11, '2026-02-23 14:03:53', 'Seguimiento del caso', '1020304050', 93);
+
 -- --------------------------------------------------------
 
 --
@@ -1004,11 +1060,11 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
-('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', 2, '$2y$10$y3oetIixLCkpaVJi06/6Uu8GAobFx0laScAzWdA6LCEIosKnFzKPu', '2026-02-12 14:18:58', '2026-02-12 15:14:10', 1),
-('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', 2, '$2y$10$HqefV0KBECI0kGZF/Ibtq./nElgxTqfrmxrQLAu0Mm1BbsJoUgaay', '2026-02-12 14:22:31', '2026-02-22 01:55:03', 1),
-('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-22 02:08:21', 1),
+('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', 2, '$2y$10$y3oetIixLCkpaVJi06/6Uu8GAobFx0laScAzWdA6LCEIosKnFzKPu', '2026-02-12 14:18:58', '2026-02-23 14:22:07', 1),
+('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', 2, '$2y$10$HqefV0KBECI0kGZF/Ibtq./nElgxTqfrmxrQLAu0Mm1BbsJoUgaay', '2026-02-12 14:22:31', '2026-02-23 14:31:50', 1),
+('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-23 14:19:57', 1),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-02-12 15:01:09', 1),
-('1756664828', 'Isaac', 'Carvajal', 'zackycarvajal@gmail.com', 2, '$2y$10$3vRK9ALJ8K/ffOvJMqDb9.giktCYmj9zHUwUAAvboirCOekDFGot2', '2026-02-12 14:20:29', '2026-02-12 14:58:47', 1);
+('1756664828', 'Isaac', 'Carvajal', 'zackycarvajal@gmail.com', 2, '$2y$10$3vRK9ALJ8K/ffOvJMqDb9.giktCYmj9zHUwUAAvboirCOekDFGot2', '2026-02-12 14:20:29', '2026-02-23 14:33:30', 1);
 
 --
 -- Índices para tablas volcadas
@@ -1120,7 +1176,7 @@ ALTER TABLE `archivo`
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
-  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=92;
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`
@@ -1168,7 +1224,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `seguimiento`
 --
 ALTER TABLE `seguimiento`
-  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=8;
+  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_caso`
