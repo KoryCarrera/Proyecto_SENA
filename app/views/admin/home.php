@@ -118,7 +118,7 @@
               class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
               Cerrar Sesión
             </button>
-            
+
           </div>
         </div>
       </header>
@@ -146,66 +146,95 @@
             <div
               class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
             </div>
-            <h1 class="text-3xl font-bold text-white mb-4">Estadísticas generales anuales</h1>
 
-            <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+            <div class="flex items-center justify-between p-2 mb-6 min-w-full">
+              <h1 class="text-3xl font-bold text-white mb-4">Estadísticas generales anuales</h1>
 
-              <a href="/casosAdmin">
-                <!-- Tarjeta Total -->
-                <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div class="rounded">
+                <select id="selectFiltroGeneral"
+                  class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                  <option selected disabled class="bg-slate-900">Mostrar por...</option>
+                  <option class="bg-slate-900" value="semana">esta semana</option>
+                  <option class="bg-slate-900" value="mes">este mes</option>
+                  <option class="bg-slate-900" value="anual">este año</option>
+                </select>
+              </div>
+            </div>
+
+            <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-2">
+
+              <!-- Tarjeta Total -->
+              <a href="/casosAdmin" class="block">
+                <div
+                  class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all h-full">
                   <i class="bi bi-collection-fill text-indigo-400 text-xl mb-2"></i>
                   <h2 id="total" class="text-2xl font-bold text-white"></h2>
-                  <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Total</p>
+                  <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">Total
+                  </p>
                 </div>
               </a>
 
               <!-- Denuncias -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-megaphone-fill text-red-400 text-xl mb-2"></i>
                 <h2 id="denuncia" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Denuncias</p>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">Denuncias
+                </p>
               </div>
 
               <!-- Solicitudes -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-envelope-paper-fill text-amber-400 text-xl mb-2"></i>
                 <h2 id="solicitud" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Solicitudes</p>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">
+                  Solicitudes</p>
               </div>
 
               <!-- Peticiones -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-file-text-fill text-blue-400 text-xl mb-2"></i>
                 <h2 id="peticion" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Peticiones</p>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">Peticiones
+                </p>
               </div>
 
               <!-- Tutelas -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-shield-lock-fill text-cyan-400 text-xl mb-2"></i>
                 <h2 id="tutela" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Tutelas</p>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">Tutelas
+                </p>
               </div>
 
               <!-- Atendidos -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-check-circle-fill text-emerald-400 text-xl mb-2"></i>
                 <h2 id="atendido" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Atendidos</p>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">Atendidos
+                </p>
               </div>
 
               <!-- Por Atender -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-clock-history text-rose-400 text-xl mb-2"></i>
                 <h2 id="porAtender" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Por Atender</p>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">Por
+                  Atender</p>
               </div>
 
               <!-- No Atendidos -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-x-circle-fill text-red-500 text-xl mb-2"></i>
                 <h2 id="noAtendidos" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">No Atendidos</p>
+                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">No
+                  Atendidos</p>
               </div>
             </section>
 

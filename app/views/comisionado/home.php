@@ -103,12 +103,12 @@
               <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
             </a>
 
-              <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
-              <button type="submit" name="logout" id="logoutButton" value="logout"
-                class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
-                Cerrar Sesión
-              </button>
-              
+            <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+            <button type="submit" name="logout" id="logoutButton" value="logout"
+              class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
+              Cerrar Sesión
+            </button>
+
           </div>
         </div>
       </header>
@@ -138,70 +138,79 @@
             <div
               class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
             </div>
-            <h2 class="text-3xl font-bold text-white mb-4" id="tituloEstadisticas"></h2>
+            <div class="flex items-center justify-between p-2 mb-6 min-w-full">
+              <h2 class="text-3xl font-bold text-white mb-4" id="tituloEstadisticas">Estadísticas</h2>
 
-            <div class="rounded">
-              
-              <select id="selectEstadisticas"
-                class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                <option selected disabled class="bg-slate-900">Mostrar por...</option>
-                <option class="bg-slate-900" value="propios">Propios</option>
-                <option class="bg-slate-900" value="generales">Generales</option>
-              </select>
+              <div class="rounded">
+                <select id="selectEstadisticas"
+                  class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                  <option selected disabled class="bg-slate-900">Mostrar por...</option>
+                  <option class="bg-slate-900" value="propios">Propios</option>
+                  <option class="bg-slate-900" value="generales">Generales</option>
+                </select>
+              </div>
             </div>
 
             <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
               <!-- Tarjeta Total -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-collection-fill text-indigo-400 text-xl mb-2"></i>
                 <h2 id="total" class="text-2xl font-bold text-white"></h2>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Total</p>
               </div>
 
               <!-- Denuncias -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-megaphone-fill text-red-400 text-xl mb-2"></i>
                 <h2 id="denuncia" class="text-2xl font-bold text-white"></h2>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Denuncias</p>
               </div>
 
               <!-- Solicitudes -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-envelope-paper-fill text-amber-400 text-xl mb-2"></i>
                 <h2 id="solicitud" class="text-2xl font-bold text-white"></h2>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Solicitudes</p>
               </div>
 
               <!-- Peticiones -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-file-text-fill text-blue-400 text-xl mb-2"></i>
                 <h2 id="peticion" class="text-2xl font-bold text-white"></h2>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Peticiones</p>
               </div>
 
               <!-- Tutelas -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-shield-lock-fill text-cyan-400 text-xl mb-2"></i>
                 <h2 id="tutela" class="text-2xl font-bold text-white"></h2>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Tutelas</p>
               </div>
 
               <!-- Atendidos -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-check-circle-fill text-emerald-400 text-xl mb-2"></i>
                 <h2 id="atendido" class="text-2xl font-bold text-white"></h2>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Atendidos</p>
               </div>
 
               <!-- Por Atender -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-clock-history text-rose-400 text-xl mb-2"></i>
                 <h2 id="porAtender" class="text-2xl font-bold text-white"></h2>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Por Atender</p>
               </div>
 
               <!-- No Atendidos -->
-              <div class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
+              <div
+                class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-x-circle-fill text-red-500 text-xl mb-2"></i>
                 <h2 id="noAtendidos" class="text-2xl font-bold text-white"></h2>
                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">No Atendidos</p>
@@ -214,13 +223,15 @@
             <div class="flex items-center justify-between w-full mb-4">
               <h3 class="text-3xl font-bold text-white mb-4">Casos por proceso organizacional</h3>
               <div class="relative">
-                <select class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                <select
+                  class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
                   <option selected disabled class="bg-slate-900">Filtrar por...</option>
                   <option class="bg-slate-900" value="semana">esta semana</option>
                   <option class="bg-slate-900" value="mes">este mes</option>
                   <option class="bg-slate-900" value="anual">este año</option>
                 </select>
-                <i class="bi bi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-white pointer-events-none"></i>
+                <i
+                  class="bi bi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-white pointer-events-none"></i>
               </div>
             </div>
             <div class="w-full h-full flex items-center justify-center">
@@ -235,7 +246,8 @@
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
                 <h3 class="text-3xl font-bold text-white mb-4">Estadísticas por tipo</h3>
                 <div class="rounded">
-                  <select class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                  <select
+                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
                     <option selected disabled class="bg-slate-900">Filtrar por...</option>
                     <option class="bg-slate-900" value="semana">esta semana</option>
                     <option class="bg-slate-900" value="mes">este mes</option>
@@ -253,7 +265,8 @@
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
                 <h3 class="text-3xl font-bold text-white mb-4">Estadísticas por estado</h3>
                 <div class="rounded">
-                  <select class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                  <select
+                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
                     <option selected disabled class="bg-slate-900">Filtrar por...</option>
                     <option class="bg-slate-900" value="semana">esta semana</option>
                     <option class="bg-slate-900" value="mes">este mes</option>
@@ -277,7 +290,7 @@
   <script src="/assets/js/dashboard_comi.js"></script>
   <script src="/assets/js/cache.js"></script>
   <script src="/assets/js/logout.js"></script>
-  
+
 </body>
 
 </html>

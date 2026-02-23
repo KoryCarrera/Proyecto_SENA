@@ -2,54 +2,74 @@ const ENDPOINT = '/graficasComi';
 
 Chart.defaults.color = '#ffffff';
 
-// Paleta base
-const CHART_COLORS = [
-    'rgb(56, 189, 248)',   // 0. Sky Blue
-    'rgb(45, 212, 191)',   // 1. Teal/Turquesa
-    'rgb(147, 197, 253)',  // 2. Azul Pastel
-    'rgb(79, 70, 229)',    // 3. Índigo Original
-    'rgb(192, 132, 252)'   // 4. Lavanda suave
-];
+// Paleta base ampliada (Estilo Landing Page / Glassmorphism)
+const CHART_COLORS = {
+    indigo: { bg: 'rgba(99, 102, 241, 0.4)', border: '#6366f1' },
+    purple: { bg: 'rgba(168, 85, 247, 0.4)', border: '#a855f7' },
+    pink: { bg: 'rgba(236, 72, 153, 0.4)', border: '#ec4899' },
+    blue: { bg: 'rgba(56, 189, 248, 0.4)', border: '#38bdf8' },
+    emerald: { bg: 'rgba(16, 185, 129, 0.4)', border: '#10b981' },
+    orange: { bg: 'rgba(249, 115, 22, 0.4)', border: '#f97316' },
+    teal: { bg: 'rgba(20, 184, 166, 0.4)', border: '#14b8a6' },
+    rose: { bg: 'rgba(244, 63, 94, 0.4)', border: '#f43f5e' },
+    amber: { bg: 'rgba(245, 158, 11, 0.4)', border: '#f59e0b' },
+    cyan: { bg: 'rgba(6, 182, 212, 0.4)', border: '#06b6d4' },
+    violet: { bg: 'rgba(139, 92, 246, 0.4)', border: '#8b5cf6' },
+    lime: { bg: 'rgba(132, 204, 22, 0.4)', border: '#84cc16' },
+    
+    // Nuevos colores añadidos
+    red: { bg: 'rgba(239, 68, 68, 0.4)', border: '#ef4444' },
+    fuchsia: { bg: 'rgba(217, 70, 239, 0.4)', border: '#d946ef' },
+    sky: { bg: 'rgba(14, 165, 233, 0.4)', border: '#0ea5e9' },
+    yellow: { bg: 'rgba(234, 179, 8, 0.4)', border: '#eab308' },
+    green: { bg: 'rgba(34, 197, 94, 0.4)', border: '#22c55e' },
+    slate: { bg: 'rgba(100, 116, 139, 0.4)', border: '#64748b' },
+    stone: { bg: 'rgba(120, 113, 108, 0.4)', border: '#78716c' },
+    emerald_dark: { bg: 'rgba(4, 120, 87, 0.4)', border: '#047857' },
+    indigo_light: { bg: 'rgba(129, 140, 248, 0.4)', border: '#818cf8' },
+    rose_light: { bg: 'rgba(251, 113, 133, 0.4)', border: '#fb7185' },
+    cyan_dark: { bg: 'rgba(14, 116, 144, 0.4)', border: '#0e7490' },
+    amber_dark: { bg: 'rgba(180, 83, 9, 0.4)', border: '#b45309' },
+    mint: { bg: 'rgba(52, 211, 153, 0.4)', border: '#34d399' },
+    peach: { bg: 'rgba(251, 146, 60, 0.4)', border: '#fb923c' },
+    lavender: { bg: 'rgba(192, 132, 252, 0.4)', border: '#c084fc' }
+};
 
-// --- AQUÍ DEFINES QUÉ COLOR REPRESENTA QUÉ COSA ---
-// Si el label del backend coincide con estas llaves, usará ese color.
+// Array de colores para las iteraciones automáticas
+const COLORS_ARRAY = Object.values(CHART_COLORS);
+
+// Mapa dinámico para asignar colores únicos y consistentes
+const dynamicColorMap = {};
+let colorIndex = 0;
+
+// Mapa de colores para etiquetas específicas conocidas
 const COLOR_MAP = {
-    // Estados (Pie Chart generalmente)
-    'Por atender': CHART_COLORS[0], // Sky Blue
-    'Atendido': CHART_COLORS[1],    // Teal
-    'No atendido': CHART_COLORS[3], // Índigo
+    // Estados 
+    'Por atender': CHART_COLORS.amber, 
+    'Atendido': CHART_COLORS.emerald,    
+    'No atendido': CHART_COLORS.red, 
 
     // Tipos de Caso (Polar Area)
-    'Denuncia': CHART_COLORS[4],            // Lavanda
-    'Solicitud': CHART_COLORS[2],           // Azul Pastel
-    'Derecho de Petición': CHART_COLORS[0], // Sky Blue
-    'Queja': CHART_COLORS[3],               // Índigo
-    'Reclamo': CHART_COLORS[1],             // Teal
+    'Denuncia': CHART_COLORS.pink,
+    'Solicitud': CHART_COLORS.blue,
+    'Derecho de Petición': CHART_COLORS.indigo,
+    'Queja': CHART_COLORS.purple,
+    'Reclamo': CHART_COLORS.emerald,
+    'Sugerencia': CHART_COLORS.amber,
+    'Felicitación': CHART_COLORS.teal,
 
     // Procesos (Bar Chart)
-    'Ropa de Trabajo': CHART_COLORS[2],
-    'SST': CHART_COLORS[1],
-    'SSEMI': CHART_COLORS[0],
-    'Plan de incentivos': CHART_COLORS[4],
-    'Bienestar Social': CHART_COLORS[3]
+    'Ropa de Trabajo': CHART_COLORS.cyan,
+    'SST': CHART_COLORS.teal,
+    'SSEMI': CHART_COLORS.sky,
+    'Plan de incentivos': CHART_COLORS.violet,
+    'Bienestar Social': CHART_COLORS.indigo
 };
 
 const MONTH_NAMES_ES = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
 ];
-
-/**
- * Función auxiliar para obtener color consistente
- */
-const getColorForLabel = (label) => {
-    // 1. Busca en el mapa fijo
-    if (COLOR_MAP[label]) {
-        return COLOR_MAP[label];
-    }
-    // 2. Si no existe (ej: un proceso nuevo), devuelve un color por defecto (el gris o el primero)
-    return 'rgb(156, 163, 175)'; // Gris genérico para datos no mapeados
-};
 
 /**
  * Función genérica para dibujar gráficos de Chart.js.
@@ -59,22 +79,36 @@ const drawChart = (canvasElement, type, labels, data) => {
         canvasElement.chart.destroy();
     }
 
-    // Lógica para definir colores
     let backgroundColors;
     let borderColors;
+    let pointBgColors;
+    let pointBorderColors;
+
+    // Asignar color único a cada etiqueta mapeada o auto-generada
+    const mappedColors = labels.map((label, index) => {
+        if (COLOR_MAP[label]) return COLOR_MAP[label];
+        
+        // Si no está mapeado explícitamente, asignarle un color de la lista genérica
+        if (!dynamicColorMap[label]) {
+            dynamicColorMap[label] = COLORS_ARRAY[colorIndex % COLORS_ARRAY.length];
+            colorIndex++;
+        }
+        return dynamicColorMap[label];
+    });
 
     if (type === 'line') {
-        backgroundColors = CHART_COLORS[0];
-        borderColors = CHART_COLORS[0];
+        backgroundColors = CHART_COLORS.blue.bg; // Fondo general
+        borderColors = CHART_COLORS.blue.border; // La linea en si
+        // Colores específicos paralos puntos de la gráfica
+        pointBgColors = mappedColors.map(c => c.bg);
+        pointBorderColors = mappedColors.map(c => c.border);
     } else {
-        const baseColors = labels.map(label => getColorForLabel(label));
-        backgroundColors = baseColors.map(color =>
-            type === 'polarArea' ? color.replace('rgb', 'rgba').replace(')', ', 0.7)') : color
-        );
-        borderColors = 'black';
+        // Barras y Polares
+        backgroundColors = mappedColors.map(c => c.bg);
+        borderColors = mappedColors.map(c => c.border);
     }
 
-    // Construcción del dataset
+    // Construcción del dataset genereal
     const dataset = {
         label: (type === 'pie' || type === 'polarArea' ? 'Cantidad' : 'Casos Registrados'),
         data: data,
@@ -83,18 +117,18 @@ const drawChart = (canvasElement, type, labels, data) => {
         borderWidth: 1.5
     };
 
-    // Configuración específica para línea (point style circle)
+    // Configuración específica para línea
     if (type === 'line') {
-        dataset.pointStyle = 'circle';          // Estilo circular explícito
-        dataset.pointRadius = 5;                // Tamaño del punto
-        dataset.pointHoverRadius = 7;           // Tamaño al hacer hover
-        dataset.pointBackgroundColor = '#ffffff';
-        dataset.pointBorderColor = borderColors;
-        dataset.pointBorderWidth = 2;            // Borde del punto
-        dataset.tension = 0.3;                   // Suavizado de la línea
-        dataset.fill = false;
-    } else {
-        dataset.fill = true;                      // Relleno para áreas (polar, etc.)
+        dataset.pointStyle = 'circle';
+        dataset.pointRadius = 5;
+        dataset.pointHoverRadius = 8;
+        dataset.pointBackgroundColor = pointBgColors;
+        dataset.pointBorderColor = pointBorderColors;
+        dataset.pointBorderWidth = 2;
+        dataset.tension = 0.3;     
+        dataset.fill = true;
+    } else if (type === 'bar') {
+        dataset.borderRadius = 6;
     }
 
     const options = {
