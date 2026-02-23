@@ -10,9 +10,9 @@ require_once __DIR__ . "/../models/getData.php";
 
 try {
     // El comisionado ve TODOS los casos, pero con diferentes métricas
-    $casosTipos = casosPorTipo($pdo);          // Todos los casos por tipo (igual que admin)
-    $casosPorEstado = casosPorEstado($pdo);    // Casos por estado (en lugar de por comisionado)
-    $casosPorProceso = casosPorProceso($pdo);  // Casos por proceso (en lugar de por mes)
+    $casosTipos = casosPorTipoComi($pdo, $documento);          // Todos los casos por tipo (igual que admin)
+    $casosPorEstado = casosPorEstadoComi($pdo, $documento);    // Casos por estado (en lugar de por comisionado)
+    $casosPorProceso = casosPorProcesoComi($pdo, $documento);  // Casos por proceso (en lugar de por mes)
     
     $response = [
         'status' => 'ok',
