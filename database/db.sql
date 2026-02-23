@@ -99,7 +99,42 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_estado` ()   BEGIN
+SELECT 
+    CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
+    COUNT(c.id_caso) AS total_casos
+FROM usuario u
+LEFT JOIN caso c ON u.documento = c.documento
+WHERE u.id_rol = 2
+GROUP BY u.documento, u.nombre, u.apellido
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_comi_mes` ()   BEGIN
+	SELECT 
+    CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
+    COUNT(c.id_caso) AS total_casos
+FROM usuario u
+LEFT JOIN caso c ON u.documento = c.documento
+WHERE u.id_rol = 2 AND MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE())
+GROUP BY u.documento, u.nombre, u.apellido
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_comi_semana` ()   BEGIN
+SELECT 
+    CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
+    COUNT(c.id_caso) AS total_casos
+FROM usuario u
+LEFT JOIN caso c ON u.documento = c.documento
+WHERE u.id_rol = 2 AND YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE())
+GROUP BY u.documento, u.nombre, u.apellido
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_estado` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -107,11 +142,71 @@ SELECT
     (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
 FROM caso c
 JOIN estado e ON c.id_estado = e.id_estado
-WHERE YEAR(c.fecha_inicio) = YEAR(CURDATE())
+WHERE YEAR(c.fecha_inicio) = YEAR(CURDATE()) 
+AND c.documento = p_documento
 GROUP BY e.estado
 ORDER BY total_casos DESC;
 
 END$$
+
+CREATE PROCEDURE `sp_casos_por_estado_mes` ()   BEGIN
+
+SELECT 
+    e.estado AS nombre_estado,
+    COUNT(c.id_caso) AS total_casos,
+    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
+FROM caso c
+JOIN estado e ON c.id_estado = e.id_estado
+WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE())
+GROUP BY e.estado
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_estado_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+
+SELECT 
+    e.estado AS nombre_estado,
+    COUNT(c.id_caso) AS total_casos,
+    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
+FROM caso c
+JOIN estado e ON c.id_estado = e.id_estado
+WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE())
+AND c.documento = p_documento
+GROUP BY e.estado
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_estado_semana` ()   BEGIN
+
+SELECT 
+    e.estado AS nombre_estado,
+    COUNT(c.id_caso) AS total_casos,
+    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
+FROM caso c
+JOIN estado e ON c.id_estado = e.id_estado
+WHERE YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) 
+GROUP BY e.estado
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_estado_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+
+SELECT 
+    e.estado AS nombre_estado,
+    COUNT(c.id_caso) AS total_casos,
+    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
+FROM caso c
+JOIN estado e ON c.id_estado = e.id_estado
+WHERE YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) 
+AND c.documento = p_documento
+GROUP BY e.estado
+ORDER BY total_casos DESC;
+
+END$$
+
 
 CREATE PROCEDURE `sp_casos_por_mes` ()   BEGIN
 
@@ -137,16 +232,137 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo` ()   BEGIN
+CREATE PROCEDURE `sp_casos_por_proceso_mes` ()   BEGIN
+
+SELECT 
+    p.nombre AS proceso,
+    COUNT(c.id_caso) AS total_casos
+FROM procesoorganizacional p
+LEFT JOIN caso c ON c.id_proceso = p.id_proceso
+WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE())
+GROUP BY p.id_proceso, p.nombre
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_proceso_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+
+SELECT 
+    p.nombre AS proceso,
+    COUNT(c.id_caso) AS total_casos
+FROM procesoorganizacional p
+LEFT JOIN caso c ON c.id_proceso = p.id_proceso
+WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE()) AND
+c.documento = p_documento
+GROUP BY p.id_proceso, p.nombre
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_proceso_semana` ()   BEGIN
+
+SELECT 
+    p.nombre AS proceso,
+    COUNT(c.id_caso) AS total_casos
+FROM procesoorganizacional p
+LEFT JOIN caso c ON c.id_proceso = p.id_proceso
+WHERE c.documento = p_documento AND YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) 
+GROUP BY p.id_proceso, p.nombre
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_proceso_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+
+SELECT 
+    p.nombre AS proceso,
+    COUNT(c.id_caso) AS total_casos
+FROM procesoorganizacional p
+LEFT JOIN caso c ON c.id_proceso = p.id_proceso
+WHERE c.documento = p_documento AND YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) 
+GROUP BY p.id_proceso, p.nombre
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
+    SELECT 
+    DAYOFWEEK(fecha_inicio) AS dia_semana,
+        COUNT(*) AS casos_dia
+    FROM caso
+    WHERE YEARWEEK(fecha_inicio, 0) = YEARWEEK(CURDATE(), 0)
+    GROUP BY WEEK(fecha_inicio, 0), DAYOFWEEK(fecha_inicio), DAYNAME(fecha_inicio)
+    ORDER BY dia_semana;
+END$$
+
+CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
+    SELECT 
+        DAY(fecha_inicio) AS dia,
+        COUNT(*) AS total_casos
+    FROM caso
+    WHERE MONTH(fecha_inicio) = MONTH(CURDATE())
+      AND YEAR(fecha_inicio) = YEAR(CURDATE())
+    GROUP BY MONTH(fecha_inicio), DAY(fecha_inicio)
+    ORDER BY dia;
+END$$
+
+CREATE PROCEDURE `sp_contear_casos_tipo` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
 FROM caso c
 INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
+WHERE c.documento = p_documento
 GROUP BY tc.nombre_caso
 ORDER BY tc.nombre_caso;
 
+END$$
+
+CREATE PROCEDURE `sp_contear_casos_tipo_mes` ()   BEGIN
+SELECT 
+    tc.nombre_caso,
+    COUNT(c.id_caso) AS total
+FROM caso c
+INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
+WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE())
+GROUP BY tc.nombre_caso
+ORDER BY tc.nombre_caso;
+
+END$$
+
+CREATE PROCEDURE `sp_contear_casos_tipo_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+SELECT 
+    tc.nombre_caso,
+    COUNT(c.id_caso) AS total
+FROM caso c
+INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
+WHERE MONTH(c.fecha_inicio) = MONTH(CURDATE()) AND YEAR(c.fecha_inicio) = YEAR(CURDATE()) AND c.documento = p_documento
+GROUP BY tc.nombre_caso
+ORDER BY tc.nombre_caso;
+
+END$$
+
+CREATE PROCEDURE `sp_contear_casos_tipo_semana` ()   BEGIN
+SELECT 
+    tc.nombre_caso,
+    COUNT(c.id_caso) AS total
+FROM caso c
+INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
+WHERE YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE())
+GROUP BY tc.nombre_caso
+ORDER BY tc.nombre_caso;
+END$$
+
+CREATE PROCEDURE `sp_contear_casos_tipo_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+SELECT 
+    tc.nombre_caso,
+    COUNT(c.id_caso) AS total
+FROM caso c
+INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
+WHERE YEARWEEK(c.fecha_inicio) = YEARWEEK(CURDATE()) AND c.documento = p_documento
+GROUP BY tc.nombre_caso
+ORDER BY tc.nombre_caso;
 END$$
 
 CREATE PROCEDURE `sp_desactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
