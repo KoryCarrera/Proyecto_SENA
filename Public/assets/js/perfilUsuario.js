@@ -13,7 +13,10 @@ const infoImportante = document.getElementById("infoImportante");
 const btnGuardarCambios = document.getElementById("btnActualizar");
 
 //Insertamos el contenido por defecto de la infoImportante para dar claridad al usuario
-infoImportante.textContent = "Tenga en cuenta que cualquier cambio realizado en su perfil será reportado al administrador, incluyendo un registro de su información antigua y la nueva. Además, por tratarse de información sensible, la modificación de su contraseña requerirá la aprobación previa de la administración antes de hacerse efectiva.";
+
+if (infoImportante) {
+    infoImportante.textContent = "Tenga en cuenta que cualquier cambio realizado en su perfil será reportado al administrador, incluyendo un registro de su información antigua y la nueva. Además, por tratarse de información sensible, la modificación de su contraseña requerirá la aprobación previa de la administración antes de hacerse efectiva.";
+}
 
 btnGuardarCambios.addEventListener('click', function (event) {
 

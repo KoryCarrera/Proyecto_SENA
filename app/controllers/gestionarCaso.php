@@ -2,7 +2,6 @@
 header('Content-Type: application/json');
 session_start();
 
-require_once __DIR__ . "/checkSessionComi.php";
 require_once __DIR__ . "/../models/getData.php";
 require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/updateData.php";
@@ -46,7 +45,7 @@ try {
         // 1. Actualizar el estado del caso
         $validarEstado = validarEstado($pdo, $idCaso);
 
-        if($validarEstado == '2'){
+        if($validarEstado == '3'){
             echo json_encode(['status' => 'error', 'mensaje' => 'Solo el administrador puede cambiar el estado de un caso No atendido']);
         exit;
         }

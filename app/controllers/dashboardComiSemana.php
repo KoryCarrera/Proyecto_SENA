@@ -9,6 +9,9 @@ require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/getData.php";
 
 try {
+
+    $documento = $_SESSION['user']['documento'];
+    
     // El comisionado ve TODOS los casos, pero con diferentes métricas
     $casosTiposSemana = casosPorTipoSemanaComi($pdo, $documento);          // Todos los casos por tipo (igual que admin)
     $casosPorEstadoSemana = casosPorEstadoSemanaComi($pdo, $documento);    // Casos por estado (en lugar de por comisionado)
