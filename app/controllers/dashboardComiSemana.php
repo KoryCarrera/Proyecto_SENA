@@ -10,26 +10,26 @@ require_once __DIR__ . "/../models/getData.php";
 
 try {
     // El comisionado ve TODOS los casos, pero con diferentes métricas
-    $casosTipos = casosPorTipo($pdo);          // Todos los casos por tipo (igual que admin)
-    $casosPorEstado = casosPorEstado($pdo);    // Casos por estado (en lugar de por comisionado)
-    $casosPorProceso = casosPorProceso($pdo);  // Casos por proceso (en lugar de por mes)
+    $casosTiposSemana = casosPorTipoSemanaComi($pdo, $documento);          // Todos los casos por tipo (igual que admin)
+    $casosPorEstadoSemana = casosPorEstadoSemanaComi($pdo, $documento);    // Casos por estado (en lugar de por comisionado)
+    $casosPorProcesoSemana = casosPorProcesoSemanaComi($pdo, $documento);  // Casos por proceso (en lugar de por mes)
     
     $response = [
         'status' => 'ok',
-        'labelsPolar' => $casosTipos ? $casosTipos['tipos'] : [],
-        'dataPolar' => $casosTipos ? $casosTipos['casos'] : [],
-        'labelsPie' => $casosPorEstado ? $casosPorEstado['estado'] : [],
-        'dataPie' => $casosPorEstado ? $casosPorEstado['casos'] : [],
-        'labelsBar' => $casosPorProceso ? $casosPorProceso['proceso'] : [],
-        'dataBar' => $casosPorProceso ? $casosPorProceso['casos'] : [],
+        'labelsPolar' => $casosTiposSemana ? $casosTiposSemana['tipos'] : [],
+        'dataPolar' => $casosTiposSemana ? $casosTiposSemana['casos'] : [],
+        'labelsPie' => $casosPorEstadoSemana ? $casosPorEstadoSemana['estado'] : [],
+        'dataPie' => $casosPorEstadoSemana ? $casosPorEstadoSemana['casos'] : [],
+        'labelsBar' => $casosPorProcesoSemana ? $casosPorProcesoSemana['proceso'] : [],
+        'dataBar' => $casosPorProcesoSemana ? $casosPorProcesoSemana['casos'] : [],
         'errors' => []
     ];
     
-    if (!$casosTipos) $response['errors']['polar'] = 'No se pudieron obtener casos por tipo';
-    if (!$casosPorEstado) $response['errors']['pie'] = 'No se pudieron obtener casos por estado';
-    if (!$casosPorProceso) $response['errors']['bar'] = 'No se pudieron obtener casos por proceso';
+    if (!$casosTiposSemana) $response['errors']['polar'] = 'No se pudieron obtener casos por tipo';
+    if (!$casosPorEstadoSemana) $response['errors']['pie'] = 'No se pudieron obtener casos por estado';
+    if (!$casosPorProcesoSemana) $response['errors']['bar'] = 'No se pudieron obtener casos por proceso';
     
-    if (!$casosTipos && !$casosPorEstado && !$casosPorProceso) {
+    if (!$casosTiposSemana && !$casosPorEstadoSemana && !$casosPorProcesoSemana) {
         $response['status'] = 'error';
         $response['mensaje'] = 'No se pudieron obtener ningún dato';
     } else if (count($response['errors']) > 0) {
