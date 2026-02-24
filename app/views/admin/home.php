@@ -240,6 +240,15 @@
 
           </div>
 
+          <div class="rounded">
+            <select id="selectGraficas"
+              class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+              <option selected disabled class="bg-slate-900">Filtrar por...</option>
+              <option class="bg-slate-900" value="semana">esta semana</option>
+              <option class="bg-slate-900" value="mes">este mes</option>
+              <option class="bg-slate-900" value="anual">este año</option>
+            </select>
+          </div>
 
           <!-- Charts Grid -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -249,15 +258,6 @@
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
                 <h3 class="text-sm font-semibold text-white mb-4 w-full text-left uppercase tracking-wider rounted">
                   Estadisticas por mes</h3>
-                <div class="rounded">
-                  <select name="" id=""
-                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                    <option selected disabled class="bg-slate-900">Filtrar por...</option>
-                    <option class="bg-slate-900" value="semana">esta semana</option>
-                    <option class="bg-slate-900" value="mes">este mes</option>
-                    <option class="bg-slate-900" value="anual">este año</option>
-                  </select>
-                </div>
               </div>
               <div class="w-full h-full flex items-center justify-center">
                 <canvas id="barChart"></canvas>

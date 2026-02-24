@@ -73,6 +73,10 @@ const MONTH_NAMES_ES = [
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
 ];
 
+const WEEK_NAME_ES = [
+    'Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5'
+];
+
 /**
  * Función genérica para dibujar gráficos de Chart.js.
  */
