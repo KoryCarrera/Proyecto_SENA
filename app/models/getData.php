@@ -881,7 +881,7 @@ function casosPorProcesoMesComi($pdo, $documento)
 
 function casosPorProcesoSemanaComi($pdo, $documento)
 {
-    $stmt = $pdo->prepare("CALL sp_casos_por_proceso_semana(?)");
+    $stmt = $pdo->prepare("CALL sp_casos_por_proceso_semana_comi(?)");
 
     $stmt->bindParam(1, $documento, PDO::PARAM_STR);
 
