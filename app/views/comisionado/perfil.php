@@ -32,13 +32,16 @@
   <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
     <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
     <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
-    <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+    <div
+      class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay">
+    </div>
   </div>
 
   <div class="flex h-screen overflow-hidden relative z-10">
 
     <!-- Sidebar -->
-    <aside class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
+    <aside
+      class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
       <!-- Logo Area -->
       <div class="h-20 flex items-center justify-center border-b border-white/5">
         <img src="/assets/img/logo_sena.png" alt="SENA" class="w-10 h-10 object-contain group-hover:block">
@@ -58,6 +61,12 @@
           <i class="bi bi-eye-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Casos</span>
         </a>
+
+        <a href="/generarInformeComi" class="nav-link">
+          <i class="bi bi-file-earmark-text-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Generar Informe</span>
+        </a>
+
         <a href="/notificacionesComi" class="nav-link">
           <i class="bi bi-envelope-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Notificaciones</span>
@@ -108,11 +117,15 @@
               <!-- Avatar Section -->
               <div class="flex flex-col items-center text-center space-y-4">
                 <div class="relative group">
-                  <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                  <img src="/assets/img/icon account.png" alt="Profile" class="relative w-32 h-32 rounded-full border-4 border-slate-900 object-cover shadow-2xl">
+                  <div
+                    class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200">
+                  </div>
+                  <img src="/assets/img/icon account.png" alt="Profile"
+                    class="relative w-32 h-32 rounded-full border-4 border-slate-900 object-cover shadow-2xl">
                 </div>
                 <div>
-                  <h3 class="text-lg font-bold text-white"><?php echo $_SESSION['user']['username'] ?? 'Usuario'; ?></h3>
+                  <h3 class="text-lg font-bold text-white"><?php echo $_SESSION['user']['username'] ?? 'Usuario'; ?>
+                  </h3>
                   <p class="text-xs text-indigo-400 font-medium tracking-widest uppercase">Comisionado Sena</p>
                 </div>
               </div>
@@ -123,13 +136,15 @@
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Documento de Identidad</label>
-                      <input type="text" name="documento" class="glass-input w-full p-3 rounded-lg text-white opacity-60"
+                      <input type="text" name="documento"
+                        class="glass-input w-full p-3 rounded-lg text-white opacity-60"
                         value="<?php echo $_SESSION['user']['documento'] ?? ''; ?>" readonly>
                       <span class="text-[10px] text-slate-500 mt-1 block">No editable por seguridad</span>
                     </div>
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Cargo / Rol</label>
-                      <input type="text" class="glass-input w-full p-3 rounded-lg text-white opacity-60" value="Comisionado" readonly>
+                      <input type="text" class="glass-input w-full p-3 rounded-lg text-white opacity-60"
+                        value="Comisionado" readonly>
                       <span class="text-[10px] text-slate-500 mt-1 block">No editable por seguridad</span>
                     </div>
                   </div>
@@ -137,22 +152,26 @@
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Nombre(s)</label>
-                      <input type="text" name="nombre" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Ingresa tu nuevo nombre" id="nuevoNombre">
+                      <input type="text" name="nombre" class="glass-input w-full p-3 rounded-lg text-white"
+                        placeholder="Ingresa tu nuevo nombre" id="nuevoNombre">
                     </div>
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Apellido(s)</label>
-                      <input type="text" name="apellido" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Ingresa tu nuevo apellido" id="nuevoApellido">
+                      <input type="text" name="apellido" class="glass-input w-full p-3 rounded-lg text-white"
+                        placeholder="Ingresa tu nuevo apellido" id="nuevoApellido">
                     </div>
                   </div>
 
                   <div>
                     <label class="block text-sm font-medium text-slate-300 mb-2">Numero de celular</label>
-                    <input type="number" name="numero" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Ejemplo: 3101234567" id="numeroNuevo">
+                    <input type="number" name="numero" class="glass-input w-full p-3 rounded-lg text-white"
+                      placeholder="Ejemplo: 3101234567" id="numeroNuevo">
                   </div>
 
                   <div>
                     <label class="block text-sm font-medium text-slate-300 mb-2">Correo Electrónico</label>
-                    <input type="email" name="email" class="glass-input w-full p-3 rounded-lg text-white" placeholder="ejemplo@sena.edu.co" id="nuevoEmail">
+                    <input type="email" name="email" class="glass-input w-full p-3 rounded-lg text-white"
+                      placeholder="ejemplo@sena.edu.co" id="nuevoEmail">
                   </div>
 
                   <div class="pt-4 border-t border-white/5">
@@ -160,17 +179,21 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">Nueva Contraseña</label>
-                        <input type="password" name="password" class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••" id="contrasenaNueva">
+                        <input type="password" name="password" class="glass-input w-full p-3 rounded-lg text-white"
+                          placeholder="••••••••" id="contrasenaNueva">
                       </div>
                       <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">Confirmar Contraseña</label>
-                        <input type="password" name="confirm_password" class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••" id="confirmarContrasena">
+                        <input type="password" name="confirm_password"
+                          class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••"
+                          id="confirmarContrasena">
                       </div>
                     </div>
                   </div>
 
                   <div class="flex justify-end pt-6">
-                    <button type="button" class="btn-search px-10 py-3 rounded-xl font-bold flex items-center gap-2" id="btnActualizar">
+                    <button type="button" class="btn-search px-10 py-3 rounded-xl font-bold flex items-center gap-2"
+                      id="btnActualizar">
                       <i class="bi bi-save2-fill"></i> Actualizar Perfil
                     </button>
                   </div>

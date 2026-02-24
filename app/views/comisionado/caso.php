@@ -33,13 +33,16 @@
   <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
     <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
     <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
-    <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+    <div
+      class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay">
+    </div>
   </div>
 
   <div class="flex h-screen overflow-hidden relative z-10">
 
     <!-- Sidebar -->
-    <aside class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
+    <aside
+      class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
 
       <!-- Logo Area -->
       <div class="h-20 flex items-center justify-center border-b border-white/5">
@@ -62,6 +65,11 @@
         <a href="/casos" class="nav-link active">
           <i class="bi bi-eye-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Casos</span>
+        </a>
+
+        <a href="/generarInformeComi" class="nav-link">
+          <i class="bi bi-file-earmark-text-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Generar Informe</span>
         </a>
 
         <a href="/notificacionesComi" class="nav-link">
@@ -129,7 +137,8 @@
           </div>
         </div>
         <form class="d-flex" role="search">
-          <input class="glass-input form-control me-2 text-white" type="search" placeholder="Palabras Claves" aria-label="Search">
+          <input class="glass-input form-control me-2 text-white" type="search" placeholder="Palabras Claves"
+            aria-label="Search">
           <button class="btn-search" type="submit">Buscar</button>
         </form>
       </div>

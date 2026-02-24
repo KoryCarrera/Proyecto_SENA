@@ -38,13 +38,16 @@ require_once __DIR__ . "/../../models/insertData.php";
   <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
     <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
     <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
-    <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+    <div
+      class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay">
+    </div>
   </div>
 
   <div class="flex h-screen overflow-hidden relative z-10">
 
     <!-- Sidebar -->
-    <aside class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
+    <aside
+      class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
 
       <!-- Logo Area -->
       <div class="h-20 flex items-center justify-center border-b border-white/5">
@@ -67,6 +70,11 @@ require_once __DIR__ . "/../../models/insertData.php";
         <a href="/casos" class="nav-link">
           <i class="bi bi-eye-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Casos</span>
+        </a>
+
+        <a href="/generarInformeComi" class="nav-link">
+          <i class="bi bi-file-earmark-text-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Generar Informe</span>
         </a>
 
         <a href="/notificacionesComi" class="nav-link">
@@ -121,7 +129,9 @@ require_once __DIR__ . "/../../models/insertData.php";
 
           <!-- Registration Form -->
           <div class="glass-card p-8 relative overflow-hidden">
-            <div class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div
+              class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
+            </div>
 
             <h1 class="text-2xl font-bold text-white mb-2 text-center">Registro de Caso</h1>
             <p class="text-slate-400 text-sm text-center mb-8">Información del Caso</p>
@@ -139,14 +149,8 @@ require_once __DIR__ . "/../../models/insertData.php";
                     <span class="input-group-text custom-icon">
                       <i class="bi bi-fonts"></i>
                     </span>
-                    <input
-                      type="text"
-                      name="nombreCaso"
-                      id="nombreCaso"
-                      class="form-control custom-input"
-                      placeholder="Ej: Queja por ruido en salones"
-                      maxlength="255"
-                      required>
+                    <input type="text" name="nombreCaso" id="nombreCaso" class="form-control custom-input"
+                      placeholder="Ej: Queja por ruido en salones" maxlength="255" required>
                   </div>
                   <small class="text-slate-500 text-xs mt-1 block">
                     <i class="bi bi-info-circle-fill"></i> Máximo 255 caracteres
@@ -162,14 +166,8 @@ require_once __DIR__ . "/../../models/insertData.php";
                     <span class="input-group-text custom-icon">
                       <i class="bi bi-123"></i>
                     </span>
-                    <input
-                      type="number"
-                      name="radicado"
-                      id="radicado"
-                      class="form-control custom-input"
-                      placeholder="Ej: 123456789"
-                      maxlength="255"
-                      required>
+                    <input type="number" name="radicado" id="radicado" class="form-control custom-input"
+                      placeholder="Ej: 123456789" maxlength="255" required>
                   </div>
                 </div>
                 <!-- Proceso Organizacional -->
@@ -191,7 +189,7 @@ require_once __DIR__ . "/../../models/insertData.php";
                 <!-- Tipo de Solicitud -->
                 <div>
                   <label for="tipoCaso" class="form-label text-sm font-semibold text-slate-300 mb-2 block">
-                    <i class="bi bi-list-task me-1"></i> Tipo de Solicitud
+                    <i class="bi bi-list-task me-1"></i> Tipo de Solicitudes
                     <span class="text-red-400">*</span>
                   </label>
                   <div class="input-group custom-input-group">
@@ -211,13 +209,8 @@ require_once __DIR__ . "/../../models/insertData.php";
                     <span class="text-red-400">*</span>
                   </label>
                   <div class="input-group custom-input-group">
-                    <textarea
-                      name="descripcion"
-                      id="descripcion"
-                      class="form-control custom-input"
-                      rows="5"
-                      placeholder="Describa los hechos del caso de manera detallada..."
-                      maxlength="2000"
+                    <textarea name="descripcion" id="descripcion" class="form-control custom-input" rows="5"
+                      placeholder="Describa los hechos del caso de manera detallada..." maxlength="2000"
                       required></textarea>
                   </div>
                   <div class="d-flex justify-content-between align-items-center mt-1">
@@ -240,12 +233,7 @@ require_once __DIR__ . "/../../models/insertData.php";
                     <span class="input-group-text custom-icon">
                       <i class="bi bi-file-earmark-arrow-up"></i>
                     </span>
-                    <input
-                      type="file"
-                      name="archivos[]"
-                      id="archivos"
-                      class="form-control custom-input"
-                      multiple
+                    <input type="file" name="archivos[]" id="archivos" class="form-control custom-input" multiple
                       accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.txt">
                   </div>
                   <small class="text-slate-500 text-xs mt-1 block">
@@ -259,9 +247,7 @@ require_once __DIR__ . "/../../models/insertData.php";
 
                 <!-- Submit Button -->
                 <div class="mt-6">
-                  <button
-                    type="button"
-                    id="btnRegistrarcaso"
+                  <button type="button" id="btnRegistrarcaso"
                     class="btn-siguiente w-full bg-indigo-500 hover:bg-indigo-600 px-8 py-3 rounded-xl">
                     <i class="bi bi-send-fill me-2 "></i> ENVIAR REGISTRO
                   </button>
