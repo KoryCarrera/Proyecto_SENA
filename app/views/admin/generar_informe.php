@@ -148,7 +148,7 @@
                 </select>
               </div>
 
-              <button type="button" class="btn-siguiente w-full flex items-center justify-center gap-2 mt-4" id="informe">
+              <button type="button" class="btn-siguiente w-full flex items-center justify-center gap-2 mt-4 text-white bg-indigo-500 hover:bg-indigo-600 px-8 py-3 rounded-xl " id="informe">
                 <i class="bi bi-download"></i> DESCARGAR
               </button>
 
