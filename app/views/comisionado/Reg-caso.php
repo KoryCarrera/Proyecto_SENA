@@ -189,7 +189,7 @@ require_once __DIR__ . "/../../models/insertData.php";
                 <!-- Tipo de Solicitud -->
                 <div>
                   <label for="tipoCaso" class="form-label text-sm font-semibold text-slate-300 mb-2 block">
-                    <i class="bi bi-list-task me-1"></i> Tipo de Solicitud
+                    <i class="bi bi-list-task me-1"></i> Tipo de Solicitudes
                     <span class="text-red-400">*</span>
                   </label>
                   <div class="input-group custom-input-group">
