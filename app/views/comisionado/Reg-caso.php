@@ -262,8 +262,8 @@ require_once __DIR__ . "/../../models/insertData.php";
                   <button
                     type="button"
                     id="btnRegistrarcaso"
-                    class="btn-siguiente w-full">
-                    <i class="bi bi-send-fill me-2"></i> ENVIAR REGISTRO
+                    class="btn-siguiente w-full bg-indigo-500 hover:bg-indigo-600 px-8 py-3 rounded-xl">
+                    <i class="bi bi-send-fill me-2 "></i> ENVIAR REGISTRO
                   </button>
                 </div>
 
