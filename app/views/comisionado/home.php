@@ -218,12 +218,22 @@
             </section>
           </div>
 
+          <div class="rounded">
+            <select id="selectGraficas"
+              class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+              <option selected disabled class="bg-slate-900">Filtrar por...</option>
+              <option class="bg-slate-900" value="semana">esta semana</option>
+              <option class="bg-slate-900" value="mes">este mes</option>
+              <option class="bg-slate-900" value="anual">este año</option>
+            </select>
+          </div>
+
           <!-- Chart 3 (Full Width) -->
           <div class="glass-card p-6 col-span-1 lg:col-span-2 flex flex-col items-center justify-center h-96 mb-8">
             <div class="flex items-center justify-between w-full mb-4">
               <h3 class="text-3xl font-bold text-white mb-4">Casos por proceso organizacional</h3>
               <div class="relative">
-                <select
+                <select id="selectEstadisticasLineal"
                   class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
                   <option selected disabled class="bg-slate-900">Filtrar por...</option>
                   <option class="bg-slate-900" value="semana">esta semana</option>
@@ -246,7 +256,7 @@
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
                 <h3 class="text-3xl font-bold text-white mb-4">Estadísticas por tipo</h3>
                 <div class="rounded">
-                  <select
+                  <select id="selectEstadisticasPolar"
                     class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
                     <option selected disabled class="bg-slate-900">Filtrar por...</option>
                     <option class="bg-slate-900" value="semana">esta semana</option>
@@ -264,15 +274,6 @@
             <div class="glass-card p-6 flex flex-col items-center justify-center h-96">
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
                 <h3 class="text-3xl font-bold text-white mb-4">Estadísticas por estado</h3>
-                <div class="rounded">
-                  <select
-                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                    <option selected disabled class="bg-slate-900">Filtrar por...</option>
-                    <option class="bg-slate-900" value="semana">esta semana</option>
-                    <option class="bg-slate-900" value="mes">este mes</option>
-                    <option class="bg-slate-900" value="anual">este año</option>
-                  </select>
-                </div>
               </div>
               <div class="w-full h-full flex items-center justify-center">
                 <canvas id="pieChart"></canvas>
