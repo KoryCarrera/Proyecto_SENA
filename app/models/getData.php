@@ -262,7 +262,6 @@ function casosPorTipoSemanaComi($pdo, $documento)
     }
 }
 
-
 function casosPorTipoMes($pdo)
 {
     $stmt = $pdo->prepare("CALL sp_contear_casos_tipo_mes");

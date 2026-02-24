@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 24-02-2026 a las 02:45:32
+-- Tiempo de generación: 24-02-2026 a las 16:22:05
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -439,7 +439,7 @@ CREATE PROCEDURE `sp_listar_casos` ()   BEGIN
 		JOIN estado e ON c.id_estado = e.id_estado
 		JOIN tipo_caso t ON c.id_tipo_caso = t.id_tipo_caso
 		JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
-		ORDER BY c.fecha_inicio DESC LIMIT 20;
+		ORDER BY c.fecha_inicio DESC;
 	END$$
 
 CREATE PROCEDURE `sp_listar_caso_por_comisionado` (IN `p_documento` VARCHAR(50))   BEGIN
@@ -458,7 +458,7 @@ CREATE PROCEDURE `sp_listar_caso_por_comisionado` (IN `p_documento` VARCHAR(50))
 		JOIN tipo_caso t ON c.id_tipo_caso = t.id_tipo_caso
 		JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
         WHERE u.documento = p_documento
-		ORDER BY c.fecha_inicio DESC LIMIT 30;
+		ORDER BY c.fecha_inicio DESC;
     END$$
 
 CREATE PROCEDURE `sp_listar_estados_caso` ()   BEGIN
@@ -837,50 +837,67 @@ CREATE TABLE `caso` (
 --
 
 INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_proceso`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
-(82, 'Reporte de accidente laboral en oficina administrativa', '1756664828', 14, '2026-02-12 14:59:17', NULL, 1, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
-(84, 'Derecho de petición – Estado de incentivo institucional', '1656966633', 13, '2026-02-12 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
+(82, 'Reporte de accidente laboral en oficina administrativa', '1756664828', 14, '2026-01-22 14:59:17', NULL, 1, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
+(84, 'Derecho de petición – Estado de incentivo institucional', '1656966633', 13, '2026-01-01 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
 (93, 'Posible trato desigual en asignación de incentivos', '1020304050', 13, '2026-02-23 12:49:15', NULL, 1, 1, 'El funcionario manifiesta inconformidad debido a que considera que los criterios de evaluación no se aplicaron de manera equitativa en su área, afectando la asignación de incentivos.'),
 (94, 'Incumplimiento en entrega de dotación operativa', '1456333298', 12, '2026-02-23 12:50:03', NULL, 2, 1, 'Se informa que el personal del área operativa no ha recibido la dotación correspondiente al periodo vigente, lo que afecta el cumplimiento seguro de sus funciones.'),
-(95, 'Presunto maltrato laboral por parte de superior', '1456333298', 10, '2026-02-23 12:50:29', NULL, 2, 1, 'El colaborador reporta comportamientos reiterados de trato inapropiado y comunicación inadecuada por parte de su jefe inmediato, solicitando revisión del caso.'),
-(99, 'Programación de examen médico ocupacional', '1756664828', 11, '2026-02-23 12:53:33', NULL, 2, 2, 'El colaborador solicita la programación de su examen médico ocupacional periódico para seguimiento de su estado de salud laboral.'),
+(95, 'Presunto maltrato laboral por parte de superior', '1456333298', 10, '2026-02-23 12:50:29', NULL, 1, 1, 'El colaborador reporta comportamientos reiterados de trato inapropiado y comunicación inadecuada por parte de su jefe inmediato, solicitando revisión del caso.'),
+(99, 'Programación de examen médico ocupacional', '1756664828', 11, '2026-02-19 12:53:33', NULL, 2, 2, 'El colaborador solicita la programación de su examen médico ocupacional periódico para seguimiento de su estado de salud laboral.'),
 (100, 'Capacitación en prevención de riesgos laborales', '1756664828', 14, '2026-02-23 12:53:57', NULL, 2, 2, 'Se solicita capacitación para el equipo de trabajo en temas de prevención de riesgos con el fin de fortalecer prácticas seguras.'),
 (103, 'Estado de solicitud de incentivo institucional', '1020304050', 13, '2026-02-23 14:11:57', NULL, 2, 3, 'El peticionario solicita conocer el estado actual de su solicitud de incentivo y los tiempos estimados de respuesta.'),
 (104, 'Copia de resultados de examen médico ocupacional', '1020304050', 11, '2026-02-23 14:12:24', NULL, 2, 3, 'Se solicita copia de los resultados del examen médico ocupacional realizado recientemente.'),
 (106, 'Solicitud de acceso al plan anual de SST', '1456333298', 14, '2026-02-23 14:15:09', NULL, 2, 3, 'Se solicita acceso o copia del plan anual de seguridad y salud en el trabajo para conocer las actividades programadas.'),
-(107, 'Demora en atención médica ocupacional', '1456333298', 11, '2026-02-23 14:15:31', NULL, 1, 4, 'El accionante manifiesta que la demora en la asignación de cita médica afecta su derecho fundamental a la salud, solicitando atención prioritaria.'),
-(110, 'Riesgo laboral no atendido oportunamente', '1756664828', 14, '2026-02-23 14:17:12', NULL, 2, 4, 'Se solicita protección de derechos fundamentales ante la persistencia de un riesgo laboral que no ha sido intervenido.'),
-(111, 'Negación de apoyo social en situación urgente', '1020304050', 10, '2026-02-23 14:17:51', NULL, 1, 4, 'El accionante solicita intervención inmediata al considerar vulnerados sus derechos por la negación de un apoyo social urgente.'),
-(113, 'Example trigger', '1456333298', 12, '2026-02-23 23:29:24', NULL, 2, 4, '123'),
-(114, 'trigger 2', '1456333298', 12, '2026-02-24 00:07:06', NULL, 2, 1, '123456'),
-(115, 'trigger 3', '1456333298', 12, '2026-02-24 00:20:06', NULL, 2, 3, 'hola mundito'),
-(116, 'hola pepito', '1456333298', 13, '2026-02-24 00:38:59', NULL, 1, 2, '123456');
+(107, 'Demora en atención médica ocupacional', '1456333298', 11, '2026-02-23 14:15:31', NULL, 2, 4, 'El accionante manifiesta que la demora en la asignación de cita médica afecta su derecho fundamental a la salud, solicitando atención prioritaria.'),
+(110, 'Riesgo laboral no atendido oportunamente', '1756664828', 14, '2026-02-21 14:17:12', NULL, 2, 4, 'Se solicita protección de derechos fundamentales ante la persistencia de un riesgo laboral que no ha sido intervenido.'),
+(111, 'Negación de apoyo social en situación urgente', '1020304050', 10, '2026-02-17 14:17:51', NULL, 1, 4, 'El accionante solicita intervención inmediata al considerar vulnerados sus derechos por la negación de un apoyo social urgente.');
 
 --
 -- Disparadores `caso`
 --
 DELIMITER $$
-CREATE TRIGGER `tr_notificar_cambio_estado_caso` AFTER UPDATE ON `caso` FOR EACH ROW INSERT INTO notificacion (documento, mensaje, fecha)
+CREATE TRIGGER `tr_notificar_cambio_estado_caso` AFTER UPDATE ON `caso` FOR EACH ROW BEGIN
+INSERT INTO noti_comisionado(documento, mensaje, fecha)
 SELECT 
     NEW.documento, 
     CONCAT(
-        'El caso ', NEW.nombre, 
-        ' con el ID: ', NEW.id_caso, 
-        ' perteneciente al proceso ', p.nombre, 
-        ', pasó del estado: ', e_old.estado,
-        ' al estado: ', e_new.estado,        
-        ' por el usuario encargado ', u.nombre, ' ', u.apellido
+        'El caso "', NEW.nombre, 
+        '" con el ID: ', NEW.id_caso, 
+        ' perteneciente al proceso "', p.nombre, 
+        '", pasó del estado: "', e_old.estado,
+        '" al estado: "', e_new.estado,        
+        '" por el usuario encargado ', u.nombre, ' ', u.apellido
     ), 
     NOW()
 FROM usuario u
 INNER JOIN procesoorganizacional p ON p.id_proceso = NEW.id_proceso
 INNER JOIN estado e_new ON e_new.id_estado = NEW.id_estado
 INNER JOIN estado e_old ON e_old.id_estado = OLD.id_estado
-WHERE u.documento = NEW.documento
+WHERE u.documento = NEW.documento;
+
+
+INSERT INTO noti_administrador(documento, mensaje, fecha)
+SELECT 
+    u_admin.documento, 
+    CONCAT(
+        'AVISO: El caso "', NEW.nombre, 
+        '" CON LA ID: ', NEW.id_caso,
+        ' cambió deL estado "', e_old.estado, '" a "', e_new.estado,
+        '". Por su Comisionado Responsable: ', u_resp.nombre, ' ', u_resp.apellido
+    ), 
+    NOW()
+FROM usuario u_admin
+INNER JOIN usuario u_resp ON u_resp.documento = NEW.documento
+INNER JOIN procesoorganizacional p ON p.id_proceso = NEW.id_proceso
+INNER JOIN estado e_new ON e_new.id_estado = NEW.id_estado
+INNER JOIN estado e_old ON e_old.id_estado = OLD.id_estado
+WHERE u_admin.id_rol = 1;
+
+END
 $$
 DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `tr_notificar_registro_caso` AFTER INSERT ON `caso` FOR EACH ROW BEGIN
-    INSERT INTO notificacion (documento, mensaje, fecha)
+    INSERT INTO noti_comisionado(documento, mensaje, fecha)
     SELECT 
         NEW.documento, 
         CONCAT('NUEVO CASO: ', NEW.nombre,' ID CASO: ', NEW.id_caso, '. \nSe ha registrado un nuevo caso de ', t.nombre_caso ,' Por Atender perteneciente al Proceso Organizacional ', p.nombre, ' asignado al comisionado ', u.nombre, ' ', u.apellido), 
@@ -998,10 +1015,36 @@ CREATE TABLE `monitoreo` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `notificacion`
+-- Estructura de tabla para la tabla `noti_administrador`
 --
 
-CREATE TABLE `notificacion` (
+CREATE TABLE `noti_administrador` (
+  `id_notificacion` int(11) NOT NULL,
+  `documento` varchar(20) NOT NULL,
+  `mensaje` text NOT NULL,
+  `fecha` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `noti_administrador`
+--
+
+INSERT INTO `noti_administrador` (`id_notificacion`, `documento`, `mensaje`, `fecha`) VALUES
+(1, '1487569254', 'ALERTA ADMIN: El caso Presunto maltrato laboral por parte de superior (ID: 95) cambió de Por atender a Atendido. Responsable: Juan Manuel Correal', '2026-02-24 15:19:08'),
+(2, '1487569254', 'AVISO: El caso \"Demora en atención médica ocupacional\" CON LA ID: 107 cambió deL estado \"Atendido\" a \"Por atender\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-02-24 15:24:32'),
+(3, '1487569254', 'AVISO: El caso \"Reporte de accidente laboral en oficina administrativa\" CON LA ID: 82 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Zack Lopez', '2026-02-24 16:05:50'),
+(4, '1487569254', 'AVISO: El caso \"Derecho de petición – Estado de incentivo institucional\" CON LA ID: 84 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Marleny Gaviria', '2026-02-24 16:05:57'),
+(5, '1487569254', 'AVISO: El caso \"Negación de apoyo social en situación urgente\" CON LA ID: 111 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simón Gonzalez Pelaez', '2026-02-24 16:06:06'),
+(6, '1487569254', 'AVISO: El caso \"Riesgo laboral no atendido oportunamente\" CON LA ID: 110 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Zack Lopez', '2026-02-24 16:06:12'),
+(7, '1487569254', 'AVISO: El caso \"Programación de examen médico ocupacional\" CON LA ID: 99 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Zack Lopez', '2026-02-24 16:08:14');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `noti_comisionado`
+--
+
+CREATE TABLE `noti_comisionado` (
   `id_notificacion` int(11) NOT NULL COMMENT 'PK para relacionar y encontrar',
   `documento` varchar(20) NOT NULL COMMENT 'Llave primaria de la tabla usuarios para relacionar ambas tablas',
   `mensaje` text NOT NULL COMMENT 'contenido de la notifiacion',
@@ -1009,16 +1052,17 @@ CREATE TABLE `notificacion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `notificacion`
+-- Volcado de datos para la tabla `noti_comisionado`
 --
 
-INSERT INTO `notificacion` (`id_notificacion`, `documento`, `mensaje`, `fecha`) VALUES
-(1, '1456333298', 'Se ha registrado un nuevo caso con ID: 113', '2026-02-23 23:29:24'),
-(2, '1456333298', 'El caso 107 pasó a estado: Atendido', '2026-02-24 00:00:49'),
-(3, '1456333298', 'Se ha registrado un nuevo caso Por Atender con ID: 114 al usuario Juan Manuel Correal', '2026-02-24 00:07:06'),
-(4, '1456333298', 'Se ha registrado un nuevo caso de Derecho de Petición Por Atender con ID: 115 al  comisionadoJuan Manuel Correal', '2026-02-24 00:20:06'),
-(5, '1456333298', ' NUEVO CASO CON LA ID: 116 Se ha registrado un nuevo caso  Por Atender de Solicitud perteneciente al Proceso Organizacional Plan de incentivos asignado al  comisionado Juan Manuel Correal', '2026-02-24 00:38:59'),
-(6, '1456333298', 'El caso hola pepito con el ID: 116 perteneciente al proceso Plan de incentivos, pasó del estado: Por atender al estado: Atendido por el usuario encargado Juan Manuel Correal', '2026-02-24 00:53:55');
+INSERT INTO `noti_comisionado` (`id_notificacion`, `documento`, `mensaje`, `fecha`) VALUES
+(9, '1456333298', 'El caso Presunto maltrato laboral por parte de superior con el ID: 95 perteneciente al proceso Bienestar Social, pasó del estado: Por atender al estado: Atendido por el usuario encargado Juan Manuel Correal', '2026-02-24 15:19:08'),
+(10, '1456333298', 'El caso \"Demora en atención médica ocupacional\" con el ID: 107 perteneciente al proceso \"SSEMI\", pasó del estado: \"Atendido\" al estado: \"Por atender\" por el usuario encargado Juan Manuel Correal', '2026-02-24 15:24:32'),
+(11, '1756664828', 'El caso \"Reporte de accidente laboral en oficina administrativa\" con el ID: 82 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Zack Lopez', '2026-02-24 16:05:50'),
+(12, '1656966633', 'El caso \"Derecho de petición – Estado de incentivo institucional\" con el ID: 84 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Marleny Gaviria', '2026-02-24 16:05:57'),
+(13, '1020304050', 'El caso \"Negación de apoyo social en situación urgente\" con el ID: 111 perteneciente al proceso \"Bienestar Social\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simón Gonzalez Pelaez', '2026-02-24 16:06:06'),
+(14, '1756664828', 'El caso \"Riesgo laboral no atendido oportunamente\" con el ID: 110 perteneciente al proceso \"SST\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Zack Lopez', '2026-02-24 16:06:12'),
+(15, '1756664828', 'El caso \"Programación de examen médico ocupacional\" con el ID: 99 perteneciente al proceso \"SSEMI\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Zack Lopez', '2026-02-24 16:08:14');
 
 -- --------------------------------------------------------
 
@@ -1135,11 +1179,33 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
-('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', NULL, 2, '$2y$10$RIuos6mK6KCSzcXYibxYE.2N9rFgTdrOHjUhR8EHM96WGJ8N1rueu', '2026-02-12 14:18:58', '2026-02-23 15:56:13', 1),
-('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$HqefV0KBECI0kGZF/Ibtq./nElgxTqfrmxrQLAu0Mm1BbsJoUgaay', '2026-02-12 14:22:31', '2026-02-24 00:34:15', 1),
+('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', NULL, 2, '$2y$10$RIuos6mK6KCSzcXYibxYE.2N9rFgTdrOHjUhR8EHM96WGJ8N1rueu', '2026-02-12 14:18:58', '2026-02-24 14:15:39', 1),
+('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$HqefV0KBECI0kGZF/Ibtq./nElgxTqfrmxrQLAu0Mm1BbsJoUgaay', '2026-02-12 14:22:31', '2026-02-24 15:18:47', 1),
 ('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', NULL, 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-23 23:19:50', 1),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-02-12 15:01:09', 1),
 ('1756664828', 'Zack', 'Lopez', 'zackycarvajal@gmail.com', '3001234567', 2, '$2y$10$urjYpXJh5Dt2iMs1ECUJcuiaaZuxUNv9HLM4UBN9qjq3LIy2NJWWW', '2026-02-12 14:20:29', '2026-02-23 23:22:33', 1);
+
+--
+-- Disparadores `usuario`
+--
+DELIMITER $$
+CREATE TRIGGER `tr_noti_reg_usuario` AFTER INSERT ON `usuario` FOR EACH ROW BEGIN
+    INSERT INTO noti_administrador (documento, mensaje, fecha)
+    SELECT 
+        u_admin.documento,
+        CONCAT(
+            'Nuevo registro: El usuario ', NEW.nombre, ' ', NEW.apellido, 
+            ' con el documento: ', NEW.documento, ') se ha unido con el rol de "', r.nombre_rol, 
+            '". Fecha de registro: ', NEW.fecha_registro, '.'
+        ),
+        NOW()
+    FROM usuario u_admin
+    INNER JOIN rol r ON r.id_rol = NEW.id_rol
+    INNER JOIN estado_usuario e ON e.id_estado = NEW.id_estado
+    WHERE u_admin.id_rol = 1;
+END
+$$
+DELIMITER ;
 
 --
 -- Índices para tablas volcadas
@@ -1196,9 +1262,16 @@ ALTER TABLE `monitoreo`
   ADD KEY `documento` (`documento`);
 
 --
--- Indices de la tabla `notificacion`
+-- Indices de la tabla `noti_administrador`
 --
-ALTER TABLE `notificacion`
+ALTER TABLE `noti_administrador`
+  ADD PRIMARY KEY (`id_notificacion`),
+  ADD KEY `documento` (`documento`);
+
+--
+-- Indices de la tabla `noti_comisionado`
+--
+ALTER TABLE `noti_comisionado`
   ADD PRIMARY KEY (`id_notificacion`),
   ADD KEY `usuario` (`documento`);
 
@@ -1251,7 +1324,7 @@ ALTER TABLE `archivo`
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
-  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=117;
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=118;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`
@@ -1278,10 +1351,16 @@ ALTER TABLE `monitoreo`
   MODIFY `id_monitoreo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria para reconocimiento y relacion';
 
 --
--- AUTO_INCREMENT de la tabla `notificacion`
+-- AUTO_INCREMENT de la tabla `noti_administrador`
 --
-ALTER TABLE `notificacion`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=7;
+ALTER TABLE `noti_administrador`
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT de la tabla `noti_comisionado`
+--
+ALTER TABLE `noti_comisionado`
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
@@ -1345,9 +1424,15 @@ ALTER TABLE `monitoreo`
   ADD CONSTRAINT `monitoreo_ibfk_1` FOREIGN KEY (`documento`) REFERENCES `usuario` (`documento`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `notificacion`
+-- Filtros para la tabla `noti_administrador`
 --
-ALTER TABLE `notificacion`
+ALTER TABLE `noti_administrador`
+  ADD CONSTRAINT `noti_administrador_ibfk_1` FOREIGN KEY (`documento`) REFERENCES `usuario` (`documento`);
+
+--
+-- Filtros para la tabla `noti_comisionado`
+--
+ALTER TABLE `noti_comisionado`
   ADD CONSTRAINT `usuario` FOREIGN KEY (`documento`) REFERENCES `usuario` (`documento`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --

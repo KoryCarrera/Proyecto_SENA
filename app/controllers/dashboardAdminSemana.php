@@ -19,8 +19,8 @@ try {
         'dataPolar' => $casosTiposSemana ? $casosTiposSemana['casos'] : [],
         'labelsPie' => $casosComisionadoSemana ? $casosComisionadoSemana['comisionado'] : [],
         'dataPie' => $casosComisionadoSemana ? $casosComisionadoSemana['casos'] : [],
-        'labelsBar' => $casosPorSemana ? $casosPorSemana['dia_semana'] : [],
-        'dataBar' => $casosPorSemana ? $casosPorSemana['casos_dia'] : [],
+        'labelsBar' => $casosPorSemana ? $casosPorSemana['dia'] : [],
+        'dataBar' => $casosPorSemana ? $casosPorSemana['casos'] : [],
         'errors' => []
     ];
     
