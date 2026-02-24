@@ -137,7 +137,7 @@ const obtenerBadgeEstado = (estado) => {
         case 'por atender':
             return `<span class="badge bg-primary">${estado}</span>`;
         case 'no atendido':
-            return `<span class="badge bg-warning text-dark">${estado}</span>`;
+            return `<span class="badge bg-danger">${estado}</span>`;
         case 'atendido':
             return `<span class="badge bg-success">${estado}</span>`;
         default:
