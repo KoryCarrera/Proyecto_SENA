@@ -67,6 +67,11 @@
           <span class="text-[10px] mt-1 font-medium">Casos</span>
         </a>
 
+        <a href="/generarInformeComi" class="nav-link">
+          <i class="bi bi-file-earmark-text-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Generar Informe</span>
+        </a>
+
         <a href="/notificacionesComi" class="nav-link">
           <i class="bi bi-envelope-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Notificaciones</span>
