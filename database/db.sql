@@ -3,7 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
+<<<<<<< Updated upstream
 -- Tiempo de generación: 19-02-2026 a las 16:12:44
+=======
+-- Tiempo de generación: 24-02-2026 a las 02:45:32
+>>>>>>> Stashed changes
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -25,6 +29,7 @@ DELIMITER $$
 --
 -- Procedimientos
 --
+<<<<<<< Updated upstream
 CREATE PROCEDURE `sp_actualizar_caso` (IN `p_estado` INT, IN `p_caso` INT)   BEGIN
 	UPDATE caso
     SET
@@ -33,6 +38,9 @@ CREATE PROCEDURE `sp_actualizar_caso` (IN `p_estado` INT, IN `p_caso` INT)   BEG
         END$$
 
 CREATE PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estado` INT)   BEGIN
+=======
+CREATE PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estado` INT, IN `p_documento` VARCHAR(20))   BEGIN
+>>>>>>> Stashed changes
     IF NOT EXISTS (SELECT 1 FROM caso WHERE id_caso = p_id_caso) THEN
 		SIGNAL SQLSTATE '45000'
 			SET MESSAGE_TEXT = 'EL caso no existe';
@@ -106,7 +114,11 @@ ORDER BY total_casos DESC;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_casos_por_comi_mes` ()   BEGIN
+=======
+CREATE PROCEDURE `sp_casos_por_comi_mes` ()   BEGIN
+>>>>>>> Stashed changes
 	SELECT 
     CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
     COUNT(c.id_caso) AS total_casos
@@ -118,7 +130,11 @@ ORDER BY total_casos DESC;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_casos_por_comi_semana` ()   BEGIN
+=======
+CREATE PROCEDURE `sp_casos_por_comi_semana` ()   BEGIN
+>>>>>>> Stashed changes
 SELECT 
     CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
     COUNT(c.id_caso) AS total_casos
@@ -130,7 +146,25 @@ ORDER BY total_casos DESC;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE PROCEDURE `sp_casos_por_estado` (IN `p_documento` VARCHAR(20))   BEGIN
+=======
+CREATE PROCEDURE `sp_casos_por_estado` ()   BEGIN
+
+SELECT 
+    e.estado AS nombre_estado,
+    COUNT(c.id_caso) AS total_casos,
+    (SELECT COUNT(*) FROM caso WHERE YEAR(fecha_inicio) = YEAR(CURDATE())) AS gran_total
+FROM caso c
+JOIN estado e ON c.id_estado = e.id_estado
+WHERE YEAR(c.fecha_inicio) = YEAR(CURDATE()) 
+GROUP BY e.estado
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_estado_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+>>>>>>> Stashed changes
 
 SELECT 
     e.estado AS nombre_estado,
@@ -145,7 +179,11 @@ ORDER BY total_casos DESC;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_casos_por_estado_mes` ()   BEGIN
+=======
+CREATE PROCEDURE `sp_casos_por_estado_mes` ()   BEGIN
+>>>>>>> Stashed changes
 
 SELECT 
     e.estado AS nombre_estado,
@@ -159,7 +197,11 @@ ORDER BY total_casos DESC;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_casos_por_estado_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+=======
+CREATE PROCEDURE `sp_casos_por_estado_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+>>>>>>> Stashed changes
 
 SELECT 
     e.estado AS nombre_estado,
@@ -174,7 +216,11 @@ ORDER BY total_casos DESC;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_casos_por_estado_semana` ()   BEGIN
+=======
+CREATE PROCEDURE `sp_casos_por_estado_semana` ()   BEGIN
+>>>>>>> Stashed changes
 
 SELECT 
     e.estado AS nombre_estado,
@@ -188,7 +234,11 @@ ORDER BY total_casos DESC;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_casos_por_estado_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+=======
+CREATE PROCEDURE `sp_casos_por_estado_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+>>>>>>> Stashed changes
 
 SELECT 
     e.estado AS nombre_estado,
@@ -215,7 +265,23 @@ ORDER BY mes;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE PROCEDURE `sp_casos_por_proceso` (IN `p_documento` VARCHAR(20))   BEGIN
+=======
+CREATE PROCEDURE `sp_casos_por_proceso` ()   BEGIN
+
+SELECT 
+    p.nombre AS proceso,
+    COUNT(c.id_caso) AS total_casos
+FROM procesoorganizacional p
+LEFT JOIN caso c ON c.id_proceso = p.id_proceso
+GROUP BY p.id_proceso, p.nombre
+ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_proceso_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+>>>>>>> Stashed changes
 
 SELECT 
     p.nombre AS proceso,
@@ -228,7 +294,11 @@ ORDER BY total_casos DESC;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_casos_por_proceso_mes` ()   BEGIN
+=======
+CREATE PROCEDURE `sp_casos_por_proceso_mes` ()   BEGIN
+>>>>>>> Stashed changes
 
 SELECT 
     p.nombre AS proceso,
@@ -241,7 +311,11 @@ ORDER BY total_casos DESC;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_casos_por_proceso_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+=======
+CREATE PROCEDURE `sp_casos_por_proceso_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+>>>>>>> Stashed changes
 
 SELECT 
     p.nombre AS proceso,
@@ -255,7 +329,11 @@ ORDER BY total_casos DESC;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_casos_por_proceso_semana` ()   BEGIN
+=======
+CREATE PROCEDURE `sp_casos_por_proceso_semana` ()   BEGIN
+>>>>>>> Stashed changes
 
 SELECT 
     p.nombre AS proceso,
@@ -268,7 +346,11 @@ ORDER BY total_casos DESC;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_casos_por_proceso_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+=======
+CREATE PROCEDURE `sp_casos_por_proceso_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+>>>>>>> Stashed changes
 
 SELECT 
     p.nombre AS proceso,
@@ -281,7 +363,11 @@ ORDER BY total_casos DESC;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
+=======
+CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
+>>>>>>> Stashed changes
     SELECT 
     DAYOFWEEK(fecha_inicio) AS dia_semana,
         COUNT(*) AS casos_dia
@@ -291,7 +377,11 @@ CREATE CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
     ORDER BY dia_semana;
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
+=======
+CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
+>>>>>>> Stashed changes
     SELECT 
         DAY(fecha_inicio) AS dia,
         COUNT(*) AS total_casos
@@ -302,7 +392,37 @@ CREATE CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
     ORDER BY dia;
 END$$
 
+<<<<<<< Updated upstream
 CREATE PROCEDURE `sp_contear_casos_tipo` (IN `p_documento` VARCHAR(20))   BEGIN
+=======
+CREATE PROCEDURE `sp_configurar_usuario` (IN `p_documento` VARCHAR(20), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN
+    UPDATE usuario 
+    SET 
+        nombre = p_nombre,
+        apellido = p_apellido,
+        email = p_email,
+        numero = p_numero,
+        contraseña = CASE
+            WHEN p_contraseña IS NULL OR p_contraseña = '' THEN contraseña 
+            ELSE p_contraseña 
+        END
+    WHERE documento = p_documento;
+END$$
+
+CREATE PROCEDURE `sp_contear_casos_tipo` ()   BEGIN
+
+SELECT 
+    tc.nombre_caso,
+    COUNT(c.id_caso) AS total
+FROM caso c
+INNER JOIN tipo_caso tc ON c.id_tipo_caso = tc.id_tipo_caso
+GROUP BY tc.nombre_caso
+ORDER BY tc.nombre_caso;
+
+END$$
+
+CREATE PROCEDURE `sp_contear_casos_tipo_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+>>>>>>> Stashed changes
 
 SELECT 
     tc.nombre_caso,
@@ -315,7 +435,11 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_contear_casos_tipo_mes` ()   BEGIN
+=======
+CREATE PROCEDURE `sp_contear_casos_tipo_mes` ()   BEGIN
+>>>>>>> Stashed changes
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -327,7 +451,11 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_contear_casos_tipo_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+=======
+CREATE PROCEDURE `sp_contear_casos_tipo_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+>>>>>>> Stashed changes
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -339,7 +467,11 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_contear_casos_tipo_semana` ()   BEGIN
+=======
+CREATE PROCEDURE `sp_contear_casos_tipo_semana` ()   BEGIN
+>>>>>>> Stashed changes
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -350,7 +482,11 @@ GROUP BY tc.nombre_caso
 ORDER BY tc.nombre_caso;
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_contear_casos_tipo_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+=======
+CREATE PROCEDURE `sp_contear_casos_tipo_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+>>>>>>> Stashed changes
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -438,8 +574,12 @@ CREATE PROCEDURE `sp_listar_proceso_organizacional` ()   BEGIN
  	FROM procesoorganizacional p INNER JOIN usuario u ON p.documento_usuario = u.documento ORDER BY p.fecha_creacion DESC;
 END$$
 
+<<<<<<< Updated upstream
 CREATE PROCEDURE `sp_listar_seguimientos_por_caso` (`p_caso` INT)   BEGIN
     
+=======
+CREATE PROCEDURE `sp_listar_seguimientos_por_caso` (IN `p_caso` INT)   BEGIN
+>>>>>>> Stashed changes
     SELECT 
         s.id_seguimiento,
         s.fecha_seguimiento,
@@ -496,7 +636,8 @@ CREATE PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
         e.estado AS estado,
         t.nombre_caso AS tipo_caso,
         p.nombre AS proceso,
-        c.descripcion
+        c.descripcion,
+        u.id_rol
     FROM caso c
     LEFT JOIN usuario u ON c.documento = u.documento
     INNER JOIN estado e ON c.id_estado = e.id_estado
@@ -737,11 +878,14 @@ CREATE PROCEDURE `sp_resumen_productividad_comisionados` ()   BEGIN
     GROUP BY u.documento, u.nombre, u.apellido;
 END$$
 
+<<<<<<< Updated upstream
 CREATE CREATE PROCEDURE `sp_taer_un_caso` (IN `p_id_caso` INT)   BEGIN
 	SELECT * FROM caso
     WHERE id_caso = p_id_caso;
     END$$
 
+=======
+>>>>>>> Stashed changes
 CREATE PROCEDURE `sp_traer_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
 
 SELECT documento, nombre, apellido, email, id_rol, id_estado FROM usuario WHERE documento = TRIM(p_documento COLLATE utf8mb4_general_ci);
@@ -792,7 +936,63 @@ INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_proceso`, `fecha_inici
 (82, 'Reporte de accidente laboral en oficina administrativa', '1756664828', 14, '2026-02-12 14:59:17', NULL, 2, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
 (83, 'Denuncia por presunto acoso laboral', '1456333298', 11, '2026-02-17 15:00:31', NULL, 2, 1, 'Presento denuncia formal por presuntas conductas reiteradas de descalificación y trato irrespetuoso por parte de mi superior inmediato. Los hechos han ocurrido en varias ocasiones frente a compañeros de trabajo, afectando mi desempeño y ambiente laboral. Solicito se adelante la investigación correspondiente garantizando confidencialidad.'),
 (84, 'Derecho de petición – Estado de incentivo institucional', '1656966633', 13, '2026-02-12 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
+<<<<<<< Updated upstream
 (85, 'Solicitud de apoyo por calamidad doméstica', '1020304050', 10, '2026-02-11 15:02:44', NULL, 2, 2, 'Solicito apoyo institucional por calamidad doméstica debido a una situación familiar imprevista ocurrida el 8 de febrero de 2026. Adjunto los documentos que soportan la situación. Agradezco se evalúe la posibilidad de otorgar el beneficio contemplado en el programa de bienestar social.');
+=======
+(93, 'Posible trato desigual en asignación de incentivos', '1020304050', 13, '2026-02-23 12:49:15', NULL, 1, 1, 'El funcionario manifiesta inconformidad debido a que considera que los criterios de evaluación no se aplicaron de manera equitativa en su área, afectando la asignación de incentivos.'),
+(94, 'Incumplimiento en entrega de dotación operativa', '1456333298', 12, '2026-02-23 12:50:03', NULL, 2, 1, 'Se informa que el personal del área operativa no ha recibido la dotación correspondiente al periodo vigente, lo que afecta el cumplimiento seguro de sus funciones.'),
+(95, 'Presunto maltrato laboral por parte de superior', '1456333298', 10, '2026-02-23 12:50:29', NULL, 2, 1, 'El colaborador reporta comportamientos reiterados de trato inapropiado y comunicación inadecuada por parte de su jefe inmediato, solicitando revisión del caso.'),
+(99, 'Programación de examen médico ocupacional', '1756664828', 11, '2026-02-23 12:53:33', NULL, 2, 2, 'El colaborador solicita la programación de su examen médico ocupacional periódico para seguimiento de su estado de salud laboral.'),
+(100, 'Capacitación en prevención de riesgos laborales', '1756664828', 14, '2026-02-23 12:53:57', NULL, 2, 2, 'Se solicita capacitación para el equipo de trabajo en temas de prevención de riesgos con el fin de fortalecer prácticas seguras.'),
+(103, 'Estado de solicitud de incentivo institucional', '1020304050', 13, '2026-02-23 14:11:57', NULL, 2, 3, 'El peticionario solicita conocer el estado actual de su solicitud de incentivo y los tiempos estimados de respuesta.'),
+(104, 'Copia de resultados de examen médico ocupacional', '1020304050', 11, '2026-02-23 14:12:24', NULL, 2, 3, 'Se solicita copia de los resultados del examen médico ocupacional realizado recientemente.'),
+(106, 'Solicitud de acceso al plan anual de SST', '1456333298', 14, '2026-02-23 14:15:09', NULL, 2, 3, 'Se solicita acceso o copia del plan anual de seguridad y salud en el trabajo para conocer las actividades programadas.'),
+(107, 'Demora en atención médica ocupacional', '1456333298', 11, '2026-02-23 14:15:31', NULL, 1, 4, 'El accionante manifiesta que la demora en la asignación de cita médica afecta su derecho fundamental a la salud, solicitando atención prioritaria.'),
+(110, 'Riesgo laboral no atendido oportunamente', '1756664828', 14, '2026-02-23 14:17:12', NULL, 2, 4, 'Se solicita protección de derechos fundamentales ante la persistencia de un riesgo laboral que no ha sido intervenido.'),
+(111, 'Negación de apoyo social en situación urgente', '1020304050', 10, '2026-02-23 14:17:51', NULL, 1, 4, 'El accionante solicita intervención inmediata al considerar vulnerados sus derechos por la negación de un apoyo social urgente.'),
+(113, 'Example trigger', '1456333298', 12, '2026-02-23 23:29:24', NULL, 2, 4, '123'),
+(114, 'trigger 2', '1456333298', 12, '2026-02-24 00:07:06', NULL, 2, 1, '123456'),
+(115, 'trigger 3', '1456333298', 12, '2026-02-24 00:20:06', NULL, 2, 3, 'hola mundito'),
+(116, 'hola pepito', '1456333298', 13, '2026-02-24 00:38:59', NULL, 1, 2, '123456');
+
+--
+-- Disparadores `caso`
+--
+DELIMITER $$
+CREATE TRIGGER `tr_notificar_cambio_estado_caso` AFTER UPDATE ON `caso` FOR EACH ROW INSERT INTO notificacion (documento, mensaje, fecha)
+SELECT 
+    NEW.documento, 
+    CONCAT(
+        'El caso ', NEW.nombre, 
+        ' con el ID: ', NEW.id_caso, 
+        ' perteneciente al proceso ', p.nombre, 
+        ', pasó del estado: ', e_old.estado,
+        ' al estado: ', e_new.estado,        
+        ' por el usuario encargado ', u.nombre, ' ', u.apellido
+    ), 
+    NOW()
+FROM usuario u
+INNER JOIN procesoorganizacional p ON p.id_proceso = NEW.id_proceso
+INNER JOIN estado e_new ON e_new.id_estado = NEW.id_estado
+INNER JOIN estado e_old ON e_old.id_estado = OLD.id_estado
+WHERE u.documento = NEW.documento
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_notificar_registro_caso` AFTER INSERT ON `caso` FOR EACH ROW BEGIN
+    INSERT INTO notificacion (documento, mensaje, fecha)
+    SELECT 
+        NEW.documento, 
+        CONCAT('NUEVO CASO: ', NEW.nombre,' ID CASO: ', NEW.id_caso, '. \nSe ha registrado un nuevo caso de ', t.nombre_caso ,' Por Atender perteneciente al Proceso Organizacional ', p.nombre, ' asignado al comisionado ', u.nombre, ' ', u.apellido), 
+        NOW()
+    FROM usuario u 
+	INNER JOIN tipo_caso t ON t.id_tipo_caso = NEW.id_tipo_caso
+    INNER JOIN procesoorganizacional p ON p.id_proceso = NEW.id_proceso
+    WHERE u.documento = NEW.documento;
+END
+$$
+DELIMITER ;
+>>>>>>> Stashed changes
 
 -- --------------------------------------------------------
 
@@ -906,9 +1106,20 @@ CREATE TABLE `notificacion` (
   `id_notificacion` int(11) NOT NULL COMMENT 'PK para relacionar y encontrar',
   `documento` varchar(20) NOT NULL COMMENT 'Llave primaria de la tabla usuarios para relacionar ambas tablas',
   `mensaje` text NOT NULL COMMENT 'contenido de la notifiacion',
-  `fecha` datetime NOT NULL COMMENT 'fecha de la notificación',
-  `leida` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'si esta leida o no '
+  `fecha` datetime NOT NULL COMMENT 'fecha de la notificación'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `notificacion`
+--
+
+INSERT INTO `notificacion` (`id_notificacion`, `documento`, `mensaje`, `fecha`) VALUES
+(1, '1456333298', 'Se ha registrado un nuevo caso con ID: 113', '2026-02-23 23:29:24'),
+(2, '1456333298', 'El caso 107 pasó a estado: Atendido', '2026-02-24 00:00:49'),
+(3, '1456333298', 'Se ha registrado un nuevo caso Por Atender con ID: 114 al usuario Juan Manuel Correal', '2026-02-24 00:07:06'),
+(4, '1456333298', 'Se ha registrado un nuevo caso de Derecho de Petición Por Atender con ID: 115 al  comisionadoJuan Manuel Correal', '2026-02-24 00:20:06'),
+(5, '1456333298', ' NUEVO CASO CON LA ID: 116 Se ha registrado un nuevo caso  Por Atender de Solicitud perteneciente al Proceso Organizacional Plan de incentivos asignado al  comisionado Juan Manuel Correal', '2026-02-24 00:38:59'),
+(6, '1456333298', 'El caso hola pepito con el ID: 116 perteneciente al proceso Plan de incentivos, pasó del estado: Por atender al estado: Atendido por el usuario encargado Juan Manuel Correal', '2026-02-24 00:53:55');
 
 -- --------------------------------------------------------
 
@@ -1013,12 +1224,21 @@ CREATE TABLE `usuario` (
 -- Volcado de datos para la tabla `usuario`
 --
 
+<<<<<<< Updated upstream
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
 ('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', 2, '$2y$10$y3oetIixLCkpaVJi06/6Uu8GAobFx0laScAzWdA6LCEIosKnFzKPu', '2026-02-12 14:18:58', '2026-02-12 15:14:10', 1),
 ('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', 2, '$2y$10$HqefV0KBECI0kGZF/Ibtq./nElgxTqfrmxrQLAu0Mm1BbsJoUgaay', '2026-02-12 14:22:31', '2026-02-18 18:12:23', 1),
 ('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-18 23:46:50', 1),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-02-12 15:01:09', 1),
 ('1756664828', 'Isaac', 'Carvajal', 'zackycarvajal@gmail.com', 2, '$2y$10$3vRK9ALJ8K/ffOvJMqDb9.giktCYmj9zHUwUAAvboirCOekDFGot2', '2026-02-12 14:20:29', '2026-02-12 14:58:47', 1);
+=======
+INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
+('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', NULL, 2, '$2y$10$RIuos6mK6KCSzcXYibxYE.2N9rFgTdrOHjUhR8EHM96WGJ8N1rueu', '2026-02-12 14:18:58', '2026-02-23 15:56:13', 1),
+('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$HqefV0KBECI0kGZF/Ibtq./nElgxTqfrmxrQLAu0Mm1BbsJoUgaay', '2026-02-12 14:22:31', '2026-02-24 00:34:15', 1),
+('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', NULL, 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-23 23:19:50', 1),
+('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-02-12 15:01:09', 1),
+('1756664828', 'Zack', 'Lopez', 'zackycarvajal@gmail.com', '3001234567', 2, '$2y$10$urjYpXJh5Dt2iMs1ECUJcuiaaZuxUNv9HLM4UBN9qjq3LIy2NJWWW', '2026-02-12 14:20:29', '2026-02-23 23:22:33', 1);
+>>>>>>> Stashed changes
 
 --
 -- Índices para tablas volcadas
@@ -1130,7 +1350,11 @@ ALTER TABLE `archivo`
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
+<<<<<<< Updated upstream
   MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=86;
+=======
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=117;
+>>>>>>> Stashed changes
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`
@@ -1160,7 +1384,7 @@ ALTER TABLE `monitoreo`
 -- AUTO_INCREMENT de la tabla `notificacion`
 --
 ALTER TABLE `notificacion`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar';
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
