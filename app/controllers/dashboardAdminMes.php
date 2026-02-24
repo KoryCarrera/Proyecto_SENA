@@ -20,7 +20,7 @@ try {
         'labelsPie' => $casosComisionadoMes ? $casosComisionadoMes['comisionado'] : [],
         'dataPie' => $casosComisionadoMes ? $casosComisionadoMes['casos'] : [],
         'labelsBar' => $casosPorUnMes ? $casosPorUnMes['dia'] : [],
-        'dataBar' => $casosPorUnMes ? $casosPorUnMes['total_casos'] : [],
+        'dataBar' => $casosPorUnMes ? $casosPorUnMes['casos'] : [],
         'errors' => []
     ];
     
