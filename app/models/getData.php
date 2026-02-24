@@ -165,7 +165,7 @@ function casosPorTipo($pdo)
 
 function casosPorTipoComi($pdo, $documento)
 {
-    $stmt = $pdo->prepare("CALL sp_contear_casos_tipo");
+    $stmt = $pdo->prepare("CALL sp_contear_casos_tipo_comi( ? )");
 
     $stmt->bindParam(1, $documento, PDO::PARAM_STR);
 
@@ -547,7 +547,7 @@ function casosPorEstado($pdo)
 
 function casosPorEstadoComi($pdo, $documento)
 {
-    $stmt = $pdo->prepare("CALL sp_casos_por_estado");
+    $stmt = $pdo->prepare("CALL sp_casos_por_estado_comi(?)");
 
     $stmt->bindParam(1, $documento, PDO::PARAM_STR);
 
