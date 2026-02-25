@@ -28,6 +28,11 @@ if ($match) {
     //Agregamos un manejo de errores interno
     header($_SERVER['SERVER_PROTOCOL'] . '500 Internar Error!');
     echo "Error: el archivo <b>{$match['target']}</b> No existe";
+
+    //manejo de CORS
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization');
   }
 
   } else {
