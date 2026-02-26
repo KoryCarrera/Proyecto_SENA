@@ -112,6 +112,18 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
     });
 
     cuerpoTabla.innerHTML = htmlFilas; //insertamos en el cuerpo de la tabla
+
+    // Inicializamos DataTables DESPUÉS de que los datos estén en el DOM
+    if ($.fn.DataTable.isDataTable('#tablaCaso')) {
+        $('#tablaCaso').DataTable().destroy();
+    }
+    $('#tablaCaso').DataTable({
+        "pageLength": 10,
+        "lengthMenu": [10, 25, 50],
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+        }
+    });
 };
 
 const formatearFecha = (fecha) => {
@@ -373,5 +385,5 @@ const mostrarDetallesCaso = (caso) => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    cargarCasos();
+    cargarCasos(); // Los datos llegan → renderizarTablaCasos → DataTables se inicia allí
 });

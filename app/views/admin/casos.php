@@ -36,6 +36,7 @@
       --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
     }
   </style>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"> <!-- DataTables CSS -->
 
 </head>
 
@@ -45,13 +46,16 @@
   <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
     <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
     <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
-    <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+    <div
+      class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay">
+    </div>
   </div>
 
   <div class="flex h-screen overflow-hidden relative z-10">
 
     <!-- Sidebar -->
-    <aside class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
+    <aside
+      class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
 
       <!-- Logo Area -->
       <div class="h-20 flex items-center justify-center border-b border-white/5">
@@ -136,7 +140,9 @@
       <div class="px-6 py-4 glass-nav z-30 flex flex-col md:flex-row gap-4 items-center justify-between">
         <div class="flex items-center gap-2 w-full md:w-auto">
           <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle bg-slate-800/50 border-slate-700 text-slate-200 hover:bg-slate-700/50" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <button
+              class="btn btn-secondary dropdown-toggle bg-slate-800/50 border-slate-700 text-slate-200 hover:bg-slate-700/50"
+              type="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-funnel"></i> Filtrar por
             </button>
             <ul class="dropdown-menu dropdown-menu-dark bg-slate-800 border-slate-700">
@@ -153,10 +159,14 @@
 
         <form class="flex gap-2 w-full md:w-auto" role="search">
           <div class="relative w-full md:w-64">
-            <input class="glass-search w-full px-4 py-2 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all" type="search" placeholder="Buscar palabras clave..." aria-label="Search">
+            <input
+              class="glass-search w-full px-4 py-2 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+              type="search" placeholder="Buscar palabras clave..." aria-label="Search">
             <i class="bi bi-search absolute right-3 top-2.5 text-slate-400"></i>
           </div>
-          <button class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors" type="submit">Buscar</button>
+          <button
+            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors"
+            type="submit">Buscar</button>
         </form>
       </div>
 
@@ -166,7 +176,7 @@
 
           <div class="glass-card p-0 overflow-hidden">
             <div class="overflow-x-auto">
-              <table class="glass-table w-full text-left text-sm text-slate-300">
+              <table id="tablaCaso" class="glass-table w-full text-left text-sm text-slate-300">
                 <thead class="bg-slate-800/50 text-xs uppercase text-slate-400">
                   <tr>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider"># Id</th>
@@ -199,28 +209,33 @@
           <h5 class="modal-title text-xl font-bold text-white flex items-center gap-2" id="modalCasoLabel">
             <i class="bi bi-file-earmark-text text-indigo-400"></i> Detailles del Caso
           </h5>
-          <button type="button" class="btn-close btn-close-white opacity-50 hover:opacity-100" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close btn-close-white opacity-50 hover:opacity-100" data-bs-dismiss="modal"
+            aria-label="Close"></button>
         </div>
         <div class="modal-body p-6 text-slate-300" id="modalCasoBody">
           <!-- El contenido se carga dinámicamente con JavaScript -->
         </div>
         <div class="modal-footer border-slate-700 p-6 bg-slate-900/20">
-          <button type="button" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm font-medium" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button"
+            class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm font-medium"
+            data-bs-dismiss="modal">Cerrar</button>
         </div>
       </div>
     </div>
   </div>
 
-
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- Bootstrap Bundle JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-    crossorigin="anonymous"></script>
-  <script src="/assets/js/logout.js"></script>
-  <script src="/assets/js/casosAdmin.js"></script>
-  <script src="/assets/js/cache.js"></script>
-
 </body>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Bootstrap Bundle JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script src="/assets/js/logout.js"></script>
+<script src="/assets/js/casosAdmin.js"></script>
+<script src="/assets/js/cache.js"></script>
+
+
+
 
 </html>
