@@ -132,8 +132,8 @@
             <div
               class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
             </div>
-            <h1 class="text-3xl font-bold text-white mb-4">¡Bienvenido al Sistema de Gestión SENA!</h1>
-            <p class="text-slate-300 max-w-3xl leading-relaxed">
+            <h1 class="text-4xl font-bold text-white mb-3">¡Bienvenido al Sistema de Gestión SENA!</h1>
+            <p class="text-base text-slate-300 max-w-3xl leading-relaxed">
               Como administrador, tienes acceso total a las herramientas y funciones de esta plataforma.
               Desde aquí podrás gestionar usuarios, supervisar solicitudes, generar reportes y mantener actualizada la
               información institucional.
@@ -148,11 +148,12 @@
             </div>
 
             <div class="flex items-center justify-between p-2 mb-6 min-w-full">
-              <h1 class="text-3xl font-bold text-white mb-4">Estadísticas generales anuales</h1>
+              <h1 class="text-2xl font-bold text-white mb-4 uppercase tracking-wider">Estadísticas generales anuales
+              </h1>
 
               <div class="rounded">
                 <select id="selectFiltroGeneral"
-                  class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                  class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-sm text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
                   <option selected disabled class="bg-slate-900">Mostrar por...</option>
                   <option class="bg-slate-900" value="semana">esta semana</option>
                   <option class="bg-slate-900" value="mes">este mes</option>
@@ -167,9 +168,9 @@
               <a href="/casosAdmin" class="block">
                 <div
                   class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all h-full">
-                  <i class="bi bi-collection-fill text-indigo-400 text-xl mb-2"></i>
-                  <h2 id="total" class="text-2xl font-bold text-white"></h2>
-                  <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">Total
+                  <i class="bi bi-collection-fill text-indigo-400 text-2xl mb-2"></i>
+                  <h2 id="total" class="text-4xl font-bold text-white"></h2>
+                  <p class="text-xs uppercase tracking-widest text-slate-400 font-semibold text-center mt-2">Total
                   </p>
                 </div>
               </a>
@@ -177,63 +178,63 @@
               <!-- Denuncias -->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
-                <i class="bi bi-megaphone-fill text-red-400 text-xl mb-2"></i>
-                <h2 id="denuncia" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">Denuncias
+                <i class="bi bi-megaphone-fill text-red-400 text-2xl mb-2"></i>
+                <h2 id="denuncia" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-widest text-slate-400 font-semibold text-center mt-2">Denuncias
                 </p>
               </div>
 
               <!-- Solicitudes -->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
-                <i class="bi bi-envelope-paper-fill text-amber-400 text-xl mb-2"></i>
-                <h2 id="solicitud" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">
+                <i class="bi bi-envelope-paper-fill text-amber-400 text-2xl mb-2"></i>
+                <h2 id="solicitud" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-widest text-slate-400 font-semibold text-center mt-2">
                   Solicitudes</p>
               </div>
 
               <!-- Peticiones -->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
-                <i class="bi bi-file-text-fill text-blue-400 text-xl mb-2"></i>
-                <h2 id="peticion" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">Peticiones
+                <i class="bi bi-file-text-fill text-blue-400 text-2xl mb-2"></i>
+                <h2 id="peticion" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-widest text-slate-400 font-semibold text-center mt-2">Peticiones
                 </p>
               </div>
 
               <!-- Tutelas -->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
-                <i class="bi bi-shield-lock-fill text-cyan-400 text-xl mb-2"></i>
-                <h2 id="tutela" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">Tutelas
+                <i class="bi bi-shield-lock-fill text-cyan-400 text-2xl mb-2"></i>
+                <h2 id="tutela" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-widest text-slate-400 font-semibold text-center mt-2">Tutelas
                 </p>
               </div>
 
               <!-- Atendidos -->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
-                <i class="bi bi-check-circle-fill text-emerald-400 text-xl mb-2"></i>
-                <h2 id="atendido" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">Atendidos
+                <i class="bi bi-check-circle-fill text-emerald-400 text-2xl mb-2"></i>
+                <h2 id="atendido" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-widest text-slate-400 font-semibold text-center mt-2">Atendidos
                 </p>
               </div>
 
               <!-- Por Atender -->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
-                <i class="bi bi-clock-history text-rose-400 text-xl mb-2"></i>
-                <h2 id="porAtender" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">Por
+                <i class="bi bi-clock-history text-rose-400 text-2xl mb-2"></i>
+                <h2 id="porAtender" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-widest text-slate-400 font-semibold text-center mt-2">Por
                   Atender</p>
               </div>
 
               <!-- No Atendidos -->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
-                <i class="bi bi-x-circle-fill text-red-500 text-xl mb-2"></i>
-                <h2 id="noAtendidos" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold text-center mt-1">No
+                <i class="bi bi-x-circle-fill text-red-500 text-2xl mb-2"></i>
+                <h2 id="noAtendidos" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-widest text-slate-400 font-semibold text-center mt-2">No
                   Atendidos</p>
               </div>
             </section>
@@ -242,7 +243,7 @@
 
           <div class="rounded">
             <select id="selectGraficas"
-              class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+              class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-sm text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
               <option selected disabled class="bg-slate-900">Filtrar por...</option>
               <option class="bg-slate-900" value="semana">esta semana</option>
               <option class="bg-slate-900" value="mes">este mes</option>
@@ -256,8 +257,8 @@
             <div
               class="glass-card p-6 col-span-1 lg:col-span-2 flex flex-col items-center justify-center min-h-[300px]">
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
-                <h3 class="text-sm font-semibold text-white mb-4 w-full text-left uppercase tracking-wider rounted">
-                  Estadisticas por mes</h3>
+                <h3 class="text-xl font-bold text-white mb-4 w-full text-left uppercase tracking-widest">
+                  Estadísticas por mes</h3>
               </div>
               <div class="w-full h-full flex items-center justify-center">
                 <canvas id="barChart"></canvas>
@@ -266,11 +267,11 @@
             <!-- Chart 1 -->
             <div class="glass-card p-6 flex flex-col items-center justify-center min-h-[300px]">
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
-                <h3 class="text-sm font-semibold text-white mb-4 w-full text-left uppercase tracking-wider rounted">
+                <h3 class="text-xl font-bold text-white mb-4 w-full text-left uppercase tracking-widest">
                   Estadísticas Por tipo</h3>
                 <div class="rounded">
                   <select name="" id=""
-                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-sm text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
                     <option selected disabled class="bg-slate-900">Filtrar por...</option>
                     <option class="bg-slate-900" value="semana">esta semana</option>
                     <option class="bg-slate-900" value="mes">este mes</option>
@@ -287,13 +288,13 @@
             <div class="glass-card p-6 flex flex-col items-center justify-start min-h-[400px]">
 
               <div class="flex items-center justify-between w-full mb-6">
-                <h3 class="text-sm font-semibold text-white uppercase tracking-wider">
+                <h3 class="text-xl font-bold text-white uppercase tracking-widest">
                   Estadísticas por comisionado
                 </h3>
 
                 <div class="relative">
                   <select id="filtroComisionado"
-                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-sm text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
                     <option selected disabled class="bg-slate-900">Filtrar por...</option>
                     <option class="bg-slate-900" value="semana">Esta semana</option>
                     <option class="bg-slate-900" value="mes">Este mes</option>
