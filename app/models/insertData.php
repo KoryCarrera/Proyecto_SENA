@@ -1,6 +1,9 @@
 <?php
 
 //FUNCIÓN: REGISTRAR CASOS
+
+use Complex\Functions;
+
 function registrarCasos($pdo, $documento, $proceso, $tipoCaso, $descripcion, $nombre)
 {
     // PREPARACIÓN DE LA LLAMADA AL PROCEDIMIENTO ALMACENADO
@@ -265,6 +268,19 @@ function registrarProceso($pdo, $descripcion, $nombre, $documentoUsuario)
         return true;
     } catch (PDOException $e) {
         error_log("Error en registrarProceso: " . $e->getMessage());
+        return false;
+    }
+}
+
+function listarNotiAdmin($pdo){
+    $stmt = $pdo->prepare("CALL sp_listar_noti_admin()");
+    try {
+        $stmt->execute();
+        $notificaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return $notificaciones;
+    } catch (PDOException $e) {
+        error_log("Error en listarNotiAdmin: " . $e->getMessage());
         return false;
     }
 }
