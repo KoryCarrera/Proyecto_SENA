@@ -75,3 +75,18 @@ function actualizarEstadoCaso($pdo, $idCaso, $idEstado, $documento)
         return false;
     }
 }
+function cambiarContraseña($pdo, $token, $password_hash)
+{
+    $stmt = $pdo->prepare("CALL sp_cambiar_contrasena_con_token(?, ?)");
+    $stmt->blindParam(1, $token, PDO::PARAM_STR);
+    $stmt->blindParam(2, $password_hash, PDO::PARAM_STR);
+
+    try {
+        $stmt->execute();
+        $stmt->closeCursor();
+        return true;
+    } catch (PDOException $e){
+        error_log("Error al cambiar la contraseña: ". $e->getMessage());
+        return false;
+    }
+}
