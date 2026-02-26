@@ -268,3 +268,21 @@ function registrarProceso($pdo, $descripcion, $nombre, $documentoUsuario)
         return false;
     }
 }
+
+function generarToken($pdo, $documento)
+{
+    $stmt = $pdo->prepare("CALL sp_generar_token_recuperacion(?)");
+
+    $stmt->bindParam(1, $documento, PDO::PARAM_STR);
+
+    try {
+        $stmt->execute();
+        $token = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        return $token;
+    } catch (PDOException $e) {
+        error_log("Error al generar el token: " . $e->getMessage());
+        return false;
+    }
+}
