@@ -55,11 +55,8 @@ const COLOR_MAP = {
     'Denuncia': CHART_COLORS.pink,
     'Solicitud': CHART_COLORS.blue,
     'Derecho de Petición': CHART_COLORS.indigo,
-    'Queja': CHART_COLORS.purple,
-    'Reclamo': CHART_COLORS.emerald,
-    'Sugerencia': CHART_COLORS.amber,
-    'Felicitación': CHART_COLORS.teal,
-
+    'Acción de Tutela': CHART_COLORS.purple,
+    
     // Procesos (Bar Chart)
     'Ropa de Trabajo': CHART_COLORS.cyan,
     'SST': CHART_COLORS.teal,
