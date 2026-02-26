@@ -156,7 +156,14 @@ const drawChart = (canvasElement, type, labels, data) => {
             legend: {
                 display: type !== 'bar' && type !== 'line',
                 position: 'bottom',
-                labels: { color: '#ffffff' }
+                labels: { color: '#ffffff', 
+                    font: {
+                        size: 20,
+                        weight: 'bold'
+                    }
+                }
+
+                
             }
         },
         scales:
