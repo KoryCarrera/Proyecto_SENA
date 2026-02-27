@@ -149,36 +149,8 @@
 
           <!-- Notifications List -->
           <div class="notificaciones glass-card p-6">
-            <ul class="noti space-y-4">
-              <li class="notis">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim dolore dolores autem cupiditate
-                  eaque illum consequuntur fuga tempora aliquid, officiis sint provident? Illum minus porro quod
-                  doloribus voluptatum expedita molestias!</p>
-              </li>
-              <li class="notis">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam doloribus deserunt
-                ducimus quod! Laboriosam ex accusamus harum repellendus. Esse libero nobis sed aliquid dolore non
-                doloremque pariatur nihil vel aspernatur.</li>
-              <li class="notis">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam doloribus deserunt
-                ducimus quod! Laboriosam ex accusamus harum repellendus. Esse libero nobis sed aliquid dolore non
-                doloremque pariatur nihil vel aspernatur.</li>
-              <li class="notis">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam doloribus deserunt
-                ducimus quod! Laboriosam ex accusamus harum repellendus. Esse libero nobis sed aliquid dolore non
-                doloremque pariatur nihil vel aspernatur.</li>
-              <li class="notis">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam doloribus deserunt
-                ducimus quod! Laboriosam ex accusamus harum repellendus. Esse libero nobis sed aliquid dolore non
-                doloremque pariatur nihil vel aspernatur.</li>
-              <li class="notis">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam doloribus deserunt
-                ducimus quod! Laboriosam ex accusamus harum repellendus. Esse libero nobis sed aliquid dolore non
-                doloremque pariatur nihil vel aspernatur.</li>
-              <li class="notis">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam doloribus deserunt
-                ducimus quod! Laboriosam ex accusamus harum repellendus. Esse libero nobis sed aliquid dolore non
-                doloremque pariatur nihil vel aspernatur.</li>
-              <li class="notis">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam doloribus deserunt
-                ducimus quod! Laboriosam ex accusamus harum repellendus. Esse libero nobis sed aliquid dolore non
-                doloremque pariatur nihil vel aspernatur.</li>
-              <li class="notis">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam doloribus deserunt
-                ducimus quod! Laboriosam ex accusamus harum repellendus. Esse libero nobis sed aliquid dolore non
-                doloremque pariatur nihil vel aspernatur.</li>
+            <ul class="noti space-y-4" id="containerNotis">
+            <!--Relleno dinamico con JS-->
             </ul>
           </div>
 
@@ -191,6 +163,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
+  <script src="/assets/js/notificacionesComi.js"></script>
   <script src="/assets/js/cache.js"></script>
   <script src="/assets/js/logout.js"></script>
 

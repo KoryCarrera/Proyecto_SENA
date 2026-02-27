@@ -128,50 +128,8 @@
         <div class="notificaciones">
           <h2 class="text-2xl font-bold text-white mb-6">Últimas Notificaciones</h2>
 
-          <ul class="noti space-y-4">
-            <li class="notis">
-              <div class="flex gap-4">
-                <div class="shrink-0 pt-1">
-                  <i class="bi bi-info-circle-fill text-indigo-400"></i>
-                </div>
-                <div>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim dolore dolores autem cupiditate eaque illum consequuntur fuga tempora aliquid, officiis sint provident? Illum minus porro quod doloribus voluptatum expedita molestias!</p>
-                  <p class="text-xs text-slate-400 mt-2">Hace 2 horas</p>
-                </div>
-              </div>
-            </li>
-            <li class="notis">
-              <div class="flex gap-4">
-                <div class="shrink-0 pt-1">
-                  <i class="bi bi-info-circle-fill text-indigo-400"></i>
-                </div>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam doloribus deserunt ducimus quod! Laboriosam ex accusamus harum repellendus.</p>
-              </div>
-            </li>
-            <li class="notis">
-              <div class="flex gap-4">
-                <div class="shrink-0 pt-1">
-                  <i class="bi bi-info-circle-fill text-indigo-400"></i>
-                </div>
-                <p>Esse libero nobis sed aliquid dolore non doloremque pariatur nihil vel aspernatur.</p>
-              </div>
-            </li>
-            <li class="notis">
-              <div class="flex gap-4">
-                <div class="shrink-0 pt-1">
-                  <i class="bi bi-info-circle-fill text-indigo-400"></i>
-                </div>
-                <p>Esse libero nobis sed aliquid dolore non doloremque pariatur nihil vel aspernatur.</p>
-              </div>
-            </li>
-            <li class="notis">
-              <div class="flex gap-4">
-                <div class="shrink-0 pt-1">
-                  <i class="bi bi-info-circle-fill text-indigo-400"></i>
-                </div>
-                <p>Esse libero nobis sed aliquid dolore non doloremque pariatur nihil vel aspernatur.</p>
-              </div>
-            </li>
+          <ul class="noti space-y-4" id="containerNotis">
+            <!--Relleno dinamico con js-->
           </ul>
         </div>
 
@@ -180,6 +138,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/assets/js/notificacionesAdmin.js"></script>
   <script src="/assets/js/cache.js"></script>
   <script src="/assets/js/logout.js"></script>
 
