@@ -236,7 +236,11 @@
           <!-- Chart 3 (Full Width) -->
           <div class="glass-card p-6 col-span-1 lg:col-span-2 flex flex-col items-center justify-center h-96 mb-8">
             <div class="flex items-center justify-between w-full mb-4">
-              <h3 class="text-3xl font-bold text-white mb-4">Casos por proceso organizacional</h3>
+              <h3 id="tituloLineas"
+                class="text-3xl font-bold text-white mb-4">
+              </h3>
+              <p id="contextoLinea"
+                class="text-slate-300 max-w-3xl leading-relaxed"></p>
               <div class="relative">
                 <select id="selectEstadisticasLineal"
                   class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
@@ -259,7 +263,12 @@
             <!-- Chart 1 (Polar) -->
             <div class="glass-card p-6 flex flex-col items-center justify-center h-96">
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
-                <h3 class="text-3xl font-bold text-white mb-4">Estadísticas por tipo</h3>
+                <h3 id="tituloPolar"
+                  class="text-3xl font-bold text-white mb-4"></h3>
+
+                <p id="contextoPolar"
+                  class="text-slate-300 max-w-3xl leading-relaxed"></p>
+
                 <div class="rounded">
                   <select id="selectEstadisticasPolar"
                     class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
@@ -278,7 +287,12 @@
             <!-- Chart 2 (Pie) -->
             <div class="glass-card p-6 flex flex-col items-center justify-center h-96">
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
-                <h3 class="text-3xl font-bold text-white mb-4">Estadísticas por estado</h3>
+                <h3 id="titulobar"
+                  class="text-3xl font-bold text-white mb-4"></h3>
+
+                <p id="contextoBar"
+                  class="text-slate-300 max-w-3xl leading-relaxed"></p>
+
               </div>
               <div class="w-full h-full flex items-center justify-center">
                 <canvas id="pieChart"></canvas>

@@ -257,8 +257,10 @@
             <div
               class="glass-card p-6 col-span-1 lg:col-span-2 flex flex-col items-center justify-center min-h-[300px]">
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
-                <h3 class="text-xl font-bold text-white mb-4 w-full text-left uppercase tracking-widest">
-                  Estadísticas por mes</h3>
+                <h3 class="text-xl font-bold text-white mb-4 w-full text-left uppercase tracking-widest" id="tituloLineas">
+                </h3>
+                <p class="text-base text-slate-300 max-w-3xl leading-relaxed" id="contextoLinea"></p>
+
               </div>
               <div class="w-full h-full flex items-center justify-center">
                 <canvas id="barChart"></canvas>
@@ -267,8 +269,10 @@
             <!-- Chart 1 -->
             <div class="glass-card p-6 flex flex-col items-center justify-center min-h-[300px]">
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
-                <h3 class="text-xl font-bold text-white mb-4 w-full text-left uppercase tracking-widest">
-                  Estadísticas Por tipo</h3>
+                <h3 class="text-xl font-bold text-white mb-4 w-full text-left uppercase tracking-widest" id="tituloPolar">
+                </h3>
+                <p class="text-base text-slate-300 max-w-3xl leading-relaxed" id="contextoPolar"></p>
+
                 <div class="rounded">
                   <select name="" id=""
                     class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-sm text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
@@ -288,9 +292,9 @@
             <div class="glass-card p-6 flex flex-col items-center justify-start min-h-[400px]">
 
               <div class="flex items-center justify-between w-full mb-6">
-                <h3 class="text-xl font-bold text-white uppercase tracking-widest">
-                  Estadísticas por comisionado
+                <h3 class="text-xl font-bold text-white uppercase tracking-widest" id="titulobar">
                 </h3>
+                <p class="text-base text-slate-300 max-w-3xl leading-relaxed" id="contextoBar"></p>
 
                 <div class="relative">
                   <select id="filtroComisionado"
