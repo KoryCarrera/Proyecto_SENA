@@ -4,6 +4,56 @@ const ENDPOINT_MES = '/graficasComi/Mes';
 
 Chart.defaults.color = '#ffffff';
 
+const tituloLinea = document.getElementById('tituloLineas');
+const tituloPolar = document.getElementById('tituloPolar');
+const tituloBar = document.getElementById('titulobar');
+const contextoLinea = document.getElementById('contextoLinea');
+const contextoPolar = document.getElementById('contextoPolar');
+const contextoBar = document.getElementById('contextoBar');
+
+const fecha = new Date();
+
+let mesActual = fecha.getMonth() + 1;
+
+switch (mesActual) {
+    case 1:
+        mesActual = 'Enero';
+        break;
+    case 2:
+        mesActual = 'Febrero';
+        break;
+    case 3:
+        mesActual = 'Marzo';
+        break;
+    case 4:
+        mesActual = 'Abril';
+        break;
+    case 5:
+        mesActual = 'Mayo';
+        break;
+    case 6:
+        mesActual = 'Junio';
+        break;
+    case 7:
+        mesActual = 'Julio';
+        break;
+    case 8:
+        mesActual = 'Agosto';
+        break;
+    case 9:
+        mesActual = 'Septiembre';
+        break;
+    case 10:
+        mesActual = 'Octubre';
+        break;
+    case 11:
+        mesActual = 'Noviembre';
+        break;
+    case 12:
+        mesActual = 'Diciembre'
+        break;
+}
+
 // Paleta base ampliada (Estilo Landing Page / Glassmorphism)
 const CHART_COLORS = {
     indigo: { bg: 'rgba(99, 102, 241, 0.4)', border: '#6366f1' },
@@ -56,7 +106,7 @@ const COLOR_MAP = {
     'Solicitud': CHART_COLORS.blue,
     'Derecho de Petición': CHART_COLORS.indigo,
     'Acción de Tutela': CHART_COLORS.purple,
-    
+
     // Procesos (Bar Chart)
     'Ropa de Trabajo': CHART_COLORS.cyan,
     'SST': CHART_COLORS.teal,
@@ -283,6 +333,18 @@ const loadAllChartData = async () => {
 
 document.addEventListener('DOMContentLoaded', loadAllChartData);
 
+// Ejemplo para el gráfico de líneas (procesos)
+tituloLinea.innerText = 'Estadística anual de casos por proceso organizacional';
+contextoLinea.innerText = `Muestra la cantidad de casos asignados a cada proceso organizacional durante el año ${fecha.getFullYear()}.`;
+
+// Gráfico polar (tipos)
+tituloPolar.innerText = 'Estadística anual de casos por tipo';
+contextoPolar.innerText = `Distribución de casos por tipo registrados en el año ${fecha.getFullYear()}.`;
+
+// Gráfico de barras (estados)
+tituloBar.innerText = 'Estadística anual de casos por estado';
+contextoBar.innerText = `Casos clasificados por estado (atendido, por atender, no atendido) en el año ${fecha.getFullYear()}.`;
+
 //capturamos el select de seleccion de estadisticas
 
 const selectGraficas = document.getElementById('selectGraficas');
@@ -291,6 +353,16 @@ selectGraficas.addEventListener('change', function () {
     const valorSeleccionado = this.value;
 
     if (valorSeleccionado === 'semana') {
+
+        tituloLinea.innerText = `Estadística de la semana actual en casos por proceso organizacional`;
+        contextoLinea.innerText = `Casos asignados a cada proceso organizacional registrados en la semana actual.`;
+
+        tituloPolar.innerText = `Estadística de la semana en casos por tipo`;
+        contextoPolar.innerText = `Distribución de casos por tipo en el período de la semana actual`;
+
+        tituloBar.innerText = `Estadística de la semana en casos por estado`;
+        contextoBar.innerText = `Casos clasificados por estado (atendido, por atender, no atendido).`;
+
         const renderChartFromResponse = (canvasId, container, apiResponse, chartId, chartType, chartName) => {
 
             const chartIdCapitalized = chartId.charAt(0).toUpperCase() + chartId.slice(1);
@@ -402,6 +474,16 @@ selectGraficas.addEventListener('change', function () {
     };
 
     if (valorSeleccionado === 'mes') {
+
+        tituloLinea.innerText = `Estadística de ${mesActual} de ${fecha.getFullYear()} - Casos por proceso organizacional`;
+        contextoLinea.innerText = `Casos asignados a cada proceso organizacional durante ${mesActual} de ${fecha.getFullYear()}.`;
+
+        tituloPolar.innerText = `Estadística de ${mesActual} de ${fecha.getFullYear()} - Casos por tipo`;
+        contextoPolar.innerText = `Distribución de casos por tipo en ${mesActual} de ${fecha.getFullYear()}.`;
+
+        tituloBar.innerText = `Estadística de ${mesActual} de ${fecha.getFullYear()} - Casos por estado`;
+        contextoBar.innerText = `Casos por estado (atendido, por atender, no atendido) correspondientes a ${mesActual} de ${fecha.getFullYear()}.`;
+
         const renderChartFromResponse = (canvasId, container, apiResponse, chartId, chartType, chartName) => {
 
             const chartIdCapitalized = chartId.charAt(0).toUpperCase() + chartId.slice(1);
@@ -513,6 +595,19 @@ selectGraficas.addEventListener('change', function () {
     };
 
     if (valorSeleccionado === 'anual') {
+
+        // Ejemplo para el gráfico de líneas (procesos)
+        tituloLinea.innerText = 'Estadística anual de casos por proceso organizacional';
+        contextoLinea.innerText = `Muestra la cantidad de casos asignados a cada proceso organizacional durante el año ${fecha.getFullYear()}.`;
+
+        // Gráfico polar (tipos)
+        tituloPolar.innerText = 'Estadística anual de casos por tipo';
+        contextoPolar.innerText = `Distribución de casos por tipo registrados en el año ${fecha.getFullYear()}.`;
+
+        // Gráfico de barras (estados)
+        tituloBar.innerText = 'Estadística anual de casos por estado';
+        contextoBar.innerText = `Casos clasificados por estado (atendido, por atender, no atendido) en el año ${fecha.getFullYear()}.`;
+        
         const renderChartFromResponse = (canvasId, container, apiResponse, chartId, chartType, chartName) => {
 
             const chartIdCapitalized = chartId.charAt(0).toUpperCase() + chartId.slice(1);

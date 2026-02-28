@@ -18,28 +18,40 @@ let mesActual = fecha.getMonth() + 1;
 switch (mesActual) {
     case 1:
         mesActual = 'Enero';
+        break;
     case 2:
         mesActual = 'Febrero';
+        break;
     case 3:
         mesActual = 'Marzo';
+        break;
     case 4:
         mesActual = 'Abril';
+        break;
     case 5:
         mesActual = 'Mayo';
+        break;
     case 6:
         mesActual = 'Junio';
+        break;
     case 7:
         mesActual = 'Julio';
+        break;
     case 8:
         mesActual = 'Agosto';
+        break;
     case 9:
         mesActual = 'Septiembre';
+        break;
     case 10:
         mesActual = 'Octubre';
+        break;
     case 11:
         mesActual = 'Noviembre';
+        break;
     case 12:
         mesActual = 'Diciembre'
+        break;
 }
 
 // Paleta base ampliada (Estilo Landing Page / Glassmorphism)
@@ -329,11 +341,11 @@ const loadAllChartData = async () => {
 
 document.addEventListener('DOMContentLoaded', loadAllChartData);
 
-tituloLinea.innerHTML = `Estadistica anual de casos por proceso organizacional`;
+tituloLinea.innerHTML = `Estadistica anual de casos ingresados`;
 tituloPolar.innerHTML = `Estadistica anual de casos por tipo`;
 tituloBar.innerHTML = `Estadistica anual de casos asignados por comisiando`;
 
-contextoLinea.innerHTML = `Muestra la cantidad de casos asignados a cada proceso organizacional en una gráfica de líneas correspondiente al año ${fecha.getFullYear()}.`;
+contextoLinea.innerHTML = `Muestra la cantidad de casos ingresados en el sistema en una gráfica de líneas correspondiente al año ${fecha.getFullYear()}.`;
 contextoPolar.innerHTML = `Presenta la distribución de casos por tipo en una gráfica polar correspondiente al año ${fecha.getFullYear()}.`;
 contextoBar.innerHTML = `Muestra la cantidad de casos asignados por cada comisionado activo en una gráfica de barras correspondiente al año ${fecha.getFullYear()}.`;
 
@@ -344,11 +356,11 @@ selectGraficas.addEventListener('change', function () {
 
     if (valorSeleccionado === 'semana') {
 
-        tituloLinea.innerHTML = `Estadistica semanal de casos por proceso organizacional`;
+        tituloLinea.innerHTML = `Estadistica semanal de casos ingresados`;
         tituloPolar.innerHTML = `Estadistica semanal de casos por tipo`;
         tituloBar.innerHTML = `Estadistica semanal de casos asignados por comisiando`;
 
-        contextoLinea.innerHTML = `Muestra la cantidad de casos asignados a cada proceso organizacional durante la semana actual del año ${fecha.getFullYear()} en una gráfica de líneas.`;
+        contextoLinea.innerHTML = `Muestra la cantidad de casos ingresados en el sistema durante la semana actual del año ${fecha.getFullYear()} en una gráfica de líneas.`;
         contextoPolar.innerHTML = `Presenta la distribución de casos por tipo durante la semana actual del año ${fecha.getFullYear()} en una gráfica polar.`;
         contextoBar.innerHTML = `Muestra la cantidad de casos asignados por cada comisionado activo durante la semana actual del año ${fecha.getFullYear()} en una gráfica de barras.`;
 
@@ -465,11 +477,11 @@ selectGraficas.addEventListener('change', function () {
     if (valorSeleccionado === 'mes') {
         const renderChartFromResponse = (canvasId, container, apiResponse, chartId, chartType, chartName) => {
 
-            tituloLinea.innerHTML = `Estadistica mensual de casos por proceso organizacional`;
+            tituloLinea.innerHTML = `Estadistica mensual de casos`;
             tituloPolar.innerHTML = `Estadistica mensual de casos por tipo`;
             tituloBar.innerHTML = `Estadistica mensual de casos asignados por comisiando`;
 
-            contextoLinea.innerHTML = `Muestra la cantidad de casos asignados a cada proceso organizacional durante el mes de ${mesActual} de ${fecha.getFullYear()} en una gráfica de líneas.`;
+            contextoLinea.innerHTML = `Muestra la cantidad de casos ingresados en el sistema durante el mes de ${mesActual} de ${fecha.getFullYear()} en una gráfica de líneas.`;
             contextoPolar.innerHTML = `Presenta la distribución de casos por tipo durante el mes de ${mesActual} de ${fecha.getFullYear()} en una gráfica polar.`;
             contextoBar.innerHTML = `Muestra la cantidad de casos asignados por cada comisionado activo durante el mes de ${mesActual} de ${fecha.getFullYear()} en una gráfica de barras.`;
 
@@ -583,11 +595,11 @@ selectGraficas.addEventListener('change', function () {
 
     if (valorSeleccionado === 'anual') {
 
-        tituloLinea.innerHTML = `Estadistica anual de casos por proceso organizacional`;
+        tituloLinea.innerHTML = `Estadistica anual de casos`;
         tituloPolar.innerHTML = `Estadistica anual de casos por tipo`;
         tituloBar.innerHTML = `Estadistica anual de casos asignados por comisiando`;
 
-        contextoLinea.innerHTML = `Muestra la cantidad de casos asignados a cada proceso organizacional en una gráfica de líneas correspondiente al año ${fecha.getFullYear()}.`;
+        contextoLinea.innerHTML = `Muestra la cantidad de casos ingresados en el sistema en una gráfica de líneas correspondiente al año ${fecha.getFullYear()}.`;
         contextoPolar.innerHTML = `Presenta la distribución de casos por tipo en una gráfica polar correspondiente al año ${fecha.getFullYear()}.`;
         contextoBar.innerHTML = `Muestra la cantidad de casos asignados por cada comisionado activo en una gráfica de barras correspondiente al año ${fecha.getFullYear()}.`;
         
