@@ -17,144 +17,9 @@ function registrarCasos($pdo, $documento, $proceso, $tipoCaso, $descripcion, $no
         $casoRegistrado = $stmt->fetch(PDO::FETCH_ASSOC);
         $stmt->closeCursor(); // Limpiar el cursor después de la ejecución
 
-        //Enviar notificacion por cada creación de caso
-        if ($casoRegistrado) {
-
-            try {
-                $resend = Resend::client($_ENV['RESEND_API_KEY']);
-
-                $resend->emails->send([
-                    'from' => 'onboarding@resend.dev',
-                    'to' => $_ENV['MAIL_FROM'],
-                    'subject' => '🔔 Nuevo caso ingresado al sistema',
-                    'html' => '
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
-        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px;">
-            <tr>
-                <td align="center">
-                    <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                        
-                        <!-- Header -->
-                        <tr>
-                            <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px 40px; text-align: center;">
-                                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600;">
-                                    Nuevo Caso Registrado
-                                </h1>
-                            </td>
-                        </tr>
-                        
-                        <!-- Content -->
-                        <tr>
-                            <td style="padding: 40px;">
-                                <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
-                                    Se ha registrado un nuevo caso en el sistema. A continuación, encontrará los detalles:
-                                </p>
-                                
-                                <!-- Details Table -->
-                                <table width="100%" cellpadding="0" cellspacing="0" style="margin: 25px 0;">
-                                    <tr>
-                                        <td style="padding: 12px 15px; background-color: #f8f9fa; border-left: 4px solid #667eea;">
-                                            <strong style="color: #667eea; font-size: 14px;">COMISIONADO</strong><br>
-                                            <span style="color: #333333; font-size: 15px;">' . htmlspecialchars($casoRegistrado['comisionado']) . '</span>
-                                        </td>
-                                    </tr>
-                                    <tr><td style="height: 10px;"></td></tr>
-                                    <tr>
-                                        <td style="padding: 12px 15px; background-color: #f8f9fa; border-left: 4px solid #667eea;">
-                                            <strong style="color: #667eea; font-size: 14px;">DOCUMENTO</strong><br>
-                                            <span style="color: #333333; font-size: 15px;">' . htmlspecialchars($documento) . '</span>
-                                        </td>
-                                    </tr>
-                                    <tr><td style="height: 10px;"></td></tr>
-                                    <tr>
-                                        <td style="padding: 12px 15px; background-color: #f8f9fa; border-left: 4px solid #667eea;">
-                                            <strong style="color: #667eea; font-size: 14px;">FECHA Y HORA</strong><br>
-                                            <span style="color: #333333; font-size: 15px;">' . htmlspecialchars($casoRegistrado['fecha_inicio']) . '</span>
-                                        </td>
-                                    </tr>
-                                    <tr><td style="height: 10px;"></td></tr>
-                                    <tr>
-                                        <td style="padding: 12px 15px; background-color: #f8f9fa; border-left: 4px solid #667eea;">
-                                            <strong style="color: #667eea; font-size: 14px;">FECHA Y HORA DE CIERRE</strong><br>
-                                            <span style="color: #333333; font-size: 15px;">' . htmlspecialchars($casoRegistrado['fecha_cierre'] ?? 'N/A') . '</span>
-                                        </td>
-                                    </tr>
-                                    <tr><td style="height: 10px;"></td></tr>
-                                    <tr>
-                                        <td style="padding: 12px 15px; background-color: #f8f9fa; border-left: 4px solid #667eea;">
-                                            <strong style="color: #667eea; font-size: 14px;">ESTADO</strong><br>
-                                            <span style="color: #333333; font-size: 15px;">' . htmlspecialchars($casoRegistrado['estado']) . '</span>
-                                        </td>
-                                    </tr>
-                                    <tr><td style="height: 10px;"></td></tr>
-                                    <tr>
-                                        <td style="padding: 12px 15px; background-color: #f8f9fa; border-left: 4px solid #667eea;">
-                                            <strong style="color: #667eea; font-size: 14px;">TIPO DE CASO</strong><br>
-                                            <span style="color: #333333; font-size: 15px;">' . htmlspecialchars($casoRegistrado['tipo_caso']) . '</span>
-                                        </td>
-                                    </tr>
-                                    <tr><td style="height: 10px;"></td></tr>
-                                    <tr>
-                                        <td style="padding: 12px 15px; background-color: #f8f9fa; border-left: 4px solid #667eea;">
-                                            <strong style="color: #667eea; font-size: 14px;">PROCESO ASIGNADO</strong><br>
-                                            <span style="color: #333333; font-size: 15px;">' . htmlspecialchars($casoRegistrado['proceso']) . '</span>
-                                        </td>
-                                    </tr>
-                                </table>
-                                
-                                <!-- CTA Button -->
-                                <table width="100%" cellpadding="0" cellspacing="0" style="margin: 30px 0;">
-                                    <tr>
-                                        <td align="center">
-                                            <a href="http://localhost:8000/" style="display: inline-block; padding: 14px 35px; background-color: #667eea; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: 600; font-size: 15px;">
-                                                Ver Detalles en el Sistema
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
-                                
-                                <p style="color: #666666; font-size: 14px; line-height: 1.6; margin: 20px 0 0 0;">
-                                    Para ver la descripción completa y más información, por favor ingrese al sistema.
-                                </p>
-                            </td>
-                        </tr>
-                        
-                        <!-- Footer -->
-                        <tr>
-                            <td style="background-color: #f8f9fa; padding: 20px 40px; text-align: center; border-top: 1px solid #e9ecef;">
-                                <p style="color: #999999; font-size: 12px; margin: 0; line-height: 1.5;">
-                                    Este es un mensaje automático del sistema de gestión de casos.<br>
-                                    Por favor, no responda a este correo.
-                                </p>
-                            </td>
-                        </tr>
-                        
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </body>
-    </html>
-    '
-                ]);
-            } catch (Exception $e) {
-                error_log('Error al enviar notificacion email ' . $e->getMessage());
-            }
-            return [
-                'success' => true,
-                'id_caso' => $casoRegistrado['id_caso'],
-                'data' => $casoRegistrado
-            ];
+        if (!$casoRegistrado) {
+            return ['success' => false];
         }
-
-        return ['success' => false];
-        
     } catch (PDOException $e) {
         error_log("Error al registrar caso: " . $e->getMessage());
         return ['success' => false];
@@ -286,3 +151,97 @@ function generarToken($pdo, $documento)
         return false;
     }
 }
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+function enviarCorreo($asunto, $cuerpoHTML, $cuerpoAlt, $destinatarios, $conCopia, $conCopiaOculta)
+{
+    $mail = new PHPMailer(true);
+
+    try {
+
+        $mail->isSMTP();
+        $mail->Host = getenv('SMTP_HOST');
+        $mail->SMTPAuth = true;
+        $mail->Username = getenv('MAIL_FROM');
+        $mail->Password = getenv('APP_KEY');
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+
+        //Origen del correo
+        $mail->setFrom(getenv('MAIL_FROM'), 'Sistema Gestion');
+
+        //validamos que hay al menos un destinatar
+
+        if (!$destinatarios) {
+            return false;
+        }
+
+        //Validamos si hay mas de un destinatario
+        $totalDest = count($destinatarios);
+
+        //Multiples destinatarios
+        if ($totalDest > 1) {
+
+            foreach ($destinatarios as $dest) {
+
+                $mail->addAddress($dest['emailUser'], $dest['userName']);
+            };
+        } else {
+
+            $mail->addAddress($destinatarios['emailUser'], $destinatarios['userName']);
+        };
+
+        if ($conCopia) {
+
+            $totalCC = count($conCopia);
+
+            if ($totalCC > 1) {
+
+                foreach ($conCopia as $dest) {
+
+                    $mail->addCC($dest['emailUser'], $dest['userName']);
+                };
+            } else {
+
+                $mail->addCC($conCopia['emailUser'], $conCopia['userName']);
+            };
+        };
+
+        if ($conCopiaOculta) {
+
+            $totalBCC = count($conCopiaOculta);
+
+            if ($totalBCC > 1) {
+                foreach ($conCopiaOculta as $dest) {
+
+                    $mail->addBCC($dest['emailUser'], $dest['userName']);
+                };
+            } else {
+                $mail->addBCC($conCopiaOculta['emailUser'], $conCopiaOculta['userName']);
+            }
+        };
+
+        //contenido del mensaje
+        $mail -> isHTML(true);
+        $mail -> Subject = $asunto;
+        $mail -> Body = $cuerpoHTML;
+        $mail -> AltBody = $cuerpoAlt;
+
+        //Capturar errores de envio
+
+        if(!$mail->send()) {
+
+            error_log('Ha ocurrido un error al enviar la notificacion via gmail '. $mail->ErrorInfo);
+            return false;
+        } else {
+            return true;
+        }
+    } catch (Exception $e) {
+
+    error_log('Ha ocurrido un error critico al enviar el correo, errores: 1: '. $mail -> ErrorInfo. '2: '. $e->getMessage());
+
+    return false;
+    }
+};

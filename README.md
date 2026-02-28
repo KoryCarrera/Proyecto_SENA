@@ -81,7 +81,7 @@ Sistema web que proporciona:
 - **[DOMPDF](https://github.com/dompdf/dompdf)** - Generación de reportes PDF
 - **[PhpSpreadsheet](https://phpspreadsheet.readthedocs.io/)** - Generación de reportes Excel
 - **[phpdotenv](https://github.com/vlucas/phpdotenv)** - Lectura de variables de entorno
-- **[Resend](https://resend.com/php)** - Envios de notificaciones a gmail automaticamente
+- **[PHPMailer](https://mailtrap.io/es/blog/phpmailer/)** - Envios de notificaciones a gmail automaticamente
 - **[SweetAlert2](https://sweetalert2.github.io/)** - Alertas y pequeños modales esteticos
 
 ### DevOps
