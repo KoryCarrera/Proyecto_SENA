@@ -10,51 +10,22 @@ const tituloBar = document.getElementById('titulobar');
 const contextoLinea = document.getElementById('contextoLinea');
 const contextoPolar = document.getElementById('contextoPolar');
 const contextoBar = document.getElementById('contextoBar');
+const selectGraficas = document.getElementById('selectGraficas');
+
 
 const fecha = new Date();
+const anioActual = fecha.getFullYear();
+const MONTH_NAMES_ES = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+];
+const mesActual = MONTH_NAMES_ES[fecha.getMonth()];
 
-let mesActual = fecha.getMonth() + 1;
+const WEEK_NAME_ES = [
+    'Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5'
+];
 
-switch (mesActual) {
-    case 1:
-        mesActual = 'Enero';
-        break;
-    case 2:
-        mesActual = 'Febrero';
-        break;
-    case 3:
-        mesActual = 'Marzo';
-        break;
-    case 4:
-        mesActual = 'Abril';
-        break;
-    case 5:
-        mesActual = 'Mayo';
-        break;
-    case 6:
-        mesActual = 'Junio';
-        break;
-    case 7:
-        mesActual = 'Julio';
-        break;
-    case 8:
-        mesActual = 'Agosto';
-        break;
-    case 9:
-        mesActual = 'Septiembre';
-        break;
-    case 10:
-        mesActual = 'Octubre';
-        break;
-    case 11:
-        mesActual = 'Noviembre';
-        break;
-    case 12:
-        mesActual = 'Diciembre'
-        break;
-}
 
-// Paleta base ampliada (Estilo Landing Page / Glassmorphism)
 const CHART_COLORS = {
     indigo: { bg: 'rgba(99, 102, 241, 0.4)', border: '#6366f1' },
     purple: { bg: 'rgba(168, 85, 247, 0.4)', border: '#a855f7' },
@@ -68,8 +39,6 @@ const CHART_COLORS = {
     cyan: { bg: 'rgba(6, 182, 212, 0.4)', border: '#06b6d4' },
     violet: { bg: 'rgba(139, 92, 246, 0.4)', border: '#8b5cf6' },
     lime: { bg: 'rgba(132, 204, 22, 0.4)', border: '#84cc16' },
-
-    // Nuevos colores añadidos
     red: { bg: 'rgba(239, 68, 68, 0.4)', border: '#ef4444' },
     fuchsia: { bg: 'rgba(217, 70, 239, 0.4)', border: '#d946ef' },
     sky: { bg: 'rgba(14, 165, 233, 0.4)', border: '#0ea5e9' },
@@ -87,42 +56,24 @@ const CHART_COLORS = {
     lavender: { bg: 'rgba(192, 132, 252, 0.4)', border: '#c084fc' }
 };
 
-// Array de colores para las iteraciones automáticas
 const COLORS_ARRAY = Object.values(CHART_COLORS);
-
-// Mapa dinámico para asignar colores únicos y consistentes
 const dynamicColorMap = {};
 let colorIndex = 0;
 
-// Mapa de colores para etiquetas específicas conocidas
 const COLOR_MAP = {
-    // Estados 
     'Por atender': CHART_COLORS.amber,
     'Atendido': CHART_COLORS.emerald,
     'No atendido': CHART_COLORS.red,
-
-    // Tipos de Caso (Polar Area)
     'Denuncia': CHART_COLORS.pink,
     'Solicitud': CHART_COLORS.blue,
     'Derecho de Petición': CHART_COLORS.indigo,
     'Acción de Tutela': CHART_COLORS.purple,
-
-    // Procesos (Bar Chart)
     'Ropa de Trabajo': CHART_COLORS.cyan,
     'SST': CHART_COLORS.teal,
     'SSEMI': CHART_COLORS.sky,
     'Plan de incentivos': CHART_COLORS.violet,
     'Bienestar Social': CHART_COLORS.indigo
 };
-
-const MONTH_NAMES_ES = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-];
-
-const WEEK_NAME_ES = [
-    'Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5'
-];
 
 /**
  * Función genérica para dibujar gráficos de Chart.js.
@@ -137,11 +88,9 @@ const drawChart = (canvasElement, type, labels, data) => {
     let pointBgColors;
     let pointBorderColors;
 
-    // Asignar color único a cada etiqueta mapeada o auto-generada
-    const mappedColors = labels.map((label, index) => {
+    const mappedColors = labels.map((label) => {
         if (COLOR_MAP[label]) return COLOR_MAP[label];
 
-        // Si no está mapeado explícitamente, asignarle un color de la lista genérica
         if (!dynamicColorMap[label]) {
             dynamicColorMap[label] = COLORS_ARRAY[colorIndex % COLORS_ARRAY.length];
             colorIndex++;
@@ -150,18 +99,15 @@ const drawChart = (canvasElement, type, labels, data) => {
     });
 
     if (type === 'line') {
-        backgroundColors = CHART_COLORS.blue.bg; // Fondo general
-        borderColors = CHART_COLORS.blue.border; // La linea en si
-        // Colores específicos paralos puntos de la gráfica
+        backgroundColors = CHART_COLORS.blue.bg;
+        borderColors = CHART_COLORS.blue.border;
         pointBgColors = mappedColors.map(c => c.bg);
         pointBorderColors = mappedColors.map(c => c.border);
     } else {
-        // Barras y Polares
         backgroundColors = mappedColors.map(c => c.bg);
         borderColors = mappedColors.map(c => c.border);
     }
 
-    // Construcción del dataset genereal
     const dataset = {
         label: (type === 'pie' || type === 'polarArea' ? 'Cantidad' : 'Casos Registrados'),
         data: data,
@@ -170,7 +116,6 @@ const drawChart = (canvasElement, type, labels, data) => {
         borderWidth: 1.5
     };
 
-    // Configuración específica para línea
     if (type === 'line') {
         dataset.pointStyle = 'circle';
         dataset.pointRadius = 5;
@@ -190,7 +135,12 @@ const drawChart = (canvasElement, type, labels, data) => {
             legend: {
                 display: type !== 'bar' && type !== 'line',
                 position: 'bottom',
-                labels: { color: '#ffffff' }
+                labels: {
+                    color: '#ffffff', font: {
+                        size: 18,
+                        weight: 'bold'
+                    }
+                }
             },
         },
         maintainAspectRatio: false,
@@ -222,21 +172,16 @@ const drawChart = (canvasElement, type, labels, data) => {
  * Función que gestiona la representación de un gráfico.
  */
 const renderChartFromResponse = (canvasId, container, apiResponse, chartId, chartType, chartName) => {
-
     const chartIdCapitalized = chartId.charAt(0).toUpperCase() + chartId.slice(1);
     let labels = apiResponse[`labels${chartIdCapitalized}`];
     const data = apiResponse[`data${chartIdCapitalized}`];
 
-    // Convertir etiquetas numéricas de meses a strings (Solo si es mes)
-    // OJO: Según tu JSON, 'bar' trae procesos, no meses. 
-    // Dejo la validación segura: solo convierte si son números.
     if (chartId === 'bar' && labels && Array.isArray(labels) && labels.length > 0 && typeof labels[0] === 'number') {
         labels = labels.map(monthNum => MONTH_NAMES_ES[monthNum - 1] || `Mes ${monthNum}`);
     }
 
     const errorMessage = apiResponse.errors?.[chartId];
 
-    // Manejo de errores o datos vacíos
     if (errorMessage || !labels || !data || labels.length === 0 || data.length === 0) {
         const errorText = errorMessage
             ? `⚠️ Error en ${chartName}: ${errorMessage}`
@@ -246,475 +191,99 @@ const renderChartFromResponse = (canvasId, container, apiResponse, chartId, char
         return;
     }
 
-    // Crear nuevo canvas
     container.innerHTML = '';
     const newCanvas = document.createElement('canvas');
     newCanvas.id = canvasId;
     container.appendChild(newCanvas);
 
-    // Dibujar el gráfico
     drawChart(newCanvas, chartType, labels, data);
 };
 
 /**
- * Función principal que realiza UNA SOLA petición a la API y distribuye los datos.
+ * Función principal PARAMETRIZADA (Realiza UNA SOLA petición a la API)
  */
-const loadAllChartData = async () => {
-
-    // Obtener referencias a los contenedores
+const loadAllChartData = async (urlFetch) => {
     const charts = [
-        {
-            canvasId: 'barChart',
-            container: document.getElementById('barChart')?.parentElement,
-            id: 'bar',
-            type: 'line',  // Aquí definiste que 'bar' (del json) se pinte como LINEA
-            name: 'Casos por Procesos' // Cambié el nombre según tu JSON (trae Ropa, SST, etc)
-        },
-        {
-            canvasId: 'pieChart',
-            container: document.getElementById('pieChart')?.parentElement,
-            id: 'pie',
-            type: 'bar', // Aquí definiste que 'pie' (del json) se pinte como BARRA
-            name: 'Casos por Estado' // Cambié el nombre según tu JSON (trae Por atender)
-        },
-        {
-            canvasId: 'polarChart',
-            container: document.getElementById('polarChart')?.parentElement,
-            id: 'polar',
-            type: 'polarArea',
-            name: 'Casos por Tipo'
-        }
+        { canvasId: 'barChart', container: document.getElementById('barChart')?.parentElement, id: 'bar', type: 'line', name: 'Casos por Procesos' },
+        { canvasId: 'pieChart', container: document.getElementById('pieChart')?.parentElement, id: 'pie', type: 'bar', name: 'Casos por Estado' },
+        { canvasId: 'polarChart', container: document.getElementById('polarChart')?.parentElement, id: 'polar', type: 'polarArea', name: 'Casos por Tipo' }
     ].filter(c => c.container);
 
-    console.log('Charts encontrados:', charts.length);
-
-    // Mostrar indicador de carga
     charts.forEach(c => {
         c.container.innerHTML = `<p class="text-center p-4 text-muted">Cargando datos de ${c.name}...</p>`;
     });
 
     try {
-        console.log('Haciendo fetch a:', ENDPOINT);
-
-        const response = await fetch(ENDPOINT);
-
-        console.log('Response status:', response.status);
-
-        if (!response.ok) {
-            throw new Error(`Error HTTP ${response.status}`);
-        }
+        const response = await fetch(urlFetch);
+        if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
 
         const apiResponse = await response.json();
-
-        console.log('Respuesta completa del servidor:', apiResponse);
-
         if (apiResponse.status !== 'ok' && apiResponse.status !== 'partial_error') {
             throw new Error(apiResponse.mensaje || 'Error del servidor');
         }
 
-        // Renderizar cada gráfico
         charts.forEach(c => {
-            console.log(`Renderizando gráfico: ${c.name}`);
             renderChartFromResponse(c.canvasId, c.container, apiResponse, c.id, c.type, c.name);
         });
 
     } catch (error) {
-        console.error("Error crítico:", error);
-
         charts.forEach(c => {
             if (c.container) {
-                c.container.innerHTML = `<p class="text-center p-4 text-danger">
-                    <strong>Error:</strong> ${error.message}
-                </p>`;
+                c.container.innerHTML = `<p class="text-center p-4 text-danger"><strong>Error:</strong> ${error.message}</p>`;
             }
         });
     }
 };
 
-document.addEventListener('DOMContentLoaded', loadAllChartData);
+/**
+ * Diccionario dinámico para actualizar los textos de la interfaz
+ */
+const actualizarTextos = (periodo) => {
+    const textos = {
+        semana: {
+            linea: { t: `Estadística de la semana actual en casos por proceso`, c: `Casos asignados a cada proceso registrados en la semana actual.` },
+            polar: { t: `Estadística de la semana en casos por tipo`, c: `Distribución de casos por tipo en la semana actual.` },
+            bar: { t: `Estadística de la semana en casos por estado`, c: `Casos clasificados por estado (atendido, por atender, no atendido).` }
+        },
+        mes: {
+            linea: { t: `Estadística de ${mesActual} de ${anioActual} - Casos por proceso`, c: `Casos asignados a cada proceso durante ${mesActual} de ${anioActual}.` },
+            polar: { t: `Estadística de ${mesActual} de ${anioActual} - Casos por tipo`, c: `Distribución de casos por tipo en ${mesActual} de ${anioActual}.` },
+            bar: { t: `Estadística de ${mesActual} de ${anioActual} - Casos por estado`, c: `Casos por estado en ${mesActual} de ${anioActual}.` }
+        },
+        anual: {
+            linea: { t: 'Estadística anual de casos por proceso organizacional', c: `Cantidad de casos asignados a cada proceso durante el año ${anioActual}.` },
+            polar: { t: 'Estadística anual de casos por tipo', c: `Distribución de casos por tipo registrados en el año ${anioActual}.` },
+            bar: { t: 'Estadística anual de casos por estado', c: `Casos clasificados por estado en el año ${anioActual}.` }
+        }
+    };
 
-// Ejemplo para el gráfico de líneas (procesos)
-tituloLinea.innerText = 'Estadística anual de casos por proceso organizacional';
-contextoLinea.innerText = `Muestra la cantidad de casos asignados a cada proceso organizacional durante el año ${fecha.getFullYear()}.`;
+    const config = textos[periodo];
+    if (config) {
+        tituloLinea.innerText = config.linea.t;
+        contextoLinea.innerText = config.linea.c;
+        tituloPolar.innerText = config.polar.t;
+        contextoPolar.innerText = config.polar.c;
+        tituloBar.innerText = config.bar.t;
+        contextoBar.innerText = config.bar.c;
+    }
+};
 
-// Gráfico polar (tipos)
-tituloPolar.innerText = 'Estadística anual de casos por tipo';
-contextoPolar.innerText = `Distribución de casos por tipo registrados en el año ${fecha.getFullYear()}.`;
-
-// Gráfico de barras (estados)
-tituloBar.innerText = 'Estadística anual de casos por estado';
-contextoBar.innerText = `Casos clasificados por estado (atendido, por atender, no atendido) en el año ${fecha.getFullYear()}.`;
-
-//capturamos el select de seleccion de estadisticas
-
-const selectGraficas = document.getElementById('selectGraficas');
-
+/**
+ * Event Listener súper limpio
+ */
 selectGraficas.addEventListener('change', function () {
     const valorSeleccionado = this.value;
 
-    if (valorSeleccionado === 'semana') {
+    actualizarTextos(valorSeleccionado);
 
-        tituloLinea.innerText = `Estadística de la semana actual en casos por proceso organizacional`;
-        contextoLinea.innerText = `Casos asignados a cada proceso organizacional registrados en la semana actual.`;
+    let endpointFetch = ENDPOINT;
+    if (valorSeleccionado === 'semana') endpointFetch = ENDPOINT_SEMANA;
+    if (valorSeleccionado === 'mes') endpointFetch = ENDPOINT_MES;
 
-        tituloPolar.innerText = `Estadística de la semana en casos por tipo`;
-        contextoPolar.innerText = `Distribución de casos por tipo en el período de la semana actual`;
+    loadAllChartData(endpointFetch);
+});
 
-        tituloBar.innerText = `Estadística de la semana en casos por estado`;
-        contextoBar.innerText = `Casos clasificados por estado (atendido, por atender, no atendido).`;
-
-        const renderChartFromResponse = (canvasId, container, apiResponse, chartId, chartType, chartName) => {
-
-            const chartIdCapitalized = chartId.charAt(0).toUpperCase() + chartId.slice(1);
-            let labels = apiResponse[`labels${chartIdCapitalized}`];
-            const data = apiResponse[`data${chartIdCapitalized}`];
-
-            // Convertir etiquetas numéricas de meses a strings (Solo si es mes)
-            // OJO: Según tu JSON, 'bar' trae procesos, no meses. 
-            // Dejo la validación segura: solo convierte si son números.
-            if (chartId === 'bar' && labels && Array.isArray(labels) && labels.length > 0 && typeof labels[0] === 'number') {
-                labels = labels.map(monthNum => MONTH_NAMES_ES[monthNum - 1] || `Mes ${monthNum}`);
-            }
-
-            const errorMessage = apiResponse.errors?.[chartId];
-
-            // Manejo de errores o datos vacíos
-            if (errorMessage || !labels || !data || labels.length === 0 || data.length === 0) {
-                const errorText = errorMessage
-                    ? `⚠️ Error en ${chartName}: ${errorMessage}`
-                    : `✅ No hay datos de ${chartName} registrados para mostrar.`;
-
-                container.innerHTML = `<p class="text-center p-4 text-warning">${errorText}</p>`;
-                return;
-            }
-
-            // Crear nuevo canvas
-            container.innerHTML = '';
-            const newCanvas = document.createElement('canvas');
-            newCanvas.id = canvasId;
-            container.appendChild(newCanvas);
-
-            // Dibujar el gráfico
-            drawChart(newCanvas, chartType, labels, data);
-        };
-
-        /**
-         * Función principal que realiza UNA SOLA petición a la API y distribuye los datos.
-         */
-        const loadAllChartData = async () => {
-
-            // Obtener referencias a los contenedores
-            const charts = [
-                {
-                    canvasId: 'barChart',
-                    container: document.getElementById('barChart')?.parentElement,
-                    id: 'bar',
-                    type: 'line',  // Aquí definiste que 'bar' (del json) se pinte como LINEA
-                    name: 'Casos por Procesos' // Cambié el nombre según tu JSON (trae Ropa, SST, etc)
-                },
-                {
-                    canvasId: 'pieChart',
-                    container: document.getElementById('pieChart')?.parentElement,
-                    id: 'pie',
-                    type: 'bar', // Aquí definiste que 'pie' (del json) se pinte como BARRA
-                    name: 'Casos por Estado' // Cambié el nombre según tu JSON (trae Por atender)
-                },
-                {
-                    canvasId: 'polarChart',
-                    container: document.getElementById('polarChart')?.parentElement,
-                    id: 'polar',
-                    type: 'polarArea',
-                    name: 'Casos por Tipo'
-                }
-            ].filter(c => c.container);
-
-            console.log('Charts encontrados:', charts.length);
-
-            // Mostrar indicador de carga
-            charts.forEach(c => {
-                c.container.innerHTML = `<p class="text-center p-4 text-muted">Cargando datos de ${c.name}...</p>`;
-            });
-
-            try {
-
-                const response = await fetch(ENDPOINT_SEMANA);
-
-                if (!response.ok) {
-                    throw new Error(`Error HTTP ${response.status}`);
-                }
-
-                const apiResponse = await response.json();
-
-                console.log('Respuesta completa del servidor:', apiResponse);
-
-                if (apiResponse.status !== 'ok' && apiResponse.status !== 'partial_error') {
-                    throw new Error(apiResponse.mensaje || 'Error del servidor');
-                }
-
-                // Renderizar cada gráfico
-                charts.forEach(c => {
-                    console.log(`Renderizando gráfico: ${c.name}`);
-                    renderChartFromResponse(c.canvasId, c.container, apiResponse, c.id, c.type, c.name);
-                });
-
-            } catch (error) {
-                console.error("Error crítico:", error);
-
-                charts.forEach(c => {
-                    if (c.container) {
-                        c.container.innerHTML = `<p class="text-center p-4 text-danger">
-                    <strong>Error:</strong> ${error.message}
-                </p>`;
-                    }
-                });
-            }
-        };
-
-        loadAllChartData();
-    };
-
-    if (valorSeleccionado === 'mes') {
-
-        tituloLinea.innerText = `Estadística de ${mesActual} de ${fecha.getFullYear()} - Casos por proceso organizacional`;
-        contextoLinea.innerText = `Casos asignados a cada proceso organizacional durante ${mesActual} de ${fecha.getFullYear()}.`;
-
-        tituloPolar.innerText = `Estadística de ${mesActual} de ${fecha.getFullYear()} - Casos por tipo`;
-        contextoPolar.innerText = `Distribución de casos por tipo en ${mesActual} de ${fecha.getFullYear()}.`;
-
-        tituloBar.innerText = `Estadística de ${mesActual} de ${fecha.getFullYear()} - Casos por estado`;
-        contextoBar.innerText = `Casos por estado (atendido, por atender, no atendido) correspondientes a ${mesActual} de ${fecha.getFullYear()}.`;
-
-        const renderChartFromResponse = (canvasId, container, apiResponse, chartId, chartType, chartName) => {
-
-            const chartIdCapitalized = chartId.charAt(0).toUpperCase() + chartId.slice(1);
-            let labels = apiResponse[`labels${chartIdCapitalized}`];
-            const data = apiResponse[`data${chartIdCapitalized}`];
-
-            // Convertir etiquetas numéricas de meses a strings (Solo si es mes)
-            // OJO: Según tu JSON, 'bar' trae procesos, no meses. 
-            // Dejo la validación segura: solo convierte si son números.
-            if (chartId === 'bar' && labels && Array.isArray(labels) && labels.length > 0 && typeof labels[0] === 'number') {
-                labels = labels.map(monthNum => MONTH_NAMES_ES[monthNum - 1] || `Mes ${monthNum}`);
-            }
-
-            const errorMessage = apiResponse.errors?.[chartId];
-
-            // Manejo de errores o datos vacíos
-            if (errorMessage || !labels || !data || labels.length === 0 || data.length === 0) {
-                const errorText = errorMessage
-                    ? `⚠️ Error en ${chartName}: ${errorMessage}`
-                    : `✅ No hay datos de ${chartName} registrados para mostrar.`;
-
-                container.innerHTML = `<p class="text-center p-4 text-warning">${errorText}</p>`;
-                return;
-            }
-
-            // Crear nuevo canvas
-            container.innerHTML = '';
-            const newCanvas = document.createElement('canvas');
-            newCanvas.id = canvasId;
-            container.appendChild(newCanvas);
-
-            // Dibujar el gráfico
-            drawChart(newCanvas, chartType, labels, data);
-        };
-
-        /**
-         * Función principal que realiza UNA SOLA petición a la API y distribuye los datos.
-         */
-        const loadAllChartData = async () => {
-
-            // Obtener referencias a los contenedores
-            const charts = [
-                {
-                    canvasId: 'barChart',
-                    container: document.getElementById('barChart')?.parentElement,
-                    id: 'bar',
-                    type: 'line',  // Aquí definiste que 'bar' (del json) se pinte como LINEA
-                    name: 'Casos por Procesos' // Cambié el nombre según tu JSON (trae Ropa, SST, etc)
-                },
-                {
-                    canvasId: 'pieChart',
-                    container: document.getElementById('pieChart')?.parentElement,
-                    id: 'pie',
-                    type: 'bar', // Aquí definiste que 'pie' (del json) se pinte como BARRA
-                    name: 'Casos por Estado' // Cambié el nombre según tu JSON (trae Por atender)
-                },
-                {
-                    canvasId: 'polarChart',
-                    container: document.getElementById('polarChart')?.parentElement,
-                    id: 'polar',
-                    type: 'polarArea',
-                    name: 'Casos por Tipo'
-                }
-            ].filter(c => c.container);
-
-            console.log('Charts encontrados:', charts.length);
-
-            // Mostrar indicador de carga
-            charts.forEach(c => {
-                c.container.innerHTML = `<p class="text-center p-4 text-muted">Cargando datos de ${c.name}...</p>`;
-            });
-
-            try {
-
-                const response = await fetch(ENDPOINT_MES);
-
-                if (!response.ok) {
-                    throw new Error(`Error HTTP ${response.status}`);
-                }
-
-                const apiResponse = await response.json();
-
-                console.log('Respuesta completa del servidor:', apiResponse);
-
-                if (apiResponse.status !== 'ok' && apiResponse.status !== 'partial_error') {
-                    throw new Error(apiResponse.mensaje || 'Error del servidor');
-                }
-
-                // Renderizar cada gráfico
-                charts.forEach(c => {
-                    console.log(`Renderizando gráfico: ${c.name}`);
-                    renderChartFromResponse(c.canvasId, c.container, apiResponse, c.id, c.type, c.name);
-                });
-
-            } catch (error) {
-                console.error("Error crítico:", error);
-
-                charts.forEach(c => {
-                    if (c.container) {
-                        c.container.innerHTML = `<p class="text-center p-4 text-danger">
-                    <strong>Error:</strong> ${error.message}
-                </p>`;
-                    }
-                });
-            }
-        };
-
-        loadAllChartData();
-    };
-
-    if (valorSeleccionado === 'anual') {
-
-        // Ejemplo para el gráfico de líneas (procesos)
-        tituloLinea.innerText = 'Estadística anual de casos por proceso organizacional';
-        contextoLinea.innerText = `Muestra la cantidad de casos asignados a cada proceso organizacional durante el año ${fecha.getFullYear()}.`;
-
-        // Gráfico polar (tipos)
-        tituloPolar.innerText = 'Estadística anual de casos por tipo';
-        contextoPolar.innerText = `Distribución de casos por tipo registrados en el año ${fecha.getFullYear()}.`;
-
-        // Gráfico de barras (estados)
-        tituloBar.innerText = 'Estadística anual de casos por estado';
-        contextoBar.innerText = `Casos clasificados por estado (atendido, por atender, no atendido) en el año ${fecha.getFullYear()}.`;
-        
-        const renderChartFromResponse = (canvasId, container, apiResponse, chartId, chartType, chartName) => {
-
-            const chartIdCapitalized = chartId.charAt(0).toUpperCase() + chartId.slice(1);
-            let labels = apiResponse[`labels${chartIdCapitalized}`];
-            const data = apiResponse[`data${chartIdCapitalized}`];
-
-            // Convertir etiquetas numéricas de meses a strings (Solo si es mes)
-            // OJO: Según tu JSON, 'bar' trae procesos, no meses. 
-            // Dejo la validación segura: solo convierte si son números.
-            if (chartId === 'bar' && labels && Array.isArray(labels) && labels.length > 0 && typeof labels[0] === 'number') {
-                labels = labels.map(monthNum => MONTH_NAMES_ES[monthNum - 1] || `Mes ${monthNum}`);
-            }
-
-            const errorMessage = apiResponse.errors?.[chartId];
-
-            // Manejo de errores o datos vacíos
-            if (errorMessage || !labels || !data || labels.length === 0 || data.length === 0) {
-                const errorText = errorMessage
-                    ? `⚠️ Error en ${chartName}: ${errorMessage}`
-                    : `✅ No hay datos de ${chartName} registrados para mostrar.`;
-
-                container.innerHTML = `<p class="text-center p-4 text-warning">${errorText}</p>`;
-                return;
-            }
-
-            // Crear nuevo canvas
-            container.innerHTML = '';
-            const newCanvas = document.createElement('canvas');
-            newCanvas.id = canvasId;
-            container.appendChild(newCanvas);
-
-            // Dibujar el gráfico
-            drawChart(newCanvas, chartType, labels, data);
-        };
-
-        /**
-         * Función principal que realiza UNA SOLA petición a la API y distribuye los datos.
-         */
-        const loadAllChartData = async () => {
-
-            // Obtener referencias a los contenedores
-            const charts = [
-                {
-                    canvasId: 'barChart',
-                    container: document.getElementById('barChart')?.parentElement,
-                    id: 'bar',
-                    type: 'line',  // Aquí definiste que 'bar' (del json) se pinte como LINEA
-                    name: 'Casos por Procesos' // Cambié el nombre según tu JSON (trae Ropa, SST, etc)
-                },
-                {
-                    canvasId: 'pieChart',
-                    container: document.getElementById('pieChart')?.parentElement,
-                    id: 'pie',
-                    type: 'bar', // Aquí definiste que 'pie' (del json) se pinte como BARRA
-                    name: 'Casos por Estado' // Cambié el nombre según tu JSON (trae Por atender)
-                },
-                {
-                    canvasId: 'polarChart',
-                    container: document.getElementById('polarChart')?.parentElement,
-                    id: 'polar',
-                    type: 'polarArea',
-                    name: 'Casos por Tipo'
-                }
-            ].filter(c => c.container);
-
-            console.log('Charts encontrados:', charts.length);
-
-            // Mostrar indicador de carga
-            charts.forEach(c => {
-                c.container.innerHTML = `<p class="text-center p-4 text-muted">Cargando datos de ${c.name}...</p>`;
-            });
-
-            try {
-
-                const response = await fetch(ENDPOINT);
-
-                if (!response.ok) {
-                    throw new Error(`Error HTTP ${response.status}`);
-                }
-
-                const apiResponse = await response.json();
-
-                console.log('Respuesta completa del servidor:', apiResponse);
-
-                if (apiResponse.status !== 'ok' && apiResponse.status !== 'partial_error') {
-                    throw new Error(apiResponse.mensaje || 'Error del servidor');
-                }
-
-                // Renderizar cada gráfico
-                charts.forEach(c => {
-                    console.log(`Renderizando gráfico: ${c.name}`);
-                    renderChartFromResponse(c.canvasId, c.container, apiResponse, c.id, c.type, c.name);
-                });
-
-            } catch (error) {
-                console.error("Error crítico:", error);
-
-                charts.forEach(c => {
-                    if (c.container) {
-                        c.container.innerHTML = `<p class="text-center p-4 text-danger">
-                    <strong>Error:</strong> ${error.message}
-                </p>`;
-                    }
-                });
-            }
-        };
-
-        loadAllChartData();
-    };
+document.addEventListener('DOMContentLoaded', () => {
+    actualizarTextos('anual');
+    loadAllChartData(ENDPOINT);
 });
