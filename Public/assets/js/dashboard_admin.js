@@ -157,19 +157,31 @@ const drawChart = (canvasElement, type, labels, data) => {
             type === 'polarArea'
                 ? { r: { beginAtZero: true, display: false } }
                 : type === 'bar' || type === 'line'
-                ? {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: '#ffffff',
-                            stepSize: 1,
-                            precision: 0,
-                            callback: value => Number.isInteger(value) ? value : null
+                    ? {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#ffffff',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold',
+                                },
+                                stepSize: 1,
+                                precision: 0,
+                                callback: value => Number.isInteger(value) ? value : null
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#ffffff',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold',
+                                },
+                            }
                         }
-                    },
-                    x: { ticks: { color: '#ffffff' } }
-                }
-                : {}
+                    }
+                    : {}
     };
 
     canvasElement.chart = new Chart(canvasElement, {
@@ -214,14 +226,14 @@ const loadAllChartData = async (urlFetch) => {
             canvasId: 'barChart',
             container: document.getElementById('barChart')?.parentElement,
             id: 'bar',
-            type: 'line',       
+            type: 'line',
             name: 'Casos por Mes'
         },
         {
             canvasId: 'pieChart',
             container: document.getElementById('pieChart')?.parentElement,
             id: 'pie',
-            type: 'bar',         
+            type: 'bar',
             name: 'Casos por Comisionado'
         },
         {

@@ -150,6 +150,10 @@ const drawChart = (canvasElement, type, labels, data) => {
                     beginAtZero: true,
                     ticks: {
                         color: '#ffffff',
+                        font: {
+                            size: 14,
+                            weight: 'bold',
+                        },
                         stepSize: 1,
                         precision: 0,
                         callback: function (value) {
