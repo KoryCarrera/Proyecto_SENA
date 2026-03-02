@@ -28,14 +28,21 @@ function ConfigurarInfoUsuario($pdo, $documento, $nombre, $apellido, $email, $pa
     //encriptar contraseña
     $passhash = password_hash($password, PASSWORD_BCRYPT);
 
-    $stmt->bindParam(1, $nombre, PDO::PARAM_STR);
-    $stmt->bindParam(2, $apellido, PDO::PARAM_STR);
-    $stmt->bindParam(3, $email, PDO::PARAM_STR);
-    $stmt->bindParam(4, $passhash, PDO::PARAM_STR);
-    $stmt->bindParam(5, $documento, PDO::PARAM_STR);
+    $stmt->bindParam(1, $documento, PDO::PARAM_STR);
+    $stmt->bindParam(2, $nombre, PDO::PARAM_STR);
+    $stmt->bindParam(3, $apellido, PDO::PARAM_STR);
+    $stmt->bindParam(4, $email, PDO::PARAM_STR);
+    $stmt->bindParam(5, $passhash, PDO::PARAM_STR);
     $stmt->bindParam(6, $numero, PDO::PARAM_STR);
 
     try {
+        $p_documento = !empty($documento) ? $documento : null;
+        $p_nombre = !empty($nombre) ? $nombre : null;
+        $p_apellido = !empty($apellido) ? $apellido : null;
+        $p_email = !empty($email) ? $email : null;
+        $p_passhash = !empty($passhash) ? $passhash : null;
+        $p_numero = !empty($numero) ? $numero : null;
+        
         $stmt->execute();
         $stmt->closeCursor();
         return true;
