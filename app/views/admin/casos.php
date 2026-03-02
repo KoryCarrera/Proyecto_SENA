@@ -143,7 +143,7 @@
             <button
               class="btn btn-secondary dropdown-toggle bg-slate-800/50 border-slate-700 text-slate-200 hover:bg-slate-700/50"
               type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-funnel"></i> Filtrar por
+              <i class="bi bi-funnel"></i> ver por
             </button>
             <ul class="dropdown-menu dropdown-menu-dark bg-slate-800 border-slate-700">
               <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Nombre Del Caso</a></li>
@@ -161,7 +161,7 @@
           <div class="relative w-full md:w-64">
             <input
               class="glass-search w-full px-4 py-2 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
-              type="search" placeholder="Buscar palabras clave..." aria-label="Search">
+              type="search" id="buscarAdmin" placeholder="Buscar palabras clave..." aria-label="Search">
             <i class="bi bi-search absolute right-3 top-2.5 text-slate-400"></i>
           </div>
           <button
@@ -172,12 +172,12 @@
 
       <!-- Content -->
       <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
-        <div class="max-w-7xl mx-auto">
+        <div class="max-w-full mx-auto ">
 
           <div class="glass-card p-0 overflow-hidden">
             <div class="overflow-x-auto">
-              <table id="tablaCaso" class="glass-table w-full text-left text-sm text-slate-300">
-                <thead class="bg-slate-800/50 text-xs uppercase text-slate-400">
+              <table id="tablaCaso" class="glass-table w-full text-center text-sm text-slate-300 h-full" style="height: 100%;">
+                <thead class="bg-slate-800/50 text-lg text-center uppercase text-slate-400">
                   <tr>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider"># Id</th>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider">Fecha de Registro</th>
