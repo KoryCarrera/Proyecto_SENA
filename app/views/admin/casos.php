@@ -177,7 +177,7 @@
           <div class="glass-card p-0 overflow-hidden">
             <div class="overflow-x-auto">
               <table id="tablaCaso" class="glass-table w-full text-center text-sm text-slate-300 h-full" style="height: 100%;">
-                <thead class="bg-slate-800/50 text-lg text-center uppercase text-slate-400">
+                <thead class="bg-slate-800/50 text-base text-center uppercase text-slate-400">
                   <tr>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider"># Id</th>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider">Fecha de Registro</th>
