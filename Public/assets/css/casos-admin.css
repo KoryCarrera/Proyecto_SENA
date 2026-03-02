@@ -149,7 +149,7 @@ body {
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-  color: #94a3b8;
+  color: #9badbe;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -166,6 +166,9 @@ body {
 .glass-table tbody th {
   padding: 1rem 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.glass-table tbody td {
+  font-size: 1rem;
 }
 
 /* Bootstrap Compatibility for JS-injected content */

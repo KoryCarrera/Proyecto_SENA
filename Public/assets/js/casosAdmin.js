@@ -114,16 +114,17 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
     cuerpoTabla.innerHTML = htmlFilas; //insertamos en el cuerpo de la tabla
 
     // Inicializamos DataTables DESPUÉS de que los datos estén en el DOM
-    if ($.fn.DataTable.isDataTable('#tablaCaso')) {
-        $('#tablaCaso').DataTable().destroy();
-    }
-    $('#tablaCaso').DataTable({
-        "pageLength": 10,
-        "lengthMenu": [10, 25, 50],
-        "language": {
-            "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-        }
-    });
+ var table = $('#tablaCaso').DataTable({
+    "pageLength": 10,
+    "lengthMenu": [10, 25, 50],
+    "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+    }, // Cerramos language correctamente
+    "dom": 'lrtip' // Oculta el buscador nativo ('f')
+});
+$('#buscarAdmin').on('keyup', function() { //se captura el input con el estilo de buscar 
+    table.search(this.value).draw();
+});
 };
 
 const formatearFecha = (fecha) => {
@@ -190,7 +191,7 @@ function llenarTablaSeguimientos(id_caso) {
                     tablaBody.innerHTML += `
                     <tr class="border-bottom border-slate-700/30 bg-transparent">
                         <td class="bg-transparent text-indigo-300 fw-bold">${seg.id_seguimiento}</td>
-                        <td class="bg-transparent">${formatearFecha(seg.fecha_seguimiento)}</td>
+                        <td class="bg-transparent text-slate-200">${formatearFecha(seg.fecha_seguimiento)}</td>
                         <td class="bg-transparent text-slate-200">${seg.usuario}</td>
                         <td class="bg-transparent text-slate-400" style="white-space: pre-wrap;">${seg.observacion}</td>
                     </tr>
