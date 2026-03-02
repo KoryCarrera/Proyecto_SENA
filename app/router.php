@@ -10,6 +10,7 @@ $router->map('GET', '/', '../Public/landing.php');
 
 $router->map('POST', '/login/auth', 'controllers/login.php');
 $router->map('POST', '/listarSeguimientos', '/controllers/listarSeguimientos.php');
+$router->map('POST', '/ConfiUsuario', '/controllers/configuracionUsuario.php');
 $router->map('GET', '/graficasAdmin', 'controllers/dashboardAdmin.php');
 $router->map('GET', '/graficasAdmin/Mes', 'controllers/dashboardAdminMes.php');
 $router->map('GET', '/graficasAdmin/Semana', 'controllers/dashboardAdminSemana.php');

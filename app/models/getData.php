@@ -57,13 +57,12 @@ function obtenerSeguimientosPorCaso($pdo, $idCaso)
     }
 }
 
-function buscarUsuario($pdo, $document, $name)
+function buscarUsuario($pdo, $document)
 {
     //Se prepara la sentencia sql a ejecutar
-    $stmt = $pdo->prepare("CALL sp_buscar_usuario(:documento, :nombre)");
+    $stmt = $pdo->prepare("CALL sp_buscar_usuario(?)");
     //Se asignan los parametros necesarios para el sp
-    $stmt->bindParam(':documento', $document, PDO::PARAM_STR);
-    $stmt->bindParam(':nombre', $name, PDO::PARAM_STR);
+    $stmt->bindParam(1, $document, PDO::PARAM_STR);
 
     //Ejecutamos dentro de un try/catch para manejo de errores
     try {
