@@ -24,25 +24,24 @@ function ActualizarUsuario($pdo, $documento, $nombre, $apellido, $email, $rol, $
 
 function ConfigurarInfoUsuario($pdo, $documento, $nombre, $apellido, $email, $password, $numero)
 {
-    $stmt = $pdo->prepare("CALL sp_configurar_usuario(?, ?, ?, ?, ?; ?)");
-    //encriptar contraseña
-    $passhash = password_hash($password, PASSWORD_BCRYPT);
+    $stmt = $pdo->prepare("CALL sp_configurar_usuario(?, ?, ?, ?, ?, ?)");
+    
+    $p_documento = !empty($documento) ? $documento : null;
+    $p_nombre    = !empty($nombre)    ? $nombre    : null;
+    $p_apellido  = !empty($apellido)  ? $apellido  : null;
+    $p_email     = !empty($email)     ? $email     : null;
+    $p_numero    = !empty($numero)    ? $numero    : null;
+    
+    $p_passhash  = !empty($password)  ? password_hash($password, PASSWORD_BCRYPT) : null;
 
-    $stmt->bindParam(1, $documento, PDO::PARAM_STR);
-    $stmt->bindParam(2, $nombre, PDO::PARAM_STR);
-    $stmt->bindParam(3, $apellido, PDO::PARAM_STR);
-    $stmt->bindParam(4, $email, PDO::PARAM_STR);
-    $stmt->bindParam(5, $passhash, PDO::PARAM_STR);
-    $stmt->bindParam(6, $numero, PDO::PARAM_STR);
+    $stmt->bindParam(1, $p_documento, PDO::PARAM_STR);
+    $stmt->bindParam(2, $p_nombre,    PDO::PARAM_STR);
+    $stmt->bindParam(3, $p_apellido,  PDO::PARAM_STR);
+    $stmt->bindParam(4, $p_email,     PDO::PARAM_STR);
+    $stmt->bindParam(5, $p_passhash,  PDO::PARAM_STR);
+    $stmt->bindParam(6, $p_numero,    PDO::PARAM_STR);
 
     try {
-        $p_documento = !empty($documento) ? $documento : null;
-        $p_nombre = !empty($nombre) ? $nombre : null;
-        $p_apellido = !empty($apellido) ? $apellido : null;
-        $p_email = !empty($email) ? $email : null;
-        $p_passhash = !empty($passhash) ? $passhash : null;
-        $p_numero = !empty($numero) ? $numero : null;
-        
         $stmt->execute();
         $stmt->closeCursor();
         return true;

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 26-02-2026 a las 14:57:59
+-- Tiempo de generación: 02-03-2026 a las 15:32:12
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -62,9 +62,17 @@ CREATE PROCEDURE `sp_analisis_demanda` ()   BEGIN
     LIMIT 5;
 END$$
 
-CREATE PROCEDURE `sp_buscar_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE PROCEDURE `sp_buscar_usuario` (IN `p_documento` VARCHAR(20))   BEGIN
 
-SELECT u.documento, CONCAT(u.nombre, ' ', u.apellido) as nombre, u.email, u.fecha_registro, u.ultimo_inicio_sesion, r.rol FROM usuario u INNER JOIN rol r ON u.id_rol = r.id_rol WHERE documento = p_documento;
+SELECT 
+u.documento, 
+CONCAT(u.nombre, ' ', u.apellido) as nombre, 
+u.email, 
+u.fecha_registro, 
+u.contraseña,
+u.ultimo_inicio_sesion, 
+r.nombre_rol
+FROM usuario u INNER JOIN rol r ON u.id_rol = r.id_rol WHERE documento = p_documento;
 
 END$$
 
@@ -348,15 +356,16 @@ CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
 END$$
 
 CREATE PROCEDURE `sp_configurar_usuario` (IN `p_documento` VARCHAR(20), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN
-    UPDATE usuario 
+UPDATE usuario 
     SET 
-        nombre = p_nombre,
-        apellido = p_apellido,
-        email = p_email,
-        numero = p_numero,
-        contraseña = CASE
-            WHEN p_contraseña IS NULL OR p_contraseña = '' THEN contraseña 
-            ELSE p_contraseña 
+        nombre = COALESCE(NULLIF(p_nombre, ''), nombre),
+        apellido = COALESCE(NULLIF(p_apellido, ''), apellido),
+        email = COALESCE(NULLIF(p_email, ''), email),
+        numero = COALESCE(NULLIF(p_numero, ''), numero),
+        -- Usamos tu lógica de CASE para la contraseña
+        contraseña = CASE 
+            WHEN p_contrasena IS NULL OR p_contrasena = '' THEN contraseña 
+            ELSE p_contrasena 
         END
     WHERE documento = p_documento;
 END$$
@@ -481,6 +490,7 @@ END$$
 CREATE PROCEDURE `sp_listar_casos` ()   BEGIN
 	SELECT 
 			c.id_caso,
+            c.nombre,
 			CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
 			c.fecha_inicio,
 			c.fecha_cierre,
@@ -1260,9 +1270,9 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
-('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', NULL, 2, '1013341532', '2026-02-12 14:18:58', '2026-02-24 14:15:39', 1),
-('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, 'galvis123', '2026-02-12 14:22:31', '2026-02-24 15:18:47', 1),
-('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', NULL, 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-02-23 23:19:50', 1),
+('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', NULL, 2, '$2y$10$c1GnSbgIXLc3OqajRQKaX.4HP5FxdZ5Nuv8ScWzWLc3W0bsuFH5Fy', '2026-02-12 14:18:58', '2026-03-02 15:24:29', 1),
+('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2026-03-02 12:38:27', 1),
+('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', NULL, 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-03-02 12:39:20', 1),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-02-12 15:01:09', 1),
 ('1756664828', 'Zack', 'Lopez', 'zackycarvajal@gmail.com', '3001234567', 2, '$2y$10$urjYpXJh5Dt2iMs1ECUJcuiaaZuxUNv9HLM4UBN9qjq3LIy2NJWWW', '2026-02-12 14:20:29', '2026-02-23 23:22:33', 1);
 

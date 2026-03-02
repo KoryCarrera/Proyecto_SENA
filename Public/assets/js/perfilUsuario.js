@@ -1,4 +1,4 @@
-const ENDPOINT_EDITAR = "";
+const ENDPOINT_EDITAR = "/ConfiUsuario";
 
 //Capturamos los valores de los campos del formulario
 const nuevoNombre = document.getElementById("nuevoNombre");
