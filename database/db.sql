@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 02-03-2026 a las 15:32:12
+-- Tiempo de generación: 02-03-2026 a las 16:08:13
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -25,7 +25,7 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estado` INT, IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estado` INT, IN `p_documento` VARCHAR(20))   BEGIN
     IF NOT EXISTS (SELECT 1 FROM caso WHERE id_caso = p_id_caso) THEN
 		SIGNAL SQLSTATE '45000'
 			SET MESSAGE_TEXT = 'EL caso no existe';
@@ -35,7 +35,7 @@ CREATE PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estad
     
     END$$
 
-CREATE PROCEDURE `sp_analisis_demanda` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_analisis_demanda` ()   BEGIN
     SELECT
         tc.nombre_caso,
 
@@ -62,7 +62,7 @@ CREATE PROCEDURE `sp_analisis_demanda` ()   BEGIN
     LIMIT 5;
 END$$
 
-CREATE PROCEDURE `sp_buscar_usuario` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_buscar_usuario` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
 u.documento, 
@@ -76,7 +76,7 @@ FROM usuario u INNER JOIN rol r ON u.id_rol = r.id_rol WHERE documento = p_docum
 
 END$$
 
-CREATE PROCEDURE `sp_cambiar_contrasena_con_token` (IN `p_token` VARCHAR(255), IN `p_password_hash` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_cambiar_contrasena_con_token` (IN `p_token` VARCHAR(255), IN `p_password_hash` VARCHAR(255))   BEGIN
     DECLARE v_documento VARCHAR(50);
 
     SELECT documento INTO v_documento
@@ -102,13 +102,13 @@ CREATE PROCEDURE `sp_cambiar_contrasena_con_token` (IN `p_token` VARCHAR(255), I
     END IF;
 END$$
 
-CREATE PROCEDURE `sp_cambiar_estado_usuario` (IN `p_documento` VARCHAR(50), IN `p_estado` INT)   BEGIN 	
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_cambiar_estado_usuario` (IN `p_documento` VARCHAR(50), IN `p_estado` INT)   BEGIN 	
 
 UPDATE usuario SET id_estado = p_estado WHERE documento = p_documento;
 
 END$$
 
-CREATE PROCEDURE `sp_caracterizacion_usuarios` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_caracterizacion_usuarios` ()   BEGIN
     SELECT
         r.nombre_rol,
         COUNT(c.id_caso) AS total_pqrsd_mes
@@ -120,7 +120,7 @@ CREATE PROCEDURE `sp_caracterizacion_usuarios` ()   BEGIN
     GROUP BY r.id_rol, r.nombre_rol;
 END$$
 
-CREATE PROCEDURE `sp_casos_por_comisionado` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_comisionado` ()   BEGIN
 
 SELECT 
     CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
@@ -133,7 +133,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_comi_mes` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_comi_mes` ()   BEGIN
 	SELECT 
     CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
     COUNT(c.id_caso) AS total_casos
@@ -145,7 +145,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_comi_semana` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_comi_semana` ()   BEGIN
 SELECT 
     CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
     COUNT(c.id_caso) AS total_casos
@@ -157,7 +157,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_estado` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_estado` ()   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -171,7 +171,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_estado_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_estado_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -186,7 +186,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_estado_mes` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_estado_mes` ()   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -200,7 +200,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_estado_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_estado_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -215,7 +215,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_estado_semana` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_estado_semana` ()   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -229,7 +229,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_estado_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_estado_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -244,7 +244,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_mes` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_mes` ()   BEGIN
 
 SELECT 
     MONTH(fecha_inicio) AS mes,
@@ -256,7 +256,7 @@ ORDER BY mes;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_proceso` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_proceso` ()   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -268,7 +268,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_proceso_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_proceso_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -281,7 +281,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_proceso_mes` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_proceso_mes` ()   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -294,7 +294,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_proceso_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_proceso_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -308,7 +308,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_proceso_semana` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_proceso_semana` ()   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -321,7 +321,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_proceso_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_proceso_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -334,7 +334,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_semana` ()   BEGIN
     SELECT 
     DAYOFWEEK(fecha_inicio) AS dia_semana,
         COUNT(*) AS casos_dia
@@ -344,7 +344,7 @@ CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
     ORDER BY dia_semana;
 END$$
 
-CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
     SELECT 
         DAY(fecha_inicio) AS dia,
         COUNT(*) AS total_casos
@@ -355,14 +355,14 @@ CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
     ORDER BY dia;
 END$$
 
-CREATE PROCEDURE `sp_configurar_usuario` (IN `p_documento` VARCHAR(20), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_configurar_usuario` (IN `p_documento` VARCHAR(20), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN
 UPDATE usuario 
     SET 
         nombre = COALESCE(NULLIF(p_nombre, ''), nombre),
         apellido = COALESCE(NULLIF(p_apellido, ''), apellido),
         email = COALESCE(NULLIF(p_email, ''), email),
         numero = COALESCE(NULLIF(p_numero, ''), numero),
-        -- Usamos tu lógica de CASE para la contraseña
+        
         contraseña = CASE 
             WHEN p_contrasena IS NULL OR p_contrasena = '' THEN contraseña 
             ELSE p_contrasena 
@@ -370,7 +370,7 @@ UPDATE usuario
     WHERE documento = p_documento;
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contear_casos_tipo` ()   BEGIN
 
 SELECT 
     tc.nombre_caso,
@@ -382,7 +382,7 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contear_casos_tipo_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     tc.nombre_caso,
@@ -395,7 +395,7 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo_mes` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contear_casos_tipo_mes` ()   BEGIN
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -407,7 +407,7 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contear_casos_tipo_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -419,7 +419,7 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo_semana` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contear_casos_tipo_semana` ()   BEGIN
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -430,7 +430,7 @@ GROUP BY tc.nombre_caso
 ORDER BY tc.nombre_caso;
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contear_casos_tipo_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -441,11 +441,11 @@ GROUP BY tc.nombre_caso
 ORDER BY tc.nombre_caso;
 END$$
 
-CREATE PROCEDURE `sp_desactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_desactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
 	UPDATE procesoorganizacional SET estado = 0 WHERE id_proceso = p_id_proceso;
 END$$
 
-CREATE PROCEDURE `sp_editar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_rol` INT, IN `p_contraseña` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_editar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_rol` INT, IN `p_contraseña` VARCHAR(255))   BEGIN
     UPDATE usuario 
     SET 
         nombre = p_nombre,
@@ -459,7 +459,7 @@ CREATE PROCEDURE `sp_editar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre
     WHERE documento = p_documento;
 END$$
 
-CREATE PROCEDURE `sp_generar_token_recuperacion` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_generar_token_recuperacion` (IN `p_documento` VARCHAR(50))   BEGIN
     DECLARE v_token VARCHAR(255);
     DECLARE v_expira DATETIME;
 
@@ -487,7 +487,7 @@ CREATE PROCEDURE `sp_generar_token_recuperacion` (IN `p_documento` VARCHAR(50)) 
     SELECT v_token AS token, v_expira AS expira;
 END$$
 
-CREATE PROCEDURE `sp_listar_casos` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_casos` ()   BEGIN
 	SELECT 
 			c.id_caso,
             c.nombre,
@@ -506,7 +506,7 @@ CREATE PROCEDURE `sp_listar_casos` ()   BEGIN
 		ORDER BY c.fecha_inicio DESC;
 	END$$
 
-CREATE PROCEDURE `sp_listar_caso_por_comisionado` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_caso_por_comisionado` (IN `p_documento` VARCHAR(50))   BEGIN
     SELECT 
 			c.id_caso,
 			CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
@@ -525,7 +525,7 @@ CREATE PROCEDURE `sp_listar_caso_por_comisionado` (IN `p_documento` VARCHAR(50))
 		ORDER BY c.fecha_inicio DESC;
     END$$
 
-CREATE PROCEDURE `sp_listar_estados_caso` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_estados_caso` ()   BEGIN
     SELECT 
         id_estado,
         estado
@@ -533,11 +533,11 @@ CREATE PROCEDURE `sp_listar_estados_caso` ()   BEGIN
     ORDER BY id_estado ASC;
 END$$
 
-CREATE PROCEDURE `sp_listar_noti_admin` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_noti_admin` ()   BEGIN
 SELECT * FROM noti_administrador;
 END$$
 
-CREATE PROCEDURE `sp_listar_procesos_activos` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_procesos_activos` ()   BEGIN
     SELECT 
         id_proceso,
         nombre
@@ -546,12 +546,12 @@ CREATE PROCEDURE `sp_listar_procesos_activos` ()   BEGIN
     ORDER BY nombre ASC;
 END$$
 
-CREATE PROCEDURE `sp_listar_proceso_organizacional` ()   BEGIN 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_proceso_organizacional` ()   BEGIN 
 	SELECT p.id_proceso, p.nombre AS nombre_proceso, p.descripcion, p.fecha_creacion, p.estado, CONCAT(u.nombre, ' ', u.apellido) AS nombre_creador, u.documento, u.email
  	FROM procesoorganizacional p INNER JOIN usuario u ON p.documento_usuario = u.documento ORDER BY p.fecha_creacion DESC;
 END$$
 
-CREATE PROCEDURE `sp_listar_seguimientos_por_caso` (IN `p_caso` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_seguimientos_por_caso` (IN `p_caso` INT)   BEGIN
     SELECT 
         s.id_seguimiento,
         s.fecha_seguimiento,
@@ -564,7 +564,7 @@ CREATE PROCEDURE `sp_listar_seguimientos_por_caso` (IN `p_caso` INT)   BEGIN
     LIMIT 20;
 END$$
 
-CREATE PROCEDURE `sp_listar_tipos_caso` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_tipos_caso` ()   BEGIN
     SELECT 
         id_tipo_caso,
         nombre_caso
@@ -572,13 +572,13 @@ CREATE PROCEDURE `sp_listar_tipos_caso` ()   BEGIN
     ORDER BY nombre_caso ASC;
 END$$
 
-CREATE PROCEDURE `sp_listar_usuarios` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_usuarios` ()   BEGIN
 
  SELECT documento, nombre, apellido, email, id_rol, id_estado FROM usuario;
 
 END$$
 
-CREATE PROCEDURE `sp_login_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_login_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
     SELECT
         documento,
         CONCAT(nombre, ' ', apellido) AS     
@@ -600,7 +600,7 @@ AND id_estado = 1
     END IF;
 END$$
 
-CREATE PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
     SELECT 
     	c.documento,
         c.id_caso,
@@ -621,13 +621,13 @@ CREATE PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
     LIMIT 1;
 END$$
 
-CREATE PROCEDURE `sp_reactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_reactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
     UPDATE procesoorganizacional 
     SET estado = 1 
     WHERE id_proceso = p_id_proceso;
 END$$
 
-CREATE PROCEDURE `sp_registrar_caso` (IN `p_documento` VARCHAR(20), IN `p_id_proceso` INT, IN `p_id_tipo_caso` INT, IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_caso` (IN `p_documento` VARCHAR(20), IN `p_id_proceso` INT, IN `p_id_tipo_caso` INT, IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(255))   BEGIN
 DECLARE v_id_caso INT;
     
 INSERT INTO caso (documento, id_proceso, id_tipo_caso, descripcion, nombre) VALUES (p_documento, p_id_proceso, p_id_tipo_caso, p_descripcion, p_nombre);
@@ -654,7 +654,7 @@ INSERT INTO caso (documento, id_proceso, id_tipo_caso, descripcion, nombre) VALU
 
 END$$
 
-CREATE PROCEDURE `sp_registrar_informe` (IN `p_documento` VARCHAR(50), IN `p_formato` VARCHAR(10), IN `p_contenido` TEXT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_informe` (IN `p_documento` VARCHAR(50), IN `p_formato` VARCHAR(10), IN `p_contenido` TEXT)   BEGIN
 
 
 
@@ -684,16 +684,16 @@ CREATE PROCEDURE `sp_registrar_informe` (IN `p_documento` VARCHAR(50), IN `p_for
 
 END$$
 
-CREATE PROCEDURE `sp_registrar_monitoreo` (IN `p_documento` VARCHAR(50), IN `p_tipo` ENUM('inicio_sesion','accion'), IN `p_descripcion` TEXT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_monitoreo` (IN `p_documento` VARCHAR(50), IN `p_tipo` ENUM('inicio_sesion','accion'), IN `p_descripcion` TEXT)   BEGIN
 INSERT INTO usuario (documento, fecha, tipo, descripcion) VALUES (p_documento, NOW(), p_tipo, p_descripcion);
 END$$
 
-CREATE PROCEDURE `sp_registrar_proceso_organizacional` (IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(100), IN `p_documento_usuario` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_proceso_organizacional` (IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(100), IN `p_documento_usuario` VARCHAR(50))   BEGIN
     INSERT INTO procesoorganizacional (descripcion, nombre, documento_usuario)
     VALUES (p_descripcion, p_nombre, p_documento_usuario);
 END$$
 
-CREATE PROCEDURE `sp_registrar_seguimiento` (IN `p_observacion` TEXT, IN `p_caso` INT, IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_seguimiento` (IN `p_observacion` TEXT, IN `p_caso` INT, IN `p_documento` VARCHAR(50))   BEGIN
     
     IF NOT EXISTS (SELECT 1 FROM caso WHERE p_caso = caso.id_caso)
     	THEN SIGNAL SQLSTATE '45000'
@@ -710,14 +710,14 @@ CREATE PROCEDURE `sp_registrar_seguimiento` (IN `p_observacion` TEXT, IN `p_caso
     
     END$$
 
-CREATE PROCEDURE `sp_registrar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(50), IN `p_apellido` VARCHAR(50), IN `p_email` VARCHAR(100), IN `p_id_rol` INT(11), IN `p_contraseña` VARCHAR(255))   BEGIN 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(50), IN `p_apellido` VARCHAR(50), IN `p_email` VARCHAR(100), IN `p_id_rol` INT(11), IN `p_contraseña` VARCHAR(255))   BEGIN 
 
 INSERT INTO usuario (documento, nombre, apellido, email, id_rol, contraseña, fecha_registro, ultimo_inicio_sesion) 
 VALUES (p_documento, p_nombre, p_apellido, p_email, p_id_rol, p_contraseña, NOW(), NULL);
 
 END$$
 
-CREATE PROCEDURE `sp_reporte_pqrs_excel` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_reporte_pqrs_excel` ()   BEGIN
     DECLARE anio_actual INT;
     SET anio_actual = YEAR(CURDATE());
 
@@ -772,7 +772,7 @@ CREATE PROCEDURE `sp_reporte_pqrs_excel` ()   BEGIN
 
 END$$
 
-CREATE PROCEDURE `sp_resumen_casos_global` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_resumen_casos_global` ()   BEGIN
     SELECT
         COUNT(c.id_caso)                                                          AS total_casos,
 
@@ -792,7 +792,7 @@ CREATE PROCEDURE `sp_resumen_casos_global` ()   BEGIN
 
 END$$
 
-CREATE PROCEDURE `sp_resumen_casos_por_documento` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_resumen_casos_por_documento` (IN `p_documento` VARCHAR(50))   BEGIN
     IF NOT EXISTS (SELECT 1 FROM usuario WHERE documento = p_documento) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'El documento no corresponde a ningun usuario registrado.';
@@ -817,7 +817,7 @@ CREATE PROCEDURE `sp_resumen_casos_por_documento` (IN `p_documento` VARCHAR(50))
       AND YEAR(c.fecha_inicio) = YEAR(CURDATE());
 END$$
 
-CREATE PROCEDURE `sp_resumen_productividad_comisionados` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_resumen_productividad_comisionados` ()   BEGIN
     SELECT
         u.documento,
         u.nombre,
@@ -853,13 +853,13 @@ CREATE PROCEDURE `sp_resumen_productividad_comisionados` ()   BEGIN
     GROUP BY u.documento, u.nombre, u.apellido;
 END$$
 
-CREATE PROCEDURE `sp_traer_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_traer_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
 
 SELECT documento, nombre, apellido, email, id_rol, id_estado FROM usuario WHERE documento = TRIM(p_documento COLLATE utf8mb4_general_ci);
 
 END$$
 
-CREATE PROCEDURE `sp_validacion_estado_caso` (IN `p_id_caso` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_validacion_estado_caso` (IN `p_id_caso` INT)   BEGIN
 	SELECT id_estado AS id_estado
     FROM caso 
     WHERE id_caso = p_id_caso;
@@ -917,7 +917,41 @@ INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_proceso`, `fecha_inici
 (106, 'Solicitud de acceso al plan anual de SST', '1456333298', 14, '2026-02-23 14:15:09', NULL, 2, 3, 'Se solicita acceso o copia del plan anual de seguridad y salud en el trabajo para conocer las actividades programadas.'),
 (107, 'Demora en atención médica ocupacional', '1456333298', 11, '2026-02-23 14:15:31', NULL, 2, 4, 'El accionante manifiesta que la demora en la asignación de cita médica afecta su derecho fundamental a la salud, solicitando atención prioritaria.'),
 (110, 'Riesgo laboral no atendido oportunamente', '1756664828', 14, '2026-02-21 14:17:12', NULL, 2, 4, 'Se solicita protección de derechos fundamentales ante la persistencia de un riesgo laboral que no ha sido intervenido.'),
-(111, 'Negación de apoyo social en situación urgente', '1020304050', 10, '2026-02-17 14:17:51', NULL, 1, 4, 'El accionante solicita intervención inmediata al considerar vulnerados sus derechos por la negación de un apoyo social urgente.');
+(111, 'Negación de apoyo social en situación urgente', '1020304050', 10, '2026-02-17 14:17:51', NULL, 1, 4, 'El accionante solicita intervención inmediata al considerar vulnerados sus derechos por la negación de un apoyo social urgente.'),
+(118, 'Denuncia cableado expuesto', '1020304050', 14, '2022-01-18 07:40:00', '2022-01-20 15:10:00', 3, 1, 'Denuncia por cableado expuesto en sala de sistemas'),
+(119, 'Solicitud inspección ruido', '1456333298', 14, '2022-02-12 09:15:00', NULL, 1, 2, 'Solicitud de inspección por condiciones de ruido en taller'),
+(120, 'Incidente menor área operativa', '1656966633', 14, '2022-03-03 10:30:00', '2022-03-07 11:20:00', 3, 1, 'Reporte de incidente menor sin lesiones en área operativa'),
+(121, 'Derecho petición seguimiento SST', '1756664828', 14, '2022-04-21 14:10:00', NULL, 2, 3, 'Derecho de petición por seguimiento a reporte de seguridad'),
+(122, 'Denuncia falta señalización', '1020304050', 14, '2023-01-11 08:00:00', '2023-01-15 17:00:00', 3, 1, 'Denuncia por falta de señalización en zona de carga'),
+(123, 'Solicitud capacitación SST', '1456333298', 14, '2023-02-09 09:55:00', NULL, 1, 2, 'Solicitud de capacitación en prevención de riesgos'),
+(124, 'Incidente leve laboratorio', '1656966633', 14, '2023-03-14 11:25:00', '2023-03-18 13:40:00', 3, 1, 'Incidente leve durante práctica en laboratorio'),
+(125, 'Solicitud revisión EPP', '1756664828', 14, '2023-05-22 15:00:00', NULL, 2, 2, 'Solicitud de revisión de equipos de protección'),
+(126, 'Derecho petición auditoría SST', '1020304050', 14, '2024-01-05 07:50:00', NULL, 1, 3, 'Derecho de petición sobre estado de auditoría de seguridad'),
+(127, 'Denuncia riesgo ergonómico', '1456333298', 14, '2024-02-17 10:20:00', '2024-02-21 16:30:00', 3, 1, 'Denuncia por riesgo ergonómico en puesto administrativo'),
+(128, 'Solicitud evaluación riesgos', '1656966633', 14, '2024-03-29 12:10:00', NULL, 2, 2, 'Solicitud de evaluación de riesgos en aula técnica'),
+(129, 'Reporte caída leve', '1756664828', 14, '2024-05-03 09:00:00', '2024-05-06 14:00:00', 3, 1, 'Reporte de caída sin consecuencias graves'),
+(130, 'Solicitud inspección preventiva', '1020304050', 14, '2025-01-09 08:15:00', NULL, 1, 2, 'Solicitud de inspección preventiva general'),
+(131, 'Denuncia incumplimiento SST', '1456333298', 14, '2025-02-20 10:45:00', '2025-02-25 12:30:00', 3, 1, 'Denuncia por incumplimiento de protocolo de seguridad'),
+(132, 'Derecho petición seguimiento caso', '1656966633', 14, '2025-04-10 13:30:00', NULL, 2, 3, 'Derecho de petición por seguimiento a caso SST'),
+(133, 'Solicitud revisión locativa', '1756664828', 14, '2026-01-16 09:10:00', NULL, 1, 2, 'Solicitud de revisión de condiciones locativas'),
+(134, 'Solicitud apoyo psicológico', '1020304050', 10, '2022-02-01 10:10:00', '2022-02-03 12:00:00', 3, 2, 'Solicitud de apoyo psicológico institucional'),
+(135, 'Denuncia conflicto interpersonal', '1456333298', 10, '2022-06-18 11:20:00', NULL, 1, 1, 'Denuncia por conflicto interpersonal entre funcionarios'),
+(136, 'Solicitud programa bienestar', '1656966633', 10, '2023-02-12 08:40:00', '2023-02-18 15:10:00', 3, 2, 'Solicitud de inclusión en programa de bienestar'),
+(137, 'Derecho petición beneficios', '1756664828', 10, '2023-07-07 14:25:00', NULL, 2, 3, 'Derecho de petición por información de beneficios'),
+(138, 'Solicitud acompañamiento', '1020304050', 10, '2024-01-22 09:30:00', NULL, 1, 2, 'Solicitud de acompañamiento psicosocial'),
+(139, 'Denuncia acoso laboral', '1456333298', 10, '2024-04-11 11:15:00', '2024-04-16 16:00:00', 3, 1, 'Denuncia por presunto acoso laboral'),
+(140, 'Solicitud actividad deportiva', '1656966633', 10, '2025-03-03 10:50:00', NULL, 1, 2, 'Solicitud de inscripción a actividad deportiva'),
+(141, 'Derecho petición subsidios', '1756664828', 10, '2026-02-08 13:05:00', NULL, 2, 3, 'Derecho de petición sobre subsidios'),
+(142, 'Solicitud soporte sistema', '1020304050', 11, '2022-03-10 08:30:00', '2022-03-14 17:00:00', 3, 2, 'Solicitud de soporte a sistema institucional'),
+(143, 'Derecho petición tecnológica', '1456333298', 11, '2023-06-02 09:10:00', NULL, 1, 3, 'Derecho de petición por respuesta a solicitud tecnológica'),
+(144, 'Solicitud actualización usuario', '1656966633', 11, '2024-02-19 11:00:00', '2024-02-23 12:30:00', 3, 2, 'Solicitud de actualización de usuario'),
+(145, 'Denuncia fallas plataforma', '1756664828', 11, '2025-05-05 14:10:00', NULL, 2, 1, 'Denuncia por fallas recurrentes en plataforma'),
+(146, 'Solicitud dotación uniforme', '1020304050', 12, '2022-04-01 10:10:00', '2022-04-05 11:00:00', 3, 2, 'Solicitud de dotación de uniforme'),
+(147, 'Derecho petición dotación', '1456333298', 12, '2023-08-15 09:40:00', NULL, 1, 3, 'Derecho de petición por entrega tardía de dotación'),
+(148, 'Solicitud reposición botas', '1656966633', 12, '2024-03-20 12:30:00', '2024-03-25 15:10:00', 3, 2, 'Solicitud de reposición de botas de seguridad'),
+(149, 'Solicitud información incentivos', '1756664828', 13, '2022-11-11 08:00:00', '2022-11-15 10:30:00', 3, 2, 'Solicitud de información sobre incentivos'),
+(150, 'Derecho petición convocatoria', '1020304050', 13, '2024-06-06 09:45:00', NULL, 1, 3, 'Derecho de petición por resultados de convocatoria'),
+(151, 'Solicitud inscripción incentivos', '1456333298', 13, '2026-01-20 11:20:00', NULL, 2, 2, 'Solicitud de inscripción a programa de incentivos');
 
 --
 -- Disparadores `caso`
@@ -1130,7 +1164,41 @@ INSERT INTO `noti_comisionado` (`id_notificacion`, `documento`, `mensaje`, `fech
 (12, '1656966633', 'El caso \"Derecho de petición – Estado de incentivo institucional\" con el ID: 84 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Marleny Gaviria', '2026-02-24 16:05:57'),
 (13, '1020304050', 'El caso \"Negación de apoyo social en situación urgente\" con el ID: 111 perteneciente al proceso \"Bienestar Social\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simón Gonzalez Pelaez', '2026-02-24 16:06:06'),
 (14, '1756664828', 'El caso \"Riesgo laboral no atendido oportunamente\" con el ID: 110 perteneciente al proceso \"SST\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Zack Lopez', '2026-02-24 16:06:12'),
-(15, '1756664828', 'El caso \"Programación de examen médico ocupacional\" con el ID: 99 perteneciente al proceso \"SSEMI\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Zack Lopez', '2026-02-24 16:08:14');
+(15, '1756664828', 'El caso \"Programación de examen médico ocupacional\" con el ID: 99 perteneciente al proceso \"SSEMI\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Zack Lopez', '2026-02-24 16:08:14'),
+(16, '1020304050', 'NUEVO CASO: Denuncia cableado expuesto ID CASO: 118. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simón Gonzalez Pelaez', '2026-03-02 15:50:13'),
+(17, '1456333298', 'NUEVO CASO: Solicitud inspección ruido ID CASO: 119. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal', '2026-03-02 15:50:13'),
+(18, '1656966633', 'NUEVO CASO: Incidente menor área operativa ID CASO: 120. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-03-02 15:50:13'),
+(19, '1756664828', 'NUEVO CASO: Derecho petición seguimiento SST ID CASO: 121. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Zack Lopez', '2026-03-02 15:50:13'),
+(20, '1020304050', 'NUEVO CASO: Denuncia falta señalización ID CASO: 122. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simón Gonzalez Pelaez', '2026-03-02 15:50:13'),
+(21, '1456333298', 'NUEVO CASO: Solicitud capacitación SST ID CASO: 123. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal', '2026-03-02 15:50:13'),
+(22, '1656966633', 'NUEVO CASO: Incidente leve laboratorio ID CASO: 124. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-03-02 15:50:13'),
+(23, '1756664828', 'NUEVO CASO: Solicitud revisión EPP ID CASO: 125. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Zack Lopez', '2026-03-02 15:50:13'),
+(24, '1020304050', 'NUEVO CASO: Derecho petición auditoría SST ID CASO: 126. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simón Gonzalez Pelaez', '2026-03-02 15:50:13'),
+(25, '1456333298', 'NUEVO CASO: Denuncia riesgo ergonómico ID CASO: 127. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal', '2026-03-02 15:50:13'),
+(26, '1656966633', 'NUEVO CASO: Solicitud evaluación riesgos ID CASO: 128. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-03-02 15:50:13'),
+(27, '1756664828', 'NUEVO CASO: Reporte caída leve ID CASO: 129. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Zack Lopez', '2026-03-02 15:50:13'),
+(28, '1020304050', 'NUEVO CASO: Solicitud inspección preventiva ID CASO: 130. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simón Gonzalez Pelaez', '2026-03-02 15:50:13'),
+(29, '1456333298', 'NUEVO CASO: Denuncia incumplimiento SST ID CASO: 131. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal', '2026-03-02 15:50:13'),
+(30, '1656966633', 'NUEVO CASO: Derecho petición seguimiento caso ID CASO: 132. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-03-02 15:50:13'),
+(31, '1756664828', 'NUEVO CASO: Solicitud revisión locativa ID CASO: 133. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Zack Lopez', '2026-03-02 15:50:13'),
+(32, '1020304050', 'NUEVO CASO: Solicitud apoyo psicológico ID CASO: 134. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simón Gonzalez Pelaez', '2026-03-02 15:50:13'),
+(33, '1456333298', 'NUEVO CASO: Denuncia conflicto interpersonal ID CASO: 135. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Juan Manuel Correal', '2026-03-02 15:50:13'),
+(34, '1656966633', 'NUEVO CASO: Solicitud programa bienestar ID CASO: 136. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Marleny Gaviria', '2026-03-02 15:50:13'),
+(35, '1756664828', 'NUEVO CASO: Derecho petición beneficios ID CASO: 137. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Zack Lopez', '2026-03-02 15:50:13'),
+(36, '1020304050', 'NUEVO CASO: Solicitud acompañamiento ID CASO: 138. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simón Gonzalez Pelaez', '2026-03-02 15:50:13'),
+(37, '1456333298', 'NUEVO CASO: Denuncia acoso laboral ID CASO: 139. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Juan Manuel Correal', '2026-03-02 15:50:13'),
+(38, '1656966633', 'NUEVO CASO: Solicitud actividad deportiva ID CASO: 140. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Marleny Gaviria', '2026-03-02 15:50:13'),
+(39, '1756664828', 'NUEVO CASO: Derecho petición subsidios ID CASO: 141. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Zack Lopez', '2026-03-02 15:50:13'),
+(40, '1020304050', 'NUEVO CASO: Solicitud soporte sistema ID CASO: 142. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Simón Gonzalez Pelaez', '2026-03-02 15:50:13'),
+(41, '1456333298', 'NUEVO CASO: Derecho petición tecnológica ID CASO: 143. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Juan Manuel Correal', '2026-03-02 15:50:13'),
+(42, '1656966633', 'NUEVO CASO: Solicitud actualización usuario ID CASO: 144. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Marleny Gaviria', '2026-03-02 15:50:13'),
+(43, '1756664828', 'NUEVO CASO: Denuncia fallas plataforma ID CASO: 145. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Zack Lopez', '2026-03-02 15:50:13'),
+(44, '1020304050', 'NUEVO CASO: Solicitud dotación uniforme ID CASO: 146. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Simón Gonzalez Pelaez', '2026-03-02 15:50:13'),
+(45, '1456333298', 'NUEVO CASO: Derecho petición dotación ID CASO: 147. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Juan Manuel Correal', '2026-03-02 15:50:13'),
+(46, '1656966633', 'NUEVO CASO: Solicitud reposición botas ID CASO: 148. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Marleny Gaviria', '2026-03-02 15:50:13'),
+(47, '1756664828', 'NUEVO CASO: Solicitud información incentivos ID CASO: 149. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Zack Lopez', '2026-03-02 15:50:13'),
+(48, '1020304050', 'NUEVO CASO: Derecho petición convocatoria ID CASO: 150. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simón Gonzalez Pelaez', '2026-03-02 15:50:13'),
+(49, '1456333298', 'NUEVO CASO: Solicitud inscripción incentivos ID CASO: 151. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal', '2026-03-02 15:50:13');
 
 -- --------------------------------------------------------
 
@@ -1270,11 +1338,11 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
-('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', NULL, 2, '$2y$10$c1GnSbgIXLc3OqajRQKaX.4HP5FxdZ5Nuv8ScWzWLc3W0bsuFH5Fy', '2026-02-12 14:18:58', '2026-03-02 15:24:29', 1),
-('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2026-03-02 12:38:27', 1),
-('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', NULL, 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-03-02 12:39:20', 1),
-('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-02-12 15:01:09', 1),
-('1756664828', 'Zack', 'Lopez', 'zackycarvajal@gmail.com', '3001234567', 2, '$2y$10$urjYpXJh5Dt2iMs1ECUJcuiaaZuxUNv9HLM4UBN9qjq3LIy2NJWWW', '2026-02-12 14:20:29', '2026-02-23 23:22:33', 1);
+('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', NULL, 2, '$2y$10$c1GnSbgIXLc3OqajRQKaX.4HP5FxdZ5Nuv8ScWzWLc3W0bsuFH5Fy', '2026-02-12 14:18:58', '2026-03-02 15:50:58', 1),
+('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2026-03-02 15:53:05', 1),
+('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', NULL, 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-03-02 16:02:26', 1),
+('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-03-02 15:52:20', 1),
+('1756664828', 'Zack', 'Lopez', 'zackycarvajal@gmail.com', '3001234567', 2, '$2y$10$LU5cPmTqh6IsYxuAjhNw8.5OIWu/UoGxFBHDP2fOEzTYDquwwWuXC', '2026-02-12 14:20:29', '2026-03-02 15:55:43', 1);
 
 --
 -- Disparadores `usuario`
@@ -1423,7 +1491,7 @@ ALTER TABLE `archivo`
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
-  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=118;
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=152;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`
@@ -1459,7 +1527,7 @@ ALTER TABLE `noti_administrador`
 -- AUTO_INCREMENT de la tabla `noti_comisionado`
 --
 ALTER TABLE `noti_comisionado`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=16;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
