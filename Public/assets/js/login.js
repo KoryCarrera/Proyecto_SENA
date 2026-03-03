@@ -52,8 +52,6 @@ var csrfToken = document.getElementById("csrf_token")
 //Se captura el boton de enviar para darle un evento
 var enviar = document.getElementById("ingresar");
 
-//Se captura el boton de "olvidaste tu contraseña" para darle un evento
-var olvidarContrasena = document.getElementById("olvidarContrasena");
 
 enviar.addEventListener('click', function login() { //Se le agrega el evento click y una función
 
@@ -120,16 +118,6 @@ enviar.addEventListener('click', function login() { //Se le agrega el evento cli
 }
 );
 
-//Agregamos el evento del "olvidaste tu contrasena"
-olvidarContrasena.addEventListener('click', function () {
-    Swal.fire({
-        title: "¿Olvidaste tu contraseña?",
-        text: "Por favor, contacta al administrador encargado.",
-        icon: "info",
-        theme: 'dark',
-        timer: 3000
-    });
-});
 
 document.addEventListener('keydown', function (event) {
 
