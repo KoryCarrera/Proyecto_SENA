@@ -1,6 +1,7 @@
 <?php
 
-function listarCasos($pdo){
+function listarCasos($pdo)
+{
     $stmt = $pdo->prepare("CALL sp_listar_casos()");
 
     try {
@@ -357,19 +358,20 @@ function casosPorComisionado($pdo)
     }
 }
 
-function casosPorComisionadoMes($pdo){
+function casosPorComisionadoMes($pdo)
+{
     $stmt = $pdo->prepare("CALL sp_casos_por_comi_mes");
 
     try {
         $stmt->execute();
         $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
-        
-        if($datos){
-            $comisionado =[];
+
+        if ($datos) {
+            $comisionado = [];
             $total = [];
 
-            foreach ($datos as $temp){
+            foreach ($datos as $temp) {
                 $comisionado[] = $temp['comisionado'];
                 $total[] = (int)$temp['total_casos'];
             }
@@ -379,7 +381,7 @@ function casosPorComisionadoMes($pdo){
                 'casos' => $total
             ];
         } else {
-        return false;
+            return false;
         }
     } catch (PDOException $e) {
         error_log("error en la obtención de casos por comisionado" . $e->getMessage());
@@ -387,19 +389,20 @@ function casosPorComisionadoMes($pdo){
     }
 }
 
-function casosPorComisionadoSemana($pdo){
+function casosPorComisionadoSemana($pdo)
+{
     $stmt = $pdo->prepare("CALL sp_casos_por_comi_semana");
 
     try {
         $stmt->execute();
         $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
-        
-        if($datos){
-            $comisionado =[];
+
+        if ($datos) {
+            $comisionado = [];
             $total = [];
 
-            foreach ($datos as $temp){
+            foreach ($datos as $temp) {
                 $comisionado[] = $temp['comisionado'];
                 $total[] = (int)$temp['total_casos'];
             }
@@ -409,7 +412,7 @@ function casosPorComisionadoSemana($pdo){
                 'casos' => $total
             ];
         } else {
-        return false;
+            return false;
         }
     } catch (PDOException $e) {
         error_log("error en la obtención de casos por comisionado" . $e->getMessage());
@@ -496,7 +499,7 @@ function casosPorSemana($pdo)
             $casos = [];
 
             foreach ($datos as $temp) { //Se recorren los arrays con la palaba reservada
-                $dia[] = (int)$temp['dia_semana']; 
+                $dia[] = (int)$temp['dia_semana'];
                 $casos[] = (int) $temp['casos_dia']; //Especificamos el tipo de dato y guardamos casos dentro de su variable
             }
 
@@ -742,7 +745,6 @@ function usuariosPorRol($pdo)
             "usuarios" => $totales,
             "total" => $totalGeneral
         ];
-
     } catch (PDOException $e) {
         return false;
     }
@@ -772,7 +774,6 @@ function usuariosPorEstado($pdo)
             "usuarios" => $totales,
             "total" => $totalGeneral
         ];
-
     } catch (PDOException $e) {
         return false;
     }
@@ -1068,7 +1069,6 @@ function listarProceso($pdo)
                 'message' => 'No se pudieron recuperar los datos'
             ];
         }
-
     } catch (PDOException $e) {
         error_log("Error en listarProceso: " . $e->getMessage());
         return [
@@ -1095,7 +1095,6 @@ function tablaBaseExcel($pdo)
             return false;
         }
     } catch (PDOException) {
-
     }
 }
 
@@ -1141,7 +1140,6 @@ function listarProcesosActivos($pdo)
         } else {
             return false;
         }
-
     } catch (PDOException $e) {
         error_log("Error al listar procesos activos: " . $e->getMessage());
         return false;
@@ -1165,7 +1163,6 @@ function listarTiposCaso($pdo)
         } else {
             return false;
         }
-
     } catch (PDOException $e) {
         error_log("Error al listar tipos de caso: " . $e->getMessage());
         return false;
@@ -1189,7 +1186,6 @@ function listarEstadosCaso($pdo)
         } else {
             return false;
         }
-
     } catch (PDOException $e) {
         error_log("Error al listar estados de caso: " . $e->getMessage());
         return false;
@@ -1215,7 +1211,6 @@ function validarEstado($pdo, $idCaso)
         } else {
             return false;
         }
-
     } catch (PDOException $e) {
         error_log("Error al listar estados de caso: " . $e->getMessage());
         return false;
@@ -1244,8 +1239,7 @@ function gestionarProceso($pdo, $nombre)
         error_log("Error al obtener el proceso solicitado " . $e->getMessage());
         return false;
     }
-}
-;
+};
 
 function conteoGeneral($pdo)
 {
@@ -1261,12 +1255,10 @@ function conteoGeneral($pdo)
         }
 
         return $conteoGeneral;
-
     } catch (PDOException $e) {
 
         error_log("Error al obtener el conteo general " . $e->getMessage());
         return false;
-
     }
 }
 
@@ -1285,11 +1277,80 @@ function conteoPorUsuario($pdo, $documento)
         }
 
         return $conteoPorUsuario;
-
     } catch (PDOException $e) {
 
         error_log("Error al obtener el conteo por usuario " . $e->getMessage());
         return false;
+    }
+}
 
+function listarNotiAdmin($pdo)
+{
+    $stmt = $pdo->prepare("CALL sp_listar_noti_admin");
+    try {
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($data) {
+            $dataFormateada = [];
+            
+            foreach ($data as $temp) {
+               $dataFormateada[] = [
+                'id' => $temp['id_notificacion'],
+                'documento' => $temp['documento'],
+                'descripción' =>  $temp['mensaje'],
+                'fecha' => $temp['fecha']
+               ];
+            }
+
+            return [
+                'status' => 'ok',
+                'data' => $dataFormateada
+            ];
+        } else {
+            return false;
+        }
+    } catch (PDOException $e) {
+
+        error_log("Error al obtener notificaciones " . $e->getMessage());
+        return false;
+    }
+}
+
+function listarNotiComi($pdo, $documento)
+{
+    $stmt = $pdo->prepare("CALL sp_listar_noti_comi(?)");
+
+    $stmt->bindParam(1, $documento, PDO::PARAM_STR);
+
+    try {
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        if ($data) {
+            $dataFormateada = [];
+            
+            foreach ($data as $temp) {
+               $dataFormateada[] = [
+                'id' => $temp['id_notificacion'],
+                'documento' => $temp['documento'],
+                'descripción' =>  $temp['mensaje'],
+                'fecha' => $temp['fecha']
+               ];
+            }
+
+            return [
+                'status' => 'ok',
+                'data' => $dataFormateada
+            ];
+        } else {
+            return false;
+        }
+    } catch (PDOException $e) {
+
+        error_log("Error al obtener notificaciones " . $e->getMessage());
+        return false;
     }
 }

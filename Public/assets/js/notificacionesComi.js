@@ -1,4 +1,4 @@
-const ENDPOINT = '';
+const ENDPOINT = '/listarNotiComi';
 
 const containerNotificaciones = document.getElementById('containerNotis');
 
