@@ -62,7 +62,7 @@ CREATE PROCEDURE `sp_analisis_demanda` ()   BEGIN
     LIMIT 5;
 END$$
 
-CREATE PROCEDURE `sp_buscar_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE PROCEDURE `sp_buscar_usuario` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
 u.documento, 
@@ -356,7 +356,7 @@ CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
 END$$
 
 CREATE PROCEDURE `sp_configurar_usuario` (IN `p_documento` VARCHAR(20), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN
-    UPDATE usuario 
+UPDATE usuario 
     SET 
         nombre = COALESCE(NULLIF(p_nombre, ''), nombre),
         apellido = COALESCE(NULLIF(p_apellido, ''), apellido),
