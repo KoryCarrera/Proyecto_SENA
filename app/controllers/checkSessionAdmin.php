@@ -1,6 +1,6 @@
 <?php
 // Define el tiempo máximo de inactividad en segundos (ej. 5 minutos = 300 segundos)
-define('TIEMPO_MAXIMO_INACTIVIDAD', 900);
+define('TIEMPO_MAXIMO_INACTIVIDAD', 5);
 
 // Inicia la sesión si aún no está activa para poder acceder a $_SESSION
 if (session_status() == PHP_SESSION_NONE) {

@@ -72,7 +72,10 @@ function buscarUsuario($pdo, $document)
         return $usuario;
     } catch (PDOException $e) {
         error_log("Error al buscar el usuario: " . $e->getMessage()); //Captamos errores en el log del servidor 
-        return null;
+        return [
+            'status' => 'error',
+            'mensaje' => 'Error al buscar el usuario'
+        ];
     }
 }
 
