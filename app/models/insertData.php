@@ -1,6 +1,9 @@
 <?php
 
 //FUNCIÓN: REGISTRAR CASOS
+
+use Complex\Functions;
+
 function registrarCasos($pdo, $documento, $proceso, $tipoCaso, $descripcion, $nombre)
 {
     // PREPARACIÓN DE LA LLAMADA AL PROCEDIMIENTO ALMACENADO
@@ -18,8 +21,9 @@ function registrarCasos($pdo, $documento, $proceso, $tipoCaso, $descripcion, $no
         $stmt->closeCursor(); // Limpiar el cursor después de la ejecución
 
         if (!$casoRegistrado) {
-            return ['success' => false];
+            return ['success' => false, 'data' => $casoRegistrado];
         }
+        return ['success' => true, 'data' => $casoRegistrado];
     } catch (PDOException $e) {
         error_log("Error al registrar caso: " . $e->getMessage());
         return ['success' => false];
@@ -224,24 +228,34 @@ function enviarCorreo($asunto, $cuerpoHTML, $cuerpoAlt, $destinatarios, $conCopi
         };
 
         //contenido del mensaje
-        $mail -> isHTML(true);
-        $mail -> Subject = $asunto;
-        $mail -> Body = $cuerpoHTML;
-        $mail -> AltBody = $cuerpoAlt;
+        $mail->isHTML(true);
+        $mail->Subject = $asunto;
+        $mail->Body = $cuerpoHTML;
+        $mail->AltBody = $cuerpoAlt;
 
         //Capturar errores de envio
 
-        if(!$mail->send()) {
+        if (!$mail->send()) {
 
-            error_log('Ha ocurrido un error al enviar la notificacion via gmail '. $mail->ErrorInfo);
+            error_log('Ha ocurrido un error al enviar la notificacion via gmail ' . $mail->ErrorInfo);
             return false;
         } else {
             return true;
         }
     } catch (Exception $e) {
 
-    error_log('Ha ocurrido un error critico al enviar el correo, errores: 1: '. $mail -> ErrorInfo. '2: '. $e->getMessage());
+        error_log('Ha ocurrido un error critico al enviar el correo, errores: 1: ' . $mail->ErrorInfo . '2: ' . $e->getMessage());
 
-    return false;
+        return false;
     }
 };
+
+function listarNotiAdmin($pdo){
+    $stmt = $pdo->prepare("CALL sp_listar_noti_admin()");
+    try {
+        $stmt->execute();
+        $notificaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return $notificaciones;
+    } catch (PDOException $e) {
+        error_log("Error en listarNotiAdmin: " . $e->getMessage());

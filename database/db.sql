@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 02-03-2026 a las 16:08:13
+-- Tiempo de generación: 26-02-2026 a las 14:57:59
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -62,7 +62,7 @@ CREATE PROCEDURE `sp_analisis_demanda` ()   BEGIN
     LIMIT 5;
 END$$
 
-CREATE PROCEDURE `sp_buscar_usuario` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `sp_buscar_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
 
 SELECT 
 u.documento, 
@@ -356,7 +356,7 @@ CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
 END$$
 
 CREATE PROCEDURE `sp_configurar_usuario` (IN `p_documento` VARCHAR(20), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN
-UPDATE usuario 
+    UPDATE usuario 
     SET 
         nombre = COALESCE(NULLIF(p_nombre, ''), nombre),
         apellido = COALESCE(NULLIF(p_apellido, ''), apellido),
@@ -1098,7 +1098,9 @@ INSERT INTO `informe` (`id_informe`, `documento`, `fecha_generacion`, `tipo_info
 (44, '1487569254', '2026-02-14 16:37:50', 'PDF', 'qgr5ert'),
 (45, '1487569254', '2026-02-14 16:37:54', 'PDF', 'qgr5ert'),
 (46, '1487569254', '2026-02-14 16:38:02', 'PDF', 'qgr5ert'),
-(47, '1487569254', '2026-02-14 16:45:17', 'PDF', 'trhrthrt');
+(47, '1487569254', '2026-02-14 16:45:17', 'PDF', 'trhrthrt'),
+(48, '1487569254', '2026-03-03 14:38:01', 'PDF', 'Reporte Casos'),
+(49, '1487569254', '2026-03-03 14:39:10', 'EXCEL', NULL);
 
 -- --------------------------------------------------------
 
@@ -1198,7 +1200,21 @@ INSERT INTO `noti_comisionado` (`id_notificacion`, `documento`, `mensaje`, `fech
 (46, '1656966633', 'NUEVO CASO: Solicitud reposición botas ID CASO: 148. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Marleny Gaviria', '2026-03-02 15:50:13'),
 (47, '1756664828', 'NUEVO CASO: Solicitud información incentivos ID CASO: 149. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Zack Lopez', '2026-03-02 15:50:13'),
 (48, '1020304050', 'NUEVO CASO: Derecho petición convocatoria ID CASO: 150. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simón Gonzalez Pelaez', '2026-03-02 15:50:13'),
-(49, '1456333298', 'NUEVO CASO: Solicitud inscripción incentivos ID CASO: 151. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal', '2026-03-02 15:50:13');
+(49, '1456333298', 'NUEVO CASO: Solicitud inscripción incentivos ID CASO: 151. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal', '2026-03-02 15:50:13'),
+(50, '1020304050', 'NUEVO CASO: example ID CASO: 152. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 12:45:41'),
+(51, '1020304050', 'NUEVO CASO: example ID CASO: 153. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 12:45:54'),
+(52, '1020304050', 'NUEVO CASO: example ID CASO: 154. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 12:48:55'),
+(53, '1020304050', 'NUEVO CASO: example ID CASO: 155. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 12:49:26'),
+(54, '1020304050', 'NUEVO CASO: example ID CASO: 156. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 13:59:37'),
+(55, '1020304050', 'NUEVO CASO: example ID CASO: 157. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 14:03:01'),
+(56, '1020304050', 'NUEVO CASO: ejemplo 1 ID CASO: 158. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 14:09:26'),
+(57, '1020304050', 'NUEVO CASO: example ID CASO: 159. \nSe ha registrado un nuevo caso de Acción de Tutela Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 14:22:30'),
+(58, '1020304050', 'NUEVO CASO: example ID CASO: 160. \nSe ha registrado un nuevo caso de Acción de Tutela Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 14:22:47'),
+(59, '1020304050', 'NUEVO CASO: example ID CASO: 161. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 14:24:56'),
+(60, '1020304050', 'NUEVO CASO: example ID CASO: 162. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 14:49:08'),
+(61, '1020304050', 'NUEVO CASO: example 2 ID CASO: 163. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 14:57:06'),
+(62, '1020304050', 'NUEVO CASO: example 2 ID CASO: 164. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 14:57:28'),
+(63, '1020304050', 'NUEVO CASO: ejemplito ID CASO: 165. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 15:00:43');
 
 -- --------------------------------------------------------
 
@@ -1338,9 +1354,9 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
-('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezsimon@gmail.com', NULL, 2, '$2y$10$c1GnSbgIXLc3OqajRQKaX.4HP5FxdZ5Nuv8ScWzWLc3W0bsuFH5Fy', '2026-02-12 14:18:58', '2026-03-02 15:50:58', 1),
-('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2026-03-02 15:53:05', 1),
-('1487569254', 'Kory', 'Carrerita', 'carreritakory@gmail.com', NULL, 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-03-02 16:02:26', 1),
+('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$c1GnSbgIXLc3OqajRQKaX.4HP5FxdZ5Nuv8ScWzWLc3W0bsuFH5Fy', '2026-02-12 14:18:58', '2026-03-03 14:48:48', 1),
+('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2026-03-03 14:46:07', 1),
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', NULL, 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-03-03 14:34:53', 1),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-03-02 15:52:20', 1),
 ('1756664828', 'Zack', 'Lopez', 'zackycarvajal@gmail.com', '3001234567', 2, '$2y$10$LU5cPmTqh6IsYxuAjhNw8.5OIWu/UoGxFBHDP2fOEzTYDquwwWuXC', '2026-02-12 14:20:29', '2026-03-02 15:55:43', 1);
 
@@ -1491,7 +1507,7 @@ ALTER TABLE `archivo`
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
-  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=152;
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=166;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`
@@ -1509,7 +1525,7 @@ ALTER TABLE `estado`
 -- AUTO_INCREMENT de la tabla `informe`
 --
 ALTER TABLE `informe`
-  MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=48;
+  MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT de la tabla `monitoreo`
@@ -1527,7 +1543,7 @@ ALTER TABLE `noti_administrador`
 -- AUTO_INCREMENT de la tabla `noti_comisionado`
 --
 ALTER TABLE `noti_comisionado`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=50;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
@@ -1632,6 +1648,19 @@ ALTER TABLE `token_usuario`
 ALTER TABLE `usuario`
   ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_rol`) REFERENCES `rol` (`id_rol`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `usuario_ibfk_2` FOREIGN KEY (`id_estado`) REFERENCES `estado_usuario` (`id_estado`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+DELIMITER $$
+--
+-- Eventos
+--
+CREATE EVENT `ev_caso_caducado` ON SCHEDULE EVERY 1 DAY STARTS '2026-02-26 15:49:18' ON COMPLETION PRESERVE ENABLE COMMENT 'Marca como no atendido los casos con mas de 2 meses' DO BEGIN
+UPDATE caso
+   SET id_estado = 3
+   WHERE fecha_inicio <= NOW() - INTERVAL 2 MONTH
+   AND id_estado <> 3;
+END$$
+
+DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
