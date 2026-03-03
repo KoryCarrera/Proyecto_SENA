@@ -1,354 +1,408 @@
-//definimos todos nuestros endpoints
-const ENDPOINT_LISTAR = '/listarProceso';
-const ENDPOINT_CREAR = '/registrarProceso';
-const ENDPOINT_DESACTIVAR = '/desactivarProceso';
-const ENDPOINT_REACTIVAR = '/reactivarProceso';
+// ─── Endpoints ───────────────────────────────────────────────────────────────
+const ENDPOINT_LISTAR = "/listarProceso";
+const ENDPOINT_CREAR = "/registrarProceso";
+const ENDPOINT_DESACTIVAR = "/desactivarProceso";
+const ENDPOINT_REACTIVAR = "/reactivarProceso";
 
-const cargarProcesos = async () => { //utilizamos una arrow function para cargar los procesos
+// ─── Cargar procesos ──────────────────────────────────────────────────────────
+const cargarProcesos = async () => {
+  const cuerpoTabla = document.getElementById("tablaProcesosBody");
 
-    //capturamos el tbody
-    const cuerpoTabla = document.getElementById("tablaProcesos");
+  if (!cuerpoTabla) {
+    console.error("No se encuentra el tbody de la tabla de procesos");
+    return;
+  }
 
-    //validamos la captura
-    if (!cuerpoTabla) {
-        console.error('No se encuentra  la tabla');
-        return;
-    }
+  // Destruir DataTable existente para evitar duplicados
+  if ($.fn.DataTable.isDataTable("#tablaProcesos")) {
+    $("#tablaProcesos").DataTable().destroy();
+  }
 
-    cuerpoTabla.innerHTML = `
+  cuerpoTabla.innerHTML = `
+    <tr>
+      <td colspan="6" class="text-center py-4">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-2 mb-0">Cargando procesos...</p>
+      </td>
+    </tr>`;
+
+  try {
+    const response = await fetch(ENDPOINT_LISTAR);
+    const data = await response.json();
+
+    if (data.status === "ok" && data.procesos.length > 0) {
+      renderizarTablaProcesos(data.procesos, cuerpoTabla);
+    } else {
+      cuerpoTabla.innerHTML = `
         <tr>
-            <td colspan="5" class="text-center">
-                 Cargando procesos
-            </td>
-        </tr>
-    `;
+          <td colspan="6" class="text-center py-4 text-warning">
+            <i class="bi bi-exclamation-triangle fs-1"></i>
+            <p class="mt-2 mb-0 fw-bold">No hay procesos registrados</p>
+          </td>
+        </tr>`;
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    cuerpoTabla.innerHTML = `
+      <tr>
+        <td colspan="6" class="text-center py-4 text-danger">
+          <p class="fw-bold">Error: ${error.message}</p>
+          <button class="btn btn-sm btn-primary mt-2" onclick="cargarProcesos()">Reintentar</button>
+        </td>
+      </tr>`;
+  }
+};
 
-    try {
-        //Esperamos una respuesta y un formato json de la misma respuesta
-        const response = await fetch(ENDPOINT_LISTAR);
+// ─── Renderizar tabla ─────────────────────────────────────────────────────────
+const renderizarTablaProcesos = (procesos, cuerpoTabla) => {
+  let htmlFilas = "";
+
+  procesos.forEach((proceso) => {
+    const botonGestion =
+      proceso.estado == 1
+        ? `<button class="btn-gestionar btn-desactivar bg-red-600 hover:bg-red-500 px-3 py-2 rounded-lg text-white" onclick="desactivarProceso(${proceso.id_proceso})">Desactivar</button>`
+        : `<button class="btn-gestionar btn-reactivar bg-indigo-600 hover:bg-indigo-500 px-3 py-2 rounded-lg text-white" onclick="reactivarProceso(${proceso.id_proceso})">Reactivar</button>`;
+
+    htmlFilas += `
+      <tr>
+        <td>${proceso.nombre_proceso}</td>
+        <td>${proceso.descripcion}</td>
+        <td>${proceso.fecha_creacion}</td>
+        <td>${proceso.documento}</td>
+        <td>${proceso.nombre_creador}</td>
+        <td>${botonGestion}</td>
+      </tr>`;
+  });
+
+  cuerpoTabla.innerHTML = htmlFilas;
+
+  // ── Inicializar DataTables con datos reales en el DOM ──────────────────────
+  var table = $("#tablaProcesos").DataTable({
+    pageLength: 10,
+    lengthMenu: [10, 25, 50, 100],
+    language: {
+      url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
+    },
+    dom: "rti", // Sin paginación nativa,para que recuerden,falta la f,la l y la p,
+    drawCallback: function () {
+      actualizarPaginacionProcesos(table);
+    },
+  });
+
+  // ── Buscador personalizado ─────────────────────────────────────────────────
+  $("#buscarProcesos")
+    .off("keyup")
+    .on("keyup", function () {
+      table.search(this.value).draw();
+    });
+
+  // ── Select de cantidad ─────────────────────────────────────────────────────
+  $("#filtroCantidadProcesos")
+    .off("change")
+    .on("change", function () {
+      table.page.len(parseInt($(this).val())).draw();
+    });
+};
+
+// ─── Paginación visual de procesos ────────────────────────────────────────────
+const actualizarPaginacionProcesos = (table) => {
+  if (!table) return;
+
+  const info = table.page.info();
+  const paginaActual = info.page;
+  const totalPaginas = info.pages;
+
+  const btnPrev = document.getElementById("btnProcesoAnterior");
+  const btnNext = document.getElementById("btnProcesoSiguiente");
+  const contenedor = document.getElementById("pagBotonesProcesos");
+
+  if (!btnPrev || !btnNext || !contenedor) return;
+
+  const claseNormal = [
+    "w-9",
+    "h-9",
+    "flex",
+    "justify-center",
+    "items-center",
+    "text-white/70",
+    "hover:text-white",
+    "hover:bg-blue-600/80",
+    "text-sm",
+    "rounded-lg",
+    "transition-colors",
+    "cursor-pointer",
+    "font-medium",
+  ].join(" ");
+
+  const claseActiva = [
+    "w-9",
+    "h-9",
+    "flex",
+    "justify-center",
+    "items-center",
+    "bg-blue-600",
+    "text-white",
+    "text-sm",
+    "rounded-lg",
+    "font-semibold",
+    "shadow",
+    "shadow-blue-500/40",
+    "cursor-default",
+  ].join(" ");
+
+  // ── Botones de número ──────────────────────────────────────────────────────
+  contenedor.innerHTML = "";
+  const ventana = 5;
+  let desde = Math.max(0, paginaActual - Math.floor(ventana / 2));
+  const hasta = Math.min(totalPaginas, desde + ventana);
+  if (hasta - desde < ventana) desde = Math.max(0, hasta - ventana);
+
+  for (let i = desde; i < hasta; i++) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = String(i + 1);
+    btn.className = i === paginaActual ? claseActiva : claseNormal;
+    if (i === paginaActual) {
+      btn.setAttribute("aria-current", "page");
+    } else {
+      btn.addEventListener("click", () => table.page(i).draw("page"));
+    }
+    contenedor.appendChild(btn);
+  }
+
+  // ── Botón Anterior ─────────────────────────────────────────────────────────
+  const nuevoPrev = btnPrev.cloneNode(true);
+  btnPrev.parentNode.replaceChild(nuevoPrev, btnPrev);
+  nuevoPrev.disabled = paginaActual === 0;
+  if (!nuevoPrev.disabled) {
+    nuevoPrev.addEventListener("click", () =>
+      table.page("previous").draw("page"),
+    );
+  }
+
+  // ── Botón Siguiente ────────────────────────────────────────────────────────
+  const nuevoNext = btnNext.cloneNode(true);
+  btnNext.parentNode.replaceChild(nuevoNext, btnNext);
+  nuevoNext.disabled = paginaActual >= totalPaginas - 1;
+  if (!nuevoNext.disabled) {
+    nuevoNext.addEventListener("click", () => table.page("next").draw("page"));
+  }
+};
+
+// ─── Desactivar proceso ───────────────────────────────────────────────────────
+const desactivarProceso = async (id_Proceso) => {
+  Swal.fire({
+    icon: "question",
+    title: "¿Estás seguro que deseas desactivar este proceso?",
+    showDenyButton: true,
+    denyButtonText: "No desactivar",
+    confirmButtonText: "Sí, desactivar",
+    theme: "dark",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(ENDPOINT_DESACTIVAR, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: id_Proceso }),
+        });
         const data = await response.json();
 
-        //Validamos que el status de la respuesta es ok y su longitud es mayor a 0
-        if (data.status === 'ok' && data.procesos.length > 0) {
-
-            //renderizamos la tabla con una funcion que declararemos mas adelante
-            renderizarTablaProcesos(data.procesos, cuerpoTabla);
-
+        if (data.status === "ok") {
+          Swal.fire({
+            icon: "success",
+            title: "Proceso desactivado exitosamente",
+            theme: "dark",
+            showConfirmButton: false,
+            timer: 1000,
+          });
+          cargarProcesos();
         } else {
-            // en caso de que no hayan procesos,esto es lo que se muestra
-            cuerpoTabla.innerHTML = `
-            
-                <tr>
-                    <td colspan="5" class="text-center">
-                        No hay procesos registrados
-                    </td>
-                </tr>
-            `;
+          Swal.fire({
+            icon: "error",
+            title: "Error al desactivar",
+            text: data.mensaje,
+            theme: "dark",
+            showConfirmButton: false,
+            timer: 1500,
+          });
         }
-
-    } catch (error) {
-        console.error('Error:', error);
-        //en este se muestra el error en caso de que no se pueda conectar
-        cuerpoTabla.innerHTML = `
-            <tr>
-                <td colspan="5" class="text-center text-danger">
-                    Error al cargar procesos
-                    <button onclick="cargarProcesos()">Reintentar</button>
-                </td>
-            </tr>
-        `;
+      } catch (error) {
+        console.error("Error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error de conexión",
+          text: error.message,
+          theme: "dark",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
     }
-};
-const renderizarTablaProcesos = (procesos, cuerpoTabla) => { //Procedemos a definir la arrow function anterior
-    let htmlFilas = '';
-
-    //recorremos el json y los vamos almacenando en una variable
-    procesos.forEach((proceso) => {
-        //Determinar qué botón mostrar según el estado
-        const botonGestion = proceso.estado == 1
-            ? `<button class="btn-gestionar btn-desactivar" 
-                       onclick="desactivarProceso(${proceso.id_proceso})">
-                   Desactivar
-               </button>`
-            : `<button class="btn-gestionar btn-reactivar" 
-                       onclick="reactivarProceso(${proceso.id_proceso})">
-                   Reactivar
-               </button>`;
-
-        htmlFilas += `
-            <tr>
-                <td>${proceso.nombre_proceso}</td>
-                <td>${proceso.descripcion}</td>
-                <td>${proceso.fecha_creacion}</td>
-                <td>${proceso.documento}</td>
-                <td>${proceso.nombre_creador}</td>
-                <td>${botonGestion}</td>
-            </tr>
-        `;
-    });
-
-    //insertamos el recorrido en el cuerpo de la tabla
-    cuerpoTabla.innerHTML = htmlFilas;
+  });
 };
 
-const desactivarProceso = async (id_Proceso) => {
-    // confirmacion de desactivacion
-
-    Swal.fire({
-        icon: 'question',
-        title: '¿Estas seguro que deseas desactivar este proceso?',
-        showDenyButton: true,
-        denyButtonText: 'No desactivar',
-        confirmButtonText: 'Si, desactivar',
-        theme: 'dark',
-    }).then(async (response) => {
-
-        if (response.isConfirmed) {
-            try {
-                const response = await fetch(ENDPOINT_DESACTIVAR, { //hacemos un fetch al endpoint de desactivar
-                    method: 'POST', //definimos el motodo de la request
-                    headers: {
-                        'Content-Type': 'application/json' //header de la request
-                    },
-                    body: JSON.stringify({ id: id_Proceso }) //body de la request
-                });
-
-                const data = await response.json(); //transformamos la respuesta a json
-
-                if (data.status === 'ok') { //validamos el estado
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Proceso desactivado exitosamente',
-                        theme: 'dark',
-                        showConfirmButton: false,
-                        timer: 1000,
-                    });
-                    cargarProcesos();
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error al desactivar el proceso',
-                        text: data.mensaje,
-                        theme: 'dark',
-                        showConfirmButton: false,
-                        timer: 1000,
-                    });
-                }
-
-            } catch (error) { //capturamos errores
-                console.error('Error:', error); //capturamos el error en la consola
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error al desactivar el proceso',
-                    text: 'Ocurrió un error al intentar desactivar el proceso.',
-                    theme: 'dark',
-                    showConfirmButton: false,
-                    timer: 1000,
-                });
-            }
-        }
-    })
-};
-
+// ─── Reactivar proceso ────────────────────────────────────────────────────────
 const reactivarProceso = async (id_Proceso) => {
+  Swal.fire({
+    icon: "question",
+    title: "¿Estás seguro que deseas reactivar este proceso?",
+    showDenyButton: true,
+    denyButtonText: "No reactivar",
+    confirmButtonText: "Sí, reactivar",
+    theme: "dark",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const response = await fetch(ENDPOINT_REACTIVAR, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: id_Proceso }),
+        });
+        const data = await response.json();
 
-    Swal.fire({
-        icon: 'question',
-        title: '¿Estas seguro que deseas reactivar este proceso?',
-        showDenyButton: true,
-        denyButtonText: 'No reactivar',
-        confirmButtonText: 'Si, reactivar',
-        theme: 'dark',
-    }).then(async (response) => {
-
-        if (response.isConfirmed) {
-            try {
-                const response = await fetch(ENDPOINT_REACTIVAR, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ id: id_Proceso })
-                });
-
-                const data = await response.json();
-
-                if (data.status === 'ok') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Proceso reactivado exitosamente',
-                        theme: 'dark',
-                        showConfirmButton: false,
-                        timer: 1000,
-                    });
-                    cargarProcesos();
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error al reactivar el proceso',
-                        text: data.mensaje,
-                        theme: 'dark',
-                        showConfirmButton: false,
-                        timer: 1000,
-                    });
-                }
-
-            } catch (error) {
-                console.error('Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error al reactivar el proceso',
-                    text: 'Ocurrió un error al intentar reactivar el proceso.',
-                    theme: 'dark',
-                    showConfirmButton: false,
-                    timer: 1000,
-                });
-            };
+        if (data.status === "ok") {
+          Swal.fire({
+            icon: "success",
+            title: "Proceso reactivado exitosamente",
+            theme: "dark",
+            showConfirmButton: false,
+            timer: 1000,
+          });
+          cargarProcesos();
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error al reactivar",
+            text: data.mensaje,
+            theme: "dark",
+            showConfirmButton: false,
+            timer: 1500,
+          });
         }
-    });
+      } catch (error) {
+        console.error("Error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error de conexión",
+          text: error.message,
+          theme: "dark",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    }
+  });
 };
 
+// ─── DOMContentLoaded ─────────────────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+  // Cargar tabla
+  cargarProcesos();
 
-//Configuramos el modal y le damos interactividad (abrir, cerrar, guardar)
-document.addEventListener('DOMContentLoaded', () => {
-    cargarProcesos();
-});
-document.addEventListener('DOMContentLoaded', () => {
+  // Modal
+  const botonAbrir = document.getElementById("abrirModal");
+  const botonCerrar = document.getElementById("cerrar-modal");
+  const modal = document.getElementById("modal");
+  const formulario = document.querySelector(".formulario");
+  const btnRegistrar = document.getElementById("btnRegistrarProceso");
 
-    const botonAbrir = document.getElementById('abrirModal');
-    const botonCerrar = document.getElementById('cerrar-modal');
-    const botonGuardar = document.getElementById('guardar-modal');
-    const modal = document.getElementById('modal');
-    const formulario = document.querySelector('.formulario');
+  if (!botonAbrir || !botonCerrar || !modal || !formulario) return;
 
-    if (!botonAbrir || !botonCerrar || !modal || !formulario) {
+  botonAbrir.addEventListener("click", () => {
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  });
+
+  const cerrarModal = () => {
+    modal.style.display = "none";
+    document.body.style.overflow = "auto";
+    formulario.reset();
+  };
+
+  botonCerrar.addEventListener("click", cerrarModal);
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) cerrarModal();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (modal.style.display === "flex" && e.key === "Escape") cerrarModal();
+  });
+
+  // Guardar proceso
+  if (btnRegistrar) {
+    btnRegistrar.addEventListener("click", async () => {
+      const nombreProceso = document
+        .getElementById("nombre-proceso")
+        .value.trim();
+      const descripcion = document.getElementById("descripcion").value.trim();
+
+      if (!nombreProceso) {
+        Swal.fire({
+          icon: "error",
+          title: "Por favor ingresa el nombre del proceso",
+          theme: "dark",
+          showConfirmButton: false,
+          timer: 1200,
+        });
+        document.getElementById("nombre-proceso").focus();
         return;
-    }
+      }
+      if (!descripcion) {
+        Swal.fire({
+          icon: "error",
+          title: "Por favor ingresa la descripción",
+          theme: "dark",
+          showConfirmButton: false,
+          timer: 1200,
+        });
+        document.getElementById("descripcion").focus();
+        return;
+      }
 
-    console.log('Elementos del modal encontrados');
+      btnRegistrar.disabled = true;
+      btnRegistrar.textContent = "Creando...";
 
-    botonAbrir.addEventListener('click', () => {
-        console.log(' Abriendo modal...');
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    });
+      try {
+        const response = await fetch(ENDPOINT_CREAR, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nombre: nombreProceso, descripcion }),
+        });
 
-    botonCerrar.addEventListener('click', () => {
-        console.log(' Cerrando modal...');
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        formulario.reset();
-    });
+        if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
+        const data = await response.json();
 
-    modal.addEventListener('click', (evento) => {
-        if (evento.target === modal) {
-            console.log(' Cerrando modal (clic fuera)...');
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            formulario.reset();
+        if (data.status === "ok") {
+          Swal.fire({
+            icon: "success",
+            title: "Proceso creado exitosamente",
+            theme: "dark",
+            showConfirmButton: false,
+            timer: 1000,
+          });
+          cerrarModal();
+          cargarProcesos();
+        } else {
+          throw new Error(data.mensaje || "Error al crear");
         }
+      } catch (error) {
+        console.error("Error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error al crear el proceso",
+          text: error.message,
+          theme: "dark",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } finally {
+        btnRegistrar.disabled = false;
+        btnRegistrar.textContent = "Crear proceso";
+      }
     });
-
-    document.addEventListener('keydown', (evento) => {
-        if (modal.style.display === 'flex' && evento.key === 'Escape') {
-            console.log(' Cerrando modal (tecla ESC)...');
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            formulario.reset();
-        }
-    });
-
-
-    formulario.addEventListener('submit', async (evento) => {
-        evento.preventDefault();
-
-
-
-        const nombreProceso = document.getElementById('nombre-proceso').value;
-        const descripcion = document.getElementById('descripcion').value;
-
-        // Verifica los campos se hayan llenado
-        if (!nombreProceso.trim()) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Por favor ingresa el nombre del proceso',
-                theme: 'dark',
-                showConfirmButton: false,
-                timer: 1000,
-            });
-            document.getElementById('nombre-proceso').focus();
-            return;
-        }
-
-        if (!descripcion.trim()) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Por favor ingresa la descripción',
-                theme: 'dark',
-                showConfirmButton: false,
-                timer: 1000,
-            });
-            document.getElementById('descripcion').focus();
-            return;
-        }
-
-        botonGuardar.disabled = true;
-        botonGuardar.textContent = 'Creando...';
-
-        try {
-            const response = await fetch(ENDPOINT_CREAR, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    nombre: nombreProceso,
-                    descripcion: descripcion
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error HTTP ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            if (data.status === 'ok') {
-                console.log(' Proceso creado');
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Proceso creado exitosamente',
-                    theme: 'dark',
-                    showConfirmButton: false,
-                    timer: 1000,
-                });
-
-                // Cierra el modal cambiando el estilo a none 
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-                formulario.reset();
-
-
-                cargarProcesos();
-            } else {
-                throw new Error(data.mensaje || 'Error al crear');
-            }
-
-        } catch (error) {
-            console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error al crear el proceso',
-                text: `Error: ${error.message}`,
-                theme: 'dark',
-                showConfirmButton: false,
-                timer: 1000,
-            });
-        } finally {
-            botonGuardar.disabled = false;
-            botonGuardar.textContent = 'crear proceso';
-        }
-    });
-
-    cargarProcesos();
+  }
 });
