@@ -33,10 +33,6 @@ if (isset($_SESSION['ultima_actividad']) && (time() - $_SESSION['ultima_activida
     // Si la sesión ha expirado por inactividad:
     session_unset();    // Elimina todas las variables de sesión (admin_user, etc.)
     session_destroy();  // Destruye el archivo de sesión del servidor
-    echo json_encode([
-        'status' => 'error',
-        'mensaje' => 'Sesión expirada por inactividad.'
-    ]);
 
     // Redirigir al login (con un parámetro para indicar que fue por timeout)
     header('Location: /?timeout=1');
