@@ -212,19 +212,23 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
         </div>
 
         <div class="mb-4">
-          <input type="text" id="crearNombre" name="nombre" required placeholder="Nombre" class="contenido glass-input">
+          <input type="text" id="crearNombre" name="nombre" required placeholder="Nombre" class="contenido glass-input" maxlength="50">
+          <span id="contearNombre"></span> /50 caracteres
         </div>
 
         <div class="mb-4">
-          <input type="text" id="crearApellido" name="apellido" required placeholder="Apellido" class="contenido glass-input">
+          <input type="text" id="crearApellido" name="apellido" required placeholder="Apellido" class="contenido glass-input" maxlength="50">
+          <span id="contearApellido"></span> /50 caracteres
         </div>
 
         <div class="mb-4">
-          <input type="number" id="crearDocumento" name="documento" required placeholder="Documento" class="contenido glass-input">
+          <input type="number" id="crearDocumento" name="documento" required placeholder="Documento" class="contenido glass-input" maxlength="10">
+          <span id="contearDocumento"></span> /10 caracteres
         </div>
 
         <div class="mb-4">
-          <input type="email" id="crearEmail" name="email" required placeholder="Correo Electrónico" class="contenido glass-input">
+          <input type="email" id="crearEmail" name="email" required placeholder="Correo Electrónico" class="contenido glass-input" maxlength="100">
+          <span id="contearEmail"></span> /100 caracteres
         </div>
 
         <div class="mb-4">
