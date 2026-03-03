@@ -511,18 +511,18 @@ const habilitarEdicion = () => {
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Nombre:</label>
-                <input type="text" class="form-control glass-input" id="nombreNuevo" value="${usarioEditable.nombre}">
+                <input type="text" class="form-control glass-input" id="nombreNuevo" value="${usarioEditable.nombre} maxlength="50">
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Apellido:</label>
-                <input type="text" class="form-control glass-input" id="apellidoNuevo" value="${usarioEditable.apellido}">
+                <input type="text" class="form-control glass-input" id="apellidoNuevo" value="${usarioEditable.apellido} maxlength="50">
             </div>
         </div>
         
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Email:</label>
-                <input type="email" class="form-control glass-input" id="emailNuevo" value="${usarioEditable.email}">
+                <input type="email" class="form-control glass-input" id="emailNuevo" value="${usarioEditable.email}" maxlength="100">
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Rol:</label>
