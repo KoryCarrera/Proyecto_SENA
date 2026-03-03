@@ -1,21 +1,21 @@
 //Definimos los endpoints en constantes para facilidad
-const ENDPOINT_LISTAR = '/listarCasos';
-const ENDPOINT_OBTENER = '/modalCasoAdmin';
-const ENDPOINT_SEGUIMIENTOS = '/listarSeguimientos';
+const ENDPOINT_LISTAR = "/listarCasos";
+const ENDPOINT_OBTENER = "/modalCasoAdmin";
+const ENDPOINT_SEGUIMIENTOS = "/listarSeguimientos";
 
 //Definimos una función Async de cargar casos
 const cargarCasos = async () => {
-    //capturamos el cuerpo de la tabla
-    const cuerpoTabla = document.getElementById('tablaCasos');
+  //capturamos el cuerpo de la tabla
+  const cuerpoTabla = document.getElementById("tablaCasos");
 
-    //validamos que exista
-    if (!cuerpoTabla) {
-        console.error('!No se encontró el cuerpo de la tabla¡');
-        return;
-    }
+  //validamos que exista
+  if (!cuerpoTabla) {
+    console.error("!No se encontró el cuerpo de la tabla¡");
+    return;
+  }
 
-    //Insertamos el "cargando..." mientras nos llegan datos 
-    cuerpoTabla.innerHTML = `
+  //Insertamos el "cargando..." mientras nos llegan datos
+  cuerpoTabla.innerHTML = `
         <tr>
             <td colspan="8" class="text-center py-4">
                 <div class="spinner-border text-primary" role="status">
@@ -26,26 +26,28 @@ const cargarCasos = async () => {
         </tr>
     `;
 
-    try {
-        //Hacemos fetch al endpoint para obtener los datos
-        const response = await fetch(ENDPOINT_LISTAR);
+  try {
+    //Hacemos fetch al endpoint para obtener los datos
+    const response = await fetch(ENDPOINT_LISTAR);
 
-        //Validamos el status devuelto por el endpoint
-        if (!response.ok) {
-            throw new Error(`Error HTTP ${response.status}: No se pudo conectar con el servidor`);
-        }
+    //Validamos el status devuelto por el endpoint
+    if (!response.ok) {
+      throw new Error(
+        `Error HTTP ${response.status}: No se pudo conectar con el servidor`,
+      );
+    }
 
-        //Transformamos a JSON
-        const data = await response.json();
+    //Transformamos a JSON
+    const data = await response.json();
 
-        //Personalizacion de errores
-        if (data.status !== 'ok') {
-            throw new Error(data.mensaje || 'Error desconocido');
-        }
+    //Personalizacion de errores
+    if (data.status !== "ok") {
+      throw new Error(data.mensaje || "Error desconocido");
+    }
 
-        //validamos datos, tipo y longitud
-        if (!data.casos || !Array.isArray(data.casos) || data.casos.length === 0) {
-            cuerpoTabla.innerHTML = `
+    //validamos datos, tipo y longitud
+    if (!data.casos || !Array.isArray(data.casos) || data.casos.length === 0) {
+      cuerpoTabla.innerHTML = `
                 <tr>
                     <td colspan="8" class="text-center py-4 text-warning">
                         <i class="bi bi-exclamation-triangle fs-1"></i>
@@ -53,16 +55,16 @@ const cargarCasos = async () => {
                     </td>
                 </tr>
             `;
-            return;
-        }
+      return;
+    }
 
-        //declaramos una función que definiremos mas adelante
-        renderizarTablaCasos(data.casos, cuerpoTabla);
+    //declaramos una función que definiremos mas adelante
+    renderizarTablaCasos(data.casos, cuerpoTabla);
 
-        //personalizamos captacion de error catch
-    } catch (error) {
-        console.error('Error al cargar los casos:', error);
-        cuerpoTabla.innerHTML = `
+    //personalizamos captacion de error catch
+  } catch (error) {
+    console.error("Error al cargar los casos:", error);
+    cuerpoTabla.innerHTML = `
             <tr>
                 <td colspan="8" class="text-center py-4 text-danger">
                     <p class="fw-bold">Error: ${error.message}</p>
@@ -72,99 +74,108 @@ const cargarCasos = async () => {
                 </td>
             </tr>
         `;
-    }
+  }
 };
 
 //definimos la funcion previamente declarada
 const renderizarTablaCasos = (casos, cuerpoTabla) => {
-    let htmlFilas = ''; //Inicializamos la variable vacia para guardar el html
+  let htmlFilas = ""; //Inicializamos la variable vacia para guardar el html
 
-    casos.forEach((caso) => { //Capturamos la fecha de inicio
-        const fechaInicio = caso.fecha_inicio
-            ? formatearFecha(caso.fecha_inicio) //Fecha estetica
-            : 'No registrada';
+  casos.forEach((caso) => {
+    //Capturamos la fecha de inicio
+    const fechaInicio = caso.fecha_inicio
+      ? formatearFecha(caso.fecha_inicio) //Fecha estetica
+      : "No registrada";
 
-        //capturamos fecha de cierre del argumento
-        const fechaCierre = caso.fecha_cierre
-            ? formatearFecha(caso.fecha_cierre) //estilizamos la fecha recibida
-            : '<span class="badge bg-warning text-dark">Pendiente</span>';
+    //capturamos fecha de cierre del argumento
+    const fechaCierre = caso.fecha_cierre
+      ? formatearFecha(caso.fecha_cierre) //estilizamos la fecha recibida
+      : '<span class="badge bg-warning text-dark">Pendiente</span>';
 
-        //Declaramos variable que definiremos mas adelante
-        const estadoBadge = obtenerBadgeEstado(caso.estado);
+    //Declaramos variable que definiremos mas adelante
+    const estadoBadge = obtenerBadgeEstado(caso.estado);
 
-        //insertamos cada iteracion en html
-        htmlFilas += `
+    //insertamos cada iteracion en html
+    htmlFilas += `
             <tr>
                 <th scope="row">${caso.id_caso}</th>
                 <td>${fechaInicio}</td>
-                <td>${caso.tipo_caso || 'N/A'}</td>
+                <td>${caso.tipo_caso || "N/A"}</td>
                 <td>${fechaCierre}</td>
                 <td>${estadoBadge}</td>
-                <td>${caso.proceso || 'N/A'}</td>
+                <td>${caso.proceso || "N/A"}</td>
                 <td>${caso.comisionado}</td>
                 <td>
-                    <button class="btn-table" onclick="supervisarCaso(${caso.id_caso})">
-                        <i class="bi bi-eye"></i> Supervisar
+                    <button class="btn-table bg-indigo-600 hover:bg-indigo-500 mr-2 rounded-lg px-3 py-2" onclick="supervisarCaso(${caso.id_caso})">
+                        <i class="bi bi-eye text-white"></i> 
                     </button>
                 </td>
             </tr>
         `;
-    });
+  });
 
-    cuerpoTabla.innerHTML = htmlFilas; //insertamos en el cuerpo de la tabla
+  cuerpoTabla.innerHTML = htmlFilas; //insertamos en el cuerpo de la tabla
 
-    // Inicializamos DataTables DESPUÉS de que los datos estén en el DOM
- var table = $('#tablaCaso').DataTable({
-    "pageLength": 10,
-    "lengthMenu": [10, 25, 50],
-    "language": {
-        "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-    }, // Cerramos language correctamente
-    "dom": 'lrtip' // Oculta el buscador nativo ('f')
-});
-$('#buscarAdmin').on('keyup', function() { //se captura el input con el estilo de buscar 
+  // Inicializamos DataTables DESPUÉS de que los datos estén en el DOM
+  var table = $("#tablaCaso").DataTable({
+    pageLength: 10,
+    lengthMenu: [10, 25, 50],
+    language: {
+      url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
+    },
+    dom: "rti", // Sin paginación interna, usamos la visual personalizada
+    drawCallback: function () {
+      actualizarPaginacionVisual(table);
+    },
+  });
+
+  $("#buscarAdmin").on("keyup", function () {
     table.search(this.value).draw();
-});
+  });
 };
+// Asegúrate de que 'table' sea la variable global donde inicializaste el DataTable
+$("#filtroCantidad").on("change", function () {
+  const valor = $(this).val();
+  table.page.len(parseInt(valor)).draw();
+});
 
 const formatearFecha = (fecha) => {
-    if (!fecha) return 'N/A'; //estilizamos el NULL
+  if (!fecha) return "N/A"; //estilizamos el NULL
 
-    //estilizamos fecha
-    const date = new Date(fecha);
-    const dia = String(date.getDate()).padStart(2, '0');
-    const mes = String(date.getMonth() + 1).padStart(2, '0');
-    const anio = date.getFullYear();
+  //estilizamos fecha
+  const date = new Date(fecha);
+  const dia = String(date.getDate()).padStart(2, "0");
+  const mes = String(date.getMonth() + 1).padStart(2, "0");
+  const anio = date.getFullYear();
 
-    //devolvemos fecha estilizada
-    return `${dia}/${mes}/${anio}`;
+  //devolvemos fecha estilizada
+  return `${dia}/${mes}/${anio}`;
 };
 
 //funcion para estilizar estado segun tipo
 const obtenerBadgeEstado = (estado) => {
-    const estadoLower = (estado || '').toLowerCase();
+  const estadoLower = (estado || "").toLowerCase();
 
-    //Usamos switch para cada caso
-    //utilizamos clases de bootstrap para estilizar con colores
-    switch (estadoLower) {
-        case 'por atender':
-            return `<span class="badge bg-primary">${estado}</span>`;
-        case 'no atendido':
-            return `<span class="badge bg-danger">${estado}</span>`;
-        case 'atendido':
-            return `<span class="badge bg-success">${estado}</span>`;
-        default:
-            return `<span class="badge bg-secondary">${estado}</span>`;
-    }
+  //Usamos switch para cada caso
+  //utilizamos clases de bootstrap para estilizar con colores
+  switch (estadoLower) {
+    case "por atender":
+      return `<span class="badge bg-primary">${estado}</span>`;
+    case "no atendido":
+      return `<span class="badge bg-danger">${estado}</span>`;
+    case "atendido":
+      return `<span class="badge bg-success">${estado}</span>`;
+    default:
+      return `<span class="badge bg-secondary">${estado}</span>`;
+  }
 };
 
 //Funcion para insertar datos en la tabla de seguimientos del modal
 function llenarTablaSeguimientos(id_caso) {
+  const tablaBody = document.getElementById("tablaSeguimientosBody");
 
-    const tablaBody = document.getElementById('tablaSeguimientosBody');
-
-    //Insertamos el cargando
-    tablaBody.innerHTML = `
+  //Insertamos el cargando
+  tablaBody.innerHTML = `
 <tr class="bg-transparent">
         <td colspan="4" class="text-center py-4 text-slate-500 italic bg-transparent border-0">
             <span class="spinner-border spinner-border-sm me-2"></span> Cargando historial...
@@ -172,23 +183,25 @@ function llenarTablaSeguimientos(id_caso) {
     </tr>
     `;
 
-    //Hacemos la request para obtener los seguimientos del caso
+  //Hacemos la request para obtener los seguimientos del caso
 
-    $.ajax({
-        url: ENDPOINT_SEGUIMIENTOS,
-        method: 'POST',
-        data: { 'idcaso': id_caso },
-        success: function (response) {
+  $.ajax({
+    url: ENDPOINT_SEGUIMIENTOS,
+    method: "POST",
+    data: { idcaso: id_caso },
+    success: function (response) {
+      //validamos que el status sea ok y que existan seguimientos
+      if (
+        response.status === "ok" &&
+        response.seguimientos &&
+        response.seguimientos.length > 0
+      ) {
+        //limpiamos la tabla
+        tablaBody.innerHTML = "";
 
-            //validamos que el status sea ok y que existan seguimientos
-            if (response.status === 'ok' && response.seguimientos && response.seguimientos.length > 0) {
-
-                //limpiamos la tabla
-                tablaBody.innerHTML = '';
-
-                //insertamos los seguimientos en la tabla
-                response.seguimientos.forEach(seg => {
-                    tablaBody.innerHTML += `
+        //insertamos los seguimientos en la tabla
+        response.seguimientos.forEach((seg) => {
+          tablaBody.innerHTML += `
                     <tr class="border-bottom border-slate-700/30 bg-transparent">
                         <td class="bg-transparent text-indigo-300 fw-bold">${seg.id_seguimiento}</td>
                         <td class="bg-transparent text-slate-200">${formatearFecha(seg.fecha_seguimiento)}</td>
@@ -196,40 +209,40 @@ function llenarTablaSeguimientos(id_caso) {
                         <td class="bg-transparent text-slate-400" style="white-space: pre-wrap;">${seg.observacion}</td>
                     </tr>
                     `;
-                });
-            } else {
-                tablaBody.innerHTML = `
+        });
+      } else {
+        tablaBody.innerHTML = `
                 <tr class="bg-transparent">
                     <td colspan="4" class="text-center py-4 text-slate-500 bg-transparent">${response.mensaje}.</td>
                 </tr>`;
-            }
+      }
 
-            if (response.status === 'error') {
-                tablaBody.innerHTML = `
+      if (response.status === "error") {
+        tablaBody.innerHTML = `
             <tr class="bg-transparent">
                     <td colspan="4" class="text-center py-4 text-warning bg-transparent">${response.mensaje}.</td>
                 </tr>`;
-            }
-        }, error: function (xhr, status, error) {
-            console.error('Error al cargar los seguimientos:', error);
-            tablaBody.innerHTML = `
+      }
+    },
+    error: function (xhr, status, error) {
+      console.error("Error al cargar los seguimientos:", error);
+      tablaBody.innerHTML = `
             <tr class="bg-transparent">
                 <td colspan="4" class="text-center py-4 text-danger bg-transparent font-bold">Error de conexión al servidor</td>
             </tr>`;
-        }
-    });
+    },
+  });
 }
 
 //funcion para supervisar claso
 const supervisarCaso = async (idCaso) => {
+  //capturamos body del modal
+  const modalElement = document.getElementById("modalCaso");
+  //inicializamos clase de bootstrap
+  const modal = new bootstrap.Modal(modalElement);
 
-    //capturamos body del modal
-    const modalElement = document.getElementById('modalCaso');
-    //inicializamos clase de bootstrap
-    const modal = new bootstrap.Modal(modalElement);
-
-    //mostramos el cargando
-    document.getElementById('modalCasoBody').innerHTML = `
+  //mostramos el cargando
+  document.getElementById("modalCasoBody").innerHTML = `
         <div class="text-center py-5">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Cargando...</span>
@@ -238,56 +251,56 @@ const supervisarCaso = async (idCaso) => {
         </div>
     `;
 
-    modal.show(); //Renderizamos
+  modal.show(); //Renderizamos
 
-    try {
-        //Hacemos fetch al endpoint donde devolverá el caso a supervisar
-        const response = await fetch(ENDPOINT_OBTENER, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `id_caso=${idCaso}`
-        });
+  try {
+    //Hacemos fetch al endpoint donde devolverá el caso a supervisar
+    const response = await fetch(ENDPOINT_OBTENER, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `id_caso=${idCaso}`,
+    });
 
-        //personalizacion de errores
-        if (!response.ok) {
-            throw new Error(`Error HTTP ${response.status}`);
-        }
+    //personalizacion de errores
+    if (!response.ok) {
+      throw new Error(`Error HTTP ${response.status}`);
+    }
 
-        //transformamos a json la response
-        const data = await response.json();
+    //transformamos a json la response
+    const data = await response.json();
 
-        //Validamos que el status de la response ok
-        if (data.status === 'ok' && data.caso) {
-            //mostramos los detalles del caso con una función que declararemos más adelante
-            mostrarDetallesCaso(data.caso);
-        } else {
-            //Mandamos un error personalizado
-            throw new Error(data.mensaje || 'No se pudo obtener el caso');
-        }
-        //capturamos errores
-    } catch (error) {
-        document.getElementById('modalCasoBody').innerHTML = `
+    //Validamos que el status de la response ok
+    if (data.status === "ok" && data.caso) {
+      //mostramos los detalles del caso con una función que declararemos más adelante
+      mostrarDetallesCaso(data.caso);
+    } else {
+      //Mandamos un error personalizado
+      throw new Error(data.mensaje || "No se pudo obtener el caso");
+    }
+    //capturamos errores
+  } catch (error) {
+    document.getElementById("modalCasoBody").innerHTML = `
             <div class="alert alert-danger" role="alert">
                 <i class="bi bi-exclamation-triangle"></i>
                 <strong>Error:</strong> ${error.message}
             </div>
         `;
-    }
+  }
 };
 
 //definimos la función previamente declarada
 const mostrarDetallesCaso = (caso) => {
-    //capturamos partes del modal
-    const modalBody = document.getElementById('modalCasoBody');
-    const modalTitle = document.getElementById('modalCasoLabel');
+  //capturamos partes del modal
+  const modalBody = document.getElementById("modalCasoBody");
+  const modalTitle = document.getElementById("modalCasoLabel");
 
-    //definimos el titulo
-    modalTitle.textContent = `Caso #${caso.id_caso} - ${caso.tipo_caso}`;
+  //definimos el titulo
+  modalTitle.textContent = `Caso #${caso.id_caso} - ${caso.tipo_caso}`;
 
-    //insertamos el html con los datos del caso
-    modalBody.innerHTML = `
+  //insertamos el html con los datos del caso
+  modalBody.innerHTML = `
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">ID del Caso:</label>
@@ -295,7 +308,7 @@ const mostrarDetallesCaso = (caso) => {
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Tipo de Caso:</label>
-                <p class="form-control-plaintext">${caso.tipo_caso || 'N/A'}</p>
+                <p class="form-control-plaintext">${caso.tipo_caso || "N/A"}</p>
             </div>
         </div>
         
@@ -317,14 +330,14 @@ const mostrarDetallesCaso = (caso) => {
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Proceso:</label>
-                <p class="form-control-plaintext">${caso.proceso || 'N/A'}</p>
+                <p class="form-control-plaintext">${caso.proceso || "N/A"}</p>
             </div>
         </div>
         
         <div class="row">
             <div class="col-md-12 mb-3">
                 <label class="form-label fw-bold">Comisionado Encargado:</label>
-                <p class="form-control-plaintext">${caso.comisionado || 'Sin asignar'}</p>
+                <p class="form-control-plaintext">${caso.comisionado || "Sin asignar"}</p>
             </div>
         </div>
 
@@ -354,37 +367,137 @@ const mostrarDetallesCaso = (caso) => {
     </div>
 </div>
         
-        ${caso.descripcion ? `
+        ${
+          caso.descripcion
+            ? `
         <div class="row">
             <div class="col-md-12 mb-3">
                 <label class="form-label fw-bold">Descripción:</label>
                 <p class="form-control-plaintext">${caso.descripcion}</p>
             </div>
         </div>
-        ` : ''}
+        `
+            : ""
+        }
     `;
 
-    //Capturamos el boton para mostrar el historial de seguimientos
-    const btnSeguimientos = document.getElementById('btnMostrar');
+  //Capturamos el boton para mostrar el historial de seguimientos
+  const btnSeguimientos = document.getElementById("btnMostrar");
 
-    //capturamos el contenedor de la tabla de seguimientos
-    const tablaSeguimientosContainer = document.getElementById('tablaSeguimientosContainer');
+  //capturamos el contenedor de la tabla de seguimientos
+  const tablaSeguimientosContainer = document.getElementById(
+    "tablaSeguimientosContainer",
+  );
 
-    btnSeguimientos.addEventListener('click', () => {
+  btnSeguimientos.addEventListener("click", () => {
+    if (tablaSeguimientosContainer.style.display === "none") {
+      tablaSeguimientosContainer.style.display = "block";
+      btnSeguimientos.innerHTML = `<i class="bi bi-eye-slash-fill me-1"></i> Ocultar Historial de Seguimientos`;
+    } else {
+      tablaSeguimientosContainer.style.display = "none";
+      btnSeguimientos.innerHTML = `<i class="bi bi-table"></i> Mostrar tabla de seguimiento`;
+    }
 
-        if (tablaSeguimientosContainer.style.display === 'none') {
-            tablaSeguimientosContainer.style.display = 'block';
-            btnSeguimientos.innerHTML = `<i class="bi bi-eye-slash-fill me-1"></i> Ocultar Historial de Seguimientos`;
-        } else {
-            tablaSeguimientosContainer.style.display = 'none';
-            btnSeguimientos.innerHTML = `<i class="bi bi-table"></i> Mostrar tabla de seguimiento`;
-        }
-
-        llenarTablaSeguimientos(caso.id_caso);
-
-    });
+    llenarTablaSeguimientos(caso.id_caso);
+  });
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-    cargarCasos(); // Los datos llegan → renderizarTablaCasos → DataTables se inicia allí
+// ─── Paginación visual personalizada ─────────────────────────────────────────
+const actualizarPaginacionVisual = (table) => {
+  if (!table) return;
+
+  const info = table.page.info(); // { page (0-based), pages, ... }
+  const paginaActual = info.page;
+  const totalPaginas = info.pages;
+
+  const btnPrev = document.getElementById("btnPaginaAnterior");
+  const btnNext = document.getElementById("btnPaginaSiguiente");
+  const contenedor = document.getElementById("pagBotones");
+
+  if (!btnPrev || !btnNext || !contenedor) return;
+
+  // ── Estilos de los botones de número ──────────────────────────────────────
+  const claseNormal = [
+    "w-9",
+    "h-9",
+    "flex",
+    "justify-center",
+    "items-center",
+    "text-white/70",
+    "hover:text-white",
+    "hover:bg-blue-600/80",
+    "text-sm",
+    "rounded-lg",
+    "transition-colors",
+    "cursor-pointer",
+    "font-medium",
+  ].join(" ");
+
+  const claseActiva = [
+    "w-9",
+    "h-9",
+    "flex",
+    "justify-center",
+    "items-center",
+    "bg-blue-600",
+    "text-white",
+    "text-sm",
+    "rounded-lg",
+    "font-semibold",
+    "shadow",
+    "shadow-blue-500/40",
+    "cursor-default",
+  ].join(" ");
+
+  // ── Generar botones de número según páginas reales ─────────────────────────
+  contenedor.innerHTML = "";
+
+  // Ventana deslizante: máx 5 páginas visibles a la vez
+  const ventana = 5;
+  let desde = Math.max(0, paginaActual - Math.floor(ventana / 2));
+  const hasta = Math.min(totalPaginas, desde + ventana);
+  if (hasta - desde < ventana) desde = Math.max(0, hasta - ventana);
+
+  for (let i = desde; i < hasta; i++) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = String(i + 1);
+    btn.className = i === paginaActual ? claseActiva : claseNormal;
+    if (i === paginaActual) {
+      btn.setAttribute("aria-current", "page");
+    } else {
+      btn.addEventListener("click", () => table.page(i).draw("page"));
+    }
+    contenedor.appendChild(btn);
+  }
+
+  // ── Botón Anterior ────────────────────────────────────────────────────────
+  // Clonar para limpiar listeners previos
+  const nuevoPrev = btnPrev.cloneNode(true);
+  btnPrev.parentNode.replaceChild(nuevoPrev, btnPrev);
+
+  if (paginaActual === 0) {
+    nuevoPrev.disabled = true;
+  } else {
+    nuevoPrev.disabled = false;
+    nuevoPrev.addEventListener("click", () =>
+      table.page("previous").draw("page"),
+    );
+  }
+
+  // ── Botón Siguiente ───────────────────────────────────────────────────────
+  const nuevoNext = btnNext.cloneNode(true);
+  btnNext.parentNode.replaceChild(nuevoNext, btnNext);
+
+  if (paginaActual >= totalPaginas - 1) {
+    nuevoNext.disabled = true;
+  } else {
+    nuevoNext.disabled = false;
+    nuevoNext.addEventListener("click", () => table.page("next").draw("page"));
+  }
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
+document.addEventListener("DOMContentLoaded", () => {
+  cargarCasos(); // Los datos llegan → renderizarTablaCasos → DataTables se inicia allí
 });
