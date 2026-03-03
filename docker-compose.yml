@@ -1,0 +1,59 @@
+#Construimos la app
+services:
+  app-sena:
+    build: . #Construimos el contenedor en base al dockerfile ya creado
+    container_name: Sistema_Gestion_SENA #Definimos el nombre del contenedor
+    ports:
+      - "8000:80" #Se accede a la app colocando en el navegador: localhost:puerto (definido en el archivo o seleccionaod desde docker)
+    volumes:
+      - .:/var/www/html #Sincronizamos los archivos de nuestra maquina con el del contenedor
+    env_file:
+      - .env
+    networks:
+      - sena-network
+    depends_on:
+      - db_sena
+
+#Contruimos el motor de la BD (MariaDB)
+  db_sena:
+    image: mariadb:10.6 #Imagen preconstruida de dockerhub
+    container_name: Sistema_BD #Definimos el nombre del contenedor con la base de datos
+    env_file:
+      - .env
+    environment: #Definimos variables de entorno
+      - MARIADB_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    ports: #definimos el puerto de la bd
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql #Persistencia de los datos
+      - ./database/db.sql:/docker-entrypoint-initdb.d/init.sql
+    networks: #Lo unimos a la network interna
+      - sena-network 
+
+#Construimos el SGBD (PhpMyAdmin)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: gestorBD_SENA
+    restart: always
+    ports:
+      - "8001:80" #Definimos el puerto para gestionar la bd
+    env_file: #definimos el archivo donde estaran las variables de entorno
+      - .env
+    environment:
+      - PMA_HOST=db_sena
+      - PMA_USER=root
+      - PMA_PASSWORD=${SGBD_ROOT_PASSWORD}
+    depends_on:
+      - db_sena
+    networks:
+      - sena-network #Lo unimos a la network interna
+
+#Red internat de los contenedores
+networks:
+  sena-network:
+    driver: bridge
+  
+#Disco Virtual para evitar que al apagar se borre la base de datos
+volumes:
+  db_data:

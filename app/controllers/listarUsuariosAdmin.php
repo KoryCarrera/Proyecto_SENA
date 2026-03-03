@@ -2,8 +2,8 @@
 
 header('Content-Type: application/json');
 
-require_once "../config/conexion.php";
-require_once "../models/getData.php";
+require_once __DIR__ . "/../config/conexion.php";
+require_once __DIR__ . "/../models/getData.php";
 
 try {
     $usuariosListados = listarUsuarios($pdo);
@@ -21,7 +21,7 @@ try {
     }
 
 } catch (Exception $e) {
-    error_log("Error en listarUsuarios.phg ". $e->getMessage());
+    error_log("Error en listarUsuarios.php ". $e->getMessage());
     echo json_encode([
         'status' => 'error',
         'mensaje' => '!Erro del servidor¡'

@@ -1,16 +1,30 @@
-const ENDPOINT_LISTAR = '../../../app/controllers/listarUsuariosAdmin.php';
-const ENDPOINT_OBTENER = '../../../app/controllers/modalUsuario.php';
+//definimos los endpoints en unas constantes
+const ENDPOINT_LISTAR = '/listarUsuarios';
+const ENDPOINT_OBTENER = '/modalUsuario';
+const ENDPOINT_INSERTAR = '/registrarUsuario';
+const ENDPOINT_EDITAR = '/editarUsuario'
+const ENDPOINT_ESTADO = '/cambiarEstadoUsuario'
 
-console.log(ENDPOINT_OBTENER);
+// La lógica de crear usuario ahora está en modal_usuarios_Admin.js
 
-const cargarUsuarios = async () => {
-    const cuerpoTabla = document.getElementById("tablaUsuarios");
 
-    if(!cuerpoTabla) {
-        console.error('No se encontró el cuerpo de la tabla');
+const cargarUsuarios = async () => { //Realizamos una async function
+    const cuerpoTabla = document.getElementById("tablaUsuarios"); //capturamos el cuerpo de la tabla
+
+    if (!cuerpoTabla) { //Validamos que encontramos la tabla
+
+        Swal.fire({
+            icon: 'error',
+            title: 'No existe la tabla casos!',
+            showConfirmButton: false,
+            timer: 1000,
+            theme: 'dark',
+        })
+
         return;
     }
 
+    //Insertamos el "cargando..." mientras esperamos una response por parte del endpoint
     cuerpoTabla.innerHTML = `
         <tr>
             <td colspan="7" class="text-center py-4">
@@ -23,21 +37,20 @@ const cargarUsuarios = async () => {
     `;
 
     try {
+        //hacemos un fecth al endpoint a listar
         const response = await fetch(ENDPOINT_LISTAR);
 
-        if (!response.ok) {
+        if (!response.ok) { //Manejamos errores personalizados
             throw new Error(`Error HTTP ${response.status}: No se pudo conectar con el servidor`);
         }
 
-        const data = await response.json();
+        const data = await response.json(); //convertimos la respuesta a json
 
-        console.log('Datos recibidos:', data);
-
-        if(data.status !== 'ok') {
+        if (data.status !== 'ok') { //Verificamos que el status NO es ok y lanzamos un error en tal caso
             throw new Error(data.mensaje || 'Error desconocido');
         }
 
-        if (!data.usuarios || !Array.isArray(data.usuarios) || data.usuarios.length === 0) {
+        if (!data.usuarios || !Array.isArray(data.usuarios) || data.usuarios.length === 0) { //Validamos si hay usuarios o no
             cuerpoTabla.innerHTML = `
                 <tr>
                     <td colspan="7" class="text-center py-4 text-warning">
@@ -49,10 +62,18 @@ const cargarUsuarios = async () => {
             return;
         }
 
-        renderizarTablaUsuarios(data.usuarios, cuerpoTabla);
+        renderizarTablaUsuarios(data.usuarios, cuerpoTabla); //ejecutamos una funcion que definimeros mas adelante
 
+        //manejo de errores
     } catch (error) {
-        console.error('Error al cargar los usuarios:', error);
+
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error al cargar usuarios!',
+            showConfirmButton: false,
+            timer: 1000,
+            theme: 'dark',
+        });
         cuerpoTabla.innerHTML = `
             <tr>
                 <td colspan="7" class="text-center py-4 text-danger">
@@ -66,14 +87,14 @@ const cargarUsuarios = async () => {
     }
 };
 
-// ✅ CORREGIDO: usuarios → usuario (singular)
-const renderizarTablaUsuarios = (usuarios, cuerpoTabla) => {
-    let htmlFilas = '';
+const renderizarTablaUsuarios = (usuarios, cuerpoTabla) => { //definimos la funcion anteriormente declarada
+    let htmlFilas = ''; //inicializamos la variable de html vacia
 
-    usuarios.forEach((usuario) => {  // ← Cambio aquí
+    usuarios.forEach((usuario) => {  //*recorremos los roles y usuarios para personalizar su aspecto segun su contenido
         const estadoUsuario = obtenerEstadoUsuario(usuario.id_estado);
         const rolUsuario = obtenerRolUsuario(usuario.id_rol);
-        
+
+        //Recorremos e insertamos datos en la variable html
         htmlFilas += `
             <tr>
                 <th scope="row">${usuario.documento}</th>
@@ -92,22 +113,22 @@ const renderizarTablaUsuarios = (usuarios, cuerpoTabla) => {
     });
 
     cuerpoTabla.innerHTML = htmlFilas;
-    console.log(`✅ Se renderizaron ${usuarios.length} usuarios`);
+    //insertamos el html previamente hecho
 };
 
-// ✅ CORREGIDO: Sin 's' al final
+//funcion para personalizar segun estado usando clases de bootstrap
 const obtenerEstadoUsuario = (idEstado) => {
     switch (idEstado) {
         case 1:
             return `<span class="badge bg-success">Activo</span>`;
-        case 2:
+        case 0:
             return `<span class="badge bg-secondary">Inactivo</span>`;
         default:
             return `<span class="badge bg-secondary">Desconocido</span>`;
     }
 };
 
-// ✅ CORREGIDO: Parámetro 'rol' en lugar de 'estado'
+//funcion para personalizar segun Rol usando clases de bootstrap
 const obtenerRolUsuario = (idRol) => {
     switch (idRol) {
         case 1:
@@ -119,12 +140,17 @@ const obtenerRolUsuario = (idRol) => {
     }
 };
 
-const gestionarUsuario = async (documento) => {
-    console.log(`👤 Gestionando usuario documento: ${documento}`);
+//inicializamos una variable vacia para luego usarla para editar al usuario
+let usarioEditable = null;
 
+//Definimos funcion para gestionar usuarios anteriorimente declarada en el html
+const gestionarUsuario = async (documento) => {
+
+    //capturamos el modal
     const modalElement = document.getElementById('modalUsuario');
     const modal = new bootstrap.Modal(modalElement);
 
+    //Hacemos la view de carga mientras busca el usuario
     document.getElementById('modalUsuarioBody').innerHTML = `
         <div class="text-center py-5">
             <div class="spinner-border text-primary" role="status">
@@ -134,30 +160,33 @@ const gestionarUsuario = async (documento) => {
         </div>
     `;
 
-    modal.show();
+    modal.show(); //mostramos modal utilizando el metodo de la clase bootstrap
 
     try {
+        //hacemos fetch al endpoint que nos va a retornar el usuario que buscamos
         const response = await fetch(ENDPOINT_OBTENER, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: `usuario=${documento}`  // ✅ CORREGIDO: sin comilla extra
+            body: `usuario=${documento}`
         });
 
+        //manejamos errores
         if (!response.ok) {
             throw new Error(`Error HTTP ${response.status}`);
         }
 
+        //Convertimos la respuesta a json
         const data = await response.json();
 
-        console.log('Usuario obtenido:', data);
 
-        if(data.status === 'ok' && data.usuario) {
+        if (data.status === 'ok' && data.usuario) { //verificamos el status de la response
             mostrarDetallesUsuario(data.usuario);
         } else {
             throw new Error(data.mensaje || 'No se pudo obtener el usuario');
         }
+        //Manejo de errores
     } catch (error) {
         console.error('Error al obtener el usuario:', error);
         document.getElementById('modalUsuarioBody').innerHTML = `
@@ -169,32 +198,226 @@ const gestionarUsuario = async (documento) => {
     }
 };
 
+//funcion para cambiar estado de usuarios
+const cambiarEstadoUsuario = (nuevoDocumento, nuevoEstado) => {
+
+    cerrarModal();
+
+    if (nuevoEstado == 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: '¡Acción importante! ¿Estás seguro de querer desactivar este usuario?',
+            text: 'Al desactivar a este usuario, si es comisionado, todos sus casos pasan a estado "Por asignar". Deberás reasignarlos manualmente. Continúa con cuidado.',
+            theme: 'dark',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Sí, desactivar",
+            denyButtonText: 'No desactivar',
+        }).then((response) => {
+
+            if (response.isConfirmed) {
+                //Encapsulamos al ajax en un try catch para captar errores
+                try {
+                    $.ajax({
+                        data: { //capturamos datos
+                            'documento': nuevoDocumento,
+                            'estado': nuevoEstado
+                        },
+                        //enviamos
+                        url: ENDPOINT_ESTADO,
+                        type: 'POST',
+                        dataType: 'json',
+
+                        success: function (response) {
+
+                            if (response.status != 'ok') {
+
+                                //se muestra una alerta estetica de error
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: `${response.mensaje}`,
+                                    showConfirmButton: false,
+                                    theme: 'dark',
+                                    timer: 1000
+                                });
+                                return;
+                            }
+                            //Se muestra alerta estetica
+                            //Si el usuario fue cambiado exitosamente se actualizaran los modales y la tabla de fondo
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Usuario desactivado con exito',
+                                theme: 'dark',
+                                showConfirmButton: false,
+                                timer: 1000,
+                            });
+                            //recargamos la tabla de usuarios
+                            cargarUsuarios();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error de conexión',
+                                text: 'Ocurrió un error al intentar desactivar al usuario.',
+                                theme: 'dark'
+                            });
+                        }
+                    });
+
+                } catch (error) {
+                    console.error(`Ha ocurrido un error inesperado ${error}`)
+                }
+            };
+
+            if (response.isDenied) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Se canceló la acción',
+                    text: 'Continúa tranquilo, el usuario se mantiene activo',
+                    theme: 'dark',
+                })
+            }
+
+        })
+    };
+
+    if (nuevoEstado == 1) {
+        Swal.fire({
+            icon: 'warning',
+            title: '¡Acción importante! ¿Estás seguro de querer reactivar este usuario?',
+            text: 'Al reactivar a este usuario, volvera a tener accesso al sistema con el permiso correspondiente a su rol.',
+            theme: 'dark',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Sí, reactivar",
+            denyButtonText: 'No reactivar',
+        }).then((response) => {
+
+            if (response.isConfirmed) {
+                //Encapsulamos al ajax en un try catch para captar errores
+                try {
+                    $.ajax({
+                        data: { //capturamos datos
+                            'documento': nuevoDocumento,
+                            'estado': nuevoEstado
+                        },
+                        //enviamos
+                        url: ENDPOINT_ESTADO,
+                        type: 'POST',
+                        dataType: 'json',
+
+                        success: function (response) {
+
+                            if (response.status != 'ok') {
+
+                                //se muestra una alerta estetica de error
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: `${response.mensaje}`,
+                                    showConfirmButton: false,
+                                    theme: 'dark',
+                                    timer: 1000
+                                });
+                                return;
+                            }
+                            //Se muestra alerta estetica
+                            //Si el usuario fue cambiado exitosamente se actualizaran los modales y la tabla de fondo
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Usuario reactivado con exito',
+                                theme: 'dark',
+                                showConfirmButton: false,
+                                timer: 1000,
+                            });
+                            //recargamos la tabla de usuarios
+                            cargarUsuarios();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error de conexión',
+                                text: 'Ocurrió un error al intentar reactivar al usuario.',
+                                theme: 'dark'
+                            });
+                        }
+                    });
+
+                } catch (error) {
+                    console.error(`Ha ocurrido un error inesperado ${error}`)
+                }
+            };
+
+            if (response.isDenied) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Se canceló la acción',
+                    text: 'Continúa tranquilo, el usuario se mantiene desactivo',
+                    theme: 'dark'
+                })
+            }
+
+        })
+    }
+}
+
+//definimos la funcion anteriormente declarada
 const mostrarDetallesUsuario = (usuario) => {
+
+    //guardamos al usuario seleccionado en una variable
+    usarioEditable = usuario;
+
+    //capturamos partes del modal
+    const modalFooter = document.getElementById('modalFooter');
     const modalBody = document.getElementById('modalUsuarioBody');
     const modalTitle = document.getElementById('modalUsuarioLabel');
 
+    //Insertamos el titulo del modal
     modalTitle.textContent = `Usuario: ${usuario.nombre} ${usuario.apellido}`;
 
+    //inicializamos variable vacia para poder usarla fuera del bloque if
+    let btnEstado = '';
+
+    //Determinamos el color y texto del boton reactivar o activar
+    if (usarioEditable.id_estado != 1) {
+        btnEstado = `<button type="button" class="btn btn-success" onclick="cambiarEstadoUsuario('${usuario.documento}', 1)">Reactivar</button>`;
+    } else {
+        btnEstado = `<button type="button" class="btn btn-danger" onclick="cambiarEstadoUsuario('${usuario.documento}', 0)">Desactivar</button>`;
+    }
+
+    //insertamos el footer
+    modalFooter.innerHTML = `
+    ${btnEstado}
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" onclick="habilitarEdicion()">
+            <i class="bi bi-pencil"></i> Editar Usuario
+        </button>
+    `;
+
+    //Insertamos los datos del usuario en el body
     modalBody.innerHTML = `
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Documento:</label>
-                <p class="form-control-plaintext">${usuario.documento}</p>
+                <p class="form-control-plaintext text-white">${usuario.documento}</p>
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Nombre Completo:</label>
-                <p class="form-control-plaintext">${usuario.nombre} ${usuario.apellido}</p>
+                <p class="form-control-plaintext text-white">${usuario.nombre} ${usuario.apellido}</p>
             </div>
         </div>
         
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Email:</label>
-                <p class="form-control-plaintext">${usuario.email}</p>
+                <p class="form-control-plaintext text-white">${usuario.email}</p>
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Rol:</label>
-                <p class="form-control-plaintext">${obtenerRolUsuario(usuario.id_rol)}</p>
+                <p class="form-control-plaintext text-white">${obtenerRolUsuario(usuario.id_rol)}</p>
             </div>
         </div>
         
@@ -207,7 +430,132 @@ const mostrarDetallesUsuario = (usuario) => {
     `;
 };
 
+//funcion para cerrar modal de bootstrap 5
+const cerrarModal = () => {
+    const modalElement = document.getElementById('modalUsuario');
+    const modal = bootstrap.Modal.getInstance(modalElement);
+    if (modal) {
+        modal.hide();
+    }
+};
+
+//función para guardar cambios del usuario
+const guardarCambios = () => {
+
+    //Capturamos valores de los inputs
+    const emailNuevo = document.getElementById('emailNuevo').value;
+    const nombreNuevo = document.getElementById('nombreNuevo').value;
+    const apellidoNuevo = document.getElementById('apellidoNuevo').value;
+    const rolNuevo = document.getElementById('rolNuevo').value;
+    const documento = document.getElementById('documentoBuscado').value;
+    const nuevaPassword = document.getElementById('nuevaPassword').value ?? null;
+
+    //Asignamos a un objeto para su manejo
+    const parametros = {
+        'nombre': nombreNuevo,
+        'apellido': apellidoNuevo,
+        'rol': rolNuevo,
+        'documento': documento,
+        'contrasena': nuevaPassword,
+        'email': emailNuevo
+    }
+
+    try {
+        $.ajax({
+            data: parametros,
+            url: ENDPOINT_EDITAR,
+            type: 'POST',
+            dataType: 'json',
+
+            success: function (response) {
+                cerrarModal(); //cerramos el modal
+                cargarUsuarios() //refrescamos la tabla
+
+                //mostramos el mensaje en una alerta
+                Swal.fire({
+                    icon: 'success',
+                    title: `${response.mensaje}`,
+                    showConfirmButton: false,
+                    theme: 'dark',
+                    timer: 1000
+                })
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
+
+                //Mostramos alerta estetica
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Ha ocurrido un error interno!',
+                    theme: 'dark',
+                    showConfirmButton: false,
+                    timer: 1000,
+
+                });
+            }
+        });
+    } catch (error) {
+        console.error(`Ha ocurrido un error inesperado ${error}`);
+    }
+}
+
+//funcion para editar al usuario
+const habilitarEdicion = () => {
+
+    //capturamos el cuerpo y el footer del modal
+    const modalBody = document.getElementById('modalUsuarioBody');
+    const modalFooter = document.getElementById('modalFooter');
+
+    //Usamos como plantilla el anterior html y cambiamos p por input
+    modalBody.innerHTML = `
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Nombre:</label>
+                <input type="text" class="form-control glass-input" id="nombreNuevo" value="${usarioEditable.nombre}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Apellido:</label>
+                <input type="text" class="form-control glass-input" id="apellidoNuevo" value="${usarioEditable.apellido}">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Email:</label>
+                <input type="email" class="form-control glass-input" id="emailNuevo" value="${usarioEditable.email}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Rol:</label>
+                <select class="form-select glass-input" id="rolNuevo">
+                    <option  class="bg-slate-900" value="1" class"bg-slate-900" ${usarioEditable.id_rol == 1 ? 'selected' : ''}>Administrador</option>
+                    <option class="bg-slate-900" value="2"  ${usarioEditable.id_rol == 2 ? 'selected' : ''}>Comisionado</option>
+                </select>
+            </div>
+            <input type="hidden" id="documentoBuscado" value="${usarioEditable.documento}">
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Estado:</label>
+                <p class="form-control-plaintext">${obtenerEstadoUsuario(usarioEditable.id_estado)}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Nueva Contraseña:</label>
+                <input type="password" class="form-control glass-input" id="nuevaPassword">
+            </div>
+        </div>
+    `;
+
+    //insertamos en el footer los boton onclick
+    modalFooter.innerHTML = `
+        <button type="button" class="btn btn-danger" onclick="mostrarDetallesUsuario(usarioEditable)">Cancelar</button>
+        <button type="button" class="btn btn-success" onclick="guardarCambios()">
+            <i class="bi bi-check-circle"></i> Guardar Cambios
+        </button>
+    `;
+};
+
+//Agregamos un evento que al cargar el DOM ejecute la funcion de cargarUsuarios
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Página cargada, iniciando carga de usuarios...');
     cargarUsuarios();
 });

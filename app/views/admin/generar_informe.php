@@ -1,149 +1,176 @@
-<?php require_once "../../controllers/checkSession.php"; ?>
+<?php require_once __DIR__ . "/../../controllers/checkSessionAdmin.php"; ?>
 
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrador</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generación de Informe | Administrador</title>
 
-    <!--Este es el enlace entre el proyecto y bootstrap-->
+  <!--Icon de la pagina-->
+  <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-    <!--CSS propio para colores y fonts-->
+  <!-- Bootstrap CSS (Required for JS compatibility) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="../../../Public/assets/css/generar_informe-admin.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-    <!--Link de google fonts-->
+  <!--CSS propio-->
+  <link rel="stylesheet" href="/assets/css/generar_informe-admin.css">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=ADLaM+Display&family=Roboto:ital,wght@0,100..900;1,100..900&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-        rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet">
+  <script src="/assets/js/jquery-3.7.1.min.js"></script>
 
 </head>
 
-<body>
-    <!--NavBar admin-->
-    <div class="top-bar">
-        <nav class="navbar m-0 p-0 bg-body-tertiary">
-            <div class="container-fluid d-flex align-items-center justify-content-between">
-                <img class="ms-3" src="../../../Public/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
-                <div class="d-flex align-items-center">
-                    <div class="text-end me-3">
-                        <?php if (isset($_SESSION['user']['username'])): ?>
-                            <h2 class='mb-0 d-none d-md-block'>
-                                <?php echo $_SESSION['user']['username']; ?>
-                            </h2>
-                        <?php endif; ?>
-                        <h4 class="mb-0 d-none d-md-block">Administrador</h4>
-                    </div>
-                    <a href="#">
-                        <img src="../../../Public/assets/img/icon account.png" alt="User" width="76" height="76">
-                    </a>
-                    <form action="../../controllers/logout.php" method="POST">
-                        <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
-                        <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
-                    </form>
-                </div>
-            </div>
-        </nav>
-    </div>
-    <!--SideBar admin-->
+<body class="antialiased selection:bg-indigo-500 selection:text-white">
 
-    <div class="side-bar">
-        <div class="sidebar container-fluid">
-            <ul class="nav flex-column text-center">
+  <!-- Decorative Background Elements -->
+  <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+    <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
+    <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
+    <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+  </div>
 
-                <li class="nav-item my-1">
-                    <a href="home.php" class="nav-link text-none">
-                        <i class="bi bi-house-fill home-icon d-block"></i>
-                        <span>Inicio</span>
-                    </a>
-                </li>
+  <div class="flex h-screen overflow-hidden relative z-10">
 
-                <li class="nav-item my-1 active">
-                    <a href="generar_informe.php" class="nav-link text-none">
-                        <i class="bi bi-file-earmark-text-fill crear-notificacion"></i>
-                        <br>
-                        <span>Generar<br>Informe</span>
-                    </a>
-                </li>
+    <!-- Sidebar -->
+    <aside class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
 
-                <li class="nav-item my-1">
-                    <a href="casos.php" class="nav-link text-none">
-                        <i class="bi bi-eye-fill ver-caso d-block"></i>
-                        <span>Casos</span>
-                    </a>
-                </li>
+      <!-- Logo Area -->
+      <div class="h-20 flex items-center justify-center border-b border-white/5">
+        <img src="/assets/img/logo_sena.png" alt="SENA" class="w-10 h-10 object-contain group-hover:block">
+      </div>
 
-                <li class="nav-item my-1">
-                    <a href="crear-usuario.php" class="nav-link text-none">
-                        <i class="bi bi-person-fill-gear usuarios"></i>
-                        <span>Usuarios</span>
-                    </a>
-                </li>
+      <!-- Navigation -->
+      <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
 
-                <li class="nav-item my-1">
-                    <a href="notificaciones.php" class="nav-link text-none">
-                        <i class="bi bi-bell-fill notificacion"></i>
-                        <span>Notificación</span>
-                    </a>
-                </li>
+        <a href="/dashboardAdmin" class="nav-link">
+          <i class="bi bi-house-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Inicio</span>
+        </a>
 
-            </ul>
+        <a href="/generarInforme" class="nav-link active">
+          <i class="bi bi-file-earmark-text-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Generar Informe</span>
+        </a>
+
+        <a href="/casosAdmin" class="nav-link">
+          <i class="bi bi-eye-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Casos</span>
+        </a>
+
+        <a href="/procesoOrganizacional" class="nav-link">
+          <i class="bi bi-diagram-3-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Procesos</span>
+        </a>
+
+        <a href="/usuarios" class="nav-link">
+          <i class="bi bi-person-fill-gear"></i>
+          <span class="text-[10px] mt-1 font-medium">Usuarios</span>
+        </a>
+
+        <a href="/notificacionesAdmin" class="nav-link">
+          <i class="bi bi-bell-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Notificación</span>
+        </a>
+
+        <a href="/perfilAdmin" class="nav-link">
+          <i class="bi bi-person-circle"></i>
+          <span class="text-[10px] mt-1 font-medium">Mi Perfil</span>
+        </a>
+
+      </nav>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 flex flex-col ml-20 h-full">
+
+      <!-- Top Bar -->
+      <header class="h-20 glass-nav flex items-center justify-between px-6 sticky top-0 z-40">
+
+        <h2 class="text-xl font-semibold text-white tracking-tight">Generar Informe</h2>
+
+        <div class="flex items-center gap-6">
+          <div class="text-right hidden md:block">
+            <?php if (isset($_SESSION['user']['username'])): ?>
+              <p class="text-sm font-medium text-white">
+                <?php echo $_SESSION['user']['username']; ?>
+              </p>
+            <?php endif; ?>
+            <p class="text-xs text-slate-400">Administrador</p>
+          </div>
+
+          <div class="flex items-center gap-4">
+            <a href="/perfilAdmin" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+              <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
+            </a>
+
+            <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+            <button type="submit" name="logout" id="logoutButton" value="logout"
+              class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
+              Cerrar Sesión
+            </button>
+
+          </div>
         </div>
-    </div>
+      </header>
 
-    <!--Contenido de la pagina-->
-    <div class="main-content">
+      <!-- Content -->
+      <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
+        <div class="max-w-2xl mx-auto">
 
-        <div class="container mt-5">
-            <h1 class="text-center mb-4">Generación de Informe</h1>
-            <div class="custom-form-box mx-auto">
-                <h2 class="text-center mb-4">Datos de Informe</h2>
-                <form id="registroForm">
-                    <div id="seccion1" class="form-section">
-                        <div class="input-group mb-4 custom-input-group">
-                            <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
+          <div class="glass-card p-8 md:p-10">
+            <h2 class="text-2xl font-bold text-white text-center mb-6" id="tituloForm"></h2>
 
-                            <select class="form-select custom-input" id="tipo-usuario">
-                                <option selected selected>Selecione el tipo de archivo</option>
-                                <option value="PDF">PDF</option>
-                                <option value="excel">EXCEL</option>
-                            </select>
-                        </div>
+            <div id="seccion1" class="form-section space-y-6">
 
-                        <div class="input-group mb-4 custom-input-group">
-                            <input type="text" class="form-control custom-input" placeholder="Titulo">
-                        </div>
+              <div class="relative" id="excluido">
+                <select class="glass-input w-full p-3 pl-12 rounded-lg text-white appearance-none cursor-pointer" id="formato">
+                  <option selected disabled class="bg-slate-800">Selecione el tipo de archivo</option>
+                  <option value="1" class="bg-slate-800">PDF</option>
+                  <option value="2" class="bg-slate-800">EXCEL</option>
+                </select>
+              </div>
 
-                        <div class="input-group mb-4 custom-input-group">
+              <div class="relative">
+                <select class="glass-input w-full p-3 pl-12 rounded-lg text-white appearance-none cursor-pointer" id="tipoReporte">
+                  <option selected disabled class="bg-slate-800">Selecione el tipo de reporte anual</option>
+                  <option value="1" class="bg-slate-800">Reporte de Casos</option>
+                  <option value="2" class="bg-slate-800">Reporte de Usuarios</option>
+                  <option value="3" class="bg-slate-800">Reporte de Procesos Organizacionales</option>
+                </select>
+              </div>
 
-                            <textarea type="text" class="form-control custom-input" placeholder="Contenido"></textarea>
-                        </div>
+              <button type="button" class="btn-siguiente w-full flex items-center justify-center gap-2 mt-4 text-white bg-indigo-500 hover:bg-indigo-600 px-8 py-3 rounded-xl " id="informe">
+                <i class="bi bi-download"></i> DESCARGAR
+              </button>
 
-                        <button type="button" class="btn btn-block w-100 btn-IMPORTAR" onclick="mostrarSeccion('seccion2')">IMPORTAR ARCHIVO</button>
-                        <button type="button" class="btn btn-block w-100 btn-siguiente" onclick="mostrarSeccion('seccion2')">SIGUIENTE</button>
-                    </div>
-                </form>
             </div>
-        </div>
+          </div>
 
-        <!--JS de Bootstrap-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-            crossorigin="anonymous"></script>
-        <script src="../../../public/assets/js/cache.js"></script>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- JS propio (Keep order) -->
+  <script src="/assets/js/logout.js"></script>
+  <script src="/assets/js/cache.js"></script>
+  <script src="/assets/js/generarInforme.js"></script>
+
 </body>
 
 </html>

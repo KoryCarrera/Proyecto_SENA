@@ -1,110 +1,48 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" href="./assets/css/inicio-entrada-cartas.css">
-    <title>pagina de inicio del sistema de gestion</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-    <!--barra de navegacion extraida de bootstrap-->
-    <section class="menu">
-      <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">SENA</a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#"
-                  >inicio</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./pages/nosotros.php">nosotros</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">cuentas</a>
-              </li>
-              <li class="nav-item dropdown">
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </section>
+<?php
 
-    <!--contenedores con los los tipos de usuarios,estaprimera es la del comisionado-->
-    <main class="contenedor">
-      <section class="tipos_usuarios">
-        <h2>selecciona tu tipo de cuenta</h2>
-        <div class="cartas_usuarios">
-          <!--esta es la carta del comisionado-->
-          <div class="carta_comisionado">
-            <a href="pages/entrada_comisionado.php" class="link-cartas">
-             <i class="fa-solid fa-user-tie"></i>
-             <h3>comisionado</h3>
-            </a>
-          </div>
-          <!--esta es la carta del administrador-->
-          <div class="carta_administrador" id="admin_login">
-            <a  href="pages/entrada_administrador.php" class="link-cartas">
-             <i class="fa-solid fa-user-gear"></i>
-             <h3>administrador</h3>
-            </a>           
-          </div>
-          <!--se crea una tercera carta que permanecera oculta,esta sera el formulario que
-          pedira los datos para el ingreso al sistema de gestions segun su tipo de usuario-->
-        </div>
-      </section>
-    </main>
-    <!--pie de pagina, toca segir buscando que tipos de lincks y contenido pondremos-->
-    <footer>
-      <div class="links_paginas">
-        <ul class="links">
-          <li><a href="#">servicios</a></li>
-          <li><a href="#">mapas de sitio</a></li>
-          <li><a href="#">terminos"</a></li>
-        </ul>
-      </div>
-      <!--los separe en tres div para presentarlo como columnas,cosa que no aparecia en el mockup-->
-      <div class="a_cerca_de">
-        <ul class="links">
-          <li><a href="#">acerca de nosotros</a></li>
-          <li><a href="#">contactanos</a></li>
-        </ul>
-      </div>
-      <div class="servicio_al_cliente">
-        <ul class="links">
-          <li><a href="#">servicio al cliente</a></li>
-          <li><a href="#">ayuda</a></li>
-        </ul>
-      </div>
-    </footer>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-      crossorigin="anonymous"
-    ></script>
-  </body>
-</html>
+//Llamamos el autoloader de vendor para inicializar altorouter
+require_once __DIR__ . '/../vendor/autoload.php';
+
+//Insertamos la libreria para las env
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
+//Cargamos el mapa de rutas (El archivo router.php)
+$router = require_once __DIR__ . '/../app/router.php';
+
+//Ejecutamos el motor de busqueda de la libreria
+
+$match = $router->match();
+
+//Ya ejecutamos la logica de redirección
+
+if ($match) {
+  //Si hay match cargamos el archivo correspondiente
+
+  //Construimos la ruta real
+  $destino = __DIR__ . '/../app/' . $match['target'];
+
+  //validamos existencia del archivo
+  if (file_exists($destino)) {
+
+    require_once $destino;
+  } else {
+
+    //Agregamos un manejo de errores interno
+    header($_SERVER['SERVER_PROTOCOL'] . '500 Internar Error!');
+    echo "Error: el archivo <b>{$match['target']}</b> No existe";
+
+    //manejo de CORS
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization');
+  }
+} else {
+
+  //Agregamos el manejo de error de Not Found (404)
+  header($_SERVER['SERVER_PROTOCOL'] . '404 Not Found!');
+
+  echo "<h1>¡Ruta no encontrada!<h1>";
+}

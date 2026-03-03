@@ -1,281 +1,125 @@
-*{
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-}
-.menu{
-    position:fixed;
-    background-color: #b2b5c5;
-    width: 100vw;
-    height: 1rem;
-}
-main{
-    height: 75vh;
-    background-color: #0b0f2a;
-    color: white;
-    text-align: center;
-}
-.contenedor{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 85vh;
-}
-
-.tipos_usuarios{
-    color: white;
-    margin: 30px;
-    padding: 30px;
-    border-radius: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-}
-.cartas_usuarios{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 0;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15)
-
-}
-.carta_administrador, .carta_comisionado{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    height: 30vh;
-    border-radius: 15px;
-    cursor: pointer;
-    gap: 15px;
-    transition: transform 0.3s ;
-}
-
-.carta_comisionado:hover, .carta_administrador:hover {
-  transform: scale(1.05);
-}
-.carta_comisionado,.carta_comisionado_login{
-    overflow: hidden;
-    word-wrap: break-word;
-  border-radius: 15px 0 0 15px;
-  border: none;
-  background: linear-gradient(135deg, #00D26A, #008F44);
-}
-
-.carta_administrador,.carta_administrador_login{
-      overflow: hidden;
-    word-wrap: break-word;
-  border-radius: 0 15px 15px 0;
-  border: none;
-  background: linear-gradient(135deg, #5a2fd8, #00a2ff);
-}
-i {
-    font-size: 50px;
-}
-.formulario_entrada{
-      overflow: hidden;
-    word-wrap: break-word;
-    display: flex;
-    border-radius: 0 15px 15px 0;
-    background:ghostwhite;
-    color: black;
-
-   
-}
-.formulario_entrada_admin{
-      overflow: hidden;
-    word-wrap: break-word;
-    display: flex;
-    border-radius: 15px 0 0 15px;
-    background:ghostwhite;
-    color: black;
-}
-
-.formulario_entrada, .formulario_entrada_admin{
-   display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 400px;
-    height: 400px;}
-
-input{
-    margin-inline-start: 1 rem;
-    padding-inline-start: 1rem;
-    border-radius: 15px;
-  width: 100%;
-  max-width: 300px;
-  margin: 10px 0;
-  padding: 0.6rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  font-size: 1rem;
-  outline: none;
-  transition: 0.3s ease;
-}
-
-input:focus {
-  border-color: #0b0f2a;
-  box-shadow: 0 0 5px rgba(11, 15, 42, 0.4);
-}
-
-
-button{
-    padding: 0 1rem 0 1rem;
-    background-color: #0b0f2a;
-    color: white;
-    align-content: center;
-    border-radius: 15px !important;
-}
-footer{
-    display:flex;
-    align-items: center;
-    justify-content: space-evenly;
-    background:#acacac;
-    height: 15vh;
-    width: 100vw;
-
-}
-.links {
-    list-style-type: none;
-}
-.links li{
-    margin: 10px;
-}
-.links a{
-    text-decoration: none;
-    color: #000000;
-
-}
-.carta_administrador, .carta_comisionado {
+/* From Uiverse.io by yashasvi9199 */ 
+.form {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 30vw;
-  height: 30vh; /* altura base */
-  padding: 1rem;
-  transition: all 0.3s ease; /* para que el cambio sea suave */
-}
-.formulario_entrada_admin{
-display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 30vw;
-  height: 30vh; /* altura base */
-  padding: 1rem;
-} .carta_administrador_login,.carta_comisionado_login{
-display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 30vw;
-  height: 30vh; /* altura base */
-  padding: 1rem;
-}
-/* Pantallas pequeñas */
-@media (max-width: 600px) {
-  .carta_administrador, .carta_comisionado, .formulario_entrada, .formulario_entrada_admin,.carta_administrador_login,.carta_comisionado_login{
-    height: 35vh; /* más altas para móviles */
-    width: 35vw;
-  }
-}
-/* Tablets */
-@media (min-width: 601px) and (max-width: 1024px) {
-  .carta_administrador, .carta_comisionado, .formulario_entrada, .formulario_entrada_admin,.carta_administrador_login,.carta_comisionado_login{
-    height: 35vh;
-    width: 30vw;
-  }
-}
-
-/* Pantallas grandes */
-@media (min-width: 1025px) {
-  .carta_administrador, .carta_comisionado,.formulario_entrada, .formulario_entrada_admin,.carta_administrador_login,.carta_comisionado_login{
-    height: 40vh;
-    width: 20vw; /* menos anchas en pantallas grandes */
-  }
-}
-.link-cartas{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    text-decoration: none;
-    color: white;
-    width: 100%;
-    height: 100%;
-}
-.boton-volver{
-  display: inline-block;
-  background-color:white ;
-  color:#0b0f2a;
-  padding: 0.6rem 1.2rem;
-  border-radius: 10px;
-  text-decoration: none;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.boton-volver:hover {
-  background-color: #0b0f2a;
-  color: white;
-}
-.nosotros {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-
-  width: 100%;
-  padding: 20px;
-  margin-top: 40px; /* por la navbar */
-}
-
-.targeta {
-  width: 80vw;
-  height: 15vh;
-  border-radius: 15px;
-  padding: 20px;
-  color: white;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  transition: 0.3s;
-}
-
-
-#targeta-1 {
-  background: linear-gradient(135deg, #ff00c8, #ff5ad9, #ff8be6);
+  gap: 10px;
+  padding-left: 2em;
+  padding-right: 2em;
+  padding-bottom: 0.4em;
+  background-color: #171717;
   border-radius: 25px;
-  height: 15%;
+  transition: 0.4s ease-in-out;
 }
 
-#targeta-2 {
-  background: linear-gradient(135deg, #00c6ff, #0072ff);
-   border-radius: 25px;
+.card {
+  background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
+  border-radius: 22px;
+  transition: all 0.3s;
 }
 
-#tarjeta-3 {
-  background: linear-gradient(135deg, #00ff88, #00c2a8, #00a3ff);
-   border-radius: 25px;
+.card2 {
+  border-radius: 0;
+  transition: all 0.2s;
 }
 
-#tarjeta-4 {
-  background: linear-gradient(135deg, #ffe259, #ffa751, #ff6a6a);
-   border-radius: 25px;
+.card2:hover {
+  transform: scale(0.98);
+  border-radius: 20px;
 }
-main{
-  height: 75vh;
-  background-color: #0b0f2a;
-  color: white;
+
+.card:hover {
+  box-shadow: 0px 0px 30px 1px rgba(0, 255, 117, 0.3);
+}
+
+#heading {
   text-align: center;
+  margin: 2em;
+  color: rgb(255, 255, 255);
+  font-size: 1.2em;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  border-radius: 25px;
+  padding: 0.6em;
+  border: none;
+  outline: none;
+  color: white;
+  background-color: #171717;
+  box-shadow: inset 2px 5px 10px rgb(5, 5, 5);
+}
+
+.input-icon {
+  height: 1.3em;
+  width: 1.3em;
+  fill: white;
+}
+
+.input-field {
+  background: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  color: #d3d3d3;
+}
+
+.form .btn {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  margin-top: 2.5em;
+}
+
+.button1 {
+  padding: 0.5em;
+  padding-left: 1.1em;
+  padding-right: 1.1em;
+  border-radius: 5px;
+  margin-right: 0.5em;
+  border: none;
+  outline: none;
+  transition: 0.4s ease-in-out;
+  background-color: #252525;
+  color: white;
+}
+
+.button1:hover {
+  background-color: black;
+  color: white;
+}
+
+.button2 {
+  padding: 0.5em;
+  padding-left: 2.3em;
+  padding-right: 2.3em;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  transition: 0.4s ease-in-out;
+  background-color: #252525;
+  color: white;
+}
+
+.button2:hover {
+  background-color: black;
+  color: white;
+}
+
+.button3 {
+  margin-bottom: 3em;
+  padding: 0.5em;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  transition: 0.4s ease-in-out;
+  background-color: #252525;
+  color: white;
+}
+
+.button3:hover {
+  background-color: red;
+  color: white;
 }

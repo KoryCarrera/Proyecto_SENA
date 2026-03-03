@@ -3,8 +3,8 @@
 header('Content-Type: application/json');
 
 //Se llaman los archivos con las dependencias que necesitamos
-require_once "../config/conexion.php";
-require_once "../models/getData.php";
+require_once __DIR__ . "/../config/conexion.php";
+require_once __DIR__ . "/../models/getData.php";
 
 try {
     //Se llaman las funciones que necesitamos
@@ -25,9 +25,9 @@ try {
     ];
     
     //Se validan que los datos devueltos no sean false por cada uno
-    if (!$casosTipos) $response['errors']['polar'] = 'No se pudieron obtener casos por tipo';
-    if (!$casosComisionado) $response['errors']['pie'] = 'No se pudieron obtener casos por comisionado';
-    if (!$casosPorMes) $response['errors']['bar'] = 'No se pudieron obtener casos por mes';
+    if (!$casosTipos) $response['errors']['polar'] = 'No se pudieron obtener casos por tipo en este mes';
+    if (!$casosComisionado) $response['errors']['pie'] = 'No se pudieron obtener casos por comisionado en este mes';
+    if (!$casosPorMes) $response['errors']['bar'] = 'No se pudieron obtener casos por este mes';
     
     if (!$casosTipos && !$casosComisionado && !$casosPorMes) { //Validamos que todos esten llenos mediante una negación
         $response['status'] = 'error';

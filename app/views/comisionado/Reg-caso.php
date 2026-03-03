@@ -1,181 +1,272 @@
 <?php
-require_once "../../controllers/checkSession.php";
-require_once "../../config/conexion.php";
-require_once "../../models/insertData.php";
+require_once __DIR__ . "/../../controllers/checkSessionComi.php";
+require_once __DIR__ . "/../../config/conexion.php";
+require_once __DIR__ . "/../../models/insertData.php";
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Comisionado</title>
-  <!--css propio-->
-  <link rel="stylesheet" href="../../../Public\assets\css\com-reg-caso.css">
+  <title>Registrar Caso | Comisionado</title>
 
-  <!--Google fonts-->
-  <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <!--Icon de la pagina-->
+  <link rel="icon" type="image/png" href="/assets/img/logo_sena.png">
 
-  <!--Bootstrap-->
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Bootstrap CSS (Required for JS compatibility) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+  <!--CSS propio-->
+  <link rel="stylesheet" href="/assets/css/com-reg-caso.css">
+  <script src="/assets/js/jquery-3.7.1.min.js"></script>
+
 </head>
 
-<body>
-  <!--Barra de navegación superior-->
-  <div class="top-bar">
-    <nav class="navbar m-0 p-0 bg-body-tertiary">
-      <div class="container-fluid d-flex align-items-center justify-content-between">
-        <img class="ms-3" src="../../../Public/assets/img/logo_sena.png" alt="SENA" width="103" height="100">
-        <div class="d-flex align-items-center">
-          <div class="text-end me-3">
+<body class="antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Decorative Background Elements -->
+  <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+    <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
+    <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
+    <div
+      class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay">
+    </div>
+  </div>
+
+  <div class="flex h-screen overflow-hidden relative z-10">
+
+    <!-- Sidebar -->
+    <aside
+      class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
+
+      <!-- Logo Area -->
+      <div class="h-20 flex items-center justify-center border-b border-white/5">
+        <img src="/assets/img/logo_sena.png" alt="SENA" class="w-10 h-10 object-contain group-hover:block">
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
+
+        <a href="/dashboardComi" class="nav-link">
+          <i class="bi bi-house-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Inicio</span>
+        </a>
+
+        <a href="/registrarCasos" class="nav-link active">
+          <i class="bi bi-file-earmark-person-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Registrar Caso</span>
+        </a>
+
+        <a href="/casos" class="nav-link">
+          <i class="bi bi-eye-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Casos</span>
+        </a>
+
+        <a href="/generarInformeComi" class="nav-link">
+          <i class="bi bi-file-earmark-text-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Generar Informe</span>
+        </a>
+
+        <a href="/notificacionesComi" class="nav-link">
+          <i class="bi bi-envelope-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Notificaciones</span>
+        </a>
+
+        <a href="/perfil" class="nav-link">
+          <i class="bi bi-person-circle"></i>
+          <span class="text-[10px] mt-1 font-medium">Mi Perfil</span>
+        </a>
+
+      </nav>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 flex flex-col ml-20 h-full">
+
+      <!-- Top Bar -->
+      <header class="h-20 glass-nav flex items-center justify-between px-6 sticky top-0 z-40">
+
+        <h2 class="text-xl font-semibold text-white tracking-tight">Registrar Caso</h2>
+
+        <div class="flex items-center gap-6">
+          <div class="text-right hidden md:block">
             <?php if (isset($_SESSION['user']['username'])): ?>
-              <h2 class='mb-0 d-none d-md-block'>
+              <p class="text-sm font-medium text-white">
                 <?php echo $_SESSION['user']['username']; ?>
-              </h2>
+              </p>
             <?php endif; ?>
-            <h4 class="mb-0 d-none d-md-block">Comisionado</h4>
+            <p class="text-xs text-slate-400">Comisionado</p>
           </div>
-          <a href="#">
-            <img src="../../../Public/assets/img/icon account.png" alt="User" width="76" height="76">
-          </a>
-          <form action="../../controllers/logout.php" method="POST">
-            <button type="submit" name="logout" value="logout">Cerrar Sesion</button>
+
+          <div class="flex items-center gap-4">
+            <a href="/perfil" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+              <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
+            </a>
+
             <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
-          </form>
+            <button type="submit" name="logout" id="logoutButton" value="logout"
+              class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
+              Cerrar Sesión
+            </button>
+
+          </div>
         </div>
-      </div>
-    </nav>
-  </div>
-  <!--contenedor barra lateral-->
-  <div class="side-bar">
-    <div class="container-fluid">
-      <ul class="nav flex-column text-center">
+      </header>
 
-        <li class="nav-item my-3">
-          <a href="home.php" class="nav-link text-dark">
-            <i class="bi bi-house-fill home-icon d-block"></i>
-            <span>Inicio</span>
-          </a>
-        </li>
+      <!-- Content -->
+      <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
+        <div class="max-w-2xl mx-auto">
 
-        <li class="nav-item my-3">
-          <a href="Reg-caso.php" class="nav-link text-dark">
-            <i class="bi bi-file-earmark-person-fill reg-caso d-block"></i>
-            <span>Registrar <br> Caso</span>
-          </a>
-        </li>
-
-        <li class="nav-item my-3">
-          <a href="caso.php" class="nav-link text-dark">
-            <i class="bi bi-eye-fill ver-caso d-block"></i>
-            <span>Casos</span>
-          </a>
-        </li>
-
-        <li class="nav-item my-3">
-          <a href="notificacion.php" class="nav-link text-dark">
-            <i class="bi bi-envelope-fill noti-icon d-block"></i>
-            <span>Notificaciones</span>
-          </a>
-        </li>
-
-        <li class="nav-item my-3">
-          <a href="#" class="nav-link text-dark">
-            <i class="bi bi-envelope-plus-fill crear-icon d-block"></i>
-            <span>Crear <br> Notificación</span>
-          </a>
-        </li>
-
-      </ul>
-    </div>
-  </div>
-  <!--contenido de la pagina de registrar caso-->
-  <div class="main-content">
-    <div class="container mt-5">
-      <h1 class="text-center mb-4">Registro de Caso</h1>
-
-      <div class="custom-form-box mx-auto">
-        <h2 class="text-center mb-4">Información del Caso</h2>
-
-        <form id="registroForm" method="POST">
-          <div id="seccion1" class="form-section">
-
-            <div class="input-group mb-4 custom-input-group">
-              <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
-              <select class="form-select custom-input" id="tipo-usuario">
-                <option selected disabled>Selecione el Tipo de Usuario</option>
-                <option value="aprendiz">Aprendiz</option>
-                <option value="empleado">Empleado</option>
-                <option value="anonimo">Anonimo</option>
-              </select>
+          <!-- Registration Form -->
+          <div class="glass-card p-8 relative overflow-hidden">
+            <div
+              class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
             </div>
 
-            <div class="input-group mb-4 custom-input-group">
-              <input name="documento" type="text" class="form-control custom-input" placeholder="Documento">
-            </div>
+            <h1 class="text-2xl font-bold text-white mb-2 text-center">Registro de Caso</h1>
+            <p class="text-slate-400 text-sm text-center mb-8">Información del Caso</p>
 
-            <div class="input-group mb-4 custom-input-group">
-              <input name="proceso" type="number" class="form-control custom-input" placeholder="Id Proceso">
-            </div>
+            <div id="registroForm">
+              <div id="seccion1" class="form-section space-y-6">
 
-            <div class="input-group mb-4 custom-input-group">
-              <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
-              <select name="estado" class="form-select custom-input" id="tipo-usuario">
-                <option selected disabled>Seleccione el estado</option>
-                <option value="1">Atendido</option>
-                <option value="2">Por atender</option>
-                <option value="3">No atendido</option>
-              </select>
-            </div>
+                <!-- Nombre del Caso -->
+                <div>
+                  <label for="nombreCaso" class="form-label text-sm font-semibold text-slate-300 mb-2 block">
+                    <i class="bi bi-card-heading me-1"></i> Nombre del Caso
+                    <span class="text-red-400">*</span>
+                  </label>
+                  <div class="input-group custom-input-group">
+                    <span class="input-group-text custom-icon">
+                      <i class="bi bi-fonts"></i>
+                    </span>
+                    <input type="text" name="nombreCaso" id="nombreCaso" class="form-control custom-input"
+                      placeholder="Ej: Queja por ruido en salones" maxlength="255" required>
+                  </div>
+                  <small class="text-slate-500 text-xs mt-1 block">
+                    <i class="bi bi-info-circle-fill"></i> Máximo 255 caracteres
+                  </small>
+                </div>
 
-            <div class="input-group mb-4 custom-input-group">
-              <span class="input-group-text custom-icon"><i class="bi bi-person-fill"></i></span>
-              <select name="tipo" class="form-select custom-input" id="tipo-usuario">
-                <option selected disabled>Seleccione el Tipo de caso</option>
-                <option value="1">peticion</option>
-                <option value="2">queja</option>
-                <option value="3">reclamo</option>
-                <option value="4">sugerencia</option>
-                <option value="5">denuncia</option>
-              </select>
-            </div>
+                <!-- Radicado -->
+                <div>
+                  <label for="radicado" class="form-label text-sm font-semibold text-slate-300 mb-2 block">
+                    <i class="bi bi-hash me-1"></i> Radicado
+                  </label>
+                  <div class="input-group custom-input-group">
+                    <span class="input-group-text custom-icon">
+                      <i class="bi bi-123"></i>
+                    </span>
+                    <input type="number" name="radicado" id="radicado" class="form-control custom-input"
+                      placeholder="Ej: 123456789" maxlength="255" required>
+                  </div>
+                </div>
+                <!-- Proceso Organizacional -->
+                <div>
+                  <label for="proceso" class="form-label text-sm font-semibold text-slate-300 mb-2 block">
+                    <i class="bi bi-hash me-1"></i> Proceso Organizacional
+                    <span class="text-red-400">*</span>
+                  </label>
+                  <div class="input-group custom-input-group">
+                    <span class="input-group-text custom-icon">
+                      <i class="bi bi-diagram-3-fill"></i>
+                    </span>
+                    <select name="proceso" id="proceso" class="form-select custom-input" required>
+                      <option selected disabled value="">Cargando procesos...</option>
+                    </select>
+                  </div>
+                </div>
 
-            <div class="input-group mb-4 custom-input-group">
-              <input name="descripcion" type="text" class="form-control custom-input" placeholder="Descripcion">
-            </div>
-            <div class="input-group mb-4 custom-input-group">
-              <input type="submit" class="form-control custom-input" placeholder="ENVIAR">
+                <!-- Tipo de Solicitud -->
+                <div>
+                  <label for="tipoCaso" class="form-label text-sm font-semibold text-slate-300 mb-2 block">
+                    <i class="bi bi-list-task me-1"></i> Tipo de Solicitudes
+                    <span class="text-red-400">*</span>
+                  </label>
+                  <div class="input-group custom-input-group">
+                    <span class="input-group-text custom-icon">
+                      <i class="bi bi-list-task"></i>
+                    </span>
+                    <select name="tipo" class="form-select custom-input" id="tipoCaso" required>
+                      <option selected disabled value="">Cargando tipos...</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Descripción -->
+                <div>
+                  <label for="descripcion" class="form-label text-sm font-semibold text-slate-300 mb-2 block">
+                    <i class="bi bi-file-text me-1"></i> Descripción Detallada
+                    <span class="text-red-400">*</span>
+                  </label>
+                  <div class="input-group custom-input-group">
+                    <textarea name="descripcion" id="descripcion" class="form-control custom-input" rows="5"
+                      placeholder="Describa los hechos del caso de manera detallada..." maxlength="2000"
+                      required></textarea>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center mt-1">
+                    <small class="text-slate-500 text-xs">
+                      <i class="bi bi-info-circle"></i> Sea lo más específico posible
+                    </small>
+                    <small class="text-slate-500 text-xs">
+                      <span id="contadorCaracteres">0</span> / 2000 caracteres
+                    </small>
+                  </div>
+                </div>
+
+                <!-- Archivos Adjuntos -->
+                <div>
+                  <label for="archivos" class="form-label text-sm font-semibold text-slate-300 mb-2 block">
+                    <i class="bi bi-paperclip me-1"></i> Archivos Adjuntos
+                    <span class="badge bg-indigo-500/20 text-indigo-300 ms-2 text-xs">Opcional</span>
+                  </label>
+                  <div class="input-group custom-input-group">
+                    <span class="input-group-text custom-icon">
+                      <i class="bi bi-file-earmark-arrow-up"></i>
+                    </span>
+                    <input type="file" name="archivos[]" id="archivos" class="form-control custom-input" multiple
+                      accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.txt">
+                  </div>
+                  <small class="text-slate-500 text-xs mt-1 block">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Máximo 3 archivos. Formatos permitidos: imágenes, videos, PDF, Word, Excel
+                  </small>
+
+                  <!-- Vista previa de archivos seleccionados -->
+                  <div id="vistaArchivos" class="mt-3"></div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="mt-6">
+                  <button type="button" id="btnRegistrarcaso"
+                    class="btn-siguiente w-full bg-indigo-500 hover:bg-indigo-600 px-8 py-3 rounded-xl">
+                    <i class="bi bi-send-fill me-2 "></i> ENVIAR REGISTRO
+                  </button>
+                </div>
+
+              </div>
             </div>
           </div>
-        </form>
-        <?php
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
-          $documento = $_POST["documento"];
-          $proceso = $_POST["proceso"];
-          $estado = $_POST["estado"];
-          $tipo = $_POST["tipo"];
-          $descripcion = $_POST["descripcion"];
-          if ($documento && $proceso && $estado && $tipo && $descripcion) {
-            $registrar = registrarCasos($pdo, $documento, $proceso, $estado, $tipo, $descripcion);
-            if ($registrar) {
-              echo "caso registrado con exito";
-            } else {
-              echo "error al registar caso";
-            }
-          } else {
-            echo "Ingrese valores validos";
-          }
-        } else {
-          echo "Rellene todos los campos";
-        }
-        ?>
-      </div>
+
+        </div>
+      </main>
     </div>
-    <script src="../../../public/assets/js/cache.js"></script>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/assets/js/logout.js"></script>
+  <script src="assets/js/registrarCaso.js"></script>
+  <script src="assets/js/cache.js"></script>
+
 </body>
 
 </html>

@@ -1,193 +1,383 @@
-.top-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  }
-.top-bar .container-fluid{
-    background-color: #606060;
-    font-family: "roboto", sans-serif;
-    position: static;
-}
-.top-bar .container-fluid h2 {
-    font-size: 26px;
-    color: white;
-    }
-.top-bar .container-fluid h4 {
-    font-size: 24px;
-    color: white;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Global Styles */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #020617;
+    /* Slate 950 */
+    color: #e2e8f0;
+    /* Slate 200 */
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
 }
 
-/*Barra secundaria abajo de la principal*/
-.second-bar{
-	background-color: #606060 !important;
-	color: white;
-	position: fixed;
-	top: 100px;
-	left: 160px;
-	border: none;
-	z-index: 500;
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
 
-.second-bar .nav-link,
-.second-bar .navbar-brand {
-	color: white !important;
+::-webkit-scrollbar-track {
+    background: #020617;
 }
-.dropdown-menu{
-	background-color: #606060;
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
 }
-.dropdown-item {
-	color: white;
+
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
 }
-.second-bar .btn {
-	color: white;
-	border-color: white;
+
+/* Glassmorphism Utilities */
+.glass-nav {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 1000;
 }
-.side-bar {
-		background-color: #606060;
-}
-.side-bar {
-     display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 100px;
-    left: 0;
-    width: 160px;
-    height: calc(100vh - 100px);
-    background-color: #949494;
-    overflow-y: auto; /* permite desplazarse */
-    scrollbar-width: none; /* Oculta scroll en Firefox */
-    -ms-overflow-style: none; /* Oculta scroll en IE y Edge antiguos */
-    font-family: "Roboto", sans-serif;
-    color: #C0C0C0;
+
+.glass-sidebar {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     z-index: 900;
 }
-.side-bar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+
+.glass-card {
+    background: rgba(17, 25, 40, 0.75);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border-radius: 1rem;
+    transition: transform 0.2s ease-in-out;
+}
+
+.glass-input {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: all 0.3s ease;
+    color: white !important;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+}
+
+.glass-input:focus {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(99, 102, 241, 0.5) !important;
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.2) !important;
+    outline: none;
+}
+
+.glass-input::placeholder {
+    color: #94a3b8;
+}
+
+/* Background Blobs */
+.blob-bg {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.4;
+    animation: blob 10s infinite alternate;
+}
+
+@keyframes blob {
+    0% {
+        transform: translate(0px, 0px) scale(1);
+    }
+
+    33% {
+        transform: translate(30px, -50px) scale(1.1);
+    }
+
+    66% {
+        transform: translate(-20px, 20px) scale(0.9);
+    }
+
+    100% {
+        transform: translate(0px, 0px) scale(1);
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Sidebar Navigation */
+.nav-link {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
-    height: 100%;
+    padding: 0.75rem 1rem;
+    color: #94a3b8;
+    /* Slate 400 */
+    transition: all 0.2s;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+    flex-direction: column;
     text-align: center;
-    gap: 35px;
-}
-/*Sección activa*/
-.sidebar .nav-item.active .nav-link span{
-		color: white;
-  }
-.sidebar .nav-item.active .nav-link .ver-caso{
-		color: white;
-	}
-/* Oculta la barra en Chrome, Edge y Safari */
-.side-bar::-webkit-scrollbar {
-    display: none;
 }
 
-/* Elimina el scroll interno para evitar conflicto */
-.side-bar .container-fluid {
-    background-color: #949494;
-    color: #C0C0C0;
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    overflow: visible;
-    height: auto;
+.nav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
 }
-/*CSS icono casa*/
-.side-bar .home-icon{
-    font-size: 40px;
-    color: #606060;
+
+.nav-link.active {
+    color: #fff;
+    background: rgba(99, 102, 241, 0.2);
+    /* Indigo-500/20 */
+    border: 1px solid rgba(99, 102, 241, 0.3);
 }
-/*CSS icono crear notificacion*/
-.side-bar .crear-icon{
-    font-size: 40px;
-    color: #606060;
+
+.nav-link i {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
 }
-/*CSS icono ver caso*/
-.side-bar .ver-caso{
-    font-size: 40px;
-    color: #606060;
+
+.nav-link span {
+    font-size: 0.75rem;
+    font-weight: 500;
 }
-/*CSS icono procesos icono*/
-.side-bar .noti-icon{
-    font-size: 40px;
-    color: #606060 !important;
+
+/* Glass Table */
+.glass-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    color: #e2e8f0;
 }
-/*CSS icono crear usuarios icono*/
-.side-bar .reg-caso{
-    font-size: 40px;
-    color: #606060;
-    text-align: center;
+
+.glass-table thead th {
+    background: rgba(30, 41, 59, 0.6);
+    padding: 1rem;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
-/*CSS icono notificaciones icono*/
-.side-bar .ver-caso{
-    font-size: 40px;
+
+.glass-table tbody tr {
+    transition: background-color 0.2s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.glass-table tbody td,
+.glass-table tbody th {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Filter / Search Bar */
+.btn-filter {
+    background: rgba(255, 255, 255, 0.05);
+    color: #94a3b8;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-filter:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.btn-search {
+    background: rgba(99, 102, 241, 0.2);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-search:hover {
+    background: rgba(99, 102, 241, 0.3);
+    color: #fff;
+}
+
+/* Glass Dropdown */
+.glass-dropdown {
+    background: rgba(15, 23, 42, 0.9) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0.75rem !important;
+}
+
+.glass-dropdown .dropdown-item {
+    color: #94a3b8 !important;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s;
+}
+
+.glass-dropdown .dropdown-item:hover {
+    background: rgba(99, 102, 241, 0.15) !important;
     color: #fff !important;
-    text-align: center;
-}
-.side-bar span {
-		color: #606060;
 }
 
-/*Fonts del contenido interno de la pagina*/
-.main-content {
-  margin-left: 160px;
-  margin-top: 100px;
-  min-height: calc(100vh - 100px);
-  background-image: url("../../../Public/assets/img/logo_sena.png");
-  background-size: 500px;
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-/*Configuracion del div que tiene el contenido*/
-.contenido {
-  font-family: "ADLaM Display", system-ui;
-  font-weight: 400;
-  font-style: normal;
-  text-align: center;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-direction: column;
-  margin-top: 3rem;
-}
-/*Configuración del background la img*/
-.main-content::before {
-  content: "";
-  position: absolute;
-  top: 100px;
-  left: 160px;
-  width: calc(100% - 160px);
-  height: calc(100% - 100px);
-  background-image: url("../../../Public/assets/img/logo_sena.png");
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.08;
-  z-index: 0;
-   overflow-y: auto;
-  
-}
-.main-content > * {
-  position: relative;
-  z-index: 1;
-  width: auto;
-}
-table {
-  margin: 0 auto;
-  width: auto;
-  max-width: 90%;
-  text-align: center;
-}
+/* Table Button */
 .btn-table {
-	background-color: #2C7C39;
-	color: white;
+    background-color: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-table:hover {
+    background-color: #4f46e5;
+    transform: translateY(-1px);
+}
+
+/* Modal Custom Styles (Preserving IDs logic but with standard project glass UI) */
+.modal {
+    display: none;
+    /* JS will toggle this to 'flex' */
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+}
+
+.contenido-modal {
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    margin: auto;
+    padding: 2.5rem;
+    border-radius: 1rem;
+    width: 95%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+
+.titulo-modal {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.botones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.boton,
+.btn-modal {
+    background-color: #6366f1;
+    /* Indigo 500 */
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.boton:hover,
+.btn-modal:hover {
+    background-color: #4f46e5;
+}
+
+#cerrar-modal {
+    background-color: #ef4444;
+    /* Red 500 */
+}
+
+#cerrar-modal:hover {
+    background-color: #dc2626;
+}
+
+/* Common form content style in modals */
+.contenido {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    color: white;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    outline: none;
+}
+
+.descripcion {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.boton-tabla {
+    background: rgba(99, 102, 241, 0.1);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.boton-tabla:hover {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: #6366f1;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.boton-tabla i {
+    font-size: 1.1rem;
 }
