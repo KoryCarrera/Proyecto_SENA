@@ -104,8 +104,8 @@ const renderizarTablaUsuarios = (usuarios, cuerpoTabla) => { //definimos la func
                 <td>${estadoUsuario}</td>
                 <td>${rolUsuario}</td>
                 <td>
-                    <button class="btn-table" onclick="gestionarUsuario('${usuario.documento}')">
-                        <i class="bi bi-eye"></i> Gestionar
+                    <button class="btn-table bg-blue-600 hover:bg-blue-500 px-3 py-2 rounded-lg text-white" onclick="gestionarUsuario('${usuario.documento}')">
+                        <i class="bi bi-gear-wide-connected"></i> 
                     </button>
                 </td>
             </tr>           
@@ -120,11 +120,11 @@ const renderizarTablaUsuarios = (usuarios, cuerpoTabla) => { //definimos la func
 const obtenerEstadoUsuario = (idEstado) => {
     switch (idEstado) {
         case 1:
-            return `<span class="badge bg-success">Activo</span>`;
+            return `<span class="badge bg-success px-3 py-2 rounded-lg text-white">Activo</span>`;
         case 0:
-            return `<span class="badge bg-secondary">Inactivo</span>`;
+            return `<span class="badge bg-secondary px-3 py-2 rounded-lg text-white">Inactivo</span>`;
         default:
-            return `<span class="badge bg-secondary">Desconocido</span>`;
+            return `<span class="badge bg-secondary px-3 py-2 rounded-lg text-white">Desconocido</span>`;
     }
 };
 
@@ -132,11 +132,11 @@ const obtenerEstadoUsuario = (idEstado) => {
 const obtenerRolUsuario = (idRol) => {
     switch (idRol) {
         case 1:
-            return `<span class="badge bg-primary">Administrador</span>`;
+            return `<span class="badge bg-primary px-3 py-2 rounded-lg text-white">Administrador</span>`;
         case 2:
-            return `<span class="badge bg-info">Comisionado</span>`;
+            return `<span class="badge bg-info px-3 py-2 rounded-lg text-white">Comisionado</span>`;
         default:
-            return `<span class="badge bg-secondary">Sin rol</span>`;
+            return `<span class="badge bg-secondary px-3 py-2 rounded-lg text-white">Sin rol</span>`;
     }
 };
 
@@ -385,7 +385,7 @@ const mostrarDetallesUsuario = (usuario) => {
     if (usarioEditable.id_estado != 1) {
         btnEstado = `<button type="button" class="btn btn-success" onclick="cambiarEstadoUsuario('${usuario.documento}', 1)">Reactivar</button>`;
     } else {
-        btnEstado = `<button type="button" class="btn btn-danger" onclick="cambiarEstadoUsuario('${usuario.documento}', 0)">Desactivar</button>`;
+        btnEstado = `<button type="button" class="btn btn-danger " onclick="cambiarEstadoUsuario('${usuario.documento}', 0)">Desactivar</button>`;
     }
 
     //insertamos el footer

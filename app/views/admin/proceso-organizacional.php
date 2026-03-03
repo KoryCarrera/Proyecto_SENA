@@ -153,7 +153,7 @@
             </form>
           </div>
 
-          <div class="flex justify-end">
+          <div class="flex justify-start">
             <button type="button" id="abrirModal" class="btn-modal flex items-center gap-2">
               <i class="bi bi-plus-lg"></i> Crear Proceso
             </button>
