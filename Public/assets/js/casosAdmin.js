@@ -132,12 +132,15 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
   $("#buscarAdmin").on("keyup", function () {
     table.search(this.value).draw();
   });
+
+  // El select de cantidad debe estar aquí dentro donde 'table' existe
+  $("#filtroCantidad")
+    .off("change")
+    .on("change", function () {
+      const valor = parseInt($(this).val());
+      table.page.len(valor).draw();
+    });
 };
-// Asegúrate de que 'table' sea la variable global donde inicializaste el DataTable
-$("#filtroCantidad").on("change", function () {
-  const valor = $(this).val();
-  table.page.len(parseInt(valor)).draw();
-});
 
 const formatearFecha = (fecha) => {
   if (!fecha) return "N/A"; //estilizamos el NULL

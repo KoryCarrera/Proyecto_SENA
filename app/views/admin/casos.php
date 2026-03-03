@@ -143,10 +143,10 @@
             <label class="text-slate-400 text-xs uppercase font-bold mr-2">Ver:</label>
             <select id="filtroCantidad"
               class="bg-slate-800/50 border border-slate-700 text-slate-200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 outline-none cursor-pointer hover:bg-slate-700/50 transition-colors">
-              <option value="10">10 casos</option>
-              <option value="25">25 casos</option>
-              <option value="50">50 casos</option>
-              <option value="100">100 casos</option>
+              <option class="px-6 py-4 font-medium tracking-wider" value="10">10 casos</option>
+              <option class="px-6 py-4 font-medium tracking-wider" value="25">25 casos</option>
+              <option class="px-6 py-4 font-medium tracking-wider" value="50">50 casos</option>
+              <option class="px-6 py-4 font-medium tracking-wider" value="100">100 casos</option>
             </select>
           </div>
         </div>
@@ -170,14 +170,9 @@
 
           <div class="glass-card p-0 overflow-hidden">
             <div class="overflow-x-auto">
-<<<<<<< HEAD
               <table id="tablaCaso" class="glass-table w-full text-center text-sm text-slate-300 h-full"
                 style="height: 100%;">
-                <thead class="bg-slate-800/50 text-lg text-center uppercase text-slate-400">
-=======
-              <table id="tablaCaso" class="glass-table w-full text-center text-sm text-slate-300 h-full" style="height: 100%;">
                 <thead class="bg-slate-800/50 text-base text-center uppercase text-slate-400">
->>>>>>> 0b5245af609f31a9a8a99ad26a7afbb6f8ca9e27
                   <tr>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider"># Id</th>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider">Fecha de Registro</th>
@@ -186,7 +181,7 @@
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider">Estado</th>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider">Proceso</th>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider">Comisionado</th>
-                    <th scope="col" class="px-6 py-4 font-medium tracking-wider text-right">Acciones</th>
+                    <th scope="col" class="px-6 py-4 font-medium tracking-wider">Acciones</th>
                   </tr>
                 </thead>
                 <tbody id="tablaCasos" class="divide-y divide-slate-700/50">

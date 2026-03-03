@@ -33,13 +33,16 @@
   <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
     <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
     <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
-    <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+    <div
+      class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay">
+    </div>
   </div>
 
   <div class="flex h-screen overflow-hidden relative z-10">
 
     <!-- Sidebar -->
-    <aside class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
+    <aside
+      class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
 
       <!-- Logo Area -->
       <div class="h-20 flex items-center justify-center border-b border-white/5">
@@ -124,6 +127,32 @@
       <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
         <div class="max-w-7xl mx-auto space-y-6">
 
+          <!-- Barra de herramientas: cantidad + búsqueda -->
+          <div class="flex flex-col md:flex-row gap-4 items-center justify-between mb-4">
+            <div class="flex items-center">
+              <label class="text-slate-400 text-xs uppercase font-bold mr-2">Ver:</label>
+              <select id="filtroCantidadProcesos"
+                class="bg-slate-800/50 border border-slate-700 text-slate-200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 outline-none cursor-pointer hover:bg-slate-700/50 transition-colors">
+                <option value="10">10 procesos</option>
+                <option value="25">25 procesos</option>
+                <option value="50">50 procesos</option>
+                <option value="100">100 procesos</option>
+              </select>
+            </div>
+
+            <form class="flex gap-2 w-full md:w-auto" role="search" onsubmit="return false;">
+              <div class="relative w-full md:w-64">
+                <input
+                  class="bg-slate-800/50 border border-slate-700 text-slate-200 w-full px-4 py-2 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+                  type="search" id="buscarProcesos" placeholder="Buscar proceso..." aria-label="Buscar">
+                <i class="bi bi-search absolute right-3 top-2.5 text-slate-400"></i>
+              </div>
+              <button
+                class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors"
+                type="submit">Buscar</button>
+            </form>
+          </div>
+
           <div class="flex justify-end">
             <button type="button" id="abrirModal" class="btn-modal flex items-center gap-2">
               <i class="bi bi-plus-lg"></i> Crear Proceso
@@ -134,7 +163,7 @@
           <section class="tabla-procesos">
             <div class="glass-card p-0 overflow-hidden">
               <div class="overflow-x-auto">
-                <table class="glass-table w-full text-left text-sm text-slate-300">
+                <table id="tablaProcesos" class="glass-table w-full text-left text-sm text-slate-300">
                   <thead class="bg-slate-800/50 text-xs uppercase text-slate-400">
                     <tr>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Nombre Proceso</th>
@@ -142,15 +171,45 @@
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Fecha Creación</th>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Documento</th>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Creador</th>
-                      <th scope="col" class="px-6 py-4 font-medium tracking-wider text-right">Gestionar</th>
+                      <th scope="col" class="px-6 py-4 font-medium tracking-wider">Gestionar</th>
                     </tr>
                   </thead>
-                  <tbody id="tablaProcesos" class="divide-y divide-slate-700/50">
+                  <tbody id="tablaProcesosBody" class="divide-y divide-slate-700/50">
                     <!-- JS Injected Rows go here -->
                   </tbody>
                 </table>
               </div>
             </div>
+
+            <!-- Paginación externa — JS la controla -->
+            <div id="paginacionProcesos" class="flex justify-center mt-4">
+              <nav class="flex items-center gap-x-1" aria-label="Paginación procesos">
+                <button type="button" id="btnProcesoAnterior"
+                  class="py-2 px-3 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                  aria-label="PreviousProceso" disabled>
+                  <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="m15 18-6-6 6-6" />
+                  </svg>
+                  <span>Anterior</span>
+                </button>
+
+                <div id="pagBotonesProcesos" class="flex items-center gap-x-1"></div>
+
+                <button type="button" id="btnProcesoSiguiente"
+                  class="py-2 px-3 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                  aria-label="NextProceso" disabled>
+                  <span>Siguiente</span>
+                  <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </button>
+              </nav>
+            </div>
+
           </section>
 
         </div>
@@ -165,11 +224,13 @@
       <div id="formProceso" class="formulario">
 
         <div class="mb-4">
-          <input type="text" id="nombre-proceso" name="nombre-proceso" placeholder="Nombre de proceso" class="contenido glass-input">
+          <input type="text" id="nombre-proceso" name="nombre-proceso" placeholder="Nombre de proceso"
+            class="contenido glass-input">
         </div>
 
         <div class="mb-4">
-          <textarea name="descripcion" id="descripcion" cols="30" rows="4" placeholder="Descripción" class="contenido glass-input"></textarea>
+          <textarea name="descripcion" id="descripcion" cols="30" rows="4" placeholder="Descripción"
+            class="contenido glass-input"></textarea>
         </div>
 
         <div class="botones">
@@ -184,12 +245,14 @@
       </div>
     </div>
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Scripts: jQuery primero, luego DataTables, luego app -->
   <script src="/assets/js/jquery-3.7.1.min.js"></script>
-  <script src="assets/js/procesos-modal.js"></script>
-  <script src="assets/js/registrarProceso.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="/assets/js/logout.js"></script>
+  <script src="/assets/js/registrarProceso.js"></script>
+  <script src="/assets/js/procesos-modal.js"></script>
 
 </body>
 
