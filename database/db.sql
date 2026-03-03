@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 26-02-2026 a las 14:57:59
+-- Tiempo de generación: 03-03-2026 a las 20:40:57
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -535,6 +535,11 @@ END$$
 
 CREATE PROCEDURE `sp_listar_noti_admin` ()   BEGIN
 SELECT * FROM noti_administrador;
+END$$
+
+CREATE PROCEDURE `sp_listar_noti_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+SELECT * FROM noti_comisionado 
+WHERE documento = p_documento;
 END$$
 
 CREATE PROCEDURE `sp_listar_procesos_activos` ()   BEGIN
@@ -1354,9 +1359,9 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
-('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$c1GnSbgIXLc3OqajRQKaX.4HP5FxdZ5Nuv8ScWzWLc3W0bsuFH5Fy', '2026-02-12 14:18:58', '2026-03-03 14:48:48', 1),
+('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$c1GnSbgIXLc3OqajRQKaX.4HP5FxdZ5Nuv8ScWzWLc3W0bsuFH5Fy', '2026-02-12 14:18:58', '2026-03-03 20:33:58', 1),
 ('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2026-03-03 14:46:07', 1),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', NULL, 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-03-03 14:34:53', 1),
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-03-03 19:21:15', 1),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-03-02 15:52:20', 1),
 ('1756664828', 'Zack', 'Lopez', 'zackycarvajal@gmail.com', '3001234567', 2, '$2y$10$LU5cPmTqh6IsYxuAjhNw8.5OIWu/UoGxFBHDP2fOEzTYDquwwWuXC', '2026-02-12 14:20:29', '2026-03-02 15:55:43', 1);
 
