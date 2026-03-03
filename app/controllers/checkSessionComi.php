@@ -1,6 +1,6 @@
 <?php
 // Define el tiempo máximo de inactividad en segundos (ej. 5 minutos = 300 segundos)
-define('TIEMPO_MAXIMO_INACTIVIDAD', 5);
+define('TIEMPO_MAXIMO_INACTIVIDAD', 900); // 15 minutos = 900 segundos
 
 // Inicia la sesión si aún no está activa para poder acceder a $_SESSION
 if (session_status() == PHP_SESSION_NONE) {
@@ -33,10 +33,6 @@ if (isset($_SESSION['ultima_actividad']) && (time() - $_SESSION['ultima_activida
     // Si la sesión ha expirado por inactividad:
     session_unset();    // Elimina todas las variables de sesión (admin_user, etc.)
     session_destroy();  // Destruye el archivo de sesión del servidor
-    echo json_encode([
-        'status' => 'error',
-        'mensaje' => 'Sesión expirada por inactividad.'
-    ]);
 
     // Redirigir al login (con un parámetro para indicar que fue por timeout)
     header('Location: /?timeout=1');
