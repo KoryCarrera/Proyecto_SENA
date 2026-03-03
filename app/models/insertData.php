@@ -259,3 +259,6 @@ function listarNotiAdmin($pdo){
         return $notificaciones;
     } catch (PDOException $e) {
         error_log("Error en listarNotiAdmin: " . $e->getMessage());
+    }
+};
+        
