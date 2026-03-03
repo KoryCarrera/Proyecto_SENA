@@ -139,21 +139,15 @@
       <!-- Filter Bar (Secondary Nav Replacement) -->
       <div class="px-6 py-4 glass-nav z-30 flex flex-col md:flex-row gap-4 items-center justify-between">
         <div class="flex items-center gap-2 w-full md:w-auto">
-          <div class="dropdown">
-            <button
-              class="btn btn-secondary dropdown-toggle bg-slate-800/50 border-slate-700 text-slate-200 hover:bg-slate-700/50"
-              type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-funnel"></i> ver por
-            </button>
-            <ul class="dropdown-menu dropdown-menu-dark bg-slate-800 border-slate-700">
-              <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Nombre Del Caso</a></li>
-              <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Fecha de registro</a></li>
-              <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Tipo de Caso</a></li>
-              <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Fecha de respuesta</a></li>
-              <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Estado</a></li>
-              <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Proceso</a></li>
-              <li><a class="dropdown-item text-slate-300 hover:bg-slate-700" href="#">Comisionado Encargado</a></li>
-            </ul>
+          <div class="relative">
+            <label class="text-slate-400 text-xs uppercase font-bold mr-2">Ver:</label>
+            <select id="filtroCantidad"
+              class="bg-slate-800/50 border border-slate-700 text-slate-200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 outline-none cursor-pointer hover:bg-slate-700/50 transition-colors">
+              <option value="10">10 casos</option>
+              <option value="25">25 casos</option>
+              <option value="50">50 casos</option>
+              <option value="100">100 casos</option>
+            </select>
           </div>
         </div>
 
@@ -176,7 +170,8 @@
 
           <div class="glass-card p-0 overflow-hidden">
             <div class="overflow-x-auto">
-              <table id="tablaCaso" class="glass-table w-full text-center text-sm text-slate-300 h-full" style="height: 100%;">
+              <table id="tablaCaso" class="glass-table w-full text-center text-sm text-slate-300 h-full"
+                style="height: 100%;">
                 <thead class="bg-slate-800/50 text-lg text-center uppercase text-slate-400">
                   <tr>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider"># Id</th>
@@ -194,6 +189,40 @@
                 </tbody>
               </table>
             </div>
+          </div>
+
+          <!-- Paginación externa — JS la controla dinámicamente -->
+          <div id="paginacionCasos" class="flex justify-center mt-4">
+            <nav class="flex items-center gap-x-1" aria-label="Pagination">
+
+              <!-- Botón Anterior -->
+              <button type="button" id="btnPaginaAnterior"
+                class="py-2 px-3 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                aria-label="Previous" disabled>
+                <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+                <span>Anterior</span>
+              </button>
+
+              <!-- Números de página — generados por JS -->
+              <div id="pagBotones" class="flex items-center gap-x-1"></div>
+
+              <!-- Botón Siguiente -->
+              <button type="button" id="btnPaginaSiguiente"
+                class="py-2 px-3 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                aria-label="Next" disabled>
+                <span>Siguiente</span>
+                <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </button>
+
+            </nav>
           </div>
 
         </div>
