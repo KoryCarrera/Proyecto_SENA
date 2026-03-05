@@ -6,6 +6,14 @@ public function __construct(private  $conexion)
     
 
     public function consultObjectHelper($sp) {
+
+        if (!$sp) {
+            throw new Exception("datos ingresados al metodo vacios");
+        }
+        if (!is_string($sp)) {
+            throw new Exception("El tipo de dato ingresado al metodo no es valido");
+        }
+
         $stmt = $this->conexion->prepare("CALL $sp");
 
         try {
@@ -28,6 +36,14 @@ public function __construct(private  $conexion)
     }
 
     public function consultSimpleHelper($sp){
+
+        if (!$sp) {
+            throw new Exception("Datos ingresados al metodos vacios");
+        };
+
+        if (!is_string($sp)) {
+            throw new Exception("El tipo de dato ingresado al metodo es no valido");
+        }
         $stmt = $this->conexion->prepare("CALL $sp");
 
         try{
@@ -122,6 +138,14 @@ public function __construct(private  $conexion)
     }
 
     public function insertOrUpdateData($sp, $data){
+
+        if (!$sp || !$data) {
+            throw new Exception("Datos ingresados al metodo vacios");
+        }
+        if (!is_string($sp) || !is_array($data)){
+            throw new Exception("El tipo de datos ingresados al metodo no son validos");
+        }
+
         $stmt = $this->conexion->prepare("CALL $sp");
 
         $i = 1;
