@@ -144,7 +144,7 @@ function casosPorTipo($pdo)
         $conteo = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
 
-        if ($conteo && count($conteo) > 0) {
+        if ($conteo && count($conteo) >= 0) {
             $nombres = [];
             $totales = [];
 
@@ -168,7 +168,7 @@ function casosPorTipo($pdo)
 
 function casosPorTipoComi($pdo, $documento)
 {
-    $stmt = $pdo->prepare("CALL sp_contear_casos_tipo_comi( ? )");
+    $stmt = $pdo->prepare("CALL sp_contear_casos_tipo_comi(?)");
 
     $stmt->bindParam(1, $documento, PDO::PARAM_STR);
 

@@ -5,20 +5,22 @@ header('Content-Type: application/json');
 
 //Llamamos la credenciales necesarias
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
 
 try {
-    $casosListados = listarCasos($pdo); //llamamos la funcion que necesitamos
+
+    $helper = new baseHelper($pdo); //instanciamos la clase baseHelper con la conexion a la base de datos
+    $casosListados = $helper->consultObjectHelper("sp_listar_casos()"); //llamamos la funcion que necesitamos
     
-    if ($casosListados && $casosListados['status'] === 'ok') { //validamos el status y que la variable no este vacia
+    if ($casosListados) { //validamos el status y que la variable no este vacia
         echo json_encode([
             'status' => 'ok',
-            'casos' => $casosListados['data']
+            'casos' => $casosListados
         ]); //retornamos el array asociativo con la data necesaria
     } else {
         echo json_encode([
             'status' => 'error',
-            'mensaje' => $casosListados['mensaje'] ?? 'No hay casos para mostrar'
+            'mensaje' => $casosListados ?? 'No hay casos para mostrar'
         ]); //en caso tal de false o null retornamos "Sin casos para mostrar"
     }
     
