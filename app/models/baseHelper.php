@@ -1,7 +1,7 @@
 <?php
 class baseHelper {
 
-public function __construct(private  $conexion) 
+public function __construct(protected  $conexion) 
 {}
     
 
