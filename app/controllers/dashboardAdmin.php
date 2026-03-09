@@ -30,7 +30,7 @@ try {
     if (!$casosPorMes) $response['errors']['bar'] = 'No se pudieron obtener casos por este mes';
     
     if (!$casosTipos && !$casosComisionado && !$casosPorMes) { //Validamos que todos esten llenos mediante una negación
-        $response['status'] = 'error';
+        $response['status'] = 'null';
         $response['mensaje'] = 'No se han encontrado datos para este año';
     } else if (count($response['errors']) > 0) { //Validamos que no hayan errores
         $response['status'] = 'partial_error';

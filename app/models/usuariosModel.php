@@ -45,4 +45,8 @@ class UsuariosModdel extends baseHelper
         
         }
     }
+
+    public function configurarUsuario($sp, $nombre = null,  ){
+
+    }
 }

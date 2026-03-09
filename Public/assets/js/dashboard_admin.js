@@ -89,6 +89,11 @@ const COLOR_MAP = {
     'Diciembre': CHART_COLORS.indigo_light
 };
 
+const chartContainers = {
+    bar: null,
+    line: null,
+    polar: null
+};
 
 const dynamicColorMap = {};
 let colorIndex = 0;
@@ -224,21 +229,21 @@ const loadAllChartData = async (urlFetch) => {
     const charts = [
         {
             canvasId: 'barChart',
-            container: document.getElementById('barChart')?.parentElement,
+            container: chartContainers.line,
             id: 'bar',
             type: 'line',
             name: 'Casos por Mes'
         },
         {
             canvasId: 'pieChart',
-            container: document.getElementById('pieChart')?.parentElement,
+            container: chartContainers.bar,
             id: 'pie',
             type: 'bar',
             name: 'Casos por Comisionado'
         },
         {
             canvasId: 'polarChart',
-            container: document.getElementById('polarChart')?.parentElement,
+            container: chartContainers.polar,
             id: 'polar',
             type: 'polarArea',
             name: 'Casos por Tipo'
@@ -329,6 +334,15 @@ const actualizarTextos = (periodo) => {
     }
 };
 
+document.addEventListener('DOMContentLoaded', () => {
+    chartContainers.bar = document.getElementById('pieChart')?.parentElement
+    chartContainers.line = document.getElementById('barChart')?.parentElement,
+    chartContainers.polar = document.getElementById('polarChart')?.parentElement;
+
+    actualizarTextos('anual');
+    loadAllChartData(ENDPOINT);
+
+})
 
 selectGraficas.addEventListener('change', function () {
     const periodo = this.value;

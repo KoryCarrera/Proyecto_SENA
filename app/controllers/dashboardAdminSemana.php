@@ -21,21 +21,8 @@ try {
         'dataPie' => $casosComisionadoSemana ? $casosComisionadoSemana['casos'] : [],
         'labelsBar' => $casosPorSemana ? $casosPorSemana['dia'] : [],
         'dataBar' => $casosPorSemana ? $casosPorSemana['casos'] : [],
-        'errors' => []
     ];
-    
-    //Se validan que los datos devueltos no sean false por cada uno
-    if (!$casosTiposSemana) $response['errors']['polar'] = 'No se pudieron obtener casos por tipo en este mes';
-    if (!$casosComisionadoSemana) $response['errors']['pie'] = 'No se pudieron obtener casos por comisionado en este mes';
-    if (!$casosPorSemana) $response['errors']['bar'] = 'No se pudieron obtener casos por este mes';
-    
-    if (!$casosTiposSemana && !$casosComisionadoSemana && !$casosPorSemana) { //Validamos que todos esten llenos mediante una negación
-        $response['status'] = 'error';
-        $response['mensaje'] = 'No se han encontrado datos para esta semana';
-    } else if (count($response['errors']) > 0) { //Validamos que no hayan errores
-        $response['status'] = 'partial_error';
-    }
-    
+
     echo json_encode($response); //Retornamos el json
     
 } catch (Exception $e) { //Capturamos errores sql
