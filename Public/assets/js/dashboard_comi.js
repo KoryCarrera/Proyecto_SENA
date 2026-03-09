@@ -75,9 +75,13 @@ const COLOR_MAP = {
     'Bienestar Social': CHART_COLORS.indigo
 };
 
-/**
- * Función genérica para dibujar gráficos de Chart.js.
- */
+const chartContainers = {
+    bar: null,
+    pie: null,
+    polar: null
+};
+
+//Función genérica para dibujar gráficos de Chart.js.
 const drawChart = (canvasElement, type, labels, data) => {
     if (canvasElement.chart) {
         canvasElement.chart.destroy();
@@ -203,14 +207,13 @@ const renderChartFromResponse = (canvasId, container, apiResponse, chartId, char
     drawChart(newCanvas, chartType, labels, data);
 };
 
-/**
- * Función principal PARAMETRIZADA (Realiza UNA SOLA petición a la API)
- */
+//Función principal PARAMETRIZADA (Realiza UNA SOLA petición a la API)
+
 const loadAllChartData = async (urlFetch) => {
     const charts = [
-        { canvasId: 'barChart', container: document.getElementById('barChart')?.parentElement, id: 'bar', type: 'line', name: 'Casos por Procesos' },
-        { canvasId: 'pieChart', container: document.getElementById('pieChart')?.parentElement, id: 'pie', type: 'bar', name: 'Casos por Estado' },
-        { canvasId: 'polarChart', container: document.getElementById('polarChart')?.parentElement, id: 'polar', type: 'polarArea', name: 'Casos por Tipo' }
+        { canvasId: 'barChart', container: chartContainers.bar, id: 'bar', type: 'line', name: 'Casos por Procesos' },
+        { canvasId: 'pieChart', container: chartContainers.pie, id: 'pie', type: 'bar', name: 'Casos por Estado' },
+        { canvasId: 'polarChart', container: chartContainers.polar, id: 'polar', type: 'polarArea', name: 'Casos por Tipo' }
     ].filter(c => c.container);
 
     charts.forEach(c => {
@@ -272,9 +275,15 @@ const actualizarTextos = (periodo) => {
     }
 };
 
-/**
- * Event Listener súper limpio
- */
+document.addEventListener('DOMContentLoaded', () => {
+    
+    chartContainers.bar = document.getElementById('barChart')?.parentElement
+    chartContainers.pie = document.getElementById('pieChart')?.parentElement
+    chartContainers.polar = document.getElementById('polarChart')?.parentElement;
+
+    actualizarTextos('anual');
+    loadAllChartData(ENDPOINT);
+})
 selectGraficas.addEventListener('change', function () {
     const valorSeleccionado = this.value;
 
