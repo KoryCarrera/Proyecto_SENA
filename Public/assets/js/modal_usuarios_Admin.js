@@ -110,7 +110,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+<<<<<<< HEAD
     if (!nombre.value.trim()) {
+=======
+    if (!nombre.trim()) {
+>>>>>>> 33081de7a93e5457e230237190cde792b10779e0
       Swal.fire({
         icon: "error",
         title: "Por favor ingresa el nombre",
@@ -122,7 +126,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+<<<<<<< HEAD
     if (!apellido.value.trim()) {
+=======
+    if (!apellido.trim()) {
+>>>>>>> 33081de7a93e5457e230237190cde792b10779e0
       Swal.fire({
         icon: "error",
         title: "Por favor ingresa el apellido",
@@ -134,7 +142,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+<<<<<<< HEAD
     if (!documento.value.trim()) {
+=======
+    if (!documento.trim()) {
+>>>>>>> 33081de7a93e5457e230237190cde792b10779e0
       Swal.fire({
         icon: "error",
         title: "Por favor ingresa el documento",
@@ -146,7 +158,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+<<<<<<< HEAD
     if (!email.value.trim()) {
+=======
+    if (!email.trim()) {
+>>>>>>> 33081de7a93e5457e230237190cde792b10779e0
       Swal.fire({
         icon: "error",
         title: "Por favor ingresa el correo",
@@ -158,7 +174,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+<<<<<<< HEAD
     if (!contrasena.value.trim()) {
+=======
+    if (!contrasena.trim()) {
+>>>>>>> 33081de7a93e5457e230237190cde792b10779e0
       Swal.fire({
         icon: "error",
         title: "Por favor ingresa la contraseña",

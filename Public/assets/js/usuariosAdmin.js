@@ -523,6 +523,7 @@ const habilitarEdicion = () => {
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Email:</label>
                 <input type="email" class="form-control glass-input" id="emailNuevo" value="${usarioEditable.email}" maxlength="100">
+                <input type="email" class="form-control glass-input" id="emailNuevo" value="${usarioEditable.email}" maxlength="100">
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Rol:</label>
