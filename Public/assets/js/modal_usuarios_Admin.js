@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (!nombre.trim()) {
+    if (!nombre.value.trim()) {
       Swal.fire({
         icon: "error",
         title: "Por favor ingresa el nombre",
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (!apellido.trim()) {
+    if (!apellido.value.trim()) {
       Swal.fire({
         icon: "error",
         title: "Por favor ingresa el apellido",
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (!documento.trim()) {
+    if (!documento.value.trim()) {
       Swal.fire({
         icon: "error",
         title: "Por favor ingresa el documento",
@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (!email.trim()) {
+    if (!email.value.trim()) {
       Swal.fire({
         icon: "error",
         title: "Por favor ingresa el correo",
@@ -158,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (!contrasena.trim()) {
+    if (!contrasena.value.trim()) {
       Swal.fire({
         icon: "error",
         title: "Por favor ingresa la contraseña",

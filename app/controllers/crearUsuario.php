@@ -2,6 +2,8 @@
 //Indica que la respuesta y recibimiento de este script siempre será un objeto JSON.
 header('Content-Type: application/json');
 
+session_start();
+
 //Se llaman los archivos con las dependencias que necesitamos
 require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/insertData.php";
@@ -58,10 +60,116 @@ if(!$usuarioRegistrado) {
         'mensaje' => 'Error al registrar al usuario'
     ]);
     exit;
+
+    
 } else {
     echo json_encode([
         'status' => 'ok',
         'mensaje' => 'Usuario registrado con exito'
     ]);
 };
-exit;
+
+$roles = [
+    1 => 'Administrador',
+    2 => 'Comisionado', 
+];
+
+$nombreRol = $roles[$rol] ?? 'Rol desconocido';
+
+$asunto = "Nuevo Usuario Registrado - #{$documento}: {$nombre}";
+
+      $cuerpoHTML = "
+    <html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; }
+            .header { background-color: #28a745; color: white; padding: 15px; }
+            .content { padding: 20px; }
+            .detalle { background-color: #f8f9fa; padding: 15px; border-radius: 5px; }
+            table { width: 100%; border-collapse: collapse; }
+            td { padding: 10px; border-bottom: 1px solid #ddd; }
+            .label { font-weight: bold; width: 150px; background-color: #e9ecef; }
+        </style>
+    </head>
+    <body>
+        <div class='header'>
+            <h2>Notificación de Nuevo Usuario</h2>
+        </div>
+        <div class='content'>
+            <p>Se ha registrado un nuevo caso en el sistema:</p>
+            <div class='detalle'>
+                <table>
+                    <tr>
+                        <td class='label'>Documento del usuario creado:</td>
+                        <td><strong>{$documento}</strong></td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Rol del usuario:</td>
+                        <td>{$nombreRol}</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Nombre:</td>
+                        <td>{$nombre}</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Apellido:</td>
+                        <td>{$apellido}</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Email:</td>
+                        <td>{$email}</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Fecha de registro:</td>
+                        <td>" . date('d/m/Y H:i:s') . "</td>
+                    </tr>
+                </table>
+            </div>";
+
+      $cuerpoHTML .= "
+            <p style='margin-top: 20px;'>Este es un mensaje automático, por favor no responder.</p>
+        </div>
+    </body>
+    </html>";
+
+    $cuerpoAlt = "NUEVO USUARIO REGISTRADO\n" .
+                 "=====================\n\n" .
+                 "Documento del usuario: {$documento}\n" .
+                 "Rol: {$nombreRol}\n" .
+                 "Nombre: {$nombre}\n" .
+                 "Apellido: {$apellido}\n" .
+                 "Email: {$email}\n" .
+                 "Fecha: " . date('d/m/Y H:i:s') . "\n\n" .
+                 "Este es un mensaje automático.";
+
+
+     $destinatarios = [
+        [
+            'emailUser' => 'kory.carrera.dev@gmail.com', 
+            'userName' => 'Administrador'
+        ]
+    ];
+
+    
+    if (isset($_SESSION['user']['email'])) {
+        $destinatarios[] = [
+            'emailUser' => $_SESSION['user']['email'],
+            'userName' => $_SESSION['user']['username']
+        ];
+    }
+
+    $correoEnviado = enviarCorreo(
+        $asunto,                    
+        $cuerpoHTML,              
+        $cuerpoAlt,              
+        $destinatarios,         
+        null,                        
+        null                         
+    );
+
+      if ($correoEnviado) {
+        error_log(" Correo enviado para usuario #{$documento}");
+    } else {
+        error_log(" No se pudo enviar correo para usuario #{$documento}");
+    }
+    
