@@ -28,7 +28,7 @@ class UsuariosModdel extends baseHelper
 
             $data = [
                 'param' => [$documentoFind, $nuevoEstado],
-                'type' => ['PDO::PARAM_STR', 'PDO::PARAM_INT']
+                'type' => [PDO::PARAM_STR, PDO::PARAM_INT]
             ];
 
             $cambioEstado = parent::insertOrUpdateData('sp_cambiar_estado_usuario', $data);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 03-03-2026 a las 20:40:57
+-- Tiempo de generación: 09-03-2026 a las 14:45:53
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -694,8 +694,22 @@ INSERT INTO usuario (documento, fecha, tipo, descripcion) VALUES (p_documento, N
 END$$
 
 CREATE PROCEDURE `sp_registrar_proceso_organizacional` (IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(100), IN `p_documento_usuario` VARCHAR(50))   BEGIN
+	DECLARE v_id_proceso INT;
+    
     INSERT INTO procesoorganizacional (descripcion, nombre, documento_usuario)
     VALUES (p_descripcion, p_nombre, p_documento_usuario);
+    
+    SET v_id_proceso = LAST_INSERT_ID();
+
+	SELECT 
+    	p.id_proceso, 
+        p.nombre,
+        p.descripcion,
+        p.documento_usuario,
+        CONCAT(u.nombre, ' ', u.apellido) AS comisionado
+        FROM procesoorganizacional p
+        LEFT JOIN usuario u ON p.documento_usuario = u.documento
+        WHERE p.id_proceso = v_id_proceso;
 END$$
 
 CREATE PROCEDURE `sp_registrar_seguimiento` (IN `p_observacion` TEXT, IN `p_caso` INT, IN `p_documento` VARCHAR(50))   BEGIN
@@ -912,7 +926,7 @@ CREATE TABLE `caso` (
 INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_proceso`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
 (82, 'Reporte de accidente laboral en oficina administrativa', '1756664828', 14, '2026-01-22 14:59:17', NULL, 1, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
 (84, 'Derecho de petición – Estado de incentivo institucional', '1656966633', 13, '2026-01-01 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
-(93, 'Posible trato desigual en asignación de incentivos', '1020304050', 13, '2026-02-23 12:49:15', NULL, 1, 1, 'El funcionario manifiesta inconformidad debido a que considera que los criterios de evaluación no se aplicaron de manera equitativa en su área, afectando la asignación de incentivos.'),
+(93, 'Posible trato desigual en asignación de incentivos', '1020304050', 13, '2026-02-09 12:49:15', NULL, 1, 1, 'El funcionario manifiesta inconformidad debido a que considera que los criterios de evaluación no se aplicaron de manera equitativa en su área, afectando la asignación de incentivos.'),
 (94, 'Incumplimiento en entrega de dotación operativa', '1456333298', 12, '2026-02-23 12:50:03', NULL, 2, 1, 'Se informa que el personal del área operativa no ha recibido la dotación correspondiente al periodo vigente, lo que afecta el cumplimiento seguro de sus funciones.'),
 (95, 'Presunto maltrato laboral por parte de superior', '1456333298', 10, '2026-02-23 12:50:29', NULL, 1, 1, 'El colaborador reporta comportamientos reiterados de trato inapropiado y comunicación inadecuada por parte de su jefe inmediato, solicitando revisión del caso.'),
 (99, 'Programación de examen médico ocupacional', '1756664828', 11, '2026-02-19 12:53:33', NULL, 2, 2, 'El colaborador solicita la programación de su examen médico ocupacional periódico para seguimiento de su estado de salud laboral.'),
@@ -1145,7 +1159,9 @@ INSERT INTO `noti_administrador` (`id_notificacion`, `documento`, `mensaje`, `fe
 (4, '1487569254', 'AVISO: El caso \"Derecho de petición – Estado de incentivo institucional\" CON LA ID: 84 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Marleny Gaviria', '2026-02-24 16:05:57'),
 (5, '1487569254', 'AVISO: El caso \"Negación de apoyo social en situación urgente\" CON LA ID: 111 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simón Gonzalez Pelaez', '2026-02-24 16:06:06'),
 (6, '1487569254', 'AVISO: El caso \"Riesgo laboral no atendido oportunamente\" CON LA ID: 110 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Zack Lopez', '2026-02-24 16:06:12'),
-(7, '1487569254', 'AVISO: El caso \"Programación de examen médico ocupacional\" CON LA ID: 99 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Zack Lopez', '2026-02-24 16:08:14');
+(7, '1487569254', 'AVISO: El caso \"Programación de examen médico ocupacional\" CON LA ID: 99 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Zack Lopez', '2026-02-24 16:08:14'),
+(8, '1487569254', 'AVISO: El caso \"Posible trato desigual en asignación de incentivos\" CON LA ID: 93 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simón Gonzalez Pelaez', '2026-03-09 12:40:47'),
+(9, '1487569254', 'AVISO: El caso \"Posible trato desigual en asignación de incentivos\" CON LA ID: 93 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simón Gonzalez Pelaez', '2026-03-09 12:42:34');
 
 -- --------------------------------------------------------
 
@@ -1219,7 +1235,9 @@ INSERT INTO `noti_comisionado` (`id_notificacion`, `documento`, `mensaje`, `fech
 (60, '1020304050', 'NUEVO CASO: example ID CASO: 162. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 14:49:08'),
 (61, '1020304050', 'NUEVO CASO: example 2 ID CASO: 163. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 14:57:06'),
 (62, '1020304050', 'NUEVO CASO: example 2 ID CASO: 164. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 14:57:28'),
-(63, '1020304050', 'NUEVO CASO: ejemplito ID CASO: 165. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 15:00:43');
+(63, '1020304050', 'NUEVO CASO: ejemplito ID CASO: 165. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simón Gonzalez Pelaez', '2026-03-03 15:00:43'),
+(64, '1020304050', 'El caso \"Posible trato desigual en asignación de incentivos\" con el ID: 93 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simón Gonzalez Pelaez', '2026-03-09 12:40:47'),
+(65, '1020304050', 'El caso \"Posible trato desigual en asignación de incentivos\" con el ID: 93 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simón Gonzalez Pelaez', '2026-03-09 12:42:34');
 
 -- --------------------------------------------------------
 
@@ -1359,9 +1377,9 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`) VALUES
-('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$c1GnSbgIXLc3OqajRQKaX.4HP5FxdZ5Nuv8ScWzWLc3W0bsuFH5Fy', '2026-02-12 14:18:58', '2026-03-03 20:33:58', 1),
+('1020304050', 'Simón', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$c1GnSbgIXLc3OqajRQKaX.4HP5FxdZ5Nuv8ScWzWLc3W0bsuFH5Fy', '2026-02-12 14:18:58', '2026-03-09 14:08:02', 1),
 ('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2026-03-03 14:46:07', 1),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-03-03 19:21:15', 1),
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-03-09 14:06:42', 1),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-03-02 15:52:20', 1),
 ('1756664828', 'Zack', 'Lopez', 'zackycarvajal@gmail.com', '3001234567', 2, '$2y$10$LU5cPmTqh6IsYxuAjhNw8.5OIWu/UoGxFBHDP2fOEzTYDquwwWuXC', '2026-02-12 14:20:29', '2026-03-02 15:55:43', 1);
 
@@ -1542,13 +1560,13 @@ ALTER TABLE `monitoreo`
 -- AUTO_INCREMENT de la tabla `noti_administrador`
 --
 ALTER TABLE `noti_administrador`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_comisionado`
 --
 ALTER TABLE `noti_comisionado`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=64;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`

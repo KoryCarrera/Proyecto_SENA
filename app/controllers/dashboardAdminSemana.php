@@ -31,7 +31,7 @@ try {
     
     if (!$casosTiposSemana && !$casosComisionadoSemana && !$casosPorSemana) { //Validamos que todos esten llenos mediante una negación
         $response['status'] = 'error';
-        $response['mensaje'] = 'No se pudieron obtener ningún dato';
+        $response['mensaje'] = 'No se han encontrado datos para esta semana';
     } else if (count($response['errors']) > 0) { //Validamos que no hayan errores
         $response['status'] = 'partial_error';
     }

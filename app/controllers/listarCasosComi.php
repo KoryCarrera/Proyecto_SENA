@@ -7,20 +7,28 @@ session_start();
 
 //Llamamos la credenciales necesarias
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ . "/../models/baseHelper.php"; //llamamos la clase baseHelper con la conexion a la base de datos "insertData.php";
 
 try {
-	$listarCasosComi = listarCasosComi($pdo, $_SESSION['user']['documento']);
+    $helper = new baseHelper($pdo);
+    $documento = $_SESSION['user']['documento'] ?? null;
+    $data = [
+        [
+        'value' => $documento,
+        'type' => PDO::PARAM_STR
+        ]
+    ];
+	$listarCasosComi = $helper->consultObjectWithParams("sp_listar_caso_por_comisionado(?)", $data);
 	
-	if ($listarCasosComi && $listarCasosComi['status'] === 'ok') {
+	if ($listarCasosComi) {
 		echo json_encode([
             'status' => 'ok',
-            'casos' => $listarCasosComi['data']
+            'casos' => $listarCasosComi
         ]);
         } else {
         echo json_encode([
             'status' => 'error',
-            'mensaje' => $listarCasosComi['mensaje'] ?? 'No hay casos para listar'
+            'mensaje' => $listarCasosComi ?? 'No hay casos para listar'
         ]); 
     }
 } catch (Exception $e) { //captura de errores sql

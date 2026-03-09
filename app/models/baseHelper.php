@@ -78,8 +78,9 @@ public function __construct(protected  $conexion)
         $stmt = $this->conexion->prepare("CALL $sp");
         
         $i = 1;
-        foreach ($params as $param => $type) {
-            $stmt->bindParam($i, $param, $type);
+        foreach ($params as $param) {
+            $stmt->bindValue($i, $param['value'], $param['type']);
+            $i++;
         };
 
         try{
@@ -114,8 +115,9 @@ public function __construct(protected  $conexion)
         $stmt = $this->conexion->prepare("CALL $sp");
         
         $i = 1;
-        foreach ($params as $param => $type) {
-            $stmt->bindParam($i, $param, $type);
+        foreach ($params as $param) {
+            $stmt->bindValue($i, $param['value'], $param['type']);
+            $i++;
         };
 
         try{
@@ -149,8 +151,9 @@ public function __construct(protected  $conexion)
         $stmt = $this->conexion->prepare("CALL $sp");
 
         $i = 1;
-        foreach ($data as $param => $type) {
-            $stmt->bindParam($i, $param, $type);
+        foreach ($data as $param) {
+            $stmt->bindValue($i, $param['value'], $param['type']);
+            $i++;
         };
 
         try {
