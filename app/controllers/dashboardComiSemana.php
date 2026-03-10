@@ -30,17 +30,6 @@ try {
         'errors' => []
     ];
     
-    if (!$casosTiposSemana) $response['errors']['polar'] = 'No se pudieron obtener casos por tipo';
-    if (!$casosPorEstadoSemana) $response['errors']['pie'] = 'No se pudieron obtener casos por estado';
-    if (!$casosPorProcesoSemana) $response['errors']['bar'] = 'No se pudieron obtener casos por proceso';
-    
-    if (!$casosTiposSemana && !$casosPorEstadoSemana && !$casosPorProcesoSemana) {
-        $response['status'] = 'error';
-        $response['mensaje'] = 'No se pudieron obtener ningún dato';
-    } else if (count($response['errors']) > 0) {
-        $response['status'] = 'partial_error';
-    }
-    
     echo json_encode($response);
     
 } catch (Exception $e) {

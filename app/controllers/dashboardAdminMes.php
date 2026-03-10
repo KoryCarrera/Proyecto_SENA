@@ -24,17 +24,6 @@ try {
         'errors' => []
     ];
     
-    //Se validan que los datos devueltos no sean false por cada uno
-    if (!$casosTiposMes) $response['errors']['polar'] = 'No se pudieron obtener casos por tipo';
-    if (!$casosComisionadoMes) $response['errors']['pie'] = 'No se pudieron obtener casos por comisionado';
-    if (!$casosPorUnMes) $response['errors']['bar'] = 'No se pudieron obtener casos por mes';
-    
-    if (!$casosTiposMes && !$casosComisionadoMes && !$casosPorUnMes) { //Validamos que todos esten llenos mediante una negación
-        $response['status'] = 'error';
-        $response['mensaje'] = 'No se han encontrado datos para este mes';
-    } else if (count($response['errors']) > 0) { //Validamos que no hayan errores
-        $response['status'] = 'partial_error';
-    }
     
     echo json_encode($response); //Retornamos el json
     
