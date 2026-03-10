@@ -1,4 +1,4 @@
-<?php
+ <?php
 class UsuariosModdel extends baseHelper
 {
     public function cambiarEstadoUsuario($documentoFind, $nuevoEstado, $documentoSession)
@@ -15,11 +15,7 @@ class UsuariosModdel extends baseHelper
                 ['value' => $nuevoEstado, 'type' => PDO::PARAM_INT],
             ];
 
-            $cambioEstado = parent::insertOrUpdateData('sp_cambiar_estado_usuario', $data);
-
-            if (!$cambioEstado) {
-                throw new Exception('¡Ha ocurrido un error a la hora de cambiar el estado del usuario!');
-            };
+            $cambioEstado = parent::insertOrUpdateData('sp_cambiar_estado_usuario(?, ?)', $data);
 
             return true;
 
@@ -31,7 +27,7 @@ class UsuariosModdel extends baseHelper
         }
     }
 
-    public function configuracionPerfilUsuario($nombre = null, $apellido = null, $correo = null, $newPass = null, $tlf = null, $oldPass, $documento)
+    public function configuracionPerfilUsuario($documento, $oldPass, $nombre = null, $apellido = null, $correo = null, $tlf = null, $newPass = null)
     {
         $data = [
             ['value' => $documento, 'type' => PDO::PARAM_STR]
