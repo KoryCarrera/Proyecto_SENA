@@ -4,7 +4,7 @@ class UsuariosModdel extends baseHelper
     public function cambiarEstadoUsuario($documentoFind, $nuevoEstado, $documentoSession)
     {
 
-        if ($documentoFind == $documentoSession) {
+        if($documentoFind == $documentoSession){
             throw new Exception('¡Por seguridad no se puede desactivar a uno mismo!');
         };
 
@@ -22,6 +22,7 @@ class UsuariosModdel extends baseHelper
             };
 
             return true;
+
         } catch (Exception $e) {
 
             error_log('Ha ocurrido un error SQL a la hora de cambiar estado usuario: ' . $e->getMessage());
