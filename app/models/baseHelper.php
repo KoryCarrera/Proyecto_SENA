@@ -161,8 +161,8 @@ public function __construct(protected  $conexion)
             $dataR = $stmt->fetch(PDO::FETCH_ASSOC);
             $stmt->closeCursor();
 
-            if($dataR && is_array($dataR)){
-                return $dataR;
+            if($dataR){
+                return true;
             } else {
                 throw new Exception("No se ha podido recuperar los datos ingresados");
             }
