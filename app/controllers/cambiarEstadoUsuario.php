@@ -2,9 +2,15 @@
 //Definimos el tipo de archivo que llegará y enviará
 header('Content-Type: application/json');
 
+session_start();
+
 //Inclusión de dependencias
-require_once __DIR__ . "/../models/disableData.php";
+
 require_once __DIR__ . "/../config/conexion.php";
+require_once __DIR__ . "/../models/baseHelper.php";
+require_once __DIR__ . "/../models/usuariosModel.php";
+
+
 
 //Validamos protocolo http
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -16,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
   exit;
 };
 
+$documentoSession = $_SESSION['user']['documento'];
 $documento = $_POST['documento'];
 $estado = $_POST['estado'];
 
@@ -29,17 +36,17 @@ if (!$documento && !$estado) {
   exit;
 }
 
-$usuarioInhabilitado = cambiarEstadoUsuario($pdo, $documento, $estado);
+try {
+  $model = new UsuariosModdel($pdo);
 
-if (!$usuarioInhabilitado) {
+
+  $model->cambiarEstadoUsuario($documento, $estado, $documentoSession);
+
   echo json_encode([
-    'status' => 'error',
-    'mensaje' => 'Error al cambiar estado del usuario'
+    'status' => 'ok'
   ]);
-  exit;
-} else {
-  echo json_encode([
-    'status' => 'ok',
-    'mensaje' => 'Estado de Usuario Cambiado'
-  ]);
+} catch (Exception $e) {
+  error_log('Ha ocurrido un error SQL a la hora de cambiar estado usuario: ' . $e->getMessage());
+
+  throw new Exception($e->getMessage());
 }
