@@ -6,7 +6,8 @@ session_start();
 
 //Se llaman los archivos con las dependencias que necesitamos
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/insertData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
+require_once __DIR__ . "/../models/usuariosModel.php";
 
 //matamos el script con exit para matar el codigo en cada validacion incorrecta
 //validamos que el metodo sea post
@@ -20,14 +21,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 //capturamos los datos del usuario
 $documento = $_POST['documento'];
-$rol = $_POST['rol'];
 $nombre = $_POST['nombre'];
 $apellido = $_POST['apellido'];
 $email = $_POST['email'];
-$contrasena = $_POST['contrasena'];
+$numero = $_POST['numero'];
+$rol = $_POST['rol'];
 
-//validacion de datos
-if(!$documento || !$rol || !$nombre || !$apellido || !$email || !$contrasena) {
+try {
+    $model = new UsuariosModdel($pdo);
+
+    
+    //validacion de datos
+if(!$documento || !$nombre || !$apellido || !$email || !$numero || !$rol ) {
     echo json_encode([
         'status' => 'error',
         'mensaje' => 'Todos los datos son requeridos'
@@ -43,16 +48,15 @@ if (!is_numeric($rol)) {
     exit;
 };
 
-if(!is_string($nombre) || !is_string($apellido) || !is_string($email) || !is_string($contrasena)) {
+if(!is_string($nombre) || !is_string($apellido) || !is_string($email) || !is_string($numero)) {
     echo json_encode([
         'status' => 'error',
         'mensaje' => 'Datos no validos'
     ]);
     exit;
 }
-
 //si todo está verdadero insertamos el usuario
-$usuarioRegistrado = registrarUsuario($pdo, $documento, $nombre, $apellido, $email, $rol, $contrasena);
+$usuarioRegistrado = $model->crearUsuario( $documento,  $nombre, $apellido, $email, $numero, $rol);
 
 if(!$usuarioRegistrado) {
     echo json_encode([
@@ -145,18 +149,11 @@ $asunto = "Nuevo Usuario Registrado - #{$documento}: {$nombre}";
 
      $destinatarios = [
         [
-            'emailUser' => 'kory.carrera.dev@gmail.com', 
-            'userName' => 'Administrador'
+            'emailUser' => "$email", 
+            'userName' => "$nombreRol"
         ]
     ];
 
-    
-    if (isset($_SESSION['user']['email'])) {
-        $destinatarios[] = [
-            'emailUser' => $_SESSION['user']['email'],
-            'userName' => $_SESSION['user']['username']
-        ];
-    }
 
     $correoEnviado = enviarCorreo(
         $asunto,                    
@@ -173,3 +170,6 @@ $asunto = "Nuevo Usuario Registrado - #{$documento}: {$nombre}";
         error_log(" No se pudo enviar correo para usuario #{$documento}");
     }
     
+}
+
+
