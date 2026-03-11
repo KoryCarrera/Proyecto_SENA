@@ -161,11 +161,7 @@ public function __construct(protected  $conexion)
             $dataR = $stmt->fetch(PDO::FETCH_ASSOC);
             $stmt->closeCursor();
 
-            if($dataR){
-                return true;
-            } else {
-                throw new Exception("No se ha podido recuperar los datos ingresados");
-            }
+            return true;
         } catch (PDOException $e) {
             error_log("Ha ocurrido un erro sql: ". $e->getMessage());
             return false;

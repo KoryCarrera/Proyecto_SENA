@@ -4,8 +4,8 @@ header('Content-Type: application/json');
 session_start();
 
 require_once __DIR__ . '/../config/conexion.php'; 
-require_once __DIR__ . '/../models/getData.php';
-require_once __DIR__ . '/../models/updateData.php';
+require_once __DIR__ . "/../models/baseHelper.php";
+require_once __DIR__ . "/../models/usuariosModel.php";
 
 // Verificamos sesión
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -20,27 +20,16 @@ $confirmar_contraseña = $_POST['password_actual'] ?? '';
 $nombre = $_POST['nombre'] ?? '';
 $apellido = $_POST['apellido'] ?? '';
 $email = $_POST['email'] ?? '';
-$numero = $_POST['numero'] ?? '';
 $contraseña = $_POST['contrasena'] ?? '';
+$numero = $_POST['numero'] ?? '';
 
-// Validar identidad
-$usuario = buscarUsuario($pdo, $documento);
+try {
+    $model = new UsuariosModdel($pdo);
 
-if (!$usuario || !password_verify($confirmar_contraseña, $usuario['contraseña'])) {
-    echo json_encode(['status' => 'error', 'mensaje' => 'La contraseña actual no coincide.']);
-    exit;
-}
-$resultado = ConfigurarInfoUsuario(
-    $pdo,
-    $documento,
-    $nombre,
-    $apellido,
-    $email,
-    $contraseña,
-    $numero
-);
+    // Declaramos variable
+    $resultado = $model->configuracionPerfilUsuario($documento, $confirmar_contraseña, $nombre, $apellido, $email, $contraseña, $numero);
 
-if ($resultado) {
+    if ($resultado) {
     // Actualizar sesión para reflejar cambios 
     if (!empty($_POST['nombre'])) $_SESSION['user']['nombre'] = $_POST['nombre'];
     if (!empty($_POST['apellido'])) $_SESSION['user']['apellido'] = $_POST['apellido'];
@@ -56,3 +45,9 @@ if ($resultado) {
         'mensaje' => 'Error al procesar la actualización en la base de datos.'
     ]);
 }
+} catch (Exception $e) {
+  error_log('Ha ocurrido un error a la hora de configurar el perfil del usuario: ' . $e->getMessage());
+
+  throw new Exception($e->getMessage());
+} 
+
