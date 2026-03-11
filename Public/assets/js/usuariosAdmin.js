@@ -523,7 +523,6 @@ const habilitarEdicion = () => {
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Email:</label>
                 <input type="email" class="form-control glass-input" id="emailNuevo" value="${usarioEditable.email}" maxlength="100">
-                <input type="email" class="form-control glass-input" id="emailNuevo" value="${usarioEditable.email}" maxlength="100">
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Rol:</label>
@@ -541,8 +540,11 @@ const habilitarEdicion = () => {
                 <p class="form-control-plaintext">${obtenerEstadoUsuario(usarioEditable.id_estado)}</p>
             </div>
             <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Nueva Contraseña:</label>
-                <input type="password" class="form-control glass-input" id="nuevaPassword">
+                <label class="form-label fw-bold d-block">Nueva Contraseña:</label>
+                <input type="checkbox" id="GenerarContraseña" class="btn-check" autocomplete="off" value = "false">
+                <label class="btn btn-outline-primary" for="GenerarContraseña">
+                    <i class="bi bi-key"></i> Generar Contraseña
+                </label>
             </div>
         </div>
     `;
