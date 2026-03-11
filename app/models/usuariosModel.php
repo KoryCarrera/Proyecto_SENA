@@ -56,6 +56,8 @@
             try {
 
                 parent::insertOrUpdateData('sp_configurar_usuario(?, ?, ?, ?, ?, ?)', $newData);
+
+                return true;
             } catch (Exception $e) {
                 error_log('Error al configurar perfil de usuario: ' . $e->getMessage());
                 throw new Exception($e);
