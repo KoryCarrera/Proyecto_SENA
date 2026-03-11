@@ -74,9 +74,9 @@
                 ['value' => $nombre, 'type' => PDO::PARAM_STR],
                 ['value' => $apellido, 'type' => PDO::PARAM_STR],
                 ['value' => $email, 'type' => PDO::PARAM_STR],
-                ['value' => $numero, 'type' => PDO::PARAM_STR],
                 ['value' => $id_rol, 'type' => PDO::PARAM_INT],
                 ['value' => $contraseñaHash, 'type' => PDO::PARAM_STR],
+                ['value' => $numero, 'type' => PDO::PARAM_STR]
             ];
 
             try {
