@@ -183,48 +183,25 @@ function enviarCorreo($asunto, $cuerpoHTML, $cuerpoAlt, $destinatarios, $conCopi
         }
 
         //Validamos si hay mas de un destinatario
-        $totalDest = count($destinatarios);
-
-        //Multiples destinatarios
-        if ($totalDest > 1) {
-
             foreach ($destinatarios as $dest) {
 
                 $mail->addAddress($dest['emailUser'], $dest['userName']);
             };
-        } else {
-
-            $mail->addAddress($destinatarios['emailUser'], $destinatarios['userName']);
-        };
 
         if ($conCopia) {
-
-            $totalCC = count($conCopia);
-
-            if ($totalCC > 1) {
 
                 foreach ($conCopia as $dest) {
 
                     $mail->addCC($dest['emailUser'], $dest['userName']);
                 };
-            } else {
-
-                $mail->addCC($conCopia['emailUser'], $conCopia['userName']);
-            };
         };
 
         if ($conCopiaOculta) {
 
-            $totalBCC = count($conCopiaOculta);
-
-            if ($totalBCC > 1) {
                 foreach ($conCopiaOculta as $dest) {
 
                     $mail->addBCC($dest['emailUser'], $dest['userName']);
                 };
-            } else {
-                $mail->addBCC($conCopiaOculta['emailUser'], $conCopiaOculta['userName']);
-            }
         };
 
         //contenido del mensaje

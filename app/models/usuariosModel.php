@@ -89,7 +89,7 @@
             }
         }
 
-        public function gestionarUsuario(
+        public function editarUsuario(
             $documento,
             $nombre = null,
             $apellido = null,
