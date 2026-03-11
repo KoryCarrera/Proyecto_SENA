@@ -232,7 +232,8 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
         </div>
 
         <div class="mb-4">
-          <input type="password" id="crearContrasena" name="contrasena" required placeholder="Contraseña" class="contenido glass-input">
+          <input type="number" id="crearTelefono" name="telefono" required placeholder="Telefono" class="contenido glass-input" maxlength="10">
+           <span id="contearTelefono"></span> /10 caracteres
         </div>
 
         <div class="botones">

@@ -12,13 +12,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const apellido = document.getElementById("crearApellido");
   const documento = document.getElementById("crearDocumento");
   const email = document.getElementById("crearEmail");
-  const contrasena = document.getElementById("crearContrasena");
+  const telefono = document.getElementById("crearTelefono");
+  
 
   //Contador de caracteres para los campos del input
   const contNombre = document.getElementById("contearNombre");
   const contApellido = document.getElementById("contearApellido");
   const contDocumento = document.getElementById("contearDocumento");
   const contEmail = document.getElementById("contearEmail");
+  const contTelefono = document.getElementById("contearTelefono");
 
   contNombre.textContent = "0";
   contApellido.textContent = "0";
@@ -41,6 +43,10 @@ document.addEventListener("DOMContentLoaded", () => {
     contEmail.textContent = email.value.length;
   });
 
+  telefono.addEventListener("input", () => {
+    contTelefono.textContent = telefono.value.length;
+  });
+
   if (!botonAbrir || !botonCerrar || !modal || !formulario) {
     return;
   }
@@ -53,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     contApellido.textContent = "0";
     contDocumento.textContent = "0";
     contEmail.textContent = "0";
+    contTelefono.textContent = "0";
   });
 
   botonCerrar.addEventListener("click", () => {
@@ -64,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     contApellido.textContent = "0";
     contDocumento.textContent = "0";
     contEmail.textContent = "0";
+    contTelefono.textContent = "0";
   });
 
   modal.addEventListener("click", (evento) => {
@@ -75,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
       contApellido.textContent = "0";
       contDocumento.textContent = "0";
       contEmail.textContent = "0";
+      contTelefono.textContent = "0";
 
       formulario.reset();
     }
@@ -89,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
       contApellido.textContent = "0";
       contDocumento.textContent = "0";
       contEmail.textContent = "0";
+      contTelefono.textContent = "0";
 
       formulario.reset();
     }
@@ -110,11 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-<<<<<<< HEAD
     if (!nombre.value.trim()) {
-=======
-    if (!nombre.trim()) {
->>>>>>> 33081de7a93e5457e230237190cde792b10779e0
       Swal.fire({
         icon: "error",
         title: "Por favor ingresa el nombre",
@@ -126,11 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-<<<<<<< HEAD
     if (!apellido.value.trim()) {
-=======
-    if (!apellido.trim()) {
->>>>>>> 33081de7a93e5457e230237190cde792b10779e0
       Swal.fire({
         icon: "error",
         title: "Por favor ingresa el apellido",
@@ -142,11 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-<<<<<<< HEAD
     if (!documento.value.trim()) {
-=======
-    if (!documento.trim()) {
->>>>>>> 33081de7a93e5457e230237190cde792b10779e0
       Swal.fire({
         icon: "error",
         title: "Por favor ingresa el documento",
@@ -158,11 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-<<<<<<< HEAD
     if (!email.value.trim()) {
-=======
-    if (!email.trim()) {
->>>>>>> 33081de7a93e5457e230237190cde792b10779e0
       Swal.fire({
         icon: "error",
         title: "Por favor ingresa el correo",
@@ -174,29 +168,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-<<<<<<< HEAD
-    if (!contrasena.value.trim()) {
-=======
-    if (!contrasena.trim()) {
->>>>>>> 33081de7a93e5457e230237190cde792b10779e0
-      Swal.fire({
-        icon: "error",
-        title: "Por favor ingresa la contraseña",
-        theme: "dark",
-        showConfirmButton: false,
-        timer: 1000,
-      });
-      document.getElementById("crearContrasena").focus();
-      return;
-    }
-
     var parametrosUsuarios = {
       documento: documento.value,
       rol: rol.value,
       nombre: nombre.value,
       apellido: apellido.value,
       email: email.value,
-      contrasena: contrasena.value,
+      telefono: telefono.value,
     };
 
     botonGuardar.disabled = true;
