@@ -48,5 +48,10 @@ try {
 } catch (Exception $e) {
   error_log('Ha ocurrido un error SQL a la hora de cambiar estado usuario: ' . $e->getMessage());
 
+    echo json_encode([
+    'status' => 'error',
+    'mensaje' => $e->getMessage()
+  ]);
+
   throw new Exception($e->getMessage());
 }
