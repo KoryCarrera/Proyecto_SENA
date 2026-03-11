@@ -3,9 +3,12 @@
 //Especificamos el tipo de comunicacion que tendra el script
 header('Content-Type: application/json');
 
+session_start();
+
 //incluimos las dependencias requeridas
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/updateData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
+require_once __DIR__ . "/../models/usuariosModel.php";;
 
 //validamos que el protocolo sea http
 
@@ -18,20 +21,25 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 };
 
 //recibimos todos las datos
+$documento = $_POST['documento'];
 $nombre = $_POST['nombre'];
 $apellido = $_POST['apellido'];
-$rol = $_POST['rol'];
-$documento = $_POST['documento'];
 $email = $_POST['email'];
+$numero = $_POST['numero'];
+$rol = $_POST['rol'];
 $contrasena = $_POST['contrasena'];
 
-//validamos todos los datos
+try {
+    $model = new UsuariosModdel($pdo);
+    //validamos todos los datos
 if (
     !is_string($nombre) ||
     !is_string($apellido) ||
     !is_numeric($rol) ||
     !is_string($documento) ||
-    !is_string($email)
+    !is_string($email) ||
+    !is_string($numero)
+
 ) {
     echo json_encode([
         'status' => 'error',
@@ -41,7 +49,7 @@ if (
 };
 
 //llamamos el modelo que necesitamos
-$usuarioActualizado = ActualizarUsuario($pdo, $documento, $nombre, $apellido, $email, $rol, $contrasena);
+$usuarioActualizado = $model->editarUsuario($documento, $nombre, $apellido, $email, $numero, $rol, $contrasena);
 
 //verificamos que la funcion haya devuelto true
 if (!$usuarioActualizado) {
@@ -56,5 +64,8 @@ if (!$usuarioActualizado) {
         'mensaje' => 'Usuario actualizado con exito'
     ]);
 }
-
 exit;
+} catch(Exception $e){
+                error_log('Error al editar usuario: ' . $e->getMessage());
+                throw new Exception($e);
+            }

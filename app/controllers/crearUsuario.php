@@ -6,6 +6,7 @@ session_start();
 
 //Se llaman los archivos con las dependencias que necesitamos
 require_once __DIR__ . "/../config/conexion.php";
+require_once __DIR__ . "//../models/insertData.php";
 require_once __DIR__ . "/../models/baseHelper.php";
 require_once __DIR__ . "/../models/usuariosModel.php";
 
@@ -24,7 +25,7 @@ $documento = $_POST['documento'];
 $nombre = $_POST['nombre'];
 $apellido = $_POST['apellido'];
 $email = $_POST['email'];
-$numero = $_POST['numero'];
+$numero = $_POST['telefono'];
 $rol = $_POST['rol'];
 
 try {
@@ -46,7 +47,11 @@ if (!is_numeric($rol)) {
         'mensaje' => 'Valor de rol no valido'
     ]);
     exit;
-};
+} 
+} catch (Exception $e) {
+    error_log('Error al crear usuario: ' . $e->getMessage());
+    throw new Exception($e);
+}
 
 if(!is_string($nombre) || !is_string($apellido) || !is_string($email) || !is_string($numero)) {
     echo json_encode([
@@ -124,6 +129,14 @@ $asunto = "Nuevo Usuario Registrado - #{$documento}: {$nombre}";
                         <td>{$email}</td>
                     </tr>
                     <tr>
+                        <td class='label'>Número:</td>
+                        <td>{$numero}</td>   
+                    </tr>
+                    <tr>
+                        <td class='label'><strong>Su contraseña:</strong></td>
+                        <td><strong>{$usuarioRegistrado}</strong></td>
+                    </tr>
+                    <tr>
                         <td class='label'>Fecha de registro:</td>
                         <td>" . date('d/m/Y H:i:s') . "</td>
                     </tr>
@@ -143,16 +156,18 @@ $asunto = "Nuevo Usuario Registrado - #{$documento}: {$nombre}";
                  "Nombre: {$nombre}\n" .
                  "Apellido: {$apellido}\n" .
                  "Email: {$email}\n" .
+                 "Numero: {$numero}\n" .
                  "Fecha: " . date('d/m/Y H:i:s') . "\n\n" .
                  "Este es un mensaje automático.";
 
 
      $destinatarios = [
         [
-            'emailUser' => "$email", 
-            'userName' => "$nombreRol"
+            'emailUser' => $email, 
+            'userName' => $nombre
         ]
-    ];
+     ];
+        
 
 
     $correoEnviado = enviarCorreo(
@@ -170,6 +185,5 @@ $asunto = "Nuevo Usuario Registrado - #{$documento}: {$nombre}";
         error_log(" No se pudo enviar correo para usuario #{$documento}");
     }
     
-}
 
 

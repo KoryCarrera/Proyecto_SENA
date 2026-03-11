@@ -27,9 +27,8 @@ try {
     $model = new UsuariosModdel($pdo);
 
     // Declaramos variable
-    $resultado = $model->configuracionPerfilUsuario($documento, $confirmar_contraseña, $nombre, $apellido, $email, $contraseña, $numero);
+    $resultado = $model->configuracionPerfilUsuario($documento, $confirmar_contraseña, $nombre, $apellido, $email, $numero, $contraseña);
 
-    if ($resultado) {
     // Actualizar sesión para reflejar cambios 
     if (!empty($_POST['nombre'])) $_SESSION['user']['nombre'] = $_POST['nombre'];
     if (!empty($_POST['apellido'])) $_SESSION['user']['apellido'] = $_POST['apellido'];
@@ -39,12 +38,6 @@ try {
         'status' => 'ok', 
         'mensaje' => 'Información actualizada correctamente.'
     ]);
-} else {
-    echo json_encode([
-        'status' => 'error', 
-        'mensaje' => 'Error al procesar la actualización en la base de datos.'
-    ]);
-}
 } catch (Exception $e) {
   error_log('Ha ocurrido un error a la hora de configurar el perfil del usuario: ' . $e->getMessage());
 
