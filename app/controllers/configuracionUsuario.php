@@ -26,6 +26,7 @@ $numero = $_POST['numero'] ?? '';
 try {
     $model = new UsuariosModdel($pdo);
 
+    // Declaramos variable
     $resultado = $model->configuracionPerfilUsuario($documento, $confirmar_contraseña, $nombre, $apellido, $email, $contraseña, $numero);
 
     if ($resultado) {
