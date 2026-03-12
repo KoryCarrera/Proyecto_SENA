@@ -135,37 +135,6 @@ function loginUsuario($pdo, $documento, $contrasena)
     }
 }
 
-function casosPorTipo($pdo)
-{
-    $stmt = $pdo->prepare("CALL sp_contear_casos_tipo");
-
-    try {
-        $stmt->execute();
-        $conteo = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
-
-        if ($conteo && count($conteo) >= 0) {
-            $nombres = [];
-            $totales = [];
-
-            foreach ($conteo as $temp) {
-                $nombres[] = $temp['nombre_caso'];  // 
-                $totales[] = (int) $temp['total'];    // 
-            }
-            return [
-                'tipos' => $nombres,
-                'casos' => $totales
-            ];
-        } else {
-            error_log("sp_contear_casos_tipo no devolvió filas");
-            return false;
-        }
-    } catch (PDOException $e) {
-        error_log("Error SQL en casosPorTipo: " . $e->getMessage());
-        return false;
-    }
-}
-
 function casosPorTipoComi($pdo, $documento)
 {
     $stmt = $pdo->prepare("CALL sp_contear_casos_tipo_comi(?)");
@@ -265,36 +234,6 @@ function casosPorTipoSemanaComi($pdo, $documento)
     }
 }
 
-function casosPorTipoMes($pdo)
-{
-    $stmt = $pdo->prepare("CALL sp_contear_casos_tipo_mes");
-
-    try {
-        $stmt->execute();
-        $conteo = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
-
-        if ($conteo && count($conteo) > 0) {
-            $nombres = [];
-            $totales = [];
-
-            foreach ($conteo as $temp) {
-                $nombres[] = $temp['nombre_caso'];  // 
-                $totales[] = (int) $temp['total'];    // 
-            }
-            return [
-                'tipos' => $nombres,
-                'casos' => $totales
-            ];
-        } else {
-            error_log("sp_contear_casos_tipo no devolvió filas");
-            return false;
-        }
-    } catch (PDOException $e) {
-        error_log("Error SQL en casosPorTipo: " . $e->getMessage());
-        return false;
-    }
-}
 
 function casosPorTipoSemana($pdo)
 {
@@ -323,37 +262,6 @@ function casosPorTipoSemana($pdo)
         }
     } catch (PDOException $e) {
         error_log("Error SQL en casosPorTipo: " . $e->getMessage());
-        return false;
-    }
-}
-
-function casosPorComisionado($pdo)
-{
-    $stmt = $pdo->prepare("CALL sp_casos_por_comisionado");
-
-    try {
-        $stmt->execute();
-        $casosComisionados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
-
-        if ($casosComisionados) {
-            $comisionado = [];
-            $total = [];
-
-            foreach ($casosComisionados as $temp) {
-                $comisionado[] = $temp['comisionado'];
-                $total[] = (int) $temp['total_casos'];
-            }
-
-            return [
-                'comisionado' => $comisionado,
-                'casos' => $total
-            ];
-        } else {
-            return false;
-        }
-    } catch (PDOException $e) {
-        error_log("error en la obtención de casos por comisionado" . $e->getMessage());
         return false;
     }
 }
@@ -1280,77 +1188,6 @@ function conteoPorUsuario($pdo, $documento)
     } catch (PDOException $e) {
 
         error_log("Error al obtener el conteo por usuario " . $e->getMessage());
-        return false;
-    }
-}
-
-function listarNotiAdmin($pdo)
-{
-    $stmt = $pdo->prepare("CALL sp_listar_noti_admin");
-    try {
-        $stmt->execute();
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
-
-        if ($data) {
-            $dataFormateada = [];
-            
-            foreach ($data as $temp) {
-               $dataFormateada[] = [
-                'id' => $temp['id_notificacion'],
-                'documento' => $temp['documento'],
-                'descripción' =>  $temp['mensaje'],
-                'fecha' => $temp['fecha']
-               ];
-            }
-
-            return [
-                'status' => 'ok',
-                'data' => $dataFormateada
-            ];
-        } else {
-            return false;
-        }
-    } catch (PDOException $e) {
-
-        error_log("Error al obtener notificaciones " . $e->getMessage());
-        return false;
-    }
-}
-
-function listarNotiComi($pdo, $documento)
-{
-    $stmt = $pdo->prepare("CALL sp_listar_noti_comi(?)");
-
-    $stmt->bindParam(1, $documento, PDO::PARAM_STR);
-
-    try {
-        $stmt->execute();
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
-
-        if ($data) {
-            $dataFormateada = [];
-            
-            foreach ($data as $temp) {
-               $dataFormateada[] = [
-                'id' => $temp['id_notificacion'],
-                'documento' => $temp['documento'],
-                'descripción' =>  $temp['mensaje'],
-                'fecha' => $temp['fecha']
-               ];
-            }
-
-            return [
-                'status' => 'ok',
-                'data' => $dataFormateada
-            ];
-        } else {
-            return false;
-        }
-    } catch (PDOException $e) {
-
-        error_log("Error al obtener notificaciones " . $e->getMessage());
         return false;
     }
 }

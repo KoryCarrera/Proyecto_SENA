@@ -12,13 +12,13 @@ require_once __DIR__ . "/../models/baseHelper.php"; //llamamos la clase baseHelp
 try {
     $helper = new baseHelper($pdo);
     $documento = $_SESSION['user']['documento'] ?? null;
-    $data = [
+    $documentData = [
         [
         'value' => $documento,
         'type' => PDO::PARAM_STR
         ]
     ];
-	$listarCasosComi = $helper->consultObjectWithParams("sp_listar_caso_por_comisionado(?)", $data);
+	$listarCasosComi = $helper->consultObjectWithParams("sp_listar_caso_por_comisionado(?)", $documentData);
 	
 	if ($listarCasosComi) {
 		echo json_encode([

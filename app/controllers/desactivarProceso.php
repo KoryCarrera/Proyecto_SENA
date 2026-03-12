@@ -3,7 +3,7 @@
 header('Content-Type: application/json');
  
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/disableData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
@@ -14,11 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    // CAPTURAR DATOS JSON 
-    $input = file_get_contents('php://input');
-    $data = json_decode($input, true);
     
-    $id_proceso = $data['id'] ?? null;
+    $id_proceso = $_POST['id_proceso'] ?? null;
     
     // Validar que se recibió el ID
     if (!$id_proceso || !is_numeric($id_proceso)) {
@@ -29,10 +26,16 @@ try {
         exit;
     }
     
-    // Llamar a la función 
-    $resultado = desactivarProceso($pdo, $id_proceso);
-
-    if ($resultado === true) {
+    // Llamar a el metodo
+    $idData = [
+        [
+            'value' => $id_proceso,
+            'type' => PDO::PARAM_INT
+        ]
+    ];
+    $helper = new baseHelper($pdo);
+    $resultado = $helper->consultSimpleWithParams('sp_desactivar_proceso(?)', $idData);
+    if ($resultado) {
         echo json_encode([
             'status' => 'ok',
             'mensaje' => 'Proceso desactivado exitosamente'
