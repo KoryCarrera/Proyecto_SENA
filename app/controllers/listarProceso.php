@@ -3,15 +3,17 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../config/conexion.php';
-require_once __DIR__ . '/../models/getData.php';
+require_once __DIR__ . '/../models/baseHelper.php';
+
+$helper = new baseHelper($pdo);
 
 try {
-    $procesosListados = listarProceso($pdo);
+    $procesosListados = $helper->consultObjectHelper('sp_listar_proceso_organizacional');
 
-    if($procesosListados && $procesosListados['status'] === 'ok'){
+    if($procesosListados){
         echo json_encode([
             'status' => 'ok',
-            'procesos' => $procesosListados['data']
+            'procesos' => $procesosListados
         ]);
     } else {
         echo json_encode([
