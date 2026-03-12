@@ -8,7 +8,7 @@ require_once __DIR__ . "/../models/baseHelper.php";
 $helper = new baseHelper($pdo);
 
 try {
-    $usuariosListados = $helper->consultSimpleHelper('sp_listar_usuarios()');
+    $usuariosListados = $helper->consultObjectHelper('sp_listar_usuarios()');
     
     if ($usuariosListados) {
         echo json_encode([

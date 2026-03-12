@@ -100,16 +100,16 @@ async function cargarNotificaciones(url) {
     if (respuesta.status === 'ok') {
 
       containerNotificaciones.innerHTML = '';
-
+      let i = 0;
       respuesta.notificaciones.forEach(data => {
-
+        i++
         containerNotificaciones.innerHTML +=
           `
       <li class="notis">
         <div class="flex gap-4">
           <div class="shrink-0 pt-1">
             <i class="bi bi-info-circle-fill text-indigo-400"></i>
-            <i class="bi text-indigo-400">${data.id}</i>
+            <i class="bi text-indigo-400">${i}</i>
           </div>
           <div>
             <p>${data.descripción}</p>
