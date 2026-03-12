@@ -126,13 +126,124 @@
                 ['value' => $passToSave, 'type' => PDO::PARAM_STR],
             ];
 
-            try{
+            try {
 
-            parent::insertOrUpdateData('sp_gestionar_usuario(?, ?, ?, ?, ?, ?, ?)', $dataInsert);
-            
-            } catch(Exception $e){
+                parent::insertOrUpdateData('sp_gestionar_usuario(?, ?, ?, ?, ?, ?, ?)', $dataInsert);
+            } catch (Exception $e) {
                 error_log('Error al gestionar usuario: ' . $e->getMessage());
                 throw new Exception($e);
+            }
+        }
+
+        public function auth2FA($documento, $codigo)
+        {
+
+            $dataUser = [
+                ['value' => $documento, 'type' => PDO::PARAM_STR],
+            ];
+
+            $findUser = parent::consultSimpleWithParams('sp_traer_usuario(?)', $dataUser);
+
+            if (!$findUser) {
+                throw new Exception('¡Usuario no encontrado¡');
+            };
+
+            if (!$findUser['2FA']) {
+                throw new Exception('¡Usuario no desea 2FA!');
+            };
+
+            $consultToken = parent::consultSimpleWithParams('sp_consultar_token_recuperacion(?)', $dataUser);
+
+            if ($consultToken !== $codigo) {
+                throw new Exception('¡Codigo de 2FA invalido!');
+            };
+
+            return true;
+        }
+
+        public function loginUsuario($documento, $contrasena)
+        {
+
+            $finData = [
+                ['value' => $documento, 'type' => PDO::PARAM_STR],
+            ];
+
+            $findUser = parent::consultSimpleWithParams('sp_login_usuario(?)', $finData);
+
+            if (!$findUser) {
+                throw new Exception('¡Documento invalido!');
+            };
+
+            if (!password_verify($contrasena, $findUser['contraseña'])) {
+                throw new Exception('¡Contraseña incorrecta!');
+            }
+
+            if (!$findUser['2FA']) {
+                return [
+                    ['2FA' => true]
+                ];
+            };
+
+            return [
+                ['2FA' => false]
+            ];
+        }
+
+        public function generarCookie($documento, $Auth2fa)
+        {
+
+            if ($Auth2fa !== true) {
+                return false;
+            };
+
+            $identToken = bin2hex(random_bytes(10));
+
+            $expirationToken = time() + (30 * 24 * 60 * 60);
+
+            setcookie(
+                'device_id', // Nombre de la cookie
+                $identToken, // Valor del token
+                $expirationToken, // Tiempo de vida
+                '/', // Ruta (disponible en todo el sitio)
+                '', // Dominio (vacío para el actual)
+                true, // Secure (Solo enviar por HTTPS)
+                true // HttpOnly (No accesible por JS)
+            );
+
+            try {
+
+                $dataToken = [
+                    ['value' => $documento, 'type' => PDO::PARAM_STR],
+                    ['value' => $identToken, 'type' => PDO::PARAM_STR]
+                ];
+
+                parent::insertOrUpdateData('sp_guardar_token_recuperacion(?, ?)', $dataToken);
+            } catch (Exception $e) {
+                error_log('Error al guardar la cookies en la base de datos: ' . $e->getMessage());
+
+                throw new Exception('Ha ocurrido un error con la cookie: ' . $e->getMessage());
+            }
+        }
+
+
+        public function validarDispositivo($documento)
+        {
+            // Verificar si la cookie existe
+            if (!isset($_COOKIE['device_id'])) {
+                return false;
+            } else {
+                $tokenCookie = $_COOKIE['device_id'];
+
+                $consultData = [
+                    [ 'value' => $documento, 'type' => PDO::PARAM_STR]
+                ];
+
+                // Consultar en la DB si ese token está asociado a este usuario
+                $dispositivo = parent::consultObjectWithParams('sp_consultar_token_recuperacion(?)', $consultData);
+
+                if ($dispositivo != $tokenCookie){
+                    return false;
+                };
             }
         }
     }

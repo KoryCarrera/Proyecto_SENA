@@ -1,113 +1,138 @@
 <?php
+//Indicamos que la respuesta sera JSON
+header('Content-Type: aplication/json');
 
-//Indica que la respuesta y recibimiento de este script siempre será un objeto JSON.
-header('Content-Type: application/json');
+//Inclusión de dependencias
+require_once __DIR__ . '/../config/conexion.php';
+require_once __DIR__ . '/../models/baseHelper.php';
+require_once __DIR__ . '/../models/usuariosModel.php';
+require_once __DIR__ . '/../models/seguridad.php';
 
-//INCLUSIÓN DE DEPENDENCIAS
-require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/getData.php";
-require_once __DIR__ . "/../models/seguridad.php";
+$helper = new baseHelper($pdo);
+$model = new UsuariosModdel($pdo);
 
-//SOLO PERMITIR SOLICITUDES POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//Solo permitimos solicitudes tipo POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode([
+        'status' => 'error',
+        'mensaje' => '¡Metodo no permitido!'
+    ]);
+    exit;
+}
 
-    //CAPTURA DE CREDENCIALES Y TOKEN DE SEGURIDAD
-    $documentoInseguro = $_POST['documento'] ?? '';
-    $contrasena = $_POST['password'] ?? '';
-    $csrf_token = $_POST['csrf_token'] ?? '';
+//Captura de credenciales
+$documentoInseguro = $_POST['documento'] ?? '';
+$contrasena = $_POST['password'] ?? '';
+$csrf_token = $_POST['csrf_token'] ?? '';
 
-    // VALIDACIÓN DEL TOKEN CSRF
-    if (!validarCsrfToken($csrf_token)) {
-        session_destroy();
+//Validamos el token
+if (!validarCsrfToken($csrf_token)) {
+    session_destroy();
+    echo json_encode([
+        'status' => 'error',
+        'mensaje' => '¡Error de seguridad recargue la pagina!'
+    ]);
+    exit;
+};
+
+//Validamos que no se hayan recibido valores vacios
+if (!$documentoInseguro && !$contrasena) {
+    echo json_encode([
+        'status' => 'error',
+        'mensaje' => '¡Valores vacios!'
+    ]);
+    exit;
+};
+
+//Limpiamos el documento del front
+$documento = limpiar($documentoInseguro);
+
+try {
+    //Verificamos con el modelo
+    $verificacion = $model->loginUsuario($documento, $contrasena);
+
+    //Regeneramos la session
+    session_regenerate_id(true);
+
+    //Configuracion de variables de session
+    $_SESSION['user'] = [
+        'documento' => $verificacion['documento'],
+        'username' => $verificacion['username'],
+        'id_rol' => $verificacion['id_rol'],
+        'email' => $verificacion['email']
+    ];
+
+    //Marca de tiempo de inactividad
+    $_SESSION['ultima_actividad'] = time();
+
+    unset($_SESSION['csrf_token']);
+
+    if ($verificacion['id_rol'] == 1) {
+
+        if (!$verificacion['2FA']) {
+            echo json_encode([
+                'status' => 'ok',
+                'redirect' => '/dashboardAdmin'
+            ]);
+            exit;
+        };
+
+        $validacion = $model->validarDispositivo($documento);
+
+        if ($validacion) {
+            echo json_encode([
+                'status' => 'ok',
+                'redirect' => '/dashboardAdmin'
+            ]);
+            exit;
+        };
+
         echo json_encode([
-            'status' => 'error',
-            'mensaje' => 'Error de seguridad, recargue la pagina'
+            'status' => 'ok',
+            'redirect' => '/2FA'
         ]);
         exit;
-    } 
+    };
 
-    // VERIFICACIÓN DE QUE LOS CAMPOS NO ESTÉN VACÍOS
-    if ($documentoInseguro && $contrasena) {
+    if ($verificacion['id_rol'] == 2) {
 
-        //LIMPIEZA DEL DOCUMENTO ANTES DE PROCESAR
-        $documento = limpiar($documentoInseguro);
-
-        //SE GUARDA EL LOGIN QUE LLAMA LA FUNCION EN LA VARIABLE VERIFICACION
-        $verificacion = loginUsuario($pdo, $documento, $contrasena);
-        //SI SE ENCONTRO UN USUARIO EN LA BASE DE DATOS STATUS ES OK
-        if ($verificacion['status'] === 'ok') {
-
-            //VALIDACIÓN DE ROL: ADMINISTRADOR
-            if ($verificacion['data']['id_rol'] == 1) {
-
-                //REGENERACIÓN DE ID DE SESIÓN
-                session_regenerate_id(true);
-
-                //CONFIGURACIÓN DE VARIABLES DE SESIÓN DEL USUARIO
-                $_SESSION['user'] = [
-                    'documento' => $verificacion['data']['documento'],
-                    'username' => $verificacion['data']['username'],
-                    'id_rol' => $verificacion['data']['id_rol'],
-                    'email' => $verificacion['data']['email']
-                ];
-
-                //MARCA DE TIEMPO PARA CONTROL DE INACTIVIDAD
-                $_SESSION['ultima_actividad'] = time();
-
-                //ELIMINAR EL TOKEN CSRF USADO
-                unset($_SESSION['csrf_token']);
-
-                //RESPUESTA EXITOSA Y REDIRECCIÓN A VISTA DE ADMINISTRADOR
-                echo json_encode([
-                    'status' => 'ok',
-                    'redirect' => '/dashboardAdmin'
-                ]);
-                exit;
-            //VALIDACIÓN DE ROL: COMISIONADO
-            } else if ($verificacion['data']['id_rol'] == 2) {
-
-                //REGENERACIÓN DE ID DE SESIÓN
-                session_regenerate_id(true);
-
-                //CONFIGURACIÓN DE VARIABLES DE SESIÓN DEL USUARIO
-                $_SESSION['user'] = [
-                    'documento' => $verificacion['data']['documento'],
-                    'username' => $verificacion['data']['username'],
-                    'id_rol' => $verificacion['data']['id_rol'],
-                    'email' => $verificacion['data']['email']
-                ];
-
-                //MARCA DE TIEMPO PARA CONTROL DE INACTIVIDAD
-                $_SESSION['ultima_actividad'] = time();
-
-                //ELIMINAR EL TOKEN CSRF USADO
-                unset($_SESSION['csrf_token']);
-
-                //RESPUESTA EXITOSA Y REDIRECCIÓN A VISTA DE ADMINISTRADOR
-                echo json_encode([
-                    'status' => 'ok',
-                    'redirect' => '/dashboardComi'
-                ]);
-                exit;
-            } else {
-                // FALLO: El usuario existe pero no tiene el rol de administrador.
-                echo json_encode([
-                    'status' => 'error',
-                    'mensaje' => 'No se ha encontrado el usuario en del sistema, verifica tus credenciales'
-                ]);
-            }
-        } else {
-            // FALLO: Las credenciales no coinciden.
+        if (!$verificacion['2FA']) {
             echo json_encode([
-                'status' => 'error',
-                'mensaje' => 'Credenciales Invalidas'
+                'status' => 'ok',
+                'redirect' => '/dashboardComi'
             ]);
-        }
-    } else {
-        // FALLO: Se enviaron valores vacíos.
+            exit;
+        };
+
+        $validacion = $model->validarDispositivo($documento);
+
+        if ($validacion) {
+            echo json_encode([
+                'status' => 'ok',
+                'redirect' => '/dashboardComi'
+            ]);
+            exit;
+        };
+
         echo json_encode([
-            'status' => 'error',
-            'mensaje' => 'valores vacios'
+            'status' => 'ok',
+            'redirect' => '/2FA'
         ]);
+        exit;
     }
+
+    echo json_encode([
+        'status' => 'error',
+        'mensaje' => 'Rol desconocido'
+    ]);
+    exit;
+} catch (Exception $e) {
+
+    error_log('¡Ha ocurrido un error al loguear: ' . $e->getMessage());
+
+    echo json_encode([
+        'status' => 'error',
+        'mensaje' => $e->getMessage()
+    ]);
+    exit;
 }
