@@ -4,8 +4,9 @@ header('Content-Type: application/json');
 
 //Llamamos los archivos necesarios
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
 
+$helper = new baseHelper($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { //Validamos que es el metodo que necesitamos
     echo json_encode([
@@ -26,14 +27,18 @@ try {
         ]);
         exit;
     }
+
+    $data = [
+        ['value' => $idCaso, 'type' => PDO::PARAM_INT],
+    ];
     
-    $casoSolicitado = traerCaso($pdo, $idCaso); //Llamamos la funcion que trae unicamente el caso que necesitamos
+    $casoSolicitado = $helper->consultSimpleWithParams('sp_obtener_caso_por_id(?)', $data); //Llamamos la funcion que trae unicamente el caso que necesitamos
     
 
-    if ($casoSolicitado && $casoSolicitado['status'] === 'ok') { // Validamos el status y si es true
+    if ($casoSolicitado) { // Validamos el status y si es true
         echo json_encode([
             'status' => 'ok',
-            'caso' => $casoSolicitado['data']  //Enviamos con JSON la data
+            'caso' => $casoSolicitado  //Enviamos con JSON la data
         ]);
     } else {
         echo json_encode([

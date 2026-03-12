@@ -3,15 +3,25 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
 
-$conteo = conteoGeneral($pdo);
+$helper = new baseHelper($pdo);
+
+if($_SERVER['REQUEST_METHOD'] !== 'GET'){
+    echo json_encode([
+        'status' => 'Error',
+        'mensaje' => '¡Metodo no permitido!'
+    ]);
+    exit;
+}
+$conteo = $helper->consultSimpleHelper('sp_resumen_casos_global');
 
 if (!$conteo) {
     echo json_encode([
         'status' => 'error',
         'mensaje' => 'Ha ocurrido un error al traer los casos'
     ]);
+    exit;
 };
 
 $parametros = [

@@ -3,15 +3,17 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
+
+$helper = new baseHelper($pdo);
 
 try {
-    $usuariosListados = listarUsuarios($pdo);
+    $usuariosListados = $helper->consultSimpleHelper('sp_listar_usuarios()');
     
-    if ($usuariosListados && $usuariosListados['status'] === 'ok') {
+    if ($usuariosListados) {
         echo json_encode([
             'status' => 'ok',
-            'usuarios' => $usuariosListados['data'],
+            'usuarios' => $usuariosListados,
         ]);
     } else {
         echo json_encode ([

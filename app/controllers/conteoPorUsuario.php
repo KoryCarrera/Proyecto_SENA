@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 session_start();
 
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     echo json_encode([
@@ -15,15 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
-if (!isset($_SESSION['user']['documento'])) {
-    echo json_encode([
-        'status' => 'error',
-        'mensaje' => 'Usuario no autenticado'
-    ]);
-    exit;
-};
+$helper = new baseHelper($pdo);
 
-$conteo = conteoPorUsuario($pdo, $_SESSION['user']['documento']);
+$data = [
+    [ 'value' => $_SESSION['user']['documento'], 'type' => PDO::PARAM_STR]
+];
+
+$conteo = $helper->consultSimpleWithParams('sp_resumen_casos_por_documento(?)', $data);
 
 if (!$conteo) {
     echo json_encode([

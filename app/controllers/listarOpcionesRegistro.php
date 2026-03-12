@@ -9,7 +9,7 @@ header('Content-Type: application/json');
 require_once __DIR__ . "/../config/conexion.php";
 
 // Modelo que contiene las funciones para obtener los catálogos
-require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
 
 
 // Este controlador solo acepta peticiones GET
@@ -24,13 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 try {
 
     // Obtiene la lista de procesos activos
-    $procesos = listarProcesosActivos($pdo);
+    $procesos = $helper->consultObjectHelper('sp_listar_procesos_activos');
 
     // Obtiene los tipos de caso disponibles
-    $tiposCaso = listarTiposCaso($pdo);
+    $tiposCaso = $helper->consultObjectHelper('sp_listar_tipos_caso');
 
     // Obtiene los estados posibles del caso
-    $estadosCaso = listarEstadosCaso($pdo);
+    $estadosCaso = $helper->consultObjectHelper('sp_listar_estados_caso');
 
 
     // Si alguno de los catálogos falla o no retorna datos
@@ -47,9 +47,9 @@ try {
     echo json_encode([
         'status' => 'ok',
         'data' => [
-            'procesos'    => $procesos['data'],
-            'tiposCaso'   => $tiposCaso['data'],
-            'estadosCaso' => $estadosCaso['data']
+            'procesos'    => $procesos,
+            'tiposCaso'   => $tiposCaso,
+            'estadosCaso' => $estadosCaso
         ]
     ]);
 

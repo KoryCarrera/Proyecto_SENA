@@ -3,7 +3,7 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
@@ -12,6 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     ]);
     exit;
 }
+
+$helper = new baseHelper($pdo);
 
 try {
     $documentoPost = $_POST['usuario'] ?? null;
@@ -25,13 +27,16 @@ try {
         ]);
         exit;
     }
-    
-    $usuarioSolicitado = gestionarUsuario($pdo, $documento);
 
-    if ($usuarioSolicitado && $usuarioSolicitado['status'] === 'ok') {
+    $data = [
+        [ 'value' => $documento, 'type' => PDO::PARAM_STR],
+    ];
+    
+    $usuarioSolicitado = $helper->consultSimpleWithParams('sp_traer_usuario(?)', $data);
+    if ($usuarioSolicitado) {
         echo json_encode([
             'status' => 'ok',
-            'usuario' => $usuarioSolicitado['data']
+            'usuario' => $usuarioSolicitado
         ]);
     } else {
         echo json_encode([
