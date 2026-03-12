@@ -73,8 +73,8 @@
         </a>
 
         <a href="/notificacionesComi" class="nav-link">
-          <i class="bi bi-envelope-fill"></i>
-          <span class="text-[10px] mt-1 font-medium">Notificaciones</span>
+          <i class="bi bi-bell-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Notificación</span>
         </a>
 
         <a href="/perfil" class="nav-link">
@@ -223,9 +223,10 @@
             </section>
           </div>
 
-          <div class="rounded">
+          <div class="rounded  w-full m-2 items-center my-6 flex justify-start items-center">
             <select id="selectGraficas"
-              class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+              class="glass-sidebar appearance-none border border-white/10 rounded-lg px-6 py-2 text-lg text-white cursor-pointer outline-none hover:bg-white/5 transition-colors
+              bg-indigo-600 ">
               <option selected disabled class="bg-slate-900">Filtrar por...</option>
               <option class="bg-slate-900" value="semana">esta semana</option>
               <option class="bg-slate-900" value="mes">este mes</option>
@@ -236,24 +237,11 @@
           <!-- Chart 3 (Full Width) -->
           <div class="glass-card p-6 col-span-1 lg:col-span-2 flex flex-col items-center justify-center h-96 mb-8">
             <div class="flex items-center justify-between w-full mb-4">
-              <h3 id="tituloLineas"
-                class="text-3xl font-bold text-white mb-4">
+              <h3 id="tituloLineas" class="text-3xl font-bold text-white mb-4">
               </h3>
-              <p id="contextoLinea"
-                class="text-slate-300 max-w-3xl leading-relaxed"></p>
-              <div class="relative">
-                <select id="selectEstadisticasLineal"
-                  class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                  <option selected disabled class="bg-slate-900">Filtrar por...</option>
-                  <option class="bg-slate-900" value="semana">esta semana</option>
-                  <option class="bg-slate-900" value="mes">este mes</option>
-                  <option class="bg-slate-900" value="anual">este año</option>
-                </select>
-                <i
-                  class="bi bi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-white pointer-events-none"></i>
-              </div>
+              <p id="contextoLinea" class="text-slate-300 max-w-3xl leading-relaxed"></p>
             </div>
-            <div class="w-full h-full flex items-center justify-center">
+            <div class="relative w-full flex-1 min-h-0 flex items-center justify-center">
               <canvas id="barChart"></canvas>
             </div>
           </div>
@@ -263,38 +251,23 @@
             <!-- Chart 1 (Polar) -->
             <div class="glass-card p-6 flex flex-col items-center justify-center h-96">
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
-                <h3 id="tituloPolar"
-                  class="text-3xl font-bold text-white mb-4"></h3>
-
-                <p id="contextoPolar"
-                  class="text-slate-300 max-w-3xl leading-relaxed"></p>
-
-                <div class="rounded">
-                  <select id="selectEstadisticasPolar"
-                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                    <option selected disabled class="bg-slate-900">Filtrar por...</option>
-                    <option class="bg-slate-900" value="semana">esta semana</option>
-                    <option class="bg-slate-900" value="mes">este mes</option>
-                    <option class="bg-slate-900" value="anual">este año</option>
-                  </select>
-                </div>
+                <h3 id="tituloPolar" class="text-3xl font-bold text-white mb-4"></h3>
+                <p id="contextoPolar" class="text-slate-300 max-w-3xl leading-relaxed"></p>
               </div>
-              <div class="w-full h-full flex items-center justify-center">
+              <div class="relative w-full flex-1 min-h-0 flex items-center justify-center">
                 <canvas id="polarChart"></canvas>
               </div>
             </div>
 
-            <!-- Chart 2 (Pie) -->
+            <!-- Chart 2 (Pie) po-->
             <div class="glass-card p-6 flex flex-col items-center justify-center h-96">
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
-                <h3 id="titulobar"
-                  class="text-3xl font-bold text-white mb-4"></h3>
+                <h3 id="titulobar" class="text-3xl font-bold text-white mb-4"></h3>
 
-                <p id="contextoBar"
-                  class="text-slate-300 max-w-3xl leading-relaxed"></p>
+                <p id="contextoBar" class="text-slate-300 max-w-3xl leading-relaxed"></p>
 
               </div>
-              <div class="w-full h-full flex items-center justify-center">
+              <div class="relative w-full flex-1 min-h-0 flex items-center justify-center">
                 <canvas id="pieChart"></canvas>
               </div>
             </div>

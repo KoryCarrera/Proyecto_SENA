@@ -78,8 +78,8 @@ require_once __DIR__ . "/../../models/insertData.php";
         </a>
 
         <a href="/notificacionesComi" class="nav-link">
-          <i class="bi bi-envelope-fill"></i>
-          <span class="text-[10px] mt-1 font-medium">Notificaciones</span>
+          <i class="bi bi-bell-fill"></i>
+          <span class="text-[10px] mt-1 font-medium">Notificación</span>
         </a>
 
         <a href="/perfil" class="nav-link">
