@@ -1,43 +1,92 @@
 <?php
 
 header('Content-Type: application/json');
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
 
 session_start();
 
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
 
 try {
-
+	$model = new baseHelper($pdo);
     $documento = $_SESSION['user']['documento'];
-
+    $documentData = [
+        [
+        'value' => $documento,
+        'type' => PDO::PARAM_STR
+        ]
+    ];
     // El comisionado ve TODOS los casos, pero con diferentes métricas
 
-    $casosTiposMes = casosPorTipoMesComi($pdo, $documento);          // Todos los casos por tipo (igual que admin)
-    $casosPorEstadoMes = casosPorEstadoMesComi($pdo, $documento);    // Casos por estado (en lugar de por comisionado)
-    $casosPorProcesoMes = casosPorProcesoMesComi($pdo, $documento);  // Casos por proceso (en lugar de por mes)
+    $casosTipoMesComi = $model->consultObjectWithParams("sp_contear_casos_tipo_mes_comi(?)");, $documentData);
+    
+    if ($casosTipoMesComi && count($casosTipoMesComi) >= 0) {
+        $nombres = [];
+        $totales = [];
+
+        foreach ($casosTipoMesComi as $temp) {
+            $nombres[] = $temp['nombre_caso']; 
+            $totales[] = (int) $temp['total'];   
+        }
+        $casosTipoMesComi = [
+            'tipos' => $nombres,
+            'casos' => $totales
+        ];
+    }
+    $casosEstadoMesComi = $model->consultObjectWithParams("sp_casos_por_estado_mes_comi(?)");, $documentData);
+    
+		
+      if ($casosEstadoMesComi && count($casosEstadoMesComi) > 0) { 
+            $estados = [];
+            $casos = [];
+
+            foreach ($casosEstadoMesComi as $temp) { 
+                $estados[] = $temp['nombre_estado'];
+                $casos[] = (int) $temp['total_casos'];
+            }
+
+            return [
+                'estado' => $estados,
+                'casos' => $casos,
+                'total' => $casosEstadoMesComi[0]['gran_total']
+            ];
+            
+    $casosPorProcesoMesComi = c$model->consultObjectWithParams("sp_casos_por_proceso_mes_comi(?)");, $documentData);
+    
+    if ($casosPorProcesoMesComi && count($casosPorProcesoMesComi) > 0) {
+            $proceso = [];
+            $casos = [];
+
+            foreach ($casosPorProcesoMesComi as $temp) {
+                $proceso[] = $temp['proceso'];          
+                $casos[] = (int) $temp['total_casos'];    
+            }
+
+            return [
+                'proceso' => $proceso,
+                'casos' => $casos
+            ];
     
     $response = [
         'status' => 'ok',
-        'labelsPolar' => $casosTiposMes ? $casosTiposMes['tipos'] : [],
-        'dataPolar' => $casosTiposMes ? $casosTiposMes['casos'] : [],
-        'labelsPie' => $casosPorEstadoMes ? $casosPorEstadoMes['estado'] : [],
-        'dataPie' => $casosPorEstadoMes ? $casosPorEstadoMes['casos'] : [],
-        'labelsBar' => $casosPorProcesoMes ? $casosPorProcesoMes['proceso'] : [],
-        'dataBar' => $casosPorProcesoMes ? $casosPorProcesoMes['casos'] : [],
+        'labelsPolar' => $casosTipoMesComi ? $casosTipoMesComi['tipos'] : [],
+        'dataPolar' => $casosTipoMesComi ? $casosTipoMesComi['casos'] : [],
+        'labelsPie' => $casosEstadoMesComi ? $casosEstadoMesComi['estado'] : [],
+        'dataPie' => $casosEstadoMesComi ? $casosEstadoMesComi['casos'] : [],
+        'labelsBar' => $casosPorProcesoMesComi ? $casosPorProcesoMesComi['proceso'] : [],
+        'dataBar' => $casosPorProcesoMesComi ? $casosPorProcesoMesComi['casos'] : [],
         'errors' => []
     ];
     
     echo json_encode($response);
     
-} catch (Exception $e) {
-    error_log("Error en dashboardComiMes.php: " . $e->getMessage());
-    echo json_encode([
-        'status' => 'error',
-        'mensaje' => 'Error del servidor: ' . $e->getMessage()
-    ]);
 }
-exit;
+}
+} catch (Exception $e) {
+    error_log("Error en dashboardComi.php: " . $e->getMessage());
+    echo json_encode([
+        'status' => 'ok',
+        'mensaje' => 'No hay casos por mostrar: ' . $e->getMessage()
+	};
+	exit;
+    
