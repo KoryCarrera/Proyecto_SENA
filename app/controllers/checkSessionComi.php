@@ -16,13 +16,20 @@ header("Expires: 0"); // Proxies/Caché
 
 // Comprueba si la variable de sesión 'user' existe (es decir, si el usuario se logeó exitosamente)
 if (!isset($_SESSION['user'])) {
-        // Si NO está logeado, lo redirigimos inmediatamente al login
-        header('Location: /');
-        exit; // Detiene la ejecución del resto del script (y no muestra el contenido de la página)
+    // Si NO está logeado, lo redirigimos inmediatamente al login
+    header('Location: /');
+    exit; // Detiene la ejecución del resto del script (y no muestra el contenido de la página)
+}
+
+//Comprobamos que el usuario tenga el verificado activo
+if (!isset($_SESSION['user']['verify'])) {
+    //Si no lo esta, redirigimos
+    header('Location: /');
+    exit;
 }
 
 //Validamos el rol para evitar usuarios en interfaces no propias
-if (!isset($_SESSION['user']['id_rol']) || $_SESSION['user']['id_rol'] != 2 ){
+if (!isset($_SESSION['user']['id_rol']) || $_SESSION['user']['id_rol'] != 2) {
     header('Location: /?action=invalid');
 }
 

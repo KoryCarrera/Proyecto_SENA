@@ -167,6 +167,18 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("crearEmail").focus();
       return;
     }
+    
+    if (!contrasena.value.trim()) {
+      Swal.fire({
+        icon: "error",
+        title: "Por favor ingresa la contraseña",
+        theme: "dark",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      document.getElementById("crearContrasena").focus();
+      return;
+    }
 
     var parametrosUsuarios = {
       documento: documento.value,
