@@ -21,6 +21,13 @@ if (!isset($_SESSION['user'])) {
         exit; // Detiene la ejecución del resto del script (y no muestra el contenido de la página)
 }
 
+//Comprobamos que el usuario tenga el verificado activo
+if (!isset($_SESSION['user']['verify'])){
+    //Si no lo esta, redirigimos
+    header('Location: /');
+    exit;
+}
+
 //Validamos el rol para evitar usuarios en interfaces no propias
 if (!isset($_SESSION['user']['id_rol']) || $_SESSION['user']['id_rol'] != 1 ){
     header('Location: /?action=invalid');

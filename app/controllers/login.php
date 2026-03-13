@@ -1,12 +1,16 @@
 <?php
 //Indicamos que la respuesta sera JSON
-header('Content-Type: aplication/json');
+header('Content-Type: application/json');
+
+//Inicializamos session
+session_start();
 
 //Inclusión de dependencias
 require_once __DIR__ . '/../config/conexion.php';
 require_once __DIR__ . '/../models/baseHelper.php';
 require_once __DIR__ . '/../models/usuariosModel.php';
 require_once __DIR__ . '/../models/seguridad.php';
+require_once __DIR__ . '/../utils/utilsAuth.php';
 
 $helper = new baseHelper($pdo);
 $model = new UsuariosModdel($pdo);
@@ -36,7 +40,7 @@ if (!validarCsrfToken($csrf_token)) {
 };
 
 //Validamos que no se hayan recibido valores vacios
-if (!$documentoInseguro && !$contrasena) {
+if (empty($documentoInseguro) || empty($contrasena)) {
     echo json_encode([
         'status' => 'error',
         'mensaje' => '¡Valores vacios!'
@@ -70,6 +74,7 @@ try {
     if ($verificacion['id_rol'] == 1) {
 
         if (!$verificacion['2FA']) {
+            $_SESSION['user']['verify'] = true;
             echo json_encode([
                 'status' => 'ok',
                 'redirect' => '/dashboardAdmin'
@@ -80,12 +85,23 @@ try {
         $validacion = $model->validarDispositivo($documento);
 
         if ($validacion) {
+            $_SESSION['user']['verify'] = true;
             echo json_encode([
                 'status' => 'ok',
                 'redirect' => '/dashboardAdmin'
             ]);
             exit;
         };
+
+        $token = bin2hex(random_bytes(3));
+
+        $dataToken = [
+            ['value' => $documento, 'type' => PDO::PARAM_STR],
+            ['value' => $token, 'type' => PDO::PARAM_STR],
+        ];
+
+        $helper->insertOrUpdateData('sp_guardar_token_2FA(?, ?)', $dataToken);
+        enviarCodigo2FA($token, $verificacion['username'], $verificacion['email']);
 
         echo json_encode([
             'status' => 'ok',
@@ -97,6 +113,7 @@ try {
     if ($verificacion['id_rol'] == 2) {
 
         if (!$verificacion['2FA']) {
+            $_SESSION['user']['verify'] = true;
             echo json_encode([
                 'status' => 'ok',
                 'redirect' => '/dashboardComi'
@@ -107,12 +124,23 @@ try {
         $validacion = $model->validarDispositivo($documento);
 
         if ($validacion) {
+            $_SESSION['user']['verify'] = true;
             echo json_encode([
                 'status' => 'ok',
                 'redirect' => '/dashboardComi'
             ]);
             exit;
         };
+
+        $token = bin2hex(random_bytes(3));
+
+        $dataToken = [
+            ['value' => $documento, 'type' => PDO::PARAM_STR],
+            ['value' => $token, 'type' => PDO::PARAM_STR],
+        ];
+
+        $helper->insertOrUpdateData('sp_guardar_token_2FA(?, ?)', $dataToken);
+        enviarCodigo2FA($token, $verificacion['username'], $verificacion['email']);
 
         echo json_encode([
             'status' => 'ok',
