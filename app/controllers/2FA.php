@@ -46,8 +46,17 @@ $documentoData = [
 $findToken = $helper->consultSimpleWithParams('sp_consultar_token_2FA(?)', $documentoData);
 
 if ($findToken == $codigo) {
+
+    $dataUser = [
+        [ 'value' => $_SESSION['user']['documento'], 'type' => PDO::PARAM_STR]
+    ];
+
     $_SESSION['user']['verify'] = true;
+
     $helper->generarCookie($_SESSION['user']['documento'], $_SESSION['user']['verify']);
+
+    $helper->insertOrUpdateData('sp_eliminar_token_2fa(?)', $dataUser);
+    
     return [
         'status' => 'ok',
         'redirect' => $redirect
