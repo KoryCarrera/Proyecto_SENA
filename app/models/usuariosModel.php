@@ -152,7 +152,7 @@
                 throw new Exception('¡Usuario no desea 2FA!');
             };
 
-            $consultToken = parent::consultSimpleWithParams('sp_consultar_token_recuperacion(?)', $dataUser);
+            $consultToken = parent::consultSimpleWithParams('sp_consultar_token_2fa(?)', $dataUser);
 
             if ($consultToken !== $codigo) {
                 throw new Exception('¡Codigo de 2FA invalido!');
@@ -217,7 +217,7 @@
                     ['value' => $identToken, 'type' => PDO::PARAM_STR]
                 ];
 
-                parent::insertOrUpdateData('sp_guardar_token_recuperacion(?, ?)', $dataToken);
+                parent::insertOrUpdateData('sp_guardar_token_2fa(?, ?)', $dataToken);
             } catch (Exception $e) {
                 error_log('Error al guardar la cookies en la base de datos: ' . $e->getMessage());
 
