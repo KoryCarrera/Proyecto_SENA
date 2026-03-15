@@ -152,7 +152,7 @@
                 throw new Exception('¡Usuario no desea 2FA!');
             };
 
-            $consultToken = parent::consultSimpleWithParams('sp_consultar_token_recuperacion(?)', $dataUser);
+            $consultToken = parent::consultSimpleWithParams('sp_consultar_token_2fa(?)', $dataUser);
 
             if ($consultToken !== $codigo) {
                 throw new Exception('¡Codigo de 2FA invalido!');
@@ -180,12 +180,12 @@
 
             if (!$findUser['2FA']) {
                 return [
-                    ['2FA' => true]
+                    ['2FA' => false]
                 ];
             };
 
             return [
-                ['2FA' => false]
+                ['2FA' => true]
             ];
         }
 
@@ -217,7 +217,7 @@
                     ['value' => $identToken, 'type' => PDO::PARAM_STR]
                 ];
 
-                parent::insertOrUpdateData('sp_guardar_token_recuperacion(?, ?)', $dataToken);
+                parent::insertOrUpdateData('sp_guardar_cookie(?, ?)', $dataToken);
             } catch (Exception $e) {
                 error_log('Error al guardar la cookies en la base de datos: ' . $e->getMessage());
 
@@ -241,7 +241,7 @@
                 // Consultar en la DB si ese token está asociado a este usuario
                 $dispositivo = parent::consultObjectWithParams('sp_consultar_token_recuperacion(?)', $consultData);
 
-                if ($dispositivo != $tokenCookie){
+                if ($dispositivo['cookie'] != $tokenCookie){
                     return false;
                 };
             }

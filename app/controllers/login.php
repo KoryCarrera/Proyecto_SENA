@@ -100,7 +100,8 @@ try {
             ['value' => $token, 'type' => PDO::PARAM_STR],
         ];
 
-        $helper->insertOrUpdateData('sp_guardar_token_2FA(?, ?)', $dataToken);
+        $helper->insertOrUpdateData('sp_guardar_token_2fa(?, ?)', $dataToken);
+        
         enviarCodigo2FA($token, $verificacion['username'], $verificacion['email']);
 
         echo json_encode([
