@@ -23,13 +23,13 @@ class CasosModel extends baseHelper {
             if ($findCase['estado_caso'] === $nuevoEstado) {
                 throw new exepcion ('es el mismo estado que intentas asignar');
             }
-            if ($caseData )
+            if ($caseData);
 
 
-        } catch (Exception $e) {
+        }catch (Exception $e) {
             error_log('Ha ocurrido un error a la hora de cambiar el estado de caso: '. $e->getMessage());
             throw new Exception('¡Ha ocurrido un error a la hora de cambiar el estado del caso! '. $e->getMessage());
         }
     }
 
-}a
+}
