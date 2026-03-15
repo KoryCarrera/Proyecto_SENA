@@ -217,7 +217,7 @@
                     ['value' => $identToken, 'type' => PDO::PARAM_STR]
                 ];
 
-                parent::insertOrUpdateData('sp_guardar_token_2fa(?, ?)', $dataToken);
+                parent::insertOrUpdateData('sp_guardar_cookie(?, ?)', $dataToken);
             } catch (Exception $e) {
                 error_log('Error al guardar la cookies en la base de datos: ' . $e->getMessage());
 
@@ -241,7 +241,7 @@
                 // Consultar en la DB si ese token está asociado a este usuario
                 $dispositivo = parent::consultObjectWithParams('sp_consultar_token_recuperacion(?)', $consultData);
 
-                if ($dispositivo != $tokenCookie){
+                if ($dispositivo['cookie'] != $tokenCookie){
                     return false;
                 };
             }
