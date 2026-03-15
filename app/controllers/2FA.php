@@ -8,7 +8,7 @@ require_once __DIR__ . '/../config/conexion.php';
 require_once __DIR__ . '/../models/usuariosModel.php';
 require_once __DIR__ . '/../models/baseHelper.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST'){
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
         'status' => 'error',
         'mensaje' => '¡Metodo no permitido!'
@@ -16,14 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST'){
     exit;
 };
 
-$helper = new baseHelper($pdo);
+$helper = new UsuariosModdel($pdo);
 
 $redirect = ($_SESSION['user']['id_rol'] == 1) ? '/dashboardAdmin' : '/dashboardComi';
 
 $codigo = strip_tags(htmlspecialchars(trim($_POST['codigo'])));
 $documento = $_SESSION['user']['documento'];
 
-if (!$codigo){
+if (!$codigo) {
     echo json_encode([
         'status' => 'error',
         'mensaje' => '¡El codigo es obligatorio!'
@@ -40,13 +40,14 @@ if (!$documento) {
 };
 
 $documentoData = [
-    [ 'value' => $documento, 'type' => PDO::PARAM_STR]
+    ['value' => $documento, 'type' => PDO::PARAM_STR]
 ];
 
 $findToken = $helper->consultSimpleWithParams('sp_consultar_token_2FA(?)', $documentoData);
 
-if($findToken == $codigo){
+if ($findToken == $codigo) {
     $_SESSION['user']['verify'] = true;
+    $helper->generarCookie($_SESSION['user']['documento'], $_SESSION['user']['verify']);
     return [
         'status' => 'ok',
         'redirect' => $redirect

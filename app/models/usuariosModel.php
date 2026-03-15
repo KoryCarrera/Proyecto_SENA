@@ -180,12 +180,12 @@
 
             if (!$findUser['2FA']) {
                 return [
-                    ['2FA' => true]
+                    ['2FA' => false]
                 ];
             };
 
             return [
-                ['2FA' => false]
+                ['2FA' => true]
             ];
         }
 
