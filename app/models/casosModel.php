@@ -13,8 +13,8 @@ class CasosModel extends baseHelper {
                 ['value' => $id_caso, 'type' => PDO::PARAM_INT]
             ];
 
-            $findUser = parent::consultSimpleHelper("sp_traer_usuario(?)", $userData);
-            $findCase = parent::consultSimpleHelper("sp_obtener_caso_por_id(?)" ,$caseData);
+            $findUser = parent::consultSimpleWithParams("sp_traer_usuario(?)", $userData);
+            $findCase = parent::consultSimpleWithParams("sp_obtener_caso_por_id(?)" ,$caseData);
 
             if (!$findUser) {
                 throw new Exception("¡No se ha encontrado el usuario que desea cambiar el estado!");
@@ -22,13 +22,85 @@ class CasosModel extends baseHelper {
 
             if ($findCase['estado_caso'] === $nuevoEstado) {
                 throw new Exception ('es el mismo estado que intentas asignar');
-            }
-            if ($caseData);
+            };
 
+            if ($caseData['estado'] == 'No atendido' && $findUser['rol'] != '1'){
+                throw new Exception('¡No tienes permisos para cambiar el estado de este casos');
+            };
+
+            $newData = [
+                [ 'value' => $id_caso, 'type' => PDO::PARAM_INT ],
+                [ 'value' => $nuevoEstado, 'type' => PDO::PARAM_INT ],
+                [ 'value' => $documentUser, 'type' => PDO::PARAM_STR ]
+            ];
+
+            parent::insertOrUpdateData('sp_actualizar_estado_caso(?, ?, ?)', $newData);
+
+            return true;
 
         }catch (Exception $e) {
             error_log('Ha ocurrido un error a la hora de cambiar el estado de caso: '. $e->getMessage());
             throw new Exception('¡Ha ocurrido un error a la hora de cambiar el estado del caso! '. $e->getMessage());
+        }
+    }
+
+    public function reasignarCaso($documentoUser, $documento, $idCaso, $motivo){
+
+        try {
+
+            $dataUser = [
+                [ 'value' => $documentoUser, 'type' => PDO::PARAM_STR]
+            ];
+
+            $dataCase = [
+                [ 'value' => $idCaso, 'type' => PDO::PARAM_STR ]
+            ];
+
+            $newUser = [
+                [ 'value' => $documento, 'type' => PDO::PARAM_STR ]
+            ];
+
+            $findUser = parent::consultSimpleWithParams('sp_traer_usuario(?)', $dataUser);
+            $findCase = parent::consultSimpleWithParams('sp_obtener_caso_por_id(?)', $dataCase);
+            $findNewComi = parent::consultSimpleWithParams('sp_traer_usuario(?)', $newUser);
+
+            if (!$findNewComi) {
+                throw new Exception('¡No se ha podido encontrar al usuario que deseas asignar el caso!');
+            };
+
+            if ($findNewComi['id_rol'] != 2) {
+                throw new Exception('¡Solo se puede reasignar casos a usuarios con el rol de administrador');
+            }
+
+            if (!$findUser){
+                throw new Exception('¡No se ha podido encontrar al usuario que desea hacer la reasignación!');
+            };
+
+            if(!$findCase){
+                throw new Exception('¡No se ha podido encontrar el caso que se desea gestionar!');
+            };
+
+            if ($findCase['estado'] == 'Atendido'){
+                throw new Exception('¡No puedes reasginar un caso ya atendido!');
+            };
+
+            if ($findUser['id_rol'] != 1) {
+                throw new Exception('¡No tienes permisos para esta acción!');
+            }; 
+
+            $reasignarCaso = [
+                [ 'value' => $documentoUser, 'type' => PDO::PARAM_STR ],
+                [ 'value' => $documento, 'type' => PDO::PARAM_STR ],
+                [ 'value' => $idCaso, 'type' => PDO::PARAM_INT ],
+                [ 'value' => $motivo, 'type' => PDO::PARAM_STR ]
+            ];
+
+            parent::insertOrUpdateData('sp_reasignar_caso(?, ?, ?, ?)', $reasignarCaso);
+
+            return true;
+        } catch(Exception $e) {
+            error_log('Ha ocurrido un error al reasignar caso: '. $e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
 
