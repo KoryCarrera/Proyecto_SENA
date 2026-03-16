@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 12-03-2026 a las 16:30:25
+-- Tiempo de generación: 16-03-2026 a las 00:03:38
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -373,6 +373,10 @@ UPDATE usuario
     WHERE documento = p_documento;
 END$$
 
+CREATE PROCEDURE `sp_consultar_token_2fa` (IN `p_documento` VARCHAR(20))   SELECT token FROM token_usuario WHERE documento = p_documento$$
+
+CREATE PROCEDURE `sp_consultar_token_cookie` (IN `p_documento` VARCHAR(20))   SELECT cookie FROM usuario WHERE documento = p_documento$$
+
 CREATE PROCEDURE `sp_contear_casos_tipo` ()   BEGIN
 
 SELECT 
@@ -490,6 +494,10 @@ CREATE PROCEDURE `sp_generar_token_recuperacion` (IN `p_documento` VARCHAR(50)) 
     SELECT v_token AS token, v_expira AS expira;
 END$$
 
+CREATE PROCEDURE `sp_guardar_cookie` (IN `p_documento` VARCHAR(20), IN `p_cookie` VARCHAR(20))   UPDATE usuario SET cookie = p_cookie WHERE documento = p_documento$$
+
+CREATE PROCEDURE `sp_guardar_token_2fa` (IN `p_documento` VARCHAR(20), IN `p_token` VARCHAR(10))   INSERT INTO token_usuario(documento, token) VALUES(p_documento, p_token)$$
+
 CREATE PROCEDURE `sp_listar_casos` ()   BEGIN
 	SELECT 
 			c.id_caso,
@@ -603,7 +611,8 @@ CREATE PROCEDURE `sp_login_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
         username,
         email,
         id_rol,
-        contraseña
+        contraseña,
+        2FA
     FROM
         usuario
     WHERE
@@ -887,7 +896,7 @@ END$$
 
 CREATE PROCEDURE `sp_traer_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
 
-SELECT documento, nombre, apellido, email, id_rol, id_estado FROM usuario WHERE documento = TRIM(p_documento COLLATE utf8mb4_general_ci);
+SELECT documento, nombre, apellido, email, id_rol, id_estado, 2FA FROM usuario WHERE documento = TRIM(p_documento COLLATE utf8mb4_general_ci);
 
 END$$
 
@@ -1401,9 +1410,7 @@ CREATE TABLE `token_usuario` (
   `id` int(11) NOT NULL,
   `documento` varchar(50) NOT NULL,
   `token` varchar(255) NOT NULL,
-  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
-  `fecha_expiracion` datetime NOT NULL,
-  `activado` tinyint(1) DEFAULT 0
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1423,19 +1430,20 @@ CREATE TABLE `usuario` (
   `fecha_registro` datetime NOT NULL DEFAULT current_timestamp() COMMENT 'fecha del dia que se registró el usuario',
   `ultimo_inicio_sesion` datetime DEFAULT NULL,
   `id_estado` tinyint(1) NOT NULL DEFAULT 1,
-  `2FA` int(1) NOT NULL DEFAULT 0
+  `2FA` int(1) NOT NULL DEFAULT 0,
+  `cookie` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`, `2FA`) VALUES
-('1020304050', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$GLchohxxzqrGdqUzrdhkx.W6EDHdax489rqyZskrPiNbNkzdBbjNm', '2026-02-12 14:18:58', '2026-03-12 12:54:28', 1, 0),
-('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2026-03-12 14:54:12', 1, 0),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-03-12 15:49:09', 1, 0),
-('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-03-02 15:52:20', 1, 0),
-('1756664828', 'Zack', 'Lopez', 'isaacmanuelcavajal1356@gmail.com', '3001234567', 2, '$2y$10$ddgxYzealY0ADRBf3t/0NO/ZNWCaJ/aaIXUaAvIJUFIzw9hABitkW', '2026-02-12 14:20:29', '2026-03-12 12:55:03', 1, 0);
+INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
+('1020304050', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$GLchohxxzqrGdqUzrdhkx.W6EDHdax489rqyZskrPiNbNkzdBbjNm', '2026-02-12 14:18:58', '2026-03-12 12:54:28', 1, 0, NULL),
+('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2026-03-15 22:54:54', 1, 0, NULL),
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-03-15 23:53:32', 1, 0, NULL),
+('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-03-02 15:52:20', 1, 0, NULL),
+('1756664828', 'Zack', 'Lopez', 'isaacmanuelcavajal1356@gmail.com', '3001234567', 2, '$2y$10$ddgxYzealY0ADRBf3t/0NO/ZNWCaJ/aaIXUaAvIJUFIzw9hABitkW', '2026-02-12 14:20:29', '2026-03-12 12:55:03', 1, 0, NULL);
 
 --
 -- Disparadores `usuario`

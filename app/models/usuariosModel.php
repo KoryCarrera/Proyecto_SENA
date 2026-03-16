@@ -239,7 +239,7 @@
                 ];
 
                 // Consultar en la DB si ese token está asociado a este usuario
-                $dispositivo = parent::consultObjectWithParams('sp_consultar_token_recuperacion(?)', $consultData);
+                $dispositivo = parent::consultObjectWithParams('sp_consultar_token_cookie(?)', $consultData);
 
                 if ($dispositivo['cookie'] != $tokenCookie){
                     return false;
