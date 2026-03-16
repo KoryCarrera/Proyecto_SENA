@@ -55,9 +55,6 @@ try {
     //Verificamos con el modelo
     $verificacion = $model->loginUsuario($documento, $contrasena);
 
-    //Regeneramos la session
-    session_regenerate_id(true);
-
     //Configuracion de variables de session
     $_SESSION['user'] = [
         'documento' => $verificacion['documento'],
@@ -72,6 +69,9 @@ try {
     unset($_SESSION['csrf_token']);
 
     if ($verificacion['id_rol'] == 1) {
+
+        //Regeneramos la session
+        session_regenerate_id(true);
 
         if (!$verificacion['2FA']) {
             $_SESSION['user']['verify'] = true;
@@ -101,7 +101,7 @@ try {
         ];
 
         $helper->insertOrUpdateData('sp_guardar_token_2fa(?, ?)', $dataToken);
-        
+
         enviarCodigo2FA($token, $verificacion['username'], $verificacion['email']);
 
         echo json_encode([
@@ -112,6 +112,9 @@ try {
     };
 
     if ($verificacion['id_rol'] == 2) {
+
+        //Regeneramos la session
+        session_regenerate_id(true);
 
         if (!$verificacion['2FA']) {
             $_SESSION['user']['verify'] = true;

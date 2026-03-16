@@ -1,4 +1,4 @@
- <?php
+<?php
     class UsuariosModdel extends baseHelper
     {
         public function cambiarEstadoUsuario($documentoFind, $nuevoEstado, $documentoSession)
@@ -176,17 +176,9 @@
 
             if (!password_verify($contrasena, $findUser['contraseña'])) {
                 throw new Exception('¡Contraseña incorrecta!');
-            }
-
-            if (!$findUser['2FA']) {
-                return [
-                    ['2FA' => false]
-                ];
             };
 
-            return [
-                ['2FA' => true]
-            ];
+            return $findUser;
         }
 
         public function generarCookie($documento, $Auth2fa)

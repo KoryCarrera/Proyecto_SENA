@@ -73,5 +73,6 @@ $router->map('GET', '/perfil', 'views/comisionado/perfil.php');
 
 $router->map('GET', '/login', '../Public/pages/entrada.php');
 $router->map('GET', '/saber-mas', '../Public/pages/saber_mas.php');
+$router->map('GET', '/2FA', '../Public/pages/2FAViews.php');
 return $router;
 ?>
