@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── Base ───────────────────────────────────────────────── */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #020617; /* slate-950, igual que el resto del proyecto */
+  color: #e2e8f0;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Glassmorphism card ─────────────────────────────────── */
+.glass-card {
+  background: rgba(17, 25, 40, 0.75);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border-radius: 1.25rem;
+}
+
+/* ── Background blobs ───────────────────────────────────── */
+.blob-bg {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: blob 10s infinite alternate;
+  z-index: 0;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+@keyframes blob {
+  0%   { transform: translate(0px,   0px)   scale(1);   }
+  33%  { transform: translate(30px, -50px)  scale(1.1); }
+  66%  { transform: translate(-20px, 20px)  scale(0.9); }
+  100% { transform: translate(0px,   0px)   scale(1);   }
+}
+
+/* ── Animate fade in ────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s ease-out forwards;
+}
+
+/* ── OTP input boxes ────────────────────────────────────── */
+.otp-input {
+  width: 3rem;
+  height: 3.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.75rem;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  caret-color: transparent;
+}
+
+.otp-input:focus {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.12);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+.otp-input.filled {
+  border-color: #818cf8;
+  background: rgba(99, 102, 241, 0.14);
+}
+
+/* ── Botón verificar ────────────────────────────────────── */
+.btn-verify {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+}
+
+.btn-verify:hover {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  box-shadow: 0 6px 28px rgba(99, 102, 241, 0.6);
+  transform: translateY(-1px);
+}
+
+/* ── Alerta de error ────────────────────────────────────── */
+.alerta-error {
+  display: none;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: #f87171;
+  font-size: 0.875rem;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.alerta-error.visible {
+  display: flex;
+}
+
+/* ── Scrollbar (coherencia con el resto) ────────────────── */
+::-webkit-scrollbar       { width: 8px; }
+::-webkit-scrollbar-track { background: #020617; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
