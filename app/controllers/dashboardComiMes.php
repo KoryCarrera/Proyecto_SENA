@@ -8,7 +8,7 @@ require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/baseHelper.php";
 
 try {
-	$model = new baseHelper($pdo);
+    $model = new baseHelper($pdo);
     $documento = $_SESSION['user']['documento'];
     $documentData = [
         [
@@ -16,77 +16,60 @@ try {
         'type' => PDO::PARAM_STR
         ]
     ];
-    // El comisionado ve TODOS los casos, pero con diferentes métricas
 
-    $casosTipoMesComi = $model->consultObjectWithParams("sp_contear_casos_tipo_mes_comi(?)");, $documentData);
+    $datosTiposComiMes = ['tipos' => [], 'casos' => []];
+    $datosEstadoComiMes = ['estado' => [], 'casos' => [], 'total' => 0];
+    $datosProcesoComiMes = ['proceso' => [], 'casos' => []];
     
-    if ($casosTipoMesComi && count($casosTipoMesComi) >= 0) {
-        $nombres = [];
-        $totales = [];
-
-        foreach ($casosTipoMesComi as $temp) {
-            $nombres[] = $temp['nombre_caso']; 
-            $totales[] = (int) $temp['total'];   
+    $casosTiposComiMes = $model->consultObjectWithParams("sp_contear_casos_tipo_mes_comi(?)", $documentData);
+    
+    if ($casosTiposComiMes && count($casosTiposComiMes) > 0) {
+        foreach ($casosTiposComiMes as $temp) {
+            $datosTiposComiMes['tipos'][] = $temp['nombre_caso'];
+            $datosTiposComiMes['casos'][] = (int) $temp['total'];
         }
-        $casosTipoMesComi = [
-            'tipos' => $nombres,
-            'casos' => $totales
-        ];
     }
-    $casosEstadoMesComi = $model->consultObjectWithParams("sp_casos_por_estado_mes_comi(?)");, $documentData);
+            
+    
+    $casosEstadoComiMes = $model->consultObjectWithParams("sp_casos_por_estado_mes_comi(?)", $documentData);
     
 		
-      if ($casosEstadoMesComi && count($casosEstadoMesComi) > 0) { 
-            $estados = [];
-            $casos = [];
-
-            foreach ($casosEstadoMesComi as $temp) { 
-                $estados[] = $temp['nombre_estado'];
-                $casos[] = (int) $temp['total_casos'];
-            }
-
-            return [
-                'estado' => $estados,
-                'casos' => $casos,
-                'total' => $casosEstadoMesComi[0]['gran_total']
-            ];
+      if ($casosEstadoComiMes && count($casosEstadoComiMes) > 0) { 
+        foreach ($casosEstadoComiMes as $temp) { 
+            $datosEstadoComiMes['estado'][] = $temp['nombre_estado'];
+            $datosEstadoComiMes['casos'][] = (int) $temp['total_casos'];
+        }
+        $datosEstadoComiMes['total'] = $casosEstadoComiMes[0]['gran_total'];
+    }
+           
             
-    $casosPorProcesoMesComi = c$model->consultObjectWithParams("sp_casos_por_proceso_mes_comi(?)");, $documentData);
+    $casosPorProcesoComiMes = $model->consultObjectWithParams("sp_casos_por_proceso_mes_comi(?)", $documentData);
     
-    if ($casosPorProcesoMesComi && count($casosPorProcesoMesComi) > 0) {
-            $proceso = [];
-            $casos = [];
-
-            foreach ($casosPorProcesoMesComi as $temp) {
-                $proceso[] = $temp['proceso'];          
-                $casos[] = (int) $temp['total_casos'];    
-            }
-
-            return [
-                'proceso' => $proceso,
-                'casos' => $casos
-            ];
-    
+    if ($casosPorProcesoComiMes && count($casosPorProcesoComiMes) > 0) {
+        foreach ($casosPorProcesoComiMes as $temp) {
+            $datosProcesoComiMes['proceso'][] = $temp['proceso']; 
+            $datosProcesoComiMes['casos'][] = (int) $temp['total_casos'];
+        }
+    }
     $response = [
         'status' => 'ok',
-        'labelsPolar' => $casosTipoMesComi ? $casosTipoMesComi['tipos'] : [],
-        'dataPolar' => $casosTipoMesComi ? $casosTipoMesComi['casos'] : [],
-        'labelsPie' => $casosEstadoMesComi ? $casosEstadoMesComi['estado'] : [],
-        'dataPie' => $casosEstadoMesComi ? $casosEstadoMesComi['casos'] : [],
-        'labelsBar' => $casosPorProcesoMesComi ? $casosPorProcesoMesComi['proceso'] : [],
-        'dataBar' => $casosPorProcesoMesComi ? $casosPorProcesoMesComi['casos'] : [],
-        'errors' => []
+        'labelsPolar' => $datosTiposComiMes['tipos'],
+        'dataPolar'   => $datosTiposComiMes['casos'],
+        'labelsPie'   => $datosEstadoComiMes['estado'],
+        'dataPie'     => $datosEstadoComiMes['casos'],
+        'labelsBar'   => $datosProcesoComiMes['proceso'],
+        'dataBar'     => $datosProcesoComiMes['casos'],
+        'errors'      => []
     ];
     
     echo json_encode($response);
+    exit;
     
-}
-}
 } catch (Exception $e) {
-    error_log("Error en dashboardComi.php: " . $e->getMessage());
+    error_log("Error en dashboardComiMes.php: " . $e->getMessage());
     echo json_encode([
-        'status' => 'ok',
-        'mensaje' => 'No hay casos por mostrar: ' . $e->getMessage()
-	};
-	exit;
-    
+        'status' => 'error',
+        'mensaje' => 'Error del servidor: ' . $e->getMessage()
+    ]); 
+    exit;
+}
