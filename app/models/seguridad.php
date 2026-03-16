@@ -43,5 +43,3 @@ function limpiar($data)
     // 2. Convierte caracteres especiales a entidades HTML (evita XSS).
     return htmlentities(trim($data), ENT_QUOTES, 'UTF-8');
 }
-
-?>
