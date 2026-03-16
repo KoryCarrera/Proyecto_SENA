@@ -92,10 +92,11 @@ class CasosModel extends baseHelper {
                 [ 'value' => $documentoUser, 'type' => PDO::PARAM_STR ],
                 [ 'value' => $documento, 'type' => PDO::PARAM_STR ],
                 [ 'value' => $idCaso, 'type' => PDO::PARAM_INT ],
-                [ 'value' => $motivo, 'type' => PDO::PARAM_STR ]
+                [ 'value' => $motivo, 'type' => PDO::PARAM_STR ],
+                [ 'value' => $findCase['documento'], 'type' => PDO::PARAM_STR ],
             ];
 
-            parent::insertOrUpdateData('sp_reasignar_caso(?, ?, ?, ?)', $reasignarCaso);
+            parent::insertOrUpdateData('sp_reasignar_caso(?, ?, ?, ?, ?)', $reasignarCaso);
 
             return true;
         } catch(Exception $e) {
