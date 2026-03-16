@@ -21,7 +21,7 @@ class CasosModel extends baseHelper {
             };
 
             if ($findCase['estado_caso'] === $nuevoEstado) {
-                throw new exepcion ('es el mismo estado que intentas asignar');
+                throw new Exception ('es el mismo estado que intentas asignar');
             }
             if ($caseData);
 

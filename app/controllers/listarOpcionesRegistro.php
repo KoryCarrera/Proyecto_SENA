@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 try {
 
+    $helper = new baseHelper($pdo);
     // Obtiene la lista de procesos activos
     $procesos = $helper->consultObjectHelper('sp_listar_procesos_activos');
 
