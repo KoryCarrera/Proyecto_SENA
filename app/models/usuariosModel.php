@@ -1,4 +1,7 @@
 <?php
+
+require_once __DIR__ . '/baseHelper.php';
+
     class UsuariosModdel extends baseHelper
     {
         public function cambiarEstadoUsuario($documentoFind, $nuevoEstado, $documentoSession)

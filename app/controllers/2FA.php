@@ -20,7 +20,7 @@ $helper = new UsuariosModdel($pdo);
 
 $redirect = ($_SESSION['user']['id_rol'] == 1) ? '/dashboardAdmin' : '/dashboardComi';
 
-$codigo = strip_tags(htmlspecialchars(trim($_POST['codigo'])));
+$codigo = $_POST['codigo'];
 $documento = $_SESSION['user']['documento'];
 
 if (!$codigo) {
@@ -57,13 +57,15 @@ if ($findToken['token'] == $codigo) {
 
     $helper->insertOrUpdateData('sp_eliminar_token_2fa(?)', $dataUser);
 
-    return [
+    echo json_encode([
         'status' => 'ok',
         'redirect' => $redirect
-    ];
+    ]);
+    exit;
 };
 
 echo json_encode([
     'status' => 'error',
     'mensaje' => '¡Codigo de 2FA incorrecto!'
 ]);
+exit;

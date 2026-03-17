@@ -17,6 +17,8 @@
 
   <!-- CSS propio 2FA -->
   <link rel="stylesheet" href="/assets/css/2fa.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="/assets/js/jquery-3.7.1.min.js"></script>
 </head>
 
 <body class="antialiased selection:bg-indigo-500 selection:text-white flex items-center justify-center min-h-screen p-4">
@@ -58,17 +60,17 @@
         <!-- Campos OTP -->
         <div class="flex justify-center gap-3 mb-8">
           <input type="text" class="otp-input" id="otp1" name="otp[]" maxlength="1"
-            inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="Dígito 1">
+            inputmode="text" pattern="[A-Za-z0-9]*" autocomplete="one-time-code" aria-label="Dígito 1">
           <input type="text" class="otp-input" id="otp2" name="otp[]" maxlength="1"
-            inputmode="numeric" pattern="[0-9]*" aria-label="Dígito 2">
+            inputmode="text" pattern="[A-Za-z0-9]*" aria-label="Dígito 2">
           <input type="text" class="otp-input" id="otp3" name="otp[]" maxlength="1"
-            inputmode="numeric" pattern="[0-9]*" aria-label="Dígito 3">
+            inputmode="text" pattern="[A-Za-z0-9]*" aria-label="Dígito 3">
           <input type="text" class="otp-input" id="otp4" name="otp[]" maxlength="1"
-            inputmode="numeric" pattern="[0-9]*" aria-label="Dígito 4">
+            inputmode="text" pattern="[A-Za-z0-9]*" aria-label="Dígito 4">
           <input type="text" class="otp-input" id="otp5" name="otp[]" maxlength="1"
-            inputmode="numeric" pattern="[0-9]*" aria-label="Dígito 5">
+            inputmode="text" pattern="[A-Za-z0-9]*" aria-label="Dígito 5">
           <input type="text" class="otp-input" id="otp6" name="otp[]" maxlength="1"
-            inputmode="numeric" pattern="[0-9]*" aria-label="Dígito 6">
+            inputmode="text" pattern="[A-Za-z0-9]*" aria-label="Dígito 6">
         </div>
 
         <!-- Campo oculto con el código completo -->
@@ -125,108 +127,8 @@
 
   </div>
 
-  <script>
-    // ── Lógica de los campos OTP ───────────────────────────
-    const otpInputs = Array.from(document.querySelectorAll('.otp-input'));
-    const codigoHidden = document.getElementById('codigo_2fa');
-
-    function actualizarCodigo() {
-      codigoHidden.value = otpInputs.map(i => i.value).join('');
-    }
-
-    otpInputs.forEach((input, index) => {
-
-      // Solo permite números y avanza al siguiente campo
-      input.addEventListener('input', (e) => {
-        const val = e.target.value.replace(/\D/g, '');
-        e.target.value = val ? val[0] : '';
-        e.target.classList.toggle('filled', !!val);
-        if (val && index < otpInputs.length - 1) otpInputs[index + 1].focus();
-        actualizarCodigo();
-      });
-
-      // Retroceso: limpia el campo anterior
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Backspace' && !e.target.value && index > 0) {
-          otpInputs[index - 1].value = '';
-          otpInputs[index - 1].classList.remove('filled');
-          otpInputs[index - 1].focus();
-          actualizarCodigo();
-        }
-      });
-
-      // Pegar código completo distribuye en los 6 campos
-      input.addEventListener('paste', (e) => {
-        e.preventDefault();
-        const paste = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
-        paste.split('').forEach((char, i) => {
-          if (otpInputs[i]) {
-            otpInputs[i].value = char;
-            otpInputs[i].classList.add('filled');
-          }
-        });
-        actualizarCodigo();
-        const nextEmpty = otpInputs.find(inp => !inp.value);
-        (nextEmpty || otpInputs[5]).focus();
-      });
-    });
-
-    // Foco automático al primer campo
-    window.addEventListener('DOMContentLoaded', () => otpInputs[0].focus());
-
-    // ── Validación antes de enviar ─────────────────────────
-    document.getElementById('form2FA').addEventListener('submit', (e) => {
-      actualizarCodigo();
-      if (codigoHidden.value.length < 6) {
-        e.preventDefault();
-        mostrarError('Por favor ingresa los 6 dígitos del código.');
-        otpInputs.find(i => !i.value)?.focus();
-      }
-    });
-
-    function mostrarError(msg) {
-      const alerta = document.getElementById('alertaError');
-      document.getElementById('mensajeError').textContent = msg;
-      alerta.classList.add('visible');
-    }
-
-    // ── Countdown para reenviar (30 s) ─────────────────────
-    let timeLeft = 30;
-    const countdownEl   = document.getElementById('countdown');
-    const countdownText = document.getElementById('countdownText');
-    const btnReenviar   = document.getElementById('btnReenviar');
-
-    function startCountdown(seconds) {
-      timeLeft = seconds;
-      btnReenviar.disabled = true;
-      countdownEl.textContent = timeLeft;
-      countdownText.textContent = '(en ' + timeLeft + 's)';
-
-      const t = setInterval(() => {
-        timeLeft--;
-        countdownEl.textContent = timeLeft;
-        if (timeLeft <= 0) {
-          clearInterval(t);
-          btnReenviar.disabled = false;
-          countdownText.textContent = '';
-        }
-      }, 1000);
-    }
-
-    // Inicia el countdown al cargar
-    startCountdown(30);
-
-    // Reenvía el código por AJAX
-    btnReenviar.addEventListener('click', () => {
-      fetch('/reenviar2fa', {
-        method: 'POST',
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-      })
-        .then(res => res.json())
-        .then(() => startCountdown(30))
-        .catch(() => alert('No se pudo reenviar el código. Inténtalo de nuevo.'));
-    });
-  </script>
+  <script src="/assets/js/2FA.js"></script>
 
 </body>
+
 </html>
