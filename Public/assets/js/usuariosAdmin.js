@@ -443,12 +443,13 @@ const cerrarModal = () => {
 const guardarCambios = () => {
 
     //Capturamos valores de los inputs
-    const emailNuevo = document.getElementById('emailNuevo').value;
-    const nombreNuevo = document.getElementById('nombreNuevo').value;
-    const apellidoNuevo = document.getElementById('apellidoNuevo').value;
-    const rolNuevo = document.getElementById('rolNuevo').value;
-    const documento = document.getElementById('documentoBuscado').value;
-    const nuevaPassword = document.getElementById('nuevaPassword').value ?? null;
+    const emailNuevo = document.getElementById('emailNuevo').value || '';
+    const nombreNuevo = document.getElementById('nombreNuevo').value || '';
+    const apellidoNuevo = document.getElementById('apellidoNuevo').value || '';
+    const rolNuevo = document.getElementById('rolNuevo').value || '';
+    const documento = document.getElementById('documentoBuscado').value || '';
+    const numero = document.getElementById('numeroNuevo').value || '';
+    const nuevaPassword = document.getElementById('GenerarContraseña').checked || '';
 
     //Asignamos a un objeto para su manejo
     const parametros = {
@@ -456,47 +457,43 @@ const guardarCambios = () => {
         'apellido': apellidoNuevo,
         'rol': rolNuevo,
         'documento': documento,
-        'contrasena': nuevaPassword,
+        'generar_password': nuevaPassword,
+        'numero': numero,
         'email': emailNuevo
     }
+    $.ajax({
+        data: parametros,
+        url: ENDPOINT_EDITAR,
+        type: 'POST',
+        dataType: 'json',
 
-    try {
-        $.ajax({
-            data: parametros,
-            url: ENDPOINT_EDITAR,
-            type: 'POST',
-            dataType: 'json',
+        success: function (response) {
+            cerrarModal(); //cerramos el modal
+            cargarUsuarios() //refrescamos la tabla
 
-            success: function (response) {
-                cerrarModal(); //cerramos el modal
-                cargarUsuarios() //refrescamos la tabla
+            //mostramos el mensaje en una alerta
+            Swal.fire({
+                icon: 'success',
+                title: `${response.mensaje}`,
+                showConfirmButton: false,
+                theme: 'dark',
+                timer: 1000
+            })
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
 
-                //mostramos el mensaje en una alerta
-                Swal.fire({
-                    icon: 'success',
-                    title: `${response.mensaje}`,
-                    showConfirmButton: false,
-                    theme: 'dark',
-                    timer: 1000
-                })
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
+            //Mostramos alerta estetica
+            Swal.fire({
+                icon: 'error',
+                title: '¡Ha ocurrido un error interno!',
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1000,
 
-                //Mostramos alerta estetica
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Ha ocurrido un error interno!',
-                    theme: 'dark',
-                    showConfirmButton: false,
-                    timer: 1000,
-
-                });
-            }
-        });
-    } catch (error) {
-        console.error(`Ha ocurrido un error inesperado ${error}`);
-    }
+            });
+        }
+    });
 }
 
 //funcion para editar al usuario
@@ -523,7 +520,6 @@ const habilitarEdicion = () => {
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Email:</label>
                 <input type="email" class="form-control glass-input" id="emailNuevo" value="${usarioEditable.email}" maxlength="100">
-                <input type="email" class="form-control glass-input" id="emailNuevo" value="${usarioEditable.email}" maxlength="100">
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Rol:</label>
@@ -532,6 +528,12 @@ const habilitarEdicion = () => {
                     <option class="bg-slate-900" value="2"  ${usarioEditable.id_rol == 2 ? 'selected' : ''}>Comisionado</option>
                 </select>
             </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Numero:</label>
+                <input type="number" class="form-control glass-input" id="numeroNuevo" value="${usarioEditable.numero}" maxlength="100">
+            </div>
+
             <input type="hidden" id="documentoBuscado" value="${usarioEditable.documento}">
         </div>
         
@@ -542,7 +544,7 @@ const habilitarEdicion = () => {
             </div>
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold d-block">Nueva Contraseña:</label>
-                <input type="checkbox" id="GenerarContraseña" class="btn-check" autocomplete="off" value = "false">
+                <input type="checkbox" id="GenerarContraseña" class="btn-check" autocomplete="off">
                 <label class="btn btn-outline-primary" for="GenerarContraseña">
                     <i class="bi bi-key"></i> Generar Contraseña
                 </label>
