@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-error_log('DEBUG EMAIL - Usuario: ' . getenv('SMTP_HOST'));
+error_log('DEBUG EMAIL - Usuario: ' . getenv('SMTP_HOST') . 'Email: ' . getenv('MAIL_FROM') . ' | Contraseña: ' . getenv('APP_KEY'));
 
 function enviarCorreo($asunto, $cuerpoHTML, $cuerpoAlt, $destinatarios, $conCopia = null, $conCopiaOculta = null)
 {
@@ -15,11 +15,11 @@ function enviarCorreo($asunto, $cuerpoHTML, $cuerpoAlt, $destinatarios, $conCopi
         $mail->Host       = getenv('SMTP_HOST');
         $mail->SMTPAuth   = true;
         $mail->Username   = getenv('MAIL_FROM');
-        $mail->Password   = getenv('RESEND_APP_KEY');
+        $mail->Password   = getenv('APP_KEY');
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
         // Origen del correo
-        $mail->setFrom(getenv('SMTP_HOST'), 'Sistema Gestion');
+        $mail->setFrom(getenv('MAIL_FROM'), 'Sistema Gestion');
 
         // Validamos que haya al menos un destinatario
         if (empty($destinatarios)) {
