@@ -124,14 +124,17 @@ require_once __DIR__ . '/baseHelper.php';
                 ['value' => $nombre, 'type' => PDO::PARAM_STR],
                 ['value' => $apellido, 'type' => PDO::PARAM_STR],
                 ['value' => $email, 'type' => PDO::PARAM_STR],
-                ['value' => $numero, 'type' => PDO::PARAM_STR],
                 ['value' => $id_rol, 'type' => PDO::PARAM_INT],
                 ['value' => $passToSave, 'type' => PDO::PARAM_STR],
+                ['value' => $numero, 'type' => PDO::PARAM_STR],
             ];
 
             try {
 
-                parent::insertOrUpdateData('sp_gestionar_usuario(?, ?, ?, ?, ?, ?, ?)', $dataInsert);
+                parent::insertOrUpdateData('sp_editar_usuario(?, ?, ?, ?, ?, ?, ?)', $dataInsert);
+
+                return $token;
+
             } catch (Exception $e) {
                 error_log('Error al gestionar usuario: ' . $e->getMessage());
                 throw new Exception($e);
