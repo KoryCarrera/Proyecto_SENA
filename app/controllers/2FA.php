@@ -14,58 +14,70 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         'mensaje' => '¡Metodo no permitido!'
     ]);
     exit;
-};
+}
+;
 
-$helper = new UsuariosModdel($pdo);
+try {
+    $helper = new UsuariosModdel($pdo);
 
-$redirect = ($_SESSION['user']['id_rol'] == 1) ? '/dashboardAdmin' : '/dashboardComi';
+    $redirect = ($_SESSION['user']['id_rol'] == 1) ? '/dashboardAdmin' : '/dashboardComi';
 
-$codigo = $_POST['codigo'];
-$documento = $_SESSION['user']['documento'];
+    $codigo = $_POST['codigo'];
+    $documento = $_SESSION['user']['documento'];
 
-if (!$codigo) {
-    echo json_encode([
-        'status' => 'error',
-        'mensaje' => '¡El codigo es obligatorio!'
-    ]);
-    exit;
-};
+    if (!$codigo) {
+        echo json_encode([
+            'status' => 'error',
+            'mensaje' => '¡El codigo es obligatorio!'
+        ]);
+        exit;
+    }
+    ;
 
-if (!$documento) {
-    echo json_encode([
-        'status' => 'error',
-        'mensaje' => '¡Usuario no autentificado!'
-    ]);
-    exit;
-};
+    if (!$documento) {
+        echo json_encode([
+            'status' => 'error',
+            'mensaje' => '¡Usuario no autentificado!'
+        ]);
+        exit;
+    }
+    ;
 
-$documentoData = [
-    ['value' => $documento, 'type' => PDO::PARAM_STR]
-];
-
-$findToken = $helper->consultSimpleWithParams('sp_consultar_token_2FA(?)', $documentoData);
-
-if ($findToken['token'] == $codigo) {
-
-    $dataUser = [
-        [ 'value' => $_SESSION['user']['documento'], 'type' => PDO::PARAM_STR]
+    $documentoData = [
+        ['value' => $documento, 'type' => PDO::PARAM_STR]
     ];
 
-    $_SESSION['user']['verify'] = true;
+    $findToken = $helper->consultSimpleWithParams('sp_consultar_token_2fa(?)', $documentoData);
 
-    $helper->generarCookie($_SESSION['user']['documento'], $_SESSION['user']['verify']);
+    if ($findToken['token'] == $codigo) {
 
-    $helper->insertOrUpdateData('sp_eliminar_token_2fa(?)', $dataUser);
+        $dataUser = [
+            ['value' => $_SESSION['user']['documento'], 'type' => PDO::PARAM_STR]
+        ];
+
+        $_SESSION['user']['verify'] = true;
+
+        $helper->generarCookie($_SESSION['user']['documento'], $_SESSION['user']['verify']);
+
+        $helper->insertOrUpdateData('sp_eliminar_token_2fa(?)', $dataUser);
+
+        echo json_encode([
+            'status' => 'ok',
+            'redirect' => $redirect
+        ]);
+        exit;
+    }
+    ;
 
     echo json_encode([
-        'status' => 'ok',
-        'redirect' => $redirect
+        'status' => 'error',
+        'mensaje' => '¡Codigo de 2FA incorrecto!'
     ]);
     exit;
-};
-
-echo json_encode([
-    'status' => 'error',
-    'mensaje' => '¡Codigo de 2FA incorrecto!'
-]);
-exit;
+} catch (PDOException $e) {
+    echo json_encode([
+        'status' => 'error',
+        'mensaje' => '¡Error de conexión a la base de datos!'
+    ]);
+    exit;
+}
