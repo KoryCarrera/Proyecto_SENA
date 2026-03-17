@@ -128,22 +128,25 @@ btnVerificar.addEventListener('click', function (e) {
                     title: '¡Ha ocurrido un error al validarte!',
                     text: `${data.mensaje}`,
                     theme: 'dark',
-                    showConfirmButtom: false,
+                    showConfirmButton: false,
                     timer: 1500,
                 })
             };
 
-            Swal.fire({
-                icon: 'success',
-                title: '¡Te has validado con exito!',
-                theme: 'dark',
-                showConfirmButtom: false,
-                timer: 1500,
-            });
+            if (data.status == 'ok') {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Te has validado con exito!',
+                    theme: 'dark',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
 
-            setTimeout(() => {
-                window.location.href = data.redirect
-            }, 1500);
+                setTimeout(() => {
+                    window.location.href = data.redirect
+                }, 1500);
+            }
+
 
         })
 })

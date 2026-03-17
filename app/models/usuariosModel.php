@@ -234,11 +234,13 @@ require_once __DIR__ . '/baseHelper.php';
                 ];
 
                 // Consultar en la DB si ese token está asociado a este usuario
-                $dispositivo = parent::consultObjectWithParams('sp_consultar_token_cookie(?)', $consultData);
+                $dispositivo = parent::consultSimpleWithParams('sp_consultar_token_cookie(?)', $consultData);
 
                 if ($dispositivo['cookie'] != $tokenCookie){
                     return false;
                 };
+
+                return true;
             }
         }
     }
