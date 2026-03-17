@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 16-03-2026 a las 16:32:12
+-- Tiempo de generación: 17-03-2026 a las 16:19:04
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -452,12 +452,13 @@ CREATE PROCEDURE `sp_desactivar_proceso` (IN `p_id_proceso` INT)   BEGIN
 	UPDATE procesoorganizacional SET estado = 0 WHERE id_proceso = p_id_proceso;
 END$$
 
-CREATE PROCEDURE `sp_editar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_rol` INT, IN `p_contraseña` VARCHAR(255))   BEGIN
+CREATE PROCEDURE `sp_editar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_rol` INT, IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN
     UPDATE usuario 
     SET 
         nombre = p_nombre,
         apellido = p_apellido,
         email = p_email,
+        numero = p_numero,
         id_rol = p_rol,
         contraseña = CASE 
             WHEN p_contraseña IS NULL OR p_contraseña = '' THEN contraseña 
@@ -465,6 +466,8 @@ CREATE PROCEDURE `sp_editar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre
         END
     WHERE documento = p_documento;
 END$$
+
+CREATE PROCEDURE `sp_eliminar_token_2fa` (IN `p_documento` VARCHAR(20))   DELETE FROM token_usuario WHERE documento = p_documento$$
 
 CREATE PROCEDURE `sp_generar_token_recuperacion` (IN `p_documento` VARCHAR(50))   BEGIN
     DECLARE v_token VARCHAR(255);
@@ -798,10 +801,45 @@ CREATE PROCEDURE `sp_registrar_seguimiento` (IN `p_observacion` TEXT, IN `p_caso
     END$$
 
 CREATE PROCEDURE `sp_registrar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(50), IN `p_apellido` VARCHAR(50), IN `p_email` VARCHAR(100), IN `p_id_rol` INT(11), IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN 
+    -- 1. Declaración de variables locales
+    DECLARE v_f_registro DATETIME;
+    DECLARE v_f_caducidad DATETIME;
+    DECLARE v_vigencia VARCHAR(20);
 
-INSERT INTO usuario (documento, nombre, apellido, email, id_rol, contraseña, numero,  fecha_registro, ultimo_inicio_sesion) 
-VALUES (p_documento, p_nombre, p_apellido, p_email, p_id_rol, p_contraseña, p_numero, NOW(), NULL);
+    -- 2. Asignación de valores
+    SET v_f_registro = NOW();
+    SET v_f_caducidad = DATE_ADD(v_f_registro, INTERVAL 2 YEAR);
+    SET v_vigencia = CONCAT(YEAR(v_f_registro), '-', YEAR(v_f_caducidad));
 
+    -- 3. Inserción en la tabla
+    INSERT INTO usuario (
+        documento, 
+        nombre, 
+        apellido, 
+        email, 
+        id_rol, 
+        contraseña, 
+        numero, 
+        fecha_registro, 
+        fecha_caducidad, 
+        vigencia_usuario, 
+        ultimo_inicio_sesion,
+        id_estado
+    ) 
+    VALUES (
+        p_documento, 
+        p_nombre, 
+        p_apellido, 
+        p_email, 
+        p_id_rol, 
+        p_contraseña, 
+        p_numero, 
+        v_f_registro, 
+        v_f_caducidad,
+        v_vigencia, 
+        NULL,
+        1
+    );
 END$$
 
 CREATE PROCEDURE `sp_reporte_pqrs_excel` ()   BEGIN
@@ -942,7 +980,7 @@ END$$
 
 CREATE PROCEDURE `sp_traer_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
 
-SELECT documento, nombre, apellido, email, id_rol, id_estado, 2FA FROM usuario WHERE documento = TRIM(p_documento COLLATE utf8mb4_general_ci);
+SELECT documento, nombre, apellido, email, numero, id_rol, id_estado, 2FA FROM usuario WHERE documento = TRIM(p_documento COLLATE utf8mb4_general_ci);
 
 END$$
 
@@ -979,7 +1017,9 @@ CREATE TABLE `caso` (
   `id_caso` int(11) NOT NULL COMMENT 'PK de casos',
   `nombre` varchar(255) NOT NULL,
   `documento` varchar(20) NOT NULL COMMENT 'FK para relacionar casos y usuarios ',
+  `id_seguimiento` int(11) DEFAULT NULL,
   `id_proceso` int(11) NOT NULL,
+  `fecha_ultimo_seguimiento` datetime DEFAULT NULL,
   `fecha_inicio` datetime NOT NULL DEFAULT current_timestamp() COMMENT 'Fecha en la que se realiza el caso',
   `fecha_cierre` datetime DEFAULT NULL,
   `id_estado` int(11) NOT NULL DEFAULT 2 COMMENT 'FK de la tabla estados de los casos',
@@ -991,54 +1031,54 @@ CREATE TABLE `caso` (
 -- Volcado de datos para la tabla `caso`
 --
 
-INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_proceso`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
-(48, 'Reporte de accidente laboral en oficina administrativa', '1020304050', 14, '2026-02-10 14:59:17', NULL, 1, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
-(49, 'Derecho de petición – Estado de incentivo institucional', '1656966633', 13, '2026-02-02 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
-(50, 'Posible trato desigual en asignación de incentivos', '1020304050', 13, '2026-02-09 12:49:15', NULL, 1, 1, 'El funcionario manifiesta inconformidad debido a que considera que los criterios de evaluación no se aplicaron de manera equitativa en su área, afectando la asignación de incentivos.'),
-(51, 'Incumplimiento en entrega de dotación operativa', '1456333298', 12, '2026-02-23 12:50:03', NULL, 2, 1, 'Se informa que el personal del área operativa no ha recibido la dotación correspondiente al periodo vigente, lo que afecta el cumplimiento seguro de sus funciones.'),
-(52, 'Presunto maltrato laboral por parte de superior', '1456333298', 10, '2026-02-23 12:50:29', NULL, 1, 1, 'El colaborador reporta comportamientos reiterados de trato inapropiado y comunicación inadecuada por parte de su jefe inmediato, solicitando revisión del caso.'),
-(53, 'Programación de examen médico ocupacional', '1756664828', 11, '2026-02-19 12:53:33', NULL, 2, 2, 'El colaborador solicita la programación de su examen médico ocupacional periódico para seguimiento de su estado de salud laboral.'),
-(54, 'Capacitación en prevención de riesgos laborales', '1756664828', 14, '2026-02-23 12:53:57', NULL, 2, 2, 'Se solicita capacitación para el equipo de trabajo en temas de prevención de riesgos con el fin de fortalecer prácticas seguras.'),
-(55, 'Estado de solicitud de incentivo institucional', '1020304050', 13, '2026-02-23 14:11:57', NULL, 2, 3, 'El peticionario solicita conocer el estado actual de su solicitud de incentivo y los tiempos estimados de respuesta.'),
-(56, 'Copia de resultados de examen médico ocupacional', '1020304050', 11, '2026-02-23 14:12:24', NULL, 2, 3, 'Se solicita copia de los resultados del examen médico ocupacional realizado recientemente.'),
-(57, 'Solicitud de acceso al plan anual de SST', '1456333298', 14, '2026-02-23 14:15:09', NULL, 2, 3, 'Se solicita acceso o copia del plan anual de seguridad y salud en el trabajo para conocer las actividades programadas.'),
-(58, 'Demora en atención médica ocupacional', '1456333298', 11, '2026-02-23 14:15:31', NULL, 2, 4, 'El accionante manifiesta que la demora en la asignación de cita médica afecta su derecho fundamental a la salud, solicitando atención prioritaria.'),
-(59, 'Riesgo laboral no atendido oportunamente', '1756664828', 14, '2026-02-21 14:17:12', NULL, 2, 4, 'Se solicita protección de derechos fundamentales ante la persistencia de un riesgo laboral que no ha sido intervenido.'),
-(60, 'Negación de apoyo social en situación urgente', '1020304050', 10, '2026-02-17 14:17:51', NULL, 1, 4, 'El accionante solicita intervención inmediata al considerar vulnerados sus derechos por la negación de un apoyo social urgente.'),
-(61, 'Denuncia cableado expuesto', '1020304050', 14, '2022-01-18 07:40:00', '2022-01-20 15:10:00', 3, 1, 'Denuncia por cableado expuesto en sala de sistemas'),
-(62, 'Solicitud inspección ruido', '1456333298', 14, '2022-02-12 09:15:00', NULL, 1, 2, 'Solicitud de inspección por condiciones de ruido en taller'),
-(63, 'Incidente menor área operativa', '1656966633', 14, '2022-03-03 10:30:00', '2022-03-07 11:20:00', 3, 1, 'Reporte de incidente menor sin lesiones en área operativa'),
-(64, 'Derecho petición seguimiento SST', '1756664828', 14, '2022-04-21 14:10:00', NULL, 2, 3, 'Derecho de petición por seguimiento a reporte de seguridad'),
-(65, 'Denuncia falta señalización', '1020304050', 14, '2023-01-11 08:00:00', '2023-01-15 17:00:00', 3, 1, 'Denuncia por falta de señalización en zona de carga'),
-(66, 'Solicitud capacitación SST', '1456333298', 14, '2023-02-09 09:55:00', NULL, 1, 2, 'Solicitud de capacitación en prevención de riesgos'),
-(67, 'Incidente leve laboratorio', '1656966633', 14, '2023-03-14 11:25:00', '2023-03-18 13:40:00', 3, 1, 'Incidente leve durante práctica en laboratorio'),
-(68, 'Solicitud revisión EPP', '1756664828', 14, '2023-05-22 15:00:00', NULL, 2, 2, 'Solicitud de revisión de equipos de protección'),
-(69, 'Derecho petición auditoría SST', '1020304050', 14, '2024-01-05 07:50:00', NULL, 1, 3, 'Derecho de petición sobre estado de auditoría de seguridad'),
-(70, 'Denuncia riesgo ergonómico', '1456333298', 14, '2024-02-17 10:20:00', '2024-02-21 16:30:00', 3, 1, 'Denuncia por riesgo ergonómico en puesto administrativo'),
-(71, 'Solicitud evaluación riesgos', '1656966633', 14, '2024-03-29 12:10:00', NULL, 2, 2, 'Solicitud de evaluación de riesgos en aula técnica'),
-(72, 'Reporte caída leve', '1756664828', 14, '2024-05-03 09:00:00', '2024-05-06 14:00:00', 3, 1, 'Reporte de caída sin consecuencias graves'),
-(73, 'Solicitud inspección preventiva', '1020304050', 14, '2025-01-09 08:15:00', NULL, 1, 2, 'Solicitud de inspección preventiva general'),
-(74, 'Denuncia incumplimiento SST', '1456333298', 14, '2025-02-20 10:45:00', '2025-02-25 12:30:00', 3, 1, 'Denuncia por incumplimiento de protocolo de seguridad'),
-(75, 'Derecho petición seguimiento caso', '1656966633', 14, '2025-04-10 13:30:00', NULL, 2, 3, 'Derecho de petición por seguimiento a caso SST'),
-(76, 'Solicitud revisión locativa', '1756664828', 14, '2026-01-16 09:10:00', NULL, 1, 2, 'Solicitud de revisión de condiciones locativas'),
-(77, 'Solicitud apoyo psicológico', '1020304050', 10, '2022-02-01 10:10:00', '2022-02-03 12:00:00', 3, 2, 'Solicitud de apoyo psicológico institucional'),
-(78, 'Denuncia conflicto interpersonal', '1456333298', 10, '2022-06-18 11:20:00', NULL, 1, 1, 'Denuncia por conflicto interpersonal entre funcionarios'),
-(79, 'Solicitud programa bienestar', '1656966633', 10, '2023-02-12 08:40:00', '2023-02-18 15:10:00', 3, 2, 'Solicitud de inclusión en programa de bienestar'),
-(80, 'Derecho petición beneficios', '1756664828', 10, '2023-07-07 14:25:00', NULL, 2, 3, 'Derecho de petición por información de beneficios'),
-(81, 'Solicitud acompañamiento', '1020304050', 10, '2024-01-22 09:30:00', NULL, 1, 2, 'Solicitud de acompañamiento psicosocial'),
-(82, 'Denuncia acoso laboral', '1456333298', 10, '2024-04-11 11:15:00', '2024-04-16 16:00:00', 3, 1, 'Denuncia por presunto acoso laboral'),
-(83, 'Solicitud actividad deportiva', '1656966633', 10, '2025-03-03 10:50:00', NULL, 1, 2, 'Solicitud de inscripción a actividad deportiva'),
-(84, 'Derecho petición subsidios', '1756664828', 10, '2026-02-08 13:05:00', NULL, 2, 3, 'Derecho de petición sobre subsidios'),
-(85, 'Solicitud soporte sistema', '1020304050', 11, '2022-03-10 08:30:00', '2022-03-14 17:00:00', 3, 2, 'Solicitud de soporte a sistema institucional'),
-(86, 'Derecho petición tecnológica', '1456333298', 11, '2023-06-02 09:10:00', NULL, 1, 3, 'Derecho de petición por respuesta a solicitud tecnológica'),
-(87, 'Solicitud actualización usuario', '1656966633', 11, '2024-02-19 11:00:00', '2024-02-23 12:30:00', 3, 2, 'Solicitud de actualización de usuario'),
-(88, 'Denuncia fallas plataforma', '1756664828', 11, '2025-05-05 14:10:00', NULL, 2, 1, 'Denuncia por fallas recurrentes en plataforma'),
-(89, 'Solicitud dotación uniforme', '1020304050', 12, '2022-04-01 10:10:00', '2022-04-05 11:00:00', 3, 2, 'Solicitud de dotación de uniforme'),
-(90, 'Derecho petición dotación', '1456333298', 12, '2023-08-15 09:40:00', NULL, 1, 3, 'Derecho de petición por entrega tardía de dotación'),
-(91, 'Solicitud reposición botas', '1656966633', 12, '2024-03-20 12:30:00', '2024-03-25 15:10:00', 3, 2, 'Solicitud de reposición de botas de seguridad'),
-(92, 'Solicitud información incentivos', '1756664828', 13, '2022-11-11 08:00:00', '2022-11-15 10:30:00', 3, 2, 'Solicitud de información sobre incentivos'),
-(93, 'Derecho petición convocatoria', '1020304050', 13, '2024-06-06 09:45:00', NULL, 1, 3, 'Derecho de petición por resultados de convocatoria'),
-(94, 'Solicitud inscripción incentivos', '1456333298', 13, '2026-01-20 11:20:00', NULL, 2, 2, 'Solicitud de inscripción a programa de incentivos');
+INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_seguimiento`, `id_proceso`, `fecha_ultimo_seguimiento`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
+(48, 'Reporte de accidente laboral en oficina administrativa', '1020304050', 17, 14, '2026-03-16 16:30:33', '2026-02-10 14:59:17', NULL, 1, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
+(49, 'Derecho de petición – Estado de incentivo institucional', '1656966633', NULL, 13, NULL, '2026-02-02 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
+(50, 'Posible trato desigual en asignación de incentivos', '1020304050', NULL, 13, NULL, '2026-02-09 12:49:15', NULL, 1, 1, 'El funcionario manifiesta inconformidad debido a que considera que los criterios de evaluación no se aplicaron de manera equitativa en su área, afectando la asignación de incentivos.'),
+(51, 'Incumplimiento en entrega de dotación operativa', '1456333298', NULL, 12, NULL, '2026-02-23 12:50:03', NULL, 2, 1, 'Se informa que el personal del área operativa no ha recibido la dotación correspondiente al periodo vigente, lo que afecta el cumplimiento seguro de sus funciones.'),
+(52, 'Presunto maltrato laboral por parte de superior', '1456333298', NULL, 10, NULL, '2026-02-23 12:50:29', NULL, 1, 1, 'El colaborador reporta comportamientos reiterados de trato inapropiado y comunicación inadecuada por parte de su jefe inmediato, solicitando revisión del caso.'),
+(53, 'Programación de examen médico ocupacional', '1756664828', NULL, 11, NULL, '2026-02-19 12:53:33', NULL, 2, 2, 'El colaborador solicita la programación de su examen médico ocupacional periódico para seguimiento de su estado de salud laboral.'),
+(54, 'Capacitación en prevención de riesgos laborales', '1756664828', NULL, 14, NULL, '2026-02-23 12:53:57', NULL, 2, 2, 'Se solicita capacitación para el equipo de trabajo en temas de prevención de riesgos con el fin de fortalecer prácticas seguras.'),
+(55, 'Estado de solicitud de incentivo institucional', '1020304050', NULL, 13, NULL, '2026-02-23 14:11:57', NULL, 2, 3, 'El peticionario solicita conocer el estado actual de su solicitud de incentivo y los tiempos estimados de respuesta.'),
+(56, 'Copia de resultados de examen médico ocupacional', '1020304050', NULL, 11, NULL, '2026-02-23 14:12:24', NULL, 2, 3, 'Se solicita copia de los resultados del examen médico ocupacional realizado recientemente.'),
+(57, 'Solicitud de acceso al plan anual de SST', '1456333298', NULL, 14, NULL, '2026-02-23 14:15:09', NULL, 2, 3, 'Se solicita acceso o copia del plan anual de seguridad y salud en el trabajo para conocer las actividades programadas.'),
+(58, 'Demora en atención médica ocupacional', '1456333298', 18, 11, '2026-03-17 14:06:50', '2026-02-23 14:15:31', NULL, 2, 4, 'El accionante manifiesta que la demora en la asignación de cita médica afecta su derecho fundamental a la salud, solicitando atención prioritaria.'),
+(59, 'Riesgo laboral no atendido oportunamente', '1756664828', NULL, 14, NULL, '2026-02-21 14:17:12', NULL, 2, 4, 'Se solicita protección de derechos fundamentales ante la persistencia de un riesgo laboral que no ha sido intervenido.'),
+(60, 'Negación de apoyo social en situación urgente', '1020304050', NULL, 10, NULL, '2026-02-17 14:17:51', NULL, 1, 4, 'El accionante solicita intervención inmediata al considerar vulnerados sus derechos por la negación de un apoyo social urgente.'),
+(61, 'Denuncia cableado expuesto', '1020304050', NULL, 14, NULL, '2022-01-18 07:40:00', '2022-01-20 15:10:00', 3, 1, 'Denuncia por cableado expuesto en sala de sistemas'),
+(62, 'Solicitud inspección ruido', '1456333298', NULL, 14, NULL, '2022-02-12 09:15:00', NULL, 1, 2, 'Solicitud de inspección por condiciones de ruido en taller'),
+(63, 'Incidente menor área operativa', '1656966633', NULL, 14, NULL, '2022-03-03 10:30:00', '2022-03-07 11:20:00', 3, 1, 'Reporte de incidente menor sin lesiones en área operativa'),
+(64, 'Derecho petición seguimiento SST', '1756664828', NULL, 14, NULL, '2022-04-21 14:10:00', NULL, 2, 3, 'Derecho de petición por seguimiento a reporte de seguridad'),
+(65, 'Denuncia falta señalización', '1020304050', NULL, 14, NULL, '2023-01-11 08:00:00', '2023-01-15 17:00:00', 3, 1, 'Denuncia por falta de señalización en zona de carga'),
+(66, 'Solicitud capacitación SST', '1456333298', NULL, 14, NULL, '2023-02-09 09:55:00', NULL, 1, 2, 'Solicitud de capacitación en prevención de riesgos'),
+(67, 'Incidente leve laboratorio', '1656966633', NULL, 14, NULL, '2023-03-14 11:25:00', '2023-03-18 13:40:00', 3, 1, 'Incidente leve durante práctica en laboratorio'),
+(68, 'Solicitud revisión EPP', '1756664828', NULL, 14, NULL, '2023-05-22 15:00:00', NULL, 2, 2, 'Solicitud de revisión de equipos de protección'),
+(69, 'Derecho petición auditoría SST', '1020304050', NULL, 14, NULL, '2024-01-05 07:50:00', NULL, 1, 3, 'Derecho de petición sobre estado de auditoría de seguridad'),
+(70, 'Denuncia riesgo ergonómico', '1456333298', NULL, 14, NULL, '2024-02-17 10:20:00', '2024-02-21 16:30:00', 3, 1, 'Denuncia por riesgo ergonómico en puesto administrativo'),
+(71, 'Solicitud evaluación riesgos', '1656966633', NULL, 14, NULL, '2024-03-29 12:10:00', NULL, 2, 2, 'Solicitud de evaluación de riesgos en aula técnica'),
+(72, 'Reporte caída leve', '1756664828', NULL, 14, NULL, '2024-05-03 09:00:00', '2024-05-06 14:00:00', 3, 1, 'Reporte de caída sin consecuencias graves'),
+(73, 'Solicitud inspección preventiva', '1020304050', NULL, 14, NULL, '2025-01-09 08:15:00', NULL, 1, 2, 'Solicitud de inspección preventiva general'),
+(74, 'Denuncia incumplimiento SST', '1456333298', NULL, 14, NULL, '2025-02-20 10:45:00', '2025-02-25 12:30:00', 3, 1, 'Denuncia por incumplimiento de protocolo de seguridad'),
+(75, 'Derecho petición seguimiento caso', '1656966633', NULL, 14, NULL, '2025-04-10 13:30:00', NULL, 2, 3, 'Derecho de petición por seguimiento a caso SST'),
+(76, 'Solicitud revisión locativa', '1756664828', NULL, 14, NULL, '2026-01-16 09:10:00', NULL, 1, 2, 'Solicitud de revisión de condiciones locativas'),
+(77, 'Solicitud apoyo psicológico', '1020304050', NULL, 10, NULL, '2022-02-01 10:10:00', '2022-02-03 12:00:00', 3, 2, 'Solicitud de apoyo psicológico institucional'),
+(78, 'Denuncia conflicto interpersonal', '1456333298', NULL, 10, NULL, '2022-06-18 11:20:00', NULL, 1, 1, 'Denuncia por conflicto interpersonal entre funcionarios'),
+(79, 'Solicitud programa bienestar', '1656966633', NULL, 10, NULL, '2023-02-12 08:40:00', '2023-02-18 15:10:00', 3, 2, 'Solicitud de inclusión en programa de bienestar'),
+(80, 'Derecho petición beneficios', '1756664828', NULL, 10, NULL, '2023-07-07 14:25:00', NULL, 2, 3, 'Derecho de petición por información de beneficios'),
+(81, 'Solicitud acompañamiento', '1020304050', 8, 10, '2026-02-23 14:01:18', '2024-01-22 09:30:00', NULL, 1, 2, 'Solicitud de acompañamiento psicosocial'),
+(82, 'Denuncia acoso laboral', '1456333298', NULL, 10, NULL, '2024-04-11 11:15:00', '2024-04-16 16:00:00', 3, 1, 'Denuncia por presunto acoso laboral'),
+(83, 'Solicitud actividad deportiva', '1656966633', NULL, 10, NULL, '2025-03-03 10:50:00', NULL, 1, 2, 'Solicitud de inscripción a actividad deportiva'),
+(84, 'Derecho petición subsidios', '1756664828', NULL, 10, NULL, '2026-02-08 13:05:00', NULL, 2, 3, 'Derecho de petición sobre subsidios'),
+(85, 'Solicitud soporte sistema', '1020304050', 9, 11, '2026-02-23 14:03:02', '2022-03-10 08:30:00', '2022-03-14 17:00:00', 3, 2, 'Solicitud de soporte a sistema institucional'),
+(86, 'Derecho petición tecnológica', '1456333298', NULL, 11, NULL, '2023-06-02 09:10:00', NULL, 1, 3, 'Derecho de petición por respuesta a solicitud tecnológica'),
+(87, 'Solicitud actualización usuario', '1656966633', NULL, 11, NULL, '2024-02-19 11:00:00', '2024-02-23 12:30:00', 3, 2, 'Solicitud de actualización de usuario'),
+(88, 'Denuncia fallas plataforma', '1756664828', NULL, 11, NULL, '2025-05-05 14:10:00', NULL, 2, 1, 'Denuncia por fallas recurrentes en plataforma'),
+(89, 'Solicitud dotación uniforme', '1020304050', NULL, 12, NULL, '2022-04-01 10:10:00', '2022-04-05 11:00:00', 3, 2, 'Solicitud de dotación de uniforme'),
+(90, 'Derecho petición dotación', '1456333298', NULL, 12, NULL, '2023-08-15 09:40:00', NULL, 1, 3, 'Derecho de petición por entrega tardía de dotación'),
+(91, 'Solicitud reposición botas', '1656966633', NULL, 12, NULL, '2024-03-20 12:30:00', '2024-03-25 15:10:00', 3, 2, 'Solicitud de reposición de botas de seguridad'),
+(92, 'Solicitud información incentivos', '1756664828', 10, 13, '2026-02-23 14:03:26', '2022-11-11 08:00:00', '2022-11-15 10:30:00', 3, 2, 'Solicitud de información sobre incentivos'),
+(93, 'Derecho petición convocatoria', '1020304050', 11, 13, '2026-02-23 14:03:53', '2024-06-06 09:45:00', NULL, 1, 3, 'Derecho de petición por resultados de convocatoria'),
+(94, 'Solicitud inscripción incentivos', '1456333298', NULL, 13, NULL, '2026-01-20 11:20:00', NULL, 2, 2, 'Solicitud de inscripción a programa de incentivos');
 
 --
 -- Disparadores `caso`
@@ -1298,7 +1338,57 @@ INSERT INTO `noti_administrador` (`id_notificacion`, `documento`, `mensaje`, `fe
 (53, '1487569254', 'AVISO: El caso \"Reporte de accidente laboral en oficina administrativa\" CON LA ID: 48 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-16 15:24:02'),
 (54, '1487569254', 'AVISO: El caso \"Reporte de accidente laboral en oficina administrativa\" CON LA ID: 48 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-16 15:25:47'),
 (55, '1487569254', 'AVISO: El caso \"Reporte de accidente laboral en oficina administrativa\" CON LA ID: 48 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Zack Lopez', '2026-03-16 16:07:29'),
-(56, '1487569254', 'AVISO: El caso \"Reporte de accidente laboral en oficina administrativa\" CON LA ID: 48 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-16 16:30:33');
+(56, '1487569254', 'AVISO: El caso \"Reporte de accidente laboral en oficina administrativa\" CON LA ID: 48 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-16 16:30:33'),
+(57, '1487569254', 'AVISO: El caso \"Reporte de accidente laboral en oficina administrativa\" CON LA ID: 48 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(58, '1487569254', 'AVISO: El caso \"Derecho de petición – Estado de incentivo institucional\" CON LA ID: 49 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Marleny Gaviria', '2026-03-17 13:05:32'),
+(59, '1487569254', 'AVISO: El caso \"Posible trato desigual en asignación de incentivos\" CON LA ID: 50 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(60, '1487569254', 'AVISO: El caso \"Incumplimiento en entrega de dotación operativa\" CON LA ID: 51 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 13:05:32'),
+(61, '1487569254', 'AVISO: El caso \"Presunto maltrato laboral por parte de superior\" CON LA ID: 52 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 13:05:32'),
+(62, '1487569254', 'AVISO: El caso \"Programación de examen médico ocupacional\" CON LA ID: 53 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Zack Lopez', '2026-03-17 13:05:32'),
+(63, '1487569254', 'AVISO: El caso \"Capacitación en prevención de riesgos laborales\" CON LA ID: 54 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Zack Lopez', '2026-03-17 13:05:32'),
+(64, '1487569254', 'AVISO: El caso \"Estado de solicitud de incentivo institucional\" CON LA ID: 55 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(65, '1487569254', 'AVISO: El caso \"Copia de resultados de examen médico ocupacional\" CON LA ID: 56 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(66, '1487569254', 'AVISO: El caso \"Solicitud de acceso al plan anual de SST\" CON LA ID: 57 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 13:05:32'),
+(67, '1487569254', 'AVISO: El caso \"Demora en atención médica ocupacional\" CON LA ID: 58 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 13:05:32'),
+(68, '1487569254', 'AVISO: El caso \"Riesgo laboral no atendido oportunamente\" CON LA ID: 59 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Zack Lopez', '2026-03-17 13:05:32'),
+(69, '1487569254', 'AVISO: El caso \"Negación de apoyo social en situación urgente\" CON LA ID: 60 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(70, '1487569254', 'AVISO: El caso \"Denuncia cableado expuesto\" CON LA ID: 61 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(71, '1487569254', 'AVISO: El caso \"Solicitud inspección ruido\" CON LA ID: 62 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 13:05:32'),
+(72, '1487569254', 'AVISO: El caso \"Incidente menor área operativa\" CON LA ID: 63 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Marleny Gaviria', '2026-03-17 13:05:32'),
+(73, '1487569254', 'AVISO: El caso \"Derecho petición seguimiento SST\" CON LA ID: 64 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Zack Lopez', '2026-03-17 13:05:32'),
+(74, '1487569254', 'AVISO: El caso \"Denuncia falta señalización\" CON LA ID: 65 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(75, '1487569254', 'AVISO: El caso \"Solicitud capacitación SST\" CON LA ID: 66 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 13:05:32'),
+(76, '1487569254', 'AVISO: El caso \"Incidente leve laboratorio\" CON LA ID: 67 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Marleny Gaviria', '2026-03-17 13:05:32'),
+(77, '1487569254', 'AVISO: El caso \"Solicitud revisión EPP\" CON LA ID: 68 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Zack Lopez', '2026-03-17 13:05:32'),
+(78, '1487569254', 'AVISO: El caso \"Derecho petición auditoría SST\" CON LA ID: 69 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(79, '1487569254', 'AVISO: El caso \"Denuncia riesgo ergonómico\" CON LA ID: 70 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 13:05:32'),
+(80, '1487569254', 'AVISO: El caso \"Solicitud evaluación riesgos\" CON LA ID: 71 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Marleny Gaviria', '2026-03-17 13:05:32'),
+(81, '1487569254', 'AVISO: El caso \"Reporte caída leve\" CON LA ID: 72 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Zack Lopez', '2026-03-17 13:05:32'),
+(82, '1487569254', 'AVISO: El caso \"Solicitud inspección preventiva\" CON LA ID: 73 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(83, '1487569254', 'AVISO: El caso \"Denuncia incumplimiento SST\" CON LA ID: 74 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 13:05:32'),
+(84, '1487569254', 'AVISO: El caso \"Derecho petición seguimiento caso\" CON LA ID: 75 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Marleny Gaviria', '2026-03-17 13:05:32'),
+(85, '1487569254', 'AVISO: El caso \"Solicitud revisión locativa\" CON LA ID: 76 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Zack Lopez', '2026-03-17 13:05:32'),
+(86, '1487569254', 'AVISO: El caso \"Solicitud apoyo psicológico\" CON LA ID: 77 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(87, '1487569254', 'AVISO: El caso \"Denuncia conflicto interpersonal\" CON LA ID: 78 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 13:05:32'),
+(88, '1487569254', 'AVISO: El caso \"Solicitud programa bienestar\" CON LA ID: 79 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Marleny Gaviria', '2026-03-17 13:05:32'),
+(89, '1487569254', 'AVISO: El caso \"Derecho petición beneficios\" CON LA ID: 80 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Zack Lopez', '2026-03-17 13:05:32'),
+(90, '1487569254', 'AVISO: El caso \"Solicitud acompañamiento\" CON LA ID: 81 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(91, '1487569254', 'AVISO: El caso \"Denuncia acoso laboral\" CON LA ID: 82 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 13:05:32'),
+(92, '1487569254', 'AVISO: El caso \"Solicitud actividad deportiva\" CON LA ID: 83 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Marleny Gaviria', '2026-03-17 13:05:32'),
+(93, '1487569254', 'AVISO: El caso \"Derecho petición subsidios\" CON LA ID: 84 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Zack Lopez', '2026-03-17 13:05:32'),
+(94, '1487569254', 'AVISO: El caso \"Solicitud soporte sistema\" CON LA ID: 85 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(95, '1487569254', 'AVISO: El caso \"Derecho petición tecnológica\" CON LA ID: 86 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 13:05:32'),
+(96, '1487569254', 'AVISO: El caso \"Solicitud actualización usuario\" CON LA ID: 87 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Marleny Gaviria', '2026-03-17 13:05:32'),
+(97, '1487569254', 'AVISO: El caso \"Denuncia fallas plataforma\" CON LA ID: 88 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Zack Lopez', '2026-03-17 13:05:32'),
+(98, '1487569254', 'AVISO: El caso \"Solicitud dotación uniforme\" CON LA ID: 89 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(99, '1487569254', 'AVISO: El caso \"Derecho petición dotación\" CON LA ID: 90 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 13:05:32'),
+(100, '1487569254', 'AVISO: El caso \"Solicitud reposición botas\" CON LA ID: 91 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Marleny Gaviria', '2026-03-17 13:05:32'),
+(101, '1487569254', 'AVISO: El caso \"Solicitud información incentivos\" CON LA ID: 92 cambió deL estado \"No atendido\" a \"No atendido\". Por su Comisionado Responsable: Zack Lopez', '2026-03-17 13:05:32'),
+(102, '1487569254', 'AVISO: El caso \"Derecho petición convocatoria\" CON LA ID: 93 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(103, '1487569254', 'AVISO: El caso \"Solicitud inscripción incentivos\" CON LA ID: 94 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 13:05:32'),
+(104, '1487569254', 'AVISO: El caso \"Demora en atención médica ocupacional\" CON LA ID: 58 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 14:06:50'),
+(105, '1487569254', 'Nuevo registro: El usuario Isaac Carvajal con el documento: 2030405060) se ha unido con el rol de \"administrador\". Fecha de registro: 2026-03-17 15:44:33.', '2026-03-17 15:44:33'),
+(106, '2030405060', 'Nuevo registro: El usuario Isaac Carvajal con el documento: 2030405060) se ha unido con el rol de \"administrador\". Fecha de registro: 2026-03-17 15:44:33.', '2026-03-17 15:44:33');
 
 -- --------------------------------------------------------
 
@@ -1376,7 +1466,55 @@ INSERT INTO `noti_comisionado` (`id_notificacion`, `documento`, `mensaje`, `fech
 (57, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Reporte de accidente laboral en oficina administrativa\" con la id la ID 48', '2026-03-16 16:07:29'),
 (58, '1020304050', 'El caso \"Reporte de accidente laboral en oficina administrativa\" con el ID: 48 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-16 16:30:33'),
 (59, '1020304050', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Simon Gonzalez Pelaez\", se te ha asignado un caso con el nombre: \"Reporte de accidente laboral en oficina administrativa\" con la id 48', '2026-03-16 16:30:33'),
-(60, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Reporte de accidente laboral en oficina administrativa y la id 48 se le ha asignado al comisonado: \"Simon Gonzalez Pelaez', '2026-03-16 16:30:33');
+(60, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Reporte de accidente laboral en oficina administrativa y la id 48 se le ha asignado al comisonado: \"Simon Gonzalez Pelaez', '2026-03-16 16:30:33'),
+(61, '1020304050', 'El caso \"Reporte de accidente laboral en oficina administrativa\" con el ID: 48 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(62, '1656966633', 'El caso \"Derecho de petición – Estado de incentivo institucional\" con el ID: 49 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Marleny Gaviria', '2026-03-17 13:05:32'),
+(63, '1020304050', 'El caso \"Posible trato desigual en asignación de incentivos\" con el ID: 50 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(64, '1456333298', 'El caso \"Incumplimiento en entrega de dotación operativa\" con el ID: 51 perteneciente al proceso \"Ropa de Trabajo\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Juan Manuel Correal', '2026-03-17 13:05:32'),
+(65, '1456333298', 'El caso \"Presunto maltrato laboral por parte de superior\" con el ID: 52 perteneciente al proceso \"Bienestar Social\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Juan Manuel Correal', '2026-03-17 13:05:32'),
+(66, '1756664828', 'El caso \"Programación de examen médico ocupacional\" con el ID: 53 perteneciente al proceso \"SSEMI\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Zack Lopez', '2026-03-17 13:05:32'),
+(67, '1756664828', 'El caso \"Capacitación en prevención de riesgos laborales\" con el ID: 54 perteneciente al proceso \"SST\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Zack Lopez', '2026-03-17 13:05:32'),
+(68, '1020304050', 'El caso \"Estado de solicitud de incentivo institucional\" con el ID: 55 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(69, '1020304050', 'El caso \"Copia de resultados de examen médico ocupacional\" con el ID: 56 perteneciente al proceso \"SSEMI\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(70, '1456333298', 'El caso \"Solicitud de acceso al plan anual de SST\" con el ID: 57 perteneciente al proceso \"SST\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Juan Manuel Correal', '2026-03-17 13:05:32'),
+(71, '1456333298', 'El caso \"Demora en atención médica ocupacional\" con el ID: 58 perteneciente al proceso \"SSEMI\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Juan Manuel Correal', '2026-03-17 13:05:32'),
+(72, '1756664828', 'El caso \"Riesgo laboral no atendido oportunamente\" con el ID: 59 perteneciente al proceso \"SST\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Zack Lopez', '2026-03-17 13:05:32'),
+(73, '1020304050', 'El caso \"Negación de apoyo social en situación urgente\" con el ID: 60 perteneciente al proceso \"Bienestar Social\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(74, '1020304050', 'El caso \"Denuncia cableado expuesto\" con el ID: 61 perteneciente al proceso \"SST\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(75, '1456333298', 'El caso \"Solicitud inspección ruido\" con el ID: 62 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Juan Manuel Correal', '2026-03-17 13:05:32'),
+(76, '1656966633', 'El caso \"Incidente menor área operativa\" con el ID: 63 perteneciente al proceso \"SST\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Marleny Gaviria', '2026-03-17 13:05:32'),
+(77, '1756664828', 'El caso \"Derecho petición seguimiento SST\" con el ID: 64 perteneciente al proceso \"SST\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Zack Lopez', '2026-03-17 13:05:32'),
+(78, '1020304050', 'El caso \"Denuncia falta señalización\" con el ID: 65 perteneciente al proceso \"SST\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(79, '1456333298', 'El caso \"Solicitud capacitación SST\" con el ID: 66 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Juan Manuel Correal', '2026-03-17 13:05:32'),
+(80, '1656966633', 'El caso \"Incidente leve laboratorio\" con el ID: 67 perteneciente al proceso \"SST\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Marleny Gaviria', '2026-03-17 13:05:32'),
+(81, '1756664828', 'El caso \"Solicitud revisión EPP\" con el ID: 68 perteneciente al proceso \"SST\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Zack Lopez', '2026-03-17 13:05:32'),
+(82, '1020304050', 'El caso \"Derecho petición auditoría SST\" con el ID: 69 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(83, '1456333298', 'El caso \"Denuncia riesgo ergonómico\" con el ID: 70 perteneciente al proceso \"SST\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Juan Manuel Correal', '2026-03-17 13:05:32'),
+(84, '1656966633', 'El caso \"Solicitud evaluación riesgos\" con el ID: 71 perteneciente al proceso \"SST\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Marleny Gaviria', '2026-03-17 13:05:32'),
+(85, '1756664828', 'El caso \"Reporte caída leve\" con el ID: 72 perteneciente al proceso \"SST\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Zack Lopez', '2026-03-17 13:05:32'),
+(86, '1020304050', 'El caso \"Solicitud inspección preventiva\" con el ID: 73 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(87, '1456333298', 'El caso \"Denuncia incumplimiento SST\" con el ID: 74 perteneciente al proceso \"SST\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Juan Manuel Correal', '2026-03-17 13:05:32'),
+(88, '1656966633', 'El caso \"Derecho petición seguimiento caso\" con el ID: 75 perteneciente al proceso \"SST\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Marleny Gaviria', '2026-03-17 13:05:32'),
+(89, '1756664828', 'El caso \"Solicitud revisión locativa\" con el ID: 76 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Zack Lopez', '2026-03-17 13:05:32'),
+(90, '1020304050', 'El caso \"Solicitud apoyo psicológico\" con el ID: 77 perteneciente al proceso \"Bienestar Social\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(91, '1456333298', 'El caso \"Denuncia conflicto interpersonal\" con el ID: 78 perteneciente al proceso \"Bienestar Social\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Juan Manuel Correal', '2026-03-17 13:05:32'),
+(92, '1656966633', 'El caso \"Solicitud programa bienestar\" con el ID: 79 perteneciente al proceso \"Bienestar Social\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Marleny Gaviria', '2026-03-17 13:05:32'),
+(93, '1756664828', 'El caso \"Derecho petición beneficios\" con el ID: 80 perteneciente al proceso \"Bienestar Social\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Zack Lopez', '2026-03-17 13:05:32'),
+(94, '1020304050', 'El caso \"Solicitud acompañamiento\" con el ID: 81 perteneciente al proceso \"Bienestar Social\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(95, '1456333298', 'El caso \"Denuncia acoso laboral\" con el ID: 82 perteneciente al proceso \"Bienestar Social\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Juan Manuel Correal', '2026-03-17 13:05:32'),
+(96, '1656966633', 'El caso \"Solicitud actividad deportiva\" con el ID: 83 perteneciente al proceso \"Bienestar Social\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Marleny Gaviria', '2026-03-17 13:05:32'),
+(97, '1756664828', 'El caso \"Derecho petición subsidios\" con el ID: 84 perteneciente al proceso \"Bienestar Social\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Zack Lopez', '2026-03-17 13:05:32'),
+(98, '1020304050', 'El caso \"Solicitud soporte sistema\" con el ID: 85 perteneciente al proceso \"SSEMI\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(99, '1456333298', 'El caso \"Derecho petición tecnológica\" con el ID: 86 perteneciente al proceso \"SSEMI\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Juan Manuel Correal', '2026-03-17 13:05:32'),
+(100, '1656966633', 'El caso \"Solicitud actualización usuario\" con el ID: 87 perteneciente al proceso \"SSEMI\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Marleny Gaviria', '2026-03-17 13:05:32'),
+(101, '1756664828', 'El caso \"Denuncia fallas plataforma\" con el ID: 88 perteneciente al proceso \"SSEMI\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Zack Lopez', '2026-03-17 13:05:32'),
+(102, '1020304050', 'El caso \"Solicitud dotación uniforme\" con el ID: 89 perteneciente al proceso \"Ropa de Trabajo\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(103, '1456333298', 'El caso \"Derecho petición dotación\" con el ID: 90 perteneciente al proceso \"Ropa de Trabajo\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Juan Manuel Correal', '2026-03-17 13:05:32'),
+(104, '1656966633', 'El caso \"Solicitud reposición botas\" con el ID: 91 perteneciente al proceso \"Ropa de Trabajo\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Marleny Gaviria', '2026-03-17 13:05:32'),
+(105, '1756664828', 'El caso \"Solicitud información incentivos\" con el ID: 92 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Zack Lopez', '2026-03-17 13:05:32'),
+(106, '1020304050', 'El caso \"Derecho petición convocatoria\" con el ID: 93 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
+(107, '1456333298', 'El caso \"Solicitud inscripción incentivos\" con el ID: 94 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Juan Manuel Correal', '2026-03-17 13:05:32'),
+(108, '1456333298', 'El caso \"Demora en atención médica ocupacional\" con el ID: 58 perteneciente al proceso \"SSEMI\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Juan Manuel Correal', '2026-03-17 14:06:50');
 
 -- --------------------------------------------------------
 
@@ -1452,7 +1590,22 @@ INSERT INTO `seguimiento` (`id_seguimiento`, `fecha_seguimiento`, `observacion`,
 (14, '2026-03-16 15:24:02', 'NO SE 2', '1487569254', 48),
 (15, '2026-03-16 15:25:47', '3', '1487569254', 48),
 (16, '2026-03-16 16:07:29', 'TEXT', '1487569254', 48),
-(17, '2026-03-16 16:30:33', 'KORY CARRERA', '1487569254', 48);
+(17, '2026-03-16 16:30:33', 'KORY CARRERA', '1487569254', 48),
+(18, '2026-03-17 14:06:50', 'SEGUIMIENTO PRUEBA 2', '1456333298', 58);
+
+--
+-- Disparadores `seguimiento`
+--
+DELIMITER $$
+CREATE TRIGGER `tr_actualizar_ultimo_seguimiento` AFTER INSERT ON `seguimiento` FOR EACH ROW BEGIN
+    UPDATE caso 
+    SET 
+        id_seguimiento = NEW.id_seguimiento,
+        fecha_ultimo_seguimiento = NEW.fecha_seguimiento
+    WHERE id_caso = NEW.id_caso;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1493,11 +1646,7 @@ CREATE TABLE `token_usuario` (
 --
 
 INSERT INTO `token_usuario` (`id`, `documento`, `token`, `fecha_creacion`) VALUES
-(6, '1487569254', '4f0da5', '2026-03-16 14:51:20'),
-(7, '1487569254', '5a151d', '2026-03-16 14:54:29'),
-(8, '1487569254', '90abe4', '2026-03-16 14:56:14'),
-(9, '1487569254', '3dce01', '2026-03-16 14:57:08'),
-(10, '1487569254', 'f6f931', '2026-03-16 14:59:22');
+(14, '1487569254', 'bd75e3', '2026-03-17 14:04:47');
 
 -- --------------------------------------------------------
 
@@ -1514,6 +1663,8 @@ CREATE TABLE `usuario` (
   `id_rol` int(11) NOT NULL COMMENT 'FK para relacionar rol del usario con la tabla rol',
   `contraseña` varchar(255) NOT NULL COMMENT 'Contraseña del usuario para su ingreso ',
   `fecha_registro` datetime NOT NULL DEFAULT current_timestamp() COMMENT 'fecha del dia que se registró el usuario',
+  `fecha_caducidad` datetime DEFAULT NULL,
+  `vigencia_usuario` varchar(20) DEFAULT NULL,
   `ultimo_inicio_sesion` datetime DEFAULT NULL,
   `id_estado` tinyint(1) NOT NULL DEFAULT 1,
   `2FA` int(1) NOT NULL DEFAULT 0,
@@ -1524,12 +1675,13 @@ CREATE TABLE `usuario` (
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
-('1020304050', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$GLchohxxzqrGdqUzrdhkx.W6EDHdax489rqyZskrPiNbNkzdBbjNm', '2026-02-12 14:18:58', '2026-03-12 12:54:28', 1, 0, NULL),
-('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2026-03-15 22:54:54', 1, 0, NULL),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-03-16 14:59:22', 1, 1, NULL),
-('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-03-02 15:52:20', 1, 0, NULL),
-('1756664828', 'Zack', 'Lopez', 'isaacmanuelcavajal1356@gmail.com', '3001234567', 2, '$2y$10$ddgxYzealY0ADRBf3t/0NO/ZNWCaJ/aaIXUaAvIJUFIzw9hABitkW', '2026-02-12 14:20:29', '2026-03-12 12:55:03', 1, 0, NULL);
+INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `fecha_caducidad`, `vigencia_usuario`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
+('1020304050', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$GLchohxxzqrGdqUzrdhkx.W6EDHdax489rqyZskrPiNbNkzdBbjNm', '2026-02-12 14:18:58', '2028-02-12 14:18:58', '2026-2028', '2026-03-12 12:54:28', 1, 0, NULL),
+('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2028-02-12 14:22:31', '2026-2028', '2026-03-17 14:05:37', 1, 0, NULL),
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-03-17 15:26:07', 1, 1, '418b83f16c24c9f6d766'),
+('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2028-02-12 14:28:54', '2026-2028', '2026-03-02 15:52:20', 1, 0, NULL),
+('1756664828', 'Zack', 'Lopez', 'isaacmanuelcavajal1356@gmail.com', '3001234567', 2, '$2y$10$ddgxYzealY0ADRBf3t/0NO/ZNWCaJ/aaIXUaAvIJUFIzw9hABitkW', '2026-02-12 14:20:29', '2028-02-12 14:20:29', '2026-2028', '2026-03-12 12:55:03', 1, 1, NULL),
+('2030405060', 'Isaac', 'Carvajal', 'isaaccarvajal1356@gmail.com', '3001231231', 1, '$2y$10$ohYytsObuQCUjiQgbrdaPO2tY4xQBFUJezPFlvQ/8/khk.iUP8FAG', '2026-03-17 15:44:33', '2028-03-17 15:44:33', '2026-2028', NULL, 1, 0, NULL);
 
 --
 -- Disparadores `usuario`
@@ -1542,7 +1694,7 @@ CREATE TRIGGER `tr_noti_reg_usuario` AFTER INSERT ON `usuario` FOR EACH ROW BEGI
         CONCAT(
             'Nuevo registro: El usuario ', NEW.nombre, ' ', NEW.apellido, 
             ' con el documento: ', NEW.documento, ') se ha unido con el rol de "', r.nombre_rol, 
-            '". Fecha de registro: ', NEW.fecha_registro, '.'
+            '". Fecha de registro: ', NEW.fecha_registro, '. Vigencia: ', NEW.vigencia_usuario, '.'
         ),
         NOW()
     FROM usuario u_admin
@@ -1572,7 +1724,8 @@ ALTER TABLE `caso`
   ADD KEY `documento` (`documento`),
   ADD KEY `id_estado` (`id_estado`),
   ADD KEY `id_tipo_caso` (`id_tipo_caso`),
-  ADD KEY `id_proceso` (`id_proceso`);
+  ADD KEY `id_proceso` (`id_proceso`),
+  ADD KEY `fk_id_ultimo_seguimiento` (`id_seguimiento`);
 
 --
 -- Indices de la tabla `configuracionusuario`
@@ -1708,13 +1861,13 @@ ALTER TABLE `monitoreo`
 -- AUTO_INCREMENT de la tabla `noti_administrador`
 --
 ALTER TABLE `noti_administrador`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_comisionado`
 --
 ALTER TABLE `noti_comisionado`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=61;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=109;
 
 --
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
@@ -1732,7 +1885,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `seguimiento`
 --
 ALTER TABLE `seguimiento`
-  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=18;
+  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_caso`
@@ -1744,7 +1897,7 @@ ALTER TABLE `tipo_caso`
 -- AUTO_INCREMENT de la tabla `token_usuario`
 --
 ALTER TABLE `token_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Restricciones para tablas volcadas
@@ -1763,6 +1916,7 @@ ALTER TABLE `caso`
   ADD CONSTRAINT `caso_ibfk_1` FOREIGN KEY (`documento`) REFERENCES `usuario` (`documento`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `caso_ibfk_2` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id_estado`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `caso_ibfk_3` FOREIGN KEY (`id_tipo_caso`) REFERENCES `tipo_caso` (`id_tipo_caso`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_id_ultimo_seguimiento` FOREIGN KEY (`id_seguimiento`) REFERENCES `seguimiento` (`id_seguimiento`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `id_proceso` FOREIGN KEY (`id_proceso`) REFERENCES `procesoorganizacional` (`id_proceso`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
@@ -1824,11 +1978,20 @@ DELIMITER $$
 --
 -- Eventos
 --
-CREATE EVENT `ev_caso_caducado` ON SCHEDULE EVERY 1 DAY STARTS '2026-02-26 15:49:18' ON COMPLETION PRESERVE ENABLE COMMENT 'Marca como no atendido los casos con mas de 2 meses' DO BEGIN
-UPDATE caso
-   SET id_estado = 3
-   WHERE fecha_inicio <= NOW() - INTERVAL 2 MONTH
-   AND id_estado <> 3;
+CREATE EVENT `ev_caso_caducado` ON SCHEDULE EVERY 1 DAY STARTS '2026-03-17 23:00:00' ON COMPLETION PRESERVE ENABLE DO BEGIN
+    UPDATE caso
+    SET id_estado = 3
+    WHERE 
+        -- Prioriza la fecha del seguimiento, si no existe usa la de creación
+        COALESCE(fecha_ultimo_seguimiento, fecha_inicio) <= NOW() - INTERVAL 2 MONTH
+        AND id_estado <> 3;
+END$$
+
+CREATE EVENT `ev_caducar_usuarios_vencidos` ON SCHEDULE EVERY 1 DAY STARTS '2026-03-18 00:00:00' ON COMPLETION PRESERVE ENABLE DO BEGIN
+UPDATE usuario
+SET id_estado = 0
+WHERE fecha_caducidad <= NOW()
+AND id_estado = 1;
 END$$
 
 DELIMITER ;
