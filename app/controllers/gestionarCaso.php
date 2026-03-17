@@ -2,10 +2,8 @@
 header('Content-Type: application/json');
 session_start();
 
-require_once __DIR__ . "/../models/getData.php";
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/updateData.php";
-require_once __DIR__ . "/../models/insertData.php";
+require_once __DIR__ . "/../models/casosModel.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['status' => 'error', 'mensaje' => 'Método no permitido']);
@@ -13,74 +11,45 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
-    $idCaso = $_POST['idCaso'] ?? null;
-    $idEstado = $_POST['idEstado'] ?? null;
-    $observacion = $_POST['observacion'] ?? '';
-    $documento =  $_SESSION['user']['documento'] ?? null;
+    $model = new CasosModel($pdo);
+    
+    // Captura de datos generales
+    $documentoUser = $_SESSION['user']['documento'] ?? null;
+    $idCaso        = $_POST['idCaso'] ?? null;
+    $motivo        = $_POST['motivo'] ?? '';
+    $seguimiento   = $_POST['observacion'] ?? '';
+    
+    // Captura de datos específicos
+    $documentonew  = $_POST['documento_nuevo'] ?? null;
+    $nuevoEstado   = $_POST['idEstado'] ?? null;
 
-    if (!$idCaso) {
-        echo json_encode(['status' => 'error', 'mensaje' => 'Faltan datos obligatorios']);
-        exit;
-    }
+    // LÓGICA DE DECISIÓN
+    // Si el documento nuevo tiene contenido, reasignamos.
+    if (!empty($documentonew)) {
+        
+        $model->reasignarCaso($documentoUser, $documentonew, $idCaso, $motivo);
+        echo json_encode(['status' => 'ok', 'mensaje' => '¡El caso ha sido reasignado exitosamente!']);
 
-    $validarCaso = traerCaso($pdo, $idCaso);
+    } 
+    // Si no hay documento nuevo, pero sí hay un nuevo estado, actualizamos.
+    elseif ($nuevoEstado) {
+        
+        $model->cambiarEstadoCaso($nuevoEstado, $documentoUser, $idCaso);
+        echo json_encode(['status' => 'ok', 'mensaje' => '¡Estado actualizado con éxito!']);
 
-    if(!$validarCaso){
-        echo json_encode(['status' => 'error', 'mensaje' => 'El caso no existe']);
-        exit;
-    }
-
-    if ($validarCaso['data']['documento'] !== $documento) {
+    } 
+    else {
+        // Si llega aquí, es porque $_POST['documento_nuevo'] y $_POST['nuevo_estado'] están vacíos o no existen.
         echo json_encode([
             'status' => 'error', 
-            'mensaje' => 'No tienes permiso de cambiar este caso, no eres el responsable asignado'
+            'mensaje' => 'No se pudo determinar la acción. Revisa que los nombres de los campos en el HTML sean correctos.'
         ]);
-        exit;
     }
 
-    // Iniciar transacción si el motor lo soporta para asegurar consistencia
-    $pdo->beginTransaction();
-
-    if ($idEstado) {
-        // 1. Actualizar el estado del caso
-        $validarEstado = validarEstado($pdo, $idCaso);
-
-        if($validarEstado == '3'){
-            echo json_encode(['status' => 'error', 'mensaje' => 'Solo el administrador puede cambiar el estado de un caso No atendido']);
-        exit;
-        }
-
-        $actualizado = actualizarEstadoCaso($pdo, $idCaso, $idEstado, $documento);
-
-        if (!$actualizado) {
-            $pdo->rollBack();
-            echo json_encode(['status' => 'error', 'mensaje' => 'Error al actualizar el estado del caso']);
-            exit;
-        }
-    }
-    // 2. Registrar el seguimiento si hay observación
-    if (!empty(trim($observacion))) {
-        $seguimiento = registrarSeguimiento($pdo, $observacion, $idCaso, $documento);
-        if (!$seguimiento) {
-            $pdo->rollBack();
-            echo json_encode(['status' => 'error', 'mensaje' => 'Error al registrar el seguimiento']);
-            exit;
-        }
-    }
-
-    $pdo->commit();
-
-    echo json_encode([
-        'status' => 'ok',
-        'mensaje' => 'Caso gestionado exitosamente'
-    ]);
-} catch (Exception $e) {
-    if ($pdo->inTransaction()) {
-        $pdo->rollBack();
-    }
-    error_log("Error en gestionarCaso.php: " . $e->getMessage());
+} catch(Exception $e) {
+    // IMPORTANTE: Devolvemos el JSON con el error real del modelo (permisos, estados, etc)
     echo json_encode([
         'status' => 'error',
-        'mensaje' => 'Error del servidor: ' . $e->getMessage()
+        'mensaje' => $e->getMessage()
     ]);
 }
