@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 16-03-2026 a las 00:03:38
+-- Tiempo de generación: 16-03-2026 a las 16:32:12
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -654,6 +654,52 @@ CREATE PROCEDURE `sp_reactivar_proceso` (IN `p_id_proceso` INT)   BEGIN
     WHERE id_proceso = p_id_proceso;
 END$$
 
+CREATE PROCEDURE `sp_reasignar_caso` (IN `p_documento` VARCHAR(20), IN `p_documento_nuevo` VARCHAR(20), IN `p_id_caso` INT, IN `p_descripcion` TEXT, IN `p_documento_viejo` VARCHAR(20))   BEGIN
+    DECLARE v_nombre_usuario VARCHAR(200);
+    DECLARE v_nombre_caso VARCHAR(200);
+    DECLARE v_nombre_viejo varchar(200);
+
+    START TRANSACTION;
+
+    SELECT CONCAT(nombre, ' ', apellido) INTO v_nombre_usuario 
+    FROM usuario WHERE documento = p_documento_nuevo;
+    
+    SELECT nombre INTO v_nombre_caso 
+    FROM caso WHERE id_caso = p_id_caso;
+    
+    SELECT nombre INTO v_nombre_viejo
+    FROM usuario WHERE documento = p_documento_viejo;
+
+    UPDATE caso 
+    SET documento = p_documento_nuevo 
+    WHERE id_caso = p_id_caso;
+
+    INSERT INTO monitoreo(documento, fecha, tipo, descripcion) 
+    VALUES(p_documento, NOW(), 2, p_descripcion);
+
+    INSERT INTO seguimiento(observacion, documento, id_caso) 
+    VALUES(p_descripcion, p_documento, p_id_caso);
+
+    INSERT INTO noti_comisionado(documento, mensaje, fecha) 
+    VALUES(
+        p_documento_nuevo, 
+        CONCAT('SE TE HA ASIGNADO UN CASO: Estimado Comisionado "', v_nombre_usuario, 
+               '", se te ha asignado un caso con el nombre: "', v_nombre_caso, '" con la id ', p_id_caso), 
+        NOW()
+    );
+    
+    INSERT INTO noti_comisionado(documento, mensaje, fecha)
+    VALUES(
+    	p_documento_viejo,
+        CONCAT('UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado "', v_nombre_viejo, 
+               '", uno de tus casos con el nombre ', v_nombre_caso,' y la id ', p_id_caso,
+		' se le ha asignado al comisonado: "',
+		v_nombre_usuario), 
+        NOW()
+    );
+    COMMIT;
+END$$
+
 CREATE PROCEDURE `sp_registrar_caso` (IN `p_documento` VARCHAR(20), IN `p_id_proceso` INT, IN `p_id_tipo_caso` INT, IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(255))   BEGIN
 DECLARE v_id_caso INT;
     
@@ -946,7 +992,7 @@ CREATE TABLE `caso` (
 --
 
 INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_proceso`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
-(48, 'Reporte de accidente laboral en oficina administrativa', '1756664828', 14, '2026-02-10 14:59:17', NULL, 1, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
+(48, 'Reporte de accidente laboral en oficina administrativa', '1020304050', 14, '2026-02-10 14:59:17', NULL, 1, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
 (49, 'Derecho de petición – Estado de incentivo institucional', '1656966633', 13, '2026-02-02 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
 (50, 'Posible trato desigual en asignación de incentivos', '1020304050', 13, '2026-02-09 12:49:15', NULL, 1, 1, 'El funcionario manifiesta inconformidad debido a que considera que los criterios de evaluación no se aplicaron de manera equitativa en su área, afectando la asignación de incentivos.'),
 (51, 'Incumplimiento en entrega de dotación operativa', '1456333298', 12, '2026-02-23 12:50:03', NULL, 2, 1, 'Se informa que el personal del área operativa no ha recibido la dotación correspondiente al periodo vigente, lo que afecta el cumplimiento seguro de sus funciones.'),
@@ -1168,6 +1214,17 @@ CREATE TABLE `monitoreo` (
   `descripcion` text NOT NULL COMMENT 'Descripcion del monitoreo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `monitoreo`
+--
+
+INSERT INTO `monitoreo` (`id_monitoreo`, `documento`, `fecha`, `tipo`, `descripcion`) VALUES
+(1, '1756664828', '2026-03-16 15:23:19', 'inicio_sesion', 'NO SE'),
+(2, '1487569254', '2026-03-16 15:24:02', 'inicio_sesion', 'NO SE 2'),
+(3, '1487569254', '2026-03-16 15:25:47', 'accion', '3'),
+(4, '1487569254', '2026-03-16 16:07:29', 'accion', 'TEXT'),
+(5, '1487569254', '2026-03-16 16:30:33', 'accion', 'KORY CARRERA');
+
 -- --------------------------------------------------------
 
 --
@@ -1236,7 +1293,12 @@ INSERT INTO `noti_administrador` (`id_notificacion`, `documento`, `mensaje`, `fe
 (48, '1487569254', 'AVISO: El caso \"Reporte de accidente laboral en oficina administrativa\" CON LA ID: 48 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Zack Lopez', '2026-03-12 16:04:59'),
 (49, '1487569254', 'AVISO: El caso \"Derecho de petición – Estado de incentivo institucional\" CON LA ID: 49 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Marleny Gaviria', '2026-03-12 16:05:09'),
 (50, '1487569254', 'AVISO: El caso \"Reporte de accidente laboral en oficina administrativa\" CON LA ID: 48 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Zack Lopez', '2026-03-12 16:08:25'),
-(51, '1487569254', 'AVISO: El caso \"Derecho de petición – Estado de incentivo institucional\" CON LA ID: 49 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Marleny Gaviria', '2026-03-12 16:08:31');
+(51, '1487569254', 'AVISO: El caso \"Derecho de petición – Estado de incentivo institucional\" CON LA ID: 49 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Marleny Gaviria', '2026-03-12 16:08:31'),
+(52, '1487569254', 'AVISO: El caso \"Reporte de accidente laboral en oficina administrativa\" CON LA ID: 48 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Kory Carrerita', '2026-03-16 15:23:19'),
+(53, '1487569254', 'AVISO: El caso \"Reporte de accidente laboral en oficina administrativa\" CON LA ID: 48 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-16 15:24:02'),
+(54, '1487569254', 'AVISO: El caso \"Reporte de accidente laboral en oficina administrativa\" CON LA ID: 48 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-16 15:25:47'),
+(55, '1487569254', 'AVISO: El caso \"Reporte de accidente laboral en oficina administrativa\" CON LA ID: 48 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Zack Lopez', '2026-03-16 16:07:29'),
+(56, '1487569254', 'AVISO: El caso \"Reporte de accidente laboral en oficina administrativa\" CON LA ID: 48 cambió deL estado \"Atendido\" a \"Atendido\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-03-16 16:30:33');
 
 -- --------------------------------------------------------
 
@@ -1306,7 +1368,15 @@ INSERT INTO `noti_comisionado` (`id_notificacion`, `documento`, `mensaje`, `fech
 (49, '1756664828', 'El caso \"Reporte de accidente laboral en oficina administrativa\" con el ID: 48 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Zack Lopez', '2026-03-12 16:04:59'),
 (50, '1656966633', 'El caso \"Derecho de petición – Estado de incentivo institucional\" con el ID: 49 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Marleny Gaviria', '2026-03-12 16:05:09'),
 (51, '1756664828', 'El caso \"Reporte de accidente laboral en oficina administrativa\" con el ID: 48 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Zack Lopez', '2026-03-12 16:08:25'),
-(52, '1656966633', 'El caso \"Derecho de petición – Estado de incentivo institucional\" con el ID: 49 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Marleny Gaviria', '2026-03-12 16:08:31');
+(52, '1656966633', 'El caso \"Derecho de petición – Estado de incentivo institucional\" con el ID: 49 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Marleny Gaviria', '2026-03-12 16:08:31'),
+(53, '1487569254', 'El caso \"Reporte de accidente laboral en oficina administrativa\" con el ID: 48 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Kory Carrerita', '2026-03-16 15:23:19'),
+(54, '1020304050', 'El caso \"Reporte de accidente laboral en oficina administrativa\" con el ID: 48 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-16 15:24:02'),
+(55, '1456333298', 'El caso \"Reporte de accidente laboral en oficina administrativa\" con el ID: 48 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Juan Manuel Correal', '2026-03-16 15:25:47'),
+(56, '1756664828', 'El caso \"Reporte de accidente laboral en oficina administrativa\" con el ID: 48 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Zack Lopez', '2026-03-16 16:07:29'),
+(57, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Reporte de accidente laboral en oficina administrativa\" con la id la ID 48', '2026-03-16 16:07:29'),
+(58, '1020304050', 'El caso \"Reporte de accidente laboral en oficina administrativa\" con el ID: 48 perteneciente al proceso \"SST\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-16 16:30:33'),
+(59, '1020304050', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Simon Gonzalez Pelaez\", se te ha asignado un caso con el nombre: \"Reporte de accidente laboral en oficina administrativa\" con la id 48', '2026-03-16 16:30:33'),
+(60, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Reporte de accidente laboral en oficina administrativa y la id 48 se le ha asignado al comisonado: \"Simon Gonzalez Pelaez', '2026-03-16 16:30:33');
 
 -- --------------------------------------------------------
 
@@ -1377,7 +1447,12 @@ INSERT INTO `seguimiento` (`id_seguimiento`, `fecha_seguimiento`, `observacion`,
 (9, '2026-02-23 14:03:02', 'Seguimiento del caso', '1020304050', 85),
 (10, '2026-02-23 14:03:26', 'Seguimiento del caso', '1020304050', 92),
 (11, '2026-02-23 14:03:53', 'Seguimiento del caso', '1020304050', 93),
-(12, '2026-03-12 15:04:24', 'XD', '1456333298', 58);
+(12, '2026-03-12 15:04:24', 'XD', '1456333298', 58),
+(13, '2026-03-16 15:23:19', 'NO SE', '1756664828', 48),
+(14, '2026-03-16 15:24:02', 'NO SE 2', '1487569254', 48),
+(15, '2026-03-16 15:25:47', '3', '1487569254', 48),
+(16, '2026-03-16 16:07:29', 'TEXT', '1487569254', 48),
+(17, '2026-03-16 16:30:33', 'KORY CARRERA', '1487569254', 48);
 
 -- --------------------------------------------------------
 
@@ -1413,6 +1488,17 @@ CREATE TABLE `token_usuario` (
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `token_usuario`
+--
+
+INSERT INTO `token_usuario` (`id`, `documento`, `token`, `fecha_creacion`) VALUES
+(6, '1487569254', '4f0da5', '2026-03-16 14:51:20'),
+(7, '1487569254', '5a151d', '2026-03-16 14:54:29'),
+(8, '1487569254', '90abe4', '2026-03-16 14:56:14'),
+(9, '1487569254', '3dce01', '2026-03-16 14:57:08'),
+(10, '1487569254', 'f6f931', '2026-03-16 14:59:22');
+
 -- --------------------------------------------------------
 
 --
@@ -1441,7 +1527,7 @@ CREATE TABLE `usuario` (
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
 ('1020304050', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$GLchohxxzqrGdqUzrdhkx.W6EDHdax489rqyZskrPiNbNkzdBbjNm', '2026-02-12 14:18:58', '2026-03-12 12:54:28', 1, 0, NULL),
 ('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2026-03-15 22:54:54', 1, 0, NULL),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-03-15 23:53:32', 1, 0, NULL),
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2026-03-16 14:59:22', 1, 1, NULL),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2026-03-02 15:52:20', 1, 0, NULL),
 ('1756664828', 'Zack', 'Lopez', 'isaacmanuelcavajal1356@gmail.com', '3001234567', 2, '$2y$10$ddgxYzealY0ADRBf3t/0NO/ZNWCaJ/aaIXUaAvIJUFIzw9hABitkW', '2026-02-12 14:20:29', '2026-03-12 12:55:03', 1, 0, NULL);
 
@@ -1616,19 +1702,19 @@ ALTER TABLE `informe`
 -- AUTO_INCREMENT de la tabla `monitoreo`
 --
 ALTER TABLE `monitoreo`
-  MODIFY `id_monitoreo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria para reconocimiento y relacion';
+  MODIFY `id_monitoreo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria para reconocimiento y relacion', AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_administrador`
 --
 ALTER TABLE `noti_administrador`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_comisionado`
 --
 ALTER TABLE `noti_comisionado`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=53;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
@@ -1646,7 +1732,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `seguimiento`
 --
 ALTER TABLE `seguimiento`
-  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=13;
+  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_caso`
@@ -1658,7 +1744,7 @@ ALTER TABLE `tipo_caso`
 -- AUTO_INCREMENT de la tabla `token_usuario`
 --
 ALTER TABLE `token_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Restricciones para tablas volcadas
