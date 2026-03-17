@@ -29,6 +29,7 @@ $router->map('POST', '/editarUsuario', '/controllers/editarUsuario.php');
 $router->map('POST', '/cambiarEstadoUsuario', '/controllers/cambiarEstadoUsuario.php');
 $router->map('POST', '/gestionarCaso', '/controllers/gestionarCaso.php');
 $router->map('POST', '/ConfiUsuario', '/controllers/configuracionUsuario.php');
+$router->map('POST', '/auth2FA', '/controllers/2FA.php');
 
 //GET
 

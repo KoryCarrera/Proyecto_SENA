@@ -10,7 +10,7 @@ otpInputs.forEach((input, index) => {
 
     // Solo permite números y avanza al siguiente campo
     input.addEventListener('input', (e) => {
-        const val = e.target.value.replace(/\D/g, '');
+        const val = e.target.value.replace(/[^A-Za-z0-9]/g, '');
         e.target.value = val ? val[0] : '';
         e.target.classList.toggle('filled', !!val);
         if (val && index < otpInputs.length - 1) otpInputs[index + 1].focus();
@@ -30,7 +30,7 @@ otpInputs.forEach((input, index) => {
     // Pegar código completo distribuye en los 6 campos
     input.addEventListener('paste', (e) => {
         e.preventDefault();
-        const paste = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+        const paste = e.clipboardData.getData('text').replace(/[^A-Za-z0-9]/g, '').slice(0, 6);
         paste.split('').forEach((char, i) => {
             if (otpInputs[i]) {
                 otpInputs[i].value = char;
@@ -110,16 +110,15 @@ const btnVerificar = document.getElementById('btnVerificar');
 
 btnVerificar.addEventListener('click', function (e) {
 
-    const data = { 'codigo': codigoHidden.value }
-
+    const formData = new FormData();
+    formData.append('codigo', codigoHidden.value);
     // Prevenir recarga de pagina al enviar
     e.preventDefault();
 
     // Enviar codigo al archivo de autentificacion
     fetch('/auth2FA', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(datos),
+        body: formData,
     })
         .then(res => res.json())
         .then(data => {
