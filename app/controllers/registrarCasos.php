@@ -4,10 +4,10 @@ header('Content-Type: application/json');
 session_start();
 
 require_once __DIR__ . "/../config/conexion.php";
+require_once __DIR__ . "/../models/casosModel.php";
 require_once __DIR__ . "/../models/insertData.php";
 require_once __DIR__ . "/../models/fileManager.php";
 require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . "/../models/insertData.php";
 
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -19,6 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
+
+    $modelCaso = new CasosModel($pdo);
+
     // Captura de datos
     $nombreCaso = $_POST["nombreCaso"] ?? null;
     $proceso = $_POST["proceso"] ?? null;
@@ -62,8 +65,7 @@ try {
     }
 
     // Registrar el caso
-    $registrar = registrarCasos(
-        $pdo,
+    $registrar = $modelCaso->registrarCaso(
         $_SESSION['user']['documento'],
         $proceso,
         $tipoCaso,
@@ -82,19 +84,21 @@ try {
 
     $idCaso = $registrar['data']['id_caso'];
 
-    // Procesar archivos (si existen)
+    // Procesar archivos
     if (isset($_FILES['archivos']) && !empty($_FILES['archivos']['name'][0])) {
-        
-        $resultadoArchivos = procesarArchivos($pdo, $idCaso, $_FILES['archivos']);
-        
-        if (!$resultadoArchivos['success']) {
-            error_log("Error al subir archivos para caso #{$idCaso}: " . $resultadoArchivos['mensaje']);
+        try {
+            $fileManager = new FileManager($pdo);
+            $fileManager->guardarArchivosCaso($idCaso, $_FILES['archivos']);
+        } catch (Exception $e) {
+            // Si fallan los archivos, el caso ya se creó, así que solo avisamos por log
+            error_log("Error subiendo archivos: " . $e->getMessage());
         }
     }
+    echo json_encode(['success' => true, 'mensaje' => 'Caso registrado correctamente']);
 
-     $asunto = "Nuevo Caso Registrado - #{$idCaso}: {$nombreCaso}";
+    $asunto = "Nuevo Caso Registrado - #{$idCaso}: {$nombreCaso}";
 
-      $cuerpoHTML = "
+    $cuerpoHTML = "
     <html>
     <head>
         <style>
@@ -146,32 +150,32 @@ try {
                 </table>
             </div>";
 
-             if (isset($resultadoArchivos['success']) && $resultadoArchivos['success']) {
+    if (isset($resultadoArchivos['success']) && $resultadoArchivos['success']) {
         $cuerpoHTML .= "
             <p style='margin-top: 20px; color: #28a745;'> Archivos subidos exitosamente</p>";
     }
 
-      $cuerpoHTML .= "
+    $cuerpoHTML .= "
             <p style='margin-top: 20px;'>Este es un mensaje automático, por favor no responder.</p>
         </div>
     </body>
     </html>";
 
     $cuerpoAlt = "NUEVO CASO REGISTRADO\n" .
-                 "=====================\n\n" .
-                 "ID del Caso: {$idCaso}\n" .
-                 "Nombre: {$nombreCaso}\n" .
-                 "Proceso: {$proceso}\n" .
-                 "Tipo: {$tipoCaso}\n" .
-                 "Descripción: {$descripcion}\n" .
-                 "Usuario: {$_SESSION['user']['username']}\n" .
-                 "Fecha: " . date('d/m/Y H:i:s') . "\n\n" .
-                 "Este es un mensaje automático.";
+        "=====================\n\n" .
+        "ID del Caso: {$idCaso}\n" .
+        "Nombre: {$nombreCaso}\n" .
+        "Proceso: {$proceso}\n" .
+        "Tipo: {$tipoCaso}\n" .
+        "Descripción: {$descripcion}\n" .
+        "Usuario: {$_SESSION['user']['username']}\n" .
+        "Fecha: " . date('d/m/Y H:i:s') . "\n\n" .
+        "Este es un mensaje automático.";
 
 
-     $destinatarios = [
+    $destinatarios = [
         [
-            'emailUser' => 'kory.carrera.dev@gmail.com', 
+            'emailUser' => 'kory.carrera.dev@gmail.com',
             'userName' => 'Administrador'
         ]
     ];
@@ -184,15 +188,15 @@ try {
     }
 
     $correoEnviado = enviarCorreo(
-        $asunto,                    
-        $cuerpoHTML,              
-        $cuerpoAlt,              
-        $destinatarios,         
-        null,                        
-        null                         
+        $asunto,
+        $cuerpoHTML,
+        $cuerpoAlt,
+        $destinatarios,
+        null,
+        null
     );
 
-      if ($correoEnviado) {
+    if ($correoEnviado) {
         error_log(" Correo enviado para caso #{$idCaso}");
     } else {
         error_log(" No se pudo enviar correo para caso #{$idCaso}");
@@ -201,10 +205,9 @@ try {
     // Respuesta exitosa
     echo json_encode([
         'status' => 'ok',
-        'mensaje' => 'Caso registrado exitosamente' . 
-                    ($correoEnviado ? ' y notificación enviada' : '')
-    ]); 
-
+        'mensaje' => 'Caso registrado exitosamente' .
+            ($correoEnviado ? ' y notificación enviada' : '')
+    ]);
 } catch (Exception $e) {
     error_log("Error en registrarCasos.php: " . $e->getMessage());
     echo json_encode([

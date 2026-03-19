@@ -69,7 +69,7 @@ class CasosModel extends baseHelper {
             };
 
             if ($findNewComi['id_rol'] != 2) {
-                throw new Exception('¡Solo se puede reasignar casos a usuarios con el rol de administrador');
+                throw new Exception('¡Solo se puede reasignar casos a usuarios con el rol de comisionado!');
             }
 
             if (!$findUser){
@@ -105,4 +105,27 @@ class CasosModel extends baseHelper {
         }
     }
 
+    public function registrarCaso($documento, $proceso, $tipoCaso, $descripcion, $nombre){
+
+        try{    
+            $data = [
+                [ 'value' => $documento, 'type' => PDO::PARAM_STR ],
+                [ 'value' => $proceso, 'type' => PDO::PARAM_INT ],
+                [ 'value' => $tipoCaso, 'type' => PDO::PARAM_INT ],
+                [ 'value' => $descripcion, 'type' => PDO::PARAM_STR ],
+                [ 'value' => $nombre, 'type' => PDO::PARAM_STR ]
+            ];
+
+            $casoRegistrado = parent::consultSimpleWithParams('sp_registrar_caso(?, ?, ?, ?, ?)', $data);
+
+            if(!$casoRegistrado){
+                throw new Exception('No se pudo obtener la confirmación del registro desde la base de datos.');
+            }
+            return ['success' => true, 'data' => $casoRegistrado];
+        } catch(Exception $e) {
+            error_log('Ha ocurrido un error al registrar caso: '. $e->getMessage());
+            throw new Exception($e->getMessage());
+    }
+
+    }
 }
