@@ -146,86 +146,79 @@
             <div class="flex items-center justify-between p-2 mb-6 min-w-full">
               <h2 class="text-3xl font-bold text-white mb-4" id="tituloEstadisticas">Estadísticas</h2>
 
-              <div class="rounded">
-                <select id="selectEstadisticas"
-                  class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                  <option selected disabled class="bg-slate-900">Mostrar por...</option>
-                  <option class="bg-slate-900" value="propios">Propios</option>
-                  <option class="bg-slate-900" value="generales">Generales</option>
-                </select>
-              </div>
+
             </div>
 
             <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
-              <!-- Tarjeta Total -->
+              <!--targetas de contenido de solicitudes-->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
-                <i class="bi bi-collection-fill text-indigo-400 text-xl mb-2"></i>
-                <h2 id="total" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Total</p>
+                <i class="b/i bi-collection-fill text-indigo-400 text-xl mb-2"></i>
+                <h2 id="total" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Total</p>
               </div>
 
               <!-- Denuncias -->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-megaphone-fill text-red-400 text-xl mb-2"></i>
-                <h2 id="denuncia" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Denuncias</p>
+                <h2 id="denuncia" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Denuncias</p>
               </div>
 
               <!-- Solicitudes -->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-envelope-paper-fill text-amber-400 text-xl mb-2"></i>
-                <h2 id="solicitud" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Solicitudes</p>
+                <h2 id="solicitud" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Solicitudes</p>
               </div>
 
               <!-- Peticiones -->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-file-text-fill text-blue-400 text-xl mb-2"></i>
-                <h2 id="peticion" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Peticiones</p>
+                <h2 id="peticion" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Peticiones</p>
               </div>
 
               <!-- Tutelas -->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-shield-lock-fill text-cyan-400 text-xl mb-2"></i>
-                <h2 id="tutela" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Tutelas</p>
+                <h2 id="tutela" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Tutelas</p>
               </div>
 
               <!-- Atendidos -->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-check-circle-fill text-emerald-400 text-xl mb-2"></i>
-                <h2 id="atendido" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Atendidos</p>
+                <h2 id="atendido" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Atendidos</p>
               </div>
 
               <!-- Por Atender -->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-clock-history text-rose-400 text-xl mb-2"></i>
-                <h2 id="porAtender" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Por Atender</p>
+                <h2 id="porAtender" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Por Atender</p>
               </div>
 
               <!-- No Atendidos -->
               <div
                 class="glass-card p-4 flex flex-col items-center justify-center border border-white/10 hover:bg-white/5 transition-all">
                 <i class="bi bi-x-circle-fill text-red-500 text-xl mb-2"></i>
-                <h2 id="noAtendidos" class="text-2xl font-bold text-white"></h2>
-                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">No Atendidos</p>
+                <h2 id="noAtendidos" class="text-4xl font-bold text-white"></h2>
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">No Atendidos</p>
               </div>
             </section>
           </div>
 
           <div class="rounded  w-full m-2 items-center my-6 flex justify-start items-center">
             <select id="selectGraficas"
-              class="glass-sidebar appearance-none border border-white/10 rounded-lg px-6 py-2 text-lg text-white cursor-pointer outline-none hover:bg-white/5 transition-colors
+              class="glass-sidebar appearance-none rounded-lg px-6 py-2 text-base text-white cursor-pointer outline-none hover:bg-white/5 transition-colors
               bg-indigo-600 ">
               <option selected disabled class="bg-slate-900">Filtrar por...</option>
               <option class="bg-slate-900" value="semana">esta semana</option>
@@ -235,7 +228,7 @@
           </div>
 
           <!-- Chart 3 (Full Width) -->
-          <div class="glass-card p-6 col-span-1 lg:col-span-2 flex flex-col items-center justify-center h-96 mb-8">
+          <div class="glass-card p-6 col-span-1 lg:col-span-3 flex flex-col items-center justify-center h-96 mb-8">
             <div class="flex items-center justify-between w-full mb-4">
               <h3 id="tituloLineas" class="text-3xl font-bold text-white mb-4">
               </h3>
@@ -249,10 +242,10 @@
           <!-- Grid para los dos gráficos inferiores -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <!-- Chart 1 (Polar) -->
-            <div class="glass-card p-6 flex flex-col items-center justify-center h-96">
+            <div class="glass-card p-6 flex flex-col items-center justify-center h-96 text-right w-full ">
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
                 <h3 id="tituloPolar" class="text-3xl font-bold text-white mb-4"></h3>
-                <p id="contextoPolar" class="text-slate-300 max-w-3xl leading-relaxed"></p>
+                <p id="contextoPolar" class="text-white max-w-3xl leading-relaxed"></p>
               </div>
               <div class="relative w-full flex-1 min-h-0 flex items-center justify-center">
                 <canvas id="polarChart"></canvas>
@@ -260,7 +253,7 @@
             </div>
 
             <!-- Chart 2 (Pie) po-->
-            <div class="glass-card p-6 flex flex-col items-center justify-center h-96">
+            <div class="glass-card p-6 flex flex-col items-center justify-center h-96 ">
               <div class="flex items-center justify-between p-2 m-2 min-w-full">
                 <h3 id="titulobar" class="text-3xl font-bold text-white mb-4"></h3>
 
