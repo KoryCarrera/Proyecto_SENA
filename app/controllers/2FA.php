@@ -52,12 +52,12 @@ try {
     if ($findToken['token'] == $codigo) {
 
         $dataUser = [
-            ['value' => $_SESSION['user']['documento'], 'type' => PDO::PARAM_STR]
+            ['value' => $documento, 'type' => PDO::PARAM_STR]
         ];
 
         $_SESSION['user']['verify'] = true;
 
-        $helper->generarCookie($_SESSION['user']['documento'], $_SESSION['user']['verify']);
+        $helper->generarCookie($documento, $_SESSION['user']['verify']);
 
         $helper->insertOrUpdateData('sp_eliminar_token_2fa(?)', $dataUser);
 
