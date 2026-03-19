@@ -157,6 +157,8 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Apellido</th>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Correo</th>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Estado</th>
+                      <th scope="col" class="px-6 py-4 font-medium tracking-wider">Ultimo Inicio</th>
+                      <th scope="col" class="px-6 py-4 font-medium tracking-wider">Vigencia</th>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Rol</th>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider text-right">Gestionar</th>
                     </tr>

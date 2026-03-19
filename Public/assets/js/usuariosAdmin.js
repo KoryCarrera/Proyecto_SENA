@@ -102,6 +102,8 @@ const renderizarTablaUsuarios = (usuarios, cuerpoTabla) => { //definimos la func
                 <td>${usuario.apellido}</td>
                 <td>${usuario.email}</td>
                 <td>${estadoUsuario}</td>
+                <td>${usuario.ultimo_inicio_sesion}</td>
+                <td>${usuario.vigencia_usuario}</td>
                 <td>${rolUsuario}</td>
                 <td>
                     <button class="btn-table bg-blue-600 hover:bg-blue-500 px-3 py-2 rounded-lg text-white" onclick="gestionarUsuario('${usuario.documento}')">
