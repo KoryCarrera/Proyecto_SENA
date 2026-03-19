@@ -1,508 +1,215 @@
 <?php
-//Debug
-/*ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-*/
-
-//Cargamos la session
+// Cargamos la session
 session_start();
 
-//Llamar al archivo necesario para dompdf y otros archivos necesarios para obtener datos
+// Llamar al archivo necesario para dompdf y otros archivos necesarios para obtener datos
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/insertData.php";
 require_once __DIR__ . "/../models/getData.php";
 
-//referenciar dompdf
+// referenciar dompdf
 use Dompdf\Dompdf;
+use Dompdf\Options;
 
-//Recibimos los datos del front
-
+// Verificamos si la petición es POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    //Llamamos las funciones necesarias
-    $estados = casosPorEstado($pdo);
-    $casosListados = listarCasos($pdo);
-    $datosInforme = registrarInforme($pdo, $_SESSION['user']['documento'], 'PDF', 'Reporte Casos');
+    // Llamamos a la función de listar procesos (asegúrate de que esté en getData.php)
+    $resProcesos = listarProcesos($pdo);
+    
+    // Registramos el informe en la bitácora
+    $datosInforme = registrarInforme($pdo, $_SESSION['user']['documento'], 'PDF', 'Reporte Procesos');
 
-    //Validamos el retorno datos de todas las funciones
-    if ($estados && $casosListados && $datosInforme) {
+    // Validamos que tengamos la lista de procesos y el registro del informe
+    if ($resProcesos && $resProcesos['status'] === 'ok' && $datosInforme) {
 
-        //Se buscara el indice donde estan los estados para luego usar ese indice pra mostrar el total  por estado
-        $indiceAtendidos = array_search('Atendido', $estados['estado']);
-        $indicePorAtender = array_search('Por atender', $estados['estado']);
-        $indiceNoAtendido = array_search('No atendido', $estados['estado']);
+        $listaCompleta = $resProcesos['data'];
+        $totalProcesos = count($listaCompleta);
+        $totalActivos = 0;
+        $totalInactivos = 0;
 
-        //Se limita unicamente a los ultimos 10 casos para reutilizar el sp de listar casos con limit 30
-        $casosListados['data'] = array_slice($casosListados['data'], 0, 10);
-
-        //Se valida si los indices devolvieron el indice esperado
-        if ($indiceAtendidos !== false && $indicePorAtender !== false && $indiceNoAtendido !== false) {
-
-            //Usamos el indice encontrado para encontrar el total del estado
-            $totalAtendidos = $estados['casos'][$indiceAtendidos];
-            $totalPorAtender = $estados['casos'][$indicePorAtender];
-            $totalNoAtendido = $estados['casos'][$indiceNoAtendido];
-        } else {
-            $totalAtendidos = 0;
-            $totalPorAtender = 0;
-            $totalNoAtendido = 0;
+        foreach ($listaCompleta as $proceso) {
+            // Conteo por Estado (1: Activo, 0: Inactivo)
+            if ($proceso['estado'] == 1) {
+                $totalActivos++;
+            } else {
+                $totalInactivos++;
+            }
         }
 
-        //Conseguimos el porcentaje de la cantidad de casos por cada tipo de estado en relacion al total
-        if ($totalAtendidos > 0 && $estados['total'] > 0) {
-            $porcentajeAtendidos = number_format((($totalAtendidos / $estados['total']) * 100), 1);
-        } else {
-            $porcentajeAtendidos = 0;
-        }
+        // Calculamos porcentajes
+        $porcentajeActivos = ($totalProcesos > 0) ? number_format((($totalActivos / $totalProcesos) * 100), 1) : 0;
+        $porcentajeInactivos = ($totalProcesos > 0) ? number_format((($totalInactivos / $totalProcesos) * 100), 1) : 0;
 
-        if ($totalPorAtender > 0 && $estados['total'] > 0) {
-            $porcentajePorAtender = number_format((($totalPorAtender / $estados['total']) * 100), 1);
-        } else {
-            $porcentajePorAtender = 0;
-        }
+        // Limitamos la tabla para el PDF a los últimos registros para evitar desbordamiento si es muy larga
+        // O puedes quitar el slice si prefieres que salgan todos (Dompdf creará nuevas páginas)
+        $dataParaTabla = $listaCompleta; 
 
-        if ($totalNoAtendido > 0 && $estados['total'] > 0) {
-            $porcentajeNoAtendidos = number_format((($totalNoAtendido / $estados['total']) * 100), 1);
-        } else {
-            $porcentajeNoAtendidos = 0;
-        }
-
-        //Convertimos la imagen a base64 para mejor entendimiento de la misma por DOMPDF
+        // Convertimos el logo a base64
         $logoPath = __DIR__ . '/../../Public/assets/img/logo_sena.png';
-
+        $logoSrc = '';
         if (file_exists($logoPath)) {
             $logoData = base64_encode(file_get_contents($logoPath));
             $logoSrc = 'data:image/png;base64,' . $logoData;
-        } else {
-            // Si no encuentra el logo, usar el placeholder
-            $logoSrc = '';
         }
-        //Usamos las funciones reservadas de ob para obtener el html y almacenarlo en una variable
+        
+        // Iniciamos el buffer de salida
         ob_start();
 ?>
         <!DOCTYPE html>
         <html lang='es'>
-
         <head>
             <meta charset='UTF-8'>
-            <title>Reporte de PQRSD</title>
+            <title>Reporte de Procesos Organizacionales</title>
             <style>
-                @page {
-                    margin: 2cm 1.5cm;
-                    size: A4;
-                }
-
-                * {
-                    margin: 0;
-                    padding: 0;
-                    box-sizing: border-box;
-                }
-
-                body {
-                    font-family: Arial, Helvetica, sans-serif;
-                    font-size: 10pt;
-                    color: #333;
-                    line-height: 1.5;
-                    padding: 1cm;
-                }
-
-                /* --- CABECERA --- */
-                .header {
-                    width: 100%;
-                    border-bottom: 3px solid #2c3e50;
-                    padding-bottom: 15px;
-                    margin-bottom: 25px;
-                }
-
-                .header-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                }
-
-                .logo-cell {
-                    width: 20%;
-                    vertical-align: top;
-                }
-
-                .company-info-cell {
-                    width: 80%;
-                    text-align: right;
-                    vertical-align: top;
-                }
-
-                .company-name {
-                    font-size: 16pt;
-                    font-weight: bold;
-                    color: #2c3e50;
-                    margin-bottom: 8px;
-                }
-
-                .company-details {
-                    font-size: 8.5pt;
-                    color: #666;
-                    line-height: 1.6;
-                }
-
-                /* --- TITULO Y INFO --- */
-                .report-title {
-                    text-align: center;
-                    background-color: #2c3e50;
-                    color: white;
-                    padding: 15px 10px;
-                    margin: 25px 0;
-                    font-size: 14pt;
-                    font-weight: bold;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
-                }
-
-                .report-info {
-                    width: 100%;
-                    margin-bottom: 25px;
-                    border: 1px solid #ddd;
-                }
-
-                .info-row {
-                    width: 100%;
-                    border-bottom: 1px solid #eee;
-                }
-
-                .info-label {
-                    width: 30%;
-                    float: left;
-                    background-color: #f8f9fa;
-                    padding: 10px 15px;
-                    font-weight: bold;
-                    color: #2c3e50;
-                    border-right: 1px solid #ddd;
-                }
-
-                .info-value {
-                    width: 70%;
-                    float: left;
-                    padding: 10px 15px;
-                }
-
-                /* --- SOLUCIÓN PARA LAS CAJAS (ESTADÍSTICAS) --- */
-                /* Usamos tablas para garantizar estructura en DOMPDF */
-                .stats-table {
-                    width: 100%;
-                    border-collapse: separate;
-                    border-spacing: 0 15px;
-                    /* Espacio vertical entre filas */
-                    margin-bottom: 30px;
-                }
-
-                .stat-box-td {
-                    width: 48%;
-                    /* Ancho fijo para las cajas */
-                    border: 2px solid #2c3e50;
-                    padding: 15px 10px;
-                    text-align: center;
-                    background-color: white;
-                    vertical-align: middle;
-                }
-
-                .stat-gap-td {
-                    width: 4%;
-                    /* El espacio exacto en el medio */
-                    background-color: transparent;
-                    border: none;
-                }
-
-                .stat-number {
-                    font-size: 26pt;
-                    font-weight: bold;
-                    color: #2c3e50;
-                    margin-bottom: 5px;
-                    line-height: 1;
-                    display: block;
-                }
-
-                .stat-label {
-                    font-size: 9pt;
-                    color: #666;
-                    text-transform: uppercase;
-                    font-weight: bold;
-                    line-height: 1.3;
-                    display: block;
-                }
-
-                /* --- ESTILOS GENERALES --- */
-                .clear {
-                    clear: both;
-                }
-
-                .section-title {
-                    background-color: #34495e;
-                    color: white;
-                    padding: 12px 15px;
-                    margin-top: 30px;
-                    margin-bottom: 18px;
-                    font-size: 12pt;
-                    font-weight: bold;
-                }
-
-                .content-box {
-                    border: 1px solid #ddd;
-                    padding: 18px;
-                    background-color: #fafafa;
-                    margin-bottom: 25px;
-                    text-align: justify;
-                    line-height: 1.7;
-                }
-
-                /* --- TABLA DE DATOS --- */
-                .data-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin-bottom: 25px;
-                }
-
-                .data-table th {
-                    background-color: #2c3e50;
-                    color: white;
-                    padding: 12px 8px;
-                    text-align: left;
-                    font-weight: bold;
-                    border: 1px solid #2c3e50;
-                    font-size: 9.5pt;
-                }
-
-                .data-table td {
-                    padding: 10px 8px;
-                    border: 1px solid #ddd;
-                    background-color: white;
-                    font-size: 9pt;
-                    vertical-align: middle;
-                }
-
-                .data-table tr:nth-child(even) td {
-                    background-color: #f8f9fa;
-                }
-
-                /* --- BADGES --- */
-                .status-badge {
-                    padding: 5px 8px;
-                    border-radius: 3px;
-                    font-size: 8pt;
-                    font-weight: bold;
-                    display: inline-block;
-                    text-align: center;
-                }
-
-                .status-pendiente {
-                    background-color: #fff3cd;
-                    color: #856404;
-                    border: 1px solid #ffeaa7;
-                }
-
-                .status-proceso {
-                    background-color: #d1ecf1;
-                    color: #0c5460;
-                    border: 1px solid #bee5eb;
-                }
-
-                .status-resuelto {
-                    background-color: #d4edda;
-                    color: #155724;
-                    border: 1px solid #c3e6cb;
-                }
-
-                .observation-box {
-                    border-left: 4px solid #2c3e50;
-                    background-color: #f8f9fa;
-                    padding: 15px 18px;
-                    margin: 15px 0;
-                    line-height: 1.6;
-                }
-
-                /* --- FIRMAS --- */
-                .signature-table {
-                    width: 100%;
-                    margin-top: 80px;
-                    border-collapse: collapse;
-                }
-
-                .sig-cell {
-                    width: 45%;
-                    text-align: center;
-                    vertical-align: top;
-                }
-
-                .sig-gap {
-                    width: 10%;
-                }
-
-                .signature-line {
-                    border-top: 2px solid #333;
-                    margin-top: 10px;
-                    padding-top: 10px;
-                    font-weight: bold;
-                    font-size: 10pt;
-                }
-
-                .signature-role {
-                    font-size: 9pt;
-                    color: #666;
-                    margin-top: 5px;
-                }
+                @page { margin: 2cm 1.5cm; size: A4; }
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: Arial, sans-serif; font-size: 10pt; color: #333; line-height: 1.5; padding: 1cm; }
+                .header { width: 100%; border-bottom: 3px solid #39A900; padding-bottom: 15px; margin-bottom: 25px; }
+                .header-table { width: 100%; border-collapse: collapse; }
+                .logo-cell { width: 70px; }
+                .company-info-cell { text-align: right; vertical-align: top; }
+                .company-name { font-size: 16pt; font-weight: bold; color: #39A900; }
+                .report-title { text-align: center; background-color: #2c3e50; color: white; padding: 15px; margin: 20px 0; font-weight: bold; text-transform: uppercase; }
+                .report-info { width: 100%; margin-bottom: 20px; border: 1px solid #ddd; }
+                .info-row { border-bottom: 1px solid #eee; clear: both; overflow: hidden; }
+                .info-label { width: 30%; float: left; background-color: #f8f9fa; padding: 8px; font-weight: bold; border-right: 1px solid #ddd; }
+                .info-value { width: 65%; float: left; padding: 8px; }
+                .stats-table { width: 100%; border-collapse: separate; border-spacing: 10px; margin-bottom: 20px; }
+                .stat-box { border: 2px solid #2c3e50; padding: 15px; text-align: center; }
+                .stat-number { font-size: 20pt; font-weight: bold; color: #2c3e50; display: block; }
+                .stat-label { font-size: 8pt; color: #666; text-transform: uppercase; font-weight: bold; }
+                .section-title { background-color: #34495e; color: white; padding: 10px; margin: 20px 0 10px 0; font-weight: bold; }
+                .content-box { border: 1px solid #ddd; padding: 15px; background-color: #fafafa; text-align: justify; }
+                .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                .data-table th { background-color: #2c3e50; color: white; padding: 10px; text-align: left; font-size: 9pt; }
+                .data-table td { padding: 8px; border: 1px solid #ddd; font-size: 8.5pt; }
+                .signature-table { width: 100%; margin-top: 50px; }
+                .sig-cell { width: 45%; text-align: center; }
+                .signature-line { border-top: 2px solid #333; margin-top: 40px; padding-top: 5px; font-weight: bold; }
+                .status-active { color: #28a745; font-weight: bold; }
+                .status-inactive { color: #dc3545; font-weight: bold; }
             </style>
         </head>
-
         <body>
             <div class='header'>
                 <table class='header-table'>
                     <tr>
                         <td class='logo-cell'>
-                            <div style='width: 70px; height: 70px; background-color: #2c3e50; color: white; text-align: center; line-height: 70px; font-size: 20pt; font-weight: bold;'>
-                                <img width='70px' height="70px" src='<?php echo $logoSrc; ?>' alt='No encontré esa chimbada'>
-                            </div>
+                            <?php if($logoSrc): ?>
+                                <img width='70' height="70" src='<?php echo $logoSrc; ?>' alt='Logo'>
+                            <?php endif; ?>
                         </td>
                         <td class='company-info-cell'>
                             <div class='company-name'>SENA</div>
-                            <div class='company-details'>
-                                Email: <?php echo $_SESSION['user']['email']; ?>
-                            </div>
+                            <div class='company-details'>Sistema de Gestión de Procesos</div>
+                            <div class='company-details'>Responsable: <?php echo $_SESSION['user']['email']; ?></div>
                         </td>
                     </tr>
                 </table>
             </div>
 
-            <div class='report-title'>
-                Reporte de Casos
-            </div>
+            <div class='report-title'>Reporte General de Procesos</div>
 
             <div class='report-info'>
                 <div class='info-row'>
-                    <div class='info-label'>Fecha de Generación:</div>
+                    <div class='info-label'>Fecha de Emisión:</div>
                     <div class='info-value'><?php echo $datosInforme['fecha_registro']; ?></div>
-                    <div class='clear'></div>
                 </div>
                 <div class='info-row'>
-                    <div class='info-label'>Responsable:</div>
-                    <div class='info-value'><?php echo $_SESSION['user']['username']; ?></div>
-                    <div class='clear'></div>
+                    <div class='info-label'>Generado por:</div>
+                    <div class='info-value'><?php echo $_SESSION['user']['username']; ?> (<?php echo $_SESSION['user']['documento']; ?>)</div>
                 </div>
                 <div class='info-row'>
                     <div class='info-label'>Código de Reporte:</div>
-                    <div class='info-value'><?php echo $datosInforme['id_generado'] ?></div>
-                    <div class='clear'></div>
+                    <div class='info-value'><?php echo $datosInforme['id_generado']; ?></div>
                 </div>
             </div>
 
             <table class='stats-table'>
                 <tr>
-                    <td class='stat-box-td'>
-                        <span class='stat-number'><?php echo $estados['total']; ?></span>
-                        <span class='stat-label'>Total de Casos</span>
+                    <td class='stat-box'>
+                        <span class='stat-number'><?php echo $totalProcesos; ?></span>
+                        <span class='stat-label'>Total de Procesos</span>
                     </td>
-                    <td class='stat-gap-td'>&nbsp;</td>
-                    <td class='stat-box-td'>
-                        <span class='stat-number'><?php echo $totalAtendidos ?></span>
-                        <span class='stat-label'>Casos Atendidos</span>
+                    <td class='stat-box'>
+                        <span class='stat-number' style="color: #28a745;"><?php echo $totalActivos; ?></span>
+                        <span class='stat-label'>Activos (<?php echo $porcentajeActivos; ?>%)</span>
                     </td>
-                </tr>
-                <tr style='height: 15px;'>
-                    <td colspan='3'></td>
-                </tr>
-                <tr>
-                    <td class='stat-box-td'>
-                        <span class='stat-number'><?php echo $totalPorAtender ?></span>
-                        <span class='stat-label'>Por atender</span>
-                    </td>
-                    <td class='stat-gap-td'>&nbsp;</td>
-                    <td class='stat-box-td'>
-                        <span class='stat-number'><?php echo $totalNoAtendido ?></span>
-                        <span class='stat-label'>No Atendidos</span>
+                    <td class='stat-box'>
+                        <span class='stat-number' style="color: #dc3545;"><?php echo $totalInactivos; ?></span>
+                        <span class='stat-label'>Inactivos (<?php echo $porcentajeInactivos; ?>%)</span>
                     </td>
                 </tr>
             </table>
-            <br>
+
             <div class='section-title'>1. RESUMEN EJECUTIVO</div>
-            <br>
             <div class='content-box'>
-                Durante el ciclo analizado, se registró un volumen global de <strong><?php echo $estados['total']; ?></strong> casos de PQRSD en el transcurso del año <strong><?php echo date('Y'); ?></strong>.
-                De este total, el <strong><?php echo $porcentajeAtendidos; ?>%</strong> corresponde a solicitudes que ya han sido <strong>atendidas</strong> formalmente.
-                Por otro lado, se identifica que un <strong><?php echo $porcentajePorAtender; ?>%</strong> de los casos se encuentra actualmente en estado <strong>por atender</strong>,
-                mientras que el <strong><?php echo $porcentajeNoAtendidos; ?>%</strong> restante se clasifica bajo el estatus de <strong>no atendido</strong> en relación con el consolidado general.
+                A la fecha del reporte, se encuentran registrados un total de <strong><?php echo $totalProcesos; ?></strong> procesos dentro del sistema. 
+                El análisis de disponibilidad indica que el <strong><?php echo $porcentajeActivos; ?>%</strong> de los procesos operativos se encuentran en estado 
+                <strong>ACTIVO</strong>, mientras que un <strong><?php echo $porcentajeInactivos; ?>%</strong> permanecen inactivos o suspendidos.
             </div>
-            <br>
-            <br>
-            <br>
-            <br>
-            <div class='section-title'>2. Ultimos 10 Casos Registrados En El Transcurso Del Año</div>
+
+            <div class='section-title'>2. DETALLE DE PROCESOS REGISTRADOS</div>
             <table class='data-table'>
                 <thead>
                     <tr>
-                        <th style='width: 13%;'>ID</th>
-                        <th style='width: 15%;'>Fecha De Registro</th>
-                        <th style='width: 25%;'>Tipo</th>
-                        <th style='width: 14%;'>Fecha respuesta</th>
-                        <th style='width: 18%;'>Estado</th>
-                        <th style='width: 15%;'>Encargado</th>
+                        <th style="width: 10%;">ID</th>
+                        <th style="width: 25%;">Nombre del Proceso</th>
+                        <th style="width: 40%;">Descripción</th>
+                        <th style="width: 15%;">Fecha Creación</th>
+                        <th style="width: 10%;">Estado</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-
-                    foreach ($casosListados['data'] as $temp) {
-                        echo "
+                    <?php foreach ($dataParaTabla as $proceso): ?>
                     <tr>
-                        <td>" . $temp['id_caso'] . "</td>
-                        <td>" . $temp['fecha_inicio'] . "</td>
-                        <td>" . $temp['tipo_caso'] . "</td>
-                        <td>" . $temp['fecha_cierre'] . "</td>
-                        <td><span class='status-badge status-proceso'>" . $temp['estado'] . "</span></td>
-                        <td>" . $temp['comisionado'] . "</td>
+                        <td><?php echo htmlspecialchars($proceso['id_proceso']); ?></td>
+                        <td><strong><?php echo htmlspecialchars($proceso['nombre']); ?></strong></td>
+                        <td><?php echo htmlspecialchars($proceso['descripcion']); ?></td>
+                        <td><?php echo date('d/m/Y', strtotime($proceso['fecha_creacion'])); ?></td>
+                        <td class="<?php echo ($proceso['estado'] == 1) ? 'status-active' : 'status-inactive'; ?>">
+                            <?php echo ($proceso['estado'] == 1) ? 'ACTIVO' : 'INACTIVO'; ?>
+                        </td>
                     </tr>
-                        ";
-                    }
-
-                    ?>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
 
             <table class='signature-table'>
                 <tr>
                     <td class='sig-cell'>
-                        <div class='signature-line'>Firma del Responsable</div>
-                        <div class='signature-role'><?php echo $_SESSION['user']['username']; ?></div>
+                        <div class='signature-line'>Firma Responsable</div>
+                        <div><?php echo $_SESSION['user']['username']; ?></div>
                     </td>
-                    <td class='sig-gap'>&nbsp;</td>
+                    <td style="width: 10%;"></td>
                     <td class='sig-cell'>
-                        <div class='signature-line'>Firma del Supervisor</div>
+                        <div class='signature-line'>Sello de Oficina</div>
+                        <div>Área de Gestión Organizacional</div>
                     </td>
                 </tr>
             </table>
         </body>
-
         </html>
-
 <?php
         $html = ob_get_clean();
 
-        //Inicializamos y usamos la clase de Dompdf
-        $dompdf = new Dompdf();
-
-        //Usamos la variable html previamente generada
+        // Configuración de Dompdf
+        $options = new Options();
+        $options->set('isRemoteEnabled', true); // Útil si cargas imágenes externas
+        
+        $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);
-
-        //Configuramos la orientacion y tamaño
         $dompdf->setPaper('A4', 'portrait');
-
-        //Renderizamos el pdf
         $dompdf->render();
 
-
-        //Enviamos el pdf al navegador para descargarlo o abrirlo en otra pagina
-        $dompdf->stream("Reporte_Confidencial_SENA.pdf", ['Attachment' => false]);
+        // Limpiar buffer y enviar PDF
+        if (ob_get_length()) ob_end_clean();
+        $dompdf->stream("Reporte_Procesos_SENA.pdf", ["Attachment" => true]);
         exit;
+    } else {
+        http_response_code(500);
+        echo "Error: No se pudieron obtener los datos de los procesos o registrar el informe.";
     }
 }
-
-//manejo de error http
-http_response_code(500);
-echo "Error al generar el reporte";
