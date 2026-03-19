@@ -1191,3 +1191,31 @@ function conteoPorUsuario($pdo, $documento)
         return false;
     }
 }
+
+function listarProcesos($pdo)
+{
+    // Usamos una consulta simple ya que es para un reporte general
+    $stmt = $pdo->prepare("SELECT id_proceso, nombre, descripcion, fecha_creacion, documento_usuario, estado FROM procesoorganizacional ORDER BY id_proceso DESC");
+
+    try {
+        $stmt->execute();
+        $procesos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        
+        if ($procesos) {
+            return [
+                'status' => 'ok',
+                'data' => $procesos
+            ];
+        } else {
+            // Si la tabla está vacía
+            return [
+                'status' => 'error',
+                'mensaje' => 'No hay procesos registrados'
+            ];
+        }
+    } catch (PDOException $e) {
+        error_log('Error al obtener los procesos: ' . $e->getMessage());
+        return null;
+    }
+}

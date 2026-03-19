@@ -21,7 +21,7 @@ $router->map('POST', '/modalUsuario', 'controllers/modalUsuario.php');
 $router->map('POST', '/modalProceso', 'controllers/modalProceso.php');
 $router->map('POST', '/CasosPDF', 'controllers/reporteCasosPDF.php');
 $router->map('POST', '/UsuariosPDF', 'controllers/reporteUsuariosPDF.php');
-$router->map('POST', '/procesosPDF', 'controllers/reporteProcesosPDF.php');
+$router->map('POST', '/ProcesosPDF', 'controllers/reporteProcesosPDF.php');
 $router->map('POST', '/desactivarProceso', 'controllers/desactivarProceso.php');
 $router->map('POST', '/reactivarProceso', 'controllers/reactivarProceso.php');
 $router->map('POST', '/generarExcel', 'controllers/reporteExcel.php');
