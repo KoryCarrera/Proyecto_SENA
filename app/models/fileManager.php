@@ -1,156 +1,70 @@
 <?php
 
-/**
- * Procesa y guarda múltiples archivos adjuntos a un caso
- * 
- * @param PDO $pdo Conexión a la base de datos
- * @param int $idCaso ID del caso al que pertenecen los archivos
- * @param array $archivos Array $_FILES['archivos']
- * @return array ['success' => bool, 'mensaje' => string, 'archivos' => array]
- */
-function procesarArchivos($pdo, $idCaso, $archivos)
-{
-    // Directorio base para uploads
-    $directorioBase = __DIR__ . '/../../uploads/casos/';
+require_once __DIR__ . '/baseHelper.php';
+
+class FileManager extends BaseHelper {
     
-    // Crear estructura de directorios por año/mes
-    $anio = date('Y');
-    $mes = date('m');
-    $directorioDestino = $directorioBase . $anio . '/' . $mes . '/';
-    
-    // Crear directorios si no existen
-    if (!file_exists($directorioDestino)) {
-        if (!mkdir($directorioDestino, 0755, true)) {
-            return [
-                'success' => false,
-                'mensaje' => 'No se pudo crear el directorio de destino',
-                'archivos' => []
-            ];
-        }
-    }
-    
-    // Configuración
-    $maxArchivos = 3;
-    $maxTamano = 10 * 1024 * 1024; // 10MB
-    $extensionesPermitidas = [
-        // Imágenes
-        'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg',
-        // Videos
-        'mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv',
-        // Documentos
-        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'csv'
+    private $maxArchivos = 3;
+    private $maxTamano = 10485760; // 10MB
+    private $extensionesPermitidas = [
+        'jpg', 'jpeg', 'png', 'webp', 'mp4', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt'
     ];
-    
-    $cantidadArchivos = count($archivos['name']);
-    
-    // Validar cantidad
-    if ($cantidadArchivos > $maxArchivos) {
-        return [
-            'success' => false,
-            'mensaje' => "Máximo {$maxArchivos} archivos permitidos",
-            'archivos' => []
-        ];
-    }
-    
-    $archivosGuardados = [];
-    $errores = [];
-    
-    // Procesar cada archivo
-    for ($i = 0; $i < $cantidadArchivos; $i++) {
-        
-        // Saltar si hay error en el archivo
-        if ($archivos['error'][$i] !== UPLOAD_ERR_OK) {
-            $errores[] = "Error al subir {$archivos['name'][$i]}";
-            continue;
+
+    public function guardarArchivosCaso($idCaso, $archivos) {
+        // 1. Validar cantidad
+        $cantidad = count($archivos['name']);
+        if ($cantidad > $this->maxArchivos) {
+            throw new Exception("Máximo {$this->maxArchivos} archivos permitidos.");
         }
+
+        // 2. Definir ruta: uploads/casos/caso#12/
+        $directorioDestino = __DIR__ . "/../uploads/casos/caso#{$idCaso}/";
         
-        $nombreOriginal = $archivos['name'][$i];
-        $tamano = $archivos['size'][$i];
-        $tmpName = $archivos['tmp_name'][$i];
-        $tipoMime = $archivos['type'][$i];
-        
-        // Validar tamaño
-        if ($tamano > $maxTamano) {
-            $errores[] = "{$nombreOriginal} supera el tamaño máximo de 10MB";
-            continue;
+        if (!file_exists($directorioDestino)) {
+            mkdir($directorioDestino, 0755, true);
         }
-        
-        // Obtener extensión
-        $extension = strtolower(pathinfo($nombreOriginal, PATHINFO_EXTENSION));
-        
-        // Validar extensión
-        if (!in_array($extension, $extensionesPermitidas)) {
-            $errores[] = "{$nombreOriginal} tiene una extensión no permitida";
-            continue;
-        }
-        
-        // Generar nombre único para evitar colisiones
-        $nombreUnico = 'caso_' . $idCaso . '_' . uniqid() . '.' . $extension;
-        $rutaCompleta = $directorioDestino . $nombreUnico;
-        
-        // Mover archivo
-        if (move_uploaded_file($tmpName, $rutaCompleta)) {
+
+        $resultados = [];
+
+        for ($i = 0; $i < $cantidad; $i++) {
+            if ($archivos['error'][$i] !== UPLOAD_ERR_OK) continue;
+
+            $nombreOriginal = $archivos['name'][$i];
+            $extension = strtolower(pathinfo($nombreOriginal, PATHINFO_EXTENSION));
             
-            // Ruta relativa para guardar en BD (sin __DIR__)
-            $rutaBD = '/uploads/casos/' . $anio . '/' . $mes . '/' . $nombreUnico;
-            
-            // Determinar tipo de archivo
-            $tipoArchivo = 'documento'; // Por defecto
-            if (strpos($tipoMime, 'image/') === 0) {
-                $tipoArchivo = 'imagen';
-            } elseif (strpos($tipoMime, 'video/') === 0) {
-                $tipoArchivo = 'video';
-            }
-            
-            // Guardar en base de datos
-            try {
-                $stmt = $pdo->prepare("
-                    INSERT INTO archivos (id_caso, nombre_archivo, ruta, tipo_archivo, fecha_subida)
-                    VALUES (?, ?, ?, ?, NOW())
-                ");
+            // Validaciones básicas
+            if ($archivos['size'][$i] > $this->maxTamano) throw new Exception("Archivo $nombreOriginal muy pesado.");
+            if (!in_array($extension, $this->extensionesPermitidas)) throw new Exception("Formato de $nombreOriginal no permitido.");
+
+            // Nombre único y rutas
+            $nombreUnico = "archivo_" . uniqid() . "." . $extension;
+            $rutaFisica = $directorioDestino . $nombreUnico;
+            $rutaBD = "uploads/casos/caso#{$idCaso}/" . $nombreUnico;
+
+            // Mover archivo
+            if (move_uploaded_file($archivos['tmp_name'][$i], $rutaFisica)) {
                 
-                $stmt->execute([
-                    $idCaso,
-                    $nombreOriginal,
-                    $rutaBD,
-                    $tipoArchivo
-                ]);
+                // 3. Guardar en BD (Sin SP por ahora, usamos SQL directo vía BaseHelper)
+                $sql = "sp_insertar_archivo_caso";
+                $tipo = $this->determinarTipo($archivos['type'][$i]);
                 
-                $archivosGuardados[] = [
-                    'nombre' => $nombreOriginal,
-                    'ruta' => $rutaBD,
-                    'tipo' => $tipoArchivo
+                $data = [
+                    ['value' => $idCaso, 'type' => PDO::PARAM_INT],
+                    ['value' => $nombreOriginal, 'type' => PDO::PARAM_STR],
+                    ['value' => $rutaBD, 'type' => PDO::PARAM_STR],
+                    ['value' => $tipo, 'type' => PDO::PARAM_STR]
                 ];
-                
-            } catch (PDOException $e) {
-                error_log("Error al guardar archivo en BD: " . $e->getMessage());
-                $errores[] = "Error al registrar {$nombreOriginal} en la base de datos";
-                
-                // Eliminar archivo físico si falla la BD
-                if (file_exists($rutaCompleta)) {
-                    unlink($rutaCompleta);
-                }
+
+                $this->insertOrUpdateData($sql, $data);
+                $resultados[] = $nombreOriginal;
             }
-            
-        } else {
-            $errores[] = "Error al mover {$nombreOriginal} al servidor";
         }
+        return $resultados;
     }
-    
-    // Resultado final
-    if (count($archivosGuardados) > 0) {
-        return [
-            'success' => true,
-            'mensaje' => count($archivosGuardados) . ' archivo(s) guardado(s) correctamente',
-            'archivos' => $archivosGuardados,
-            'errores' => $errores
-        ];
-    } else {
-        return [
-            'success' => false,
-            'mensaje' => 'No se pudo guardar ningún archivo',
-            'archivos' => [],
-            'errores' => $errores
-        ];
+
+    private function determinarTipo($mime) {
+        if (strpos($mime, 'image/') === 0) return 'imagen';
+        if (strpos($mime, 'video/') === 0) return 'video';
+        return 'documento';
     }
 }

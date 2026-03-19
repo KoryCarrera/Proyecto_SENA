@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 17-03-2026 a las 16:19:04
+-- Tiempo de generación: 19-03-2026 a las 16:16:21
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -501,6 +501,11 @@ CREATE PROCEDURE `sp_guardar_cookie` (IN `p_documento` VARCHAR(20), IN `p_cookie
 
 CREATE PROCEDURE `sp_guardar_token_2fa` (IN `p_documento` VARCHAR(20), IN `p_token` VARCHAR(10))   INSERT INTO token_usuario(documento, token) VALUES(p_documento, p_token)$$
 
+CREATE PROCEDURE `sp_insertar_archivo_caso` (IN `p_id_caso` INT, IN `p_nombre_archivo` VARCHAR(255), IN `p_ruta` VARCHAR(255), IN `p_tipo_archivo` VARCHAR(50))   BEGIN
+INSERT INTO archivo (id_caso, nombre_archivo, ruta, tipo_archivo, fecha_subida)
+VALUES (p_id_caso, p_nombre_archivo, p_ruta, p_tipo_archivo, NOW());
+END$$
+
 CREATE PROCEDURE `sp_listar_casos` ()   BEGIN
 	SELECT 
 			c.id_caso,
@@ -603,7 +608,7 @@ END$$
 
 CREATE PROCEDURE `sp_listar_usuarios` ()   BEGIN
 
- SELECT documento, nombre, apellido, email, id_rol, id_estado FROM usuario;
+ SELECT documento, nombre, apellido, email, id_rol, id_estado, vigencia_usuario, ultimo_inicio_sesion FROM usuario;
 
 END$$
 
@@ -801,17 +806,17 @@ CREATE PROCEDURE `sp_registrar_seguimiento` (IN `p_observacion` TEXT, IN `p_caso
     END$$
 
 CREATE PROCEDURE `sp_registrar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(50), IN `p_apellido` VARCHAR(50), IN `p_email` VARCHAR(100), IN `p_id_rol` INT(11), IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN 
-    -- 1. Declaración de variables locales
+    
     DECLARE v_f_registro DATETIME;
     DECLARE v_f_caducidad DATETIME;
     DECLARE v_vigencia VARCHAR(20);
 
-    -- 2. Asignación de valores
+    
     SET v_f_registro = NOW();
     SET v_f_caducidad = DATE_ADD(v_f_registro, INTERVAL 2 YEAR);
     SET v_vigencia = CONCAT(YEAR(v_f_registro), '-', YEAR(v_f_caducidad));
 
-    -- 3. Inserción en la tabla
+    
     INSERT INTO usuario (
         documento, 
         nombre, 
@@ -1007,6 +1012,13 @@ CREATE TABLE `archivo` (
   `tipo_archivo` varchar(50) NOT NULL COMMENT 'Formato del archivo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `archivo`
+--
+
+INSERT INTO `archivo` (`id_archivo`, `id_caso`, `nombre_archivo`, `fecha_subida`, `ruta`, `tipo_archivo`) VALUES
+(1, 48, 'e', '2026-03-19 16:10:28', 'e', 'e');
+
 -- --------------------------------------------------------
 
 --
@@ -1078,7 +1090,8 @@ INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_seguimiento`, `id_proc
 (91, 'Solicitud reposición botas', '1656966633', NULL, 12, NULL, '2024-03-20 12:30:00', '2024-03-25 15:10:00', 3, 2, 'Solicitud de reposición de botas de seguridad'),
 (92, 'Solicitud información incentivos', '1756664828', 10, 13, '2026-02-23 14:03:26', '2022-11-11 08:00:00', '2022-11-15 10:30:00', 3, 2, 'Solicitud de información sobre incentivos'),
 (93, 'Derecho petición convocatoria', '1020304050', 11, 13, '2026-02-23 14:03:53', '2024-06-06 09:45:00', NULL, 1, 3, 'Derecho de petición por resultados de convocatoria'),
-(94, 'Solicitud inscripción incentivos', '1456333298', NULL, 13, NULL, '2026-01-20 11:20:00', NULL, 2, 2, 'Solicitud de inscripción a programa de incentivos');
+(94, 'Solicitud inscripción incentivos', '1456333298', NULL, 13, NULL, '2026-01-20 11:20:00', NULL, 2, 2, 'Solicitud de inscripción a programa de incentivos'),
+(98, 'd', '1456333298', NULL, 13, NULL, '2026-03-19 16:12:21', NULL, 2, 1, '123ggasdc');
 
 --
 -- Disparadores `caso`
@@ -1388,7 +1401,15 @@ INSERT INTO `noti_administrador` (`id_notificacion`, `documento`, `mensaje`, `fe
 (103, '1487569254', 'AVISO: El caso \"Solicitud inscripción incentivos\" CON LA ID: 94 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 13:05:32'),
 (104, '1487569254', 'AVISO: El caso \"Demora en atención médica ocupacional\" CON LA ID: 58 cambió deL estado \"Por atender\" a \"Por atender\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-17 14:06:50'),
 (105, '1487569254', 'Nuevo registro: El usuario Isaac Carvajal con el documento: 2030405060) se ha unido con el rol de \"administrador\". Fecha de registro: 2026-03-17 15:44:33.', '2026-03-17 15:44:33'),
-(106, '2030405060', 'Nuevo registro: El usuario Isaac Carvajal con el documento: 2030405060) se ha unido con el rol de \"administrador\". Fecha de registro: 2026-03-17 15:44:33.', '2026-03-17 15:44:33');
+(106, '2030405060', 'Nuevo registro: El usuario Isaac Carvajal con el documento: 2030405060) se ha unido con el rol de \"administrador\". Fecha de registro: 2026-03-17 15:44:33.', '2026-03-17 15:44:33'),
+(108, '1487569254', 'NUEVO CASO: \"HOLO\" ID CASO: 95. \nSe ha registrado un nuevo caso de Acción de Tutela Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Juan Manuel Correal', '2026-03-19 14:31:00'),
+(109, '2030405060', 'NUEVO CASO: \"HOLO\" ID CASO: 95. \nSe ha registrado un nuevo caso de Acción de Tutela Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Juan Manuel Correal', '2026-03-19 14:31:00'),
+(111, '1487569254', 'NUEVO CASO: \"xd\" ID CASO: 96. \nSe ha registrado un nuevo caso de Acción de Tutela Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal', '2026-03-19 15:50:45'),
+(112, '2030405060', 'NUEVO CASO: \"xd\" ID CASO: 96. \nSe ha registrado un nuevo caso de Acción de Tutela Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal', '2026-03-19 15:50:45'),
+(114, '1487569254', 'NUEVO CASO: \"xd\" ID CASO: 97. \nSe ha registrado un nuevo caso de Acción de Tutela Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal', '2026-03-19 15:50:55'),
+(115, '2030405060', 'NUEVO CASO: \"xd\" ID CASO: 97. \nSe ha registrado un nuevo caso de Acción de Tutela Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal', '2026-03-19 15:50:55'),
+(117, '1487569254', 'NUEVO CASO: \"d\" ID CASO: 98. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal', '2026-03-19 16:12:21'),
+(118, '2030405060', 'NUEVO CASO: \"d\" ID CASO: 98. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal', '2026-03-19 16:12:21');
 
 -- --------------------------------------------------------
 
@@ -1514,7 +1535,11 @@ INSERT INTO `noti_comisionado` (`id_notificacion`, `documento`, `mensaje`, `fech
 (105, '1756664828', 'El caso \"Solicitud información incentivos\" con el ID: 92 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"No atendido\" al estado: \"No atendido\" por el usuario encargado Zack Lopez', '2026-03-17 13:05:32'),
 (106, '1020304050', 'El caso \"Derecho petición convocatoria\" con el ID: 93 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Atendido\" al estado: \"Atendido\" por el usuario encargado Simon Gonzalez Pelaez', '2026-03-17 13:05:32'),
 (107, '1456333298', 'El caso \"Solicitud inscripción incentivos\" con el ID: 94 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Juan Manuel Correal', '2026-03-17 13:05:32'),
-(108, '1456333298', 'El caso \"Demora en atención médica ocupacional\" con el ID: 58 perteneciente al proceso \"SSEMI\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Juan Manuel Correal', '2026-03-17 14:06:50');
+(108, '1456333298', 'El caso \"Demora en atención médica ocupacional\" con el ID: 58 perteneciente al proceso \"SSEMI\", pasó del estado: \"Por atender\" al estado: \"Por atender\" por el usuario encargado Juan Manuel Correal', '2026-03-17 14:06:50'),
+(109, '1456333298', 'NUEVO CASO: \"HOLO\" ID CASO: 95. \nSe ha registrado un nuevo caso de Acción de Tutela Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Juan Manuel Correal', '2026-03-19 14:31:00'),
+(110, '1456333298', 'NUEVO CASO: \"xd\" ID CASO: 96. \nSe ha registrado un nuevo caso de Acción de Tutela Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal', '2026-03-19 15:50:45'),
+(111, '1456333298', 'NUEVO CASO: \"xd\" ID CASO: 97. \nSe ha registrado un nuevo caso de Acción de Tutela Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal', '2026-03-19 15:50:55'),
+(112, '1456333298', 'NUEVO CASO: \"d\" ID CASO: 98. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal', '2026-03-19 16:12:21');
 
 -- --------------------------------------------------------
 
@@ -1641,13 +1666,6 @@ CREATE TABLE `token_usuario` (
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `token_usuario`
---
-
-INSERT INTO `token_usuario` (`id`, `documento`, `token`, `fecha_creacion`) VALUES
-(14, '1487569254', 'bd75e3', '2026-03-17 14:04:47');
-
 -- --------------------------------------------------------
 
 --
@@ -1677,11 +1695,11 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `fecha_caducidad`, `vigencia_usuario`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
 ('1020304050', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$GLchohxxzqrGdqUzrdhkx.W6EDHdax489rqyZskrPiNbNkzdBbjNm', '2026-02-12 14:18:58', '2028-02-12 14:18:58', '2026-2028', '2026-03-12 12:54:28', 1, 0, NULL),
-('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2028-02-12 14:22:31', '2026-2028', '2026-03-17 14:05:37', 1, 0, NULL),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-03-17 15:26:07', 1, 1, '418b83f16c24c9f6d766'),
+('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2028-02-12 14:22:31', '2026-2028', '2026-03-19 16:11:56', 1, 0, NULL),
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-03-19 14:29:55', 1, 1, '7be3757a753976a4ca6e'),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2028-02-12 14:28:54', '2026-2028', '2026-03-02 15:52:20', 1, 0, NULL),
 ('1756664828', 'Zack', 'Lopez', 'isaacmanuelcavajal1356@gmail.com', '3001234567', 2, '$2y$10$ddgxYzealY0ADRBf3t/0NO/ZNWCaJ/aaIXUaAvIJUFIzw9hABitkW', '2026-02-12 14:20:29', '2028-02-12 14:20:29', '2026-2028', '2026-03-12 12:55:03', 1, 1, NULL),
-('2030405060', 'Isaac', 'Carvajal', 'isaaccarvajal1356@gmail.com', '3001231231', 1, '$2y$10$ohYytsObuQCUjiQgbrdaPO2tY4xQBFUJezPFlvQ/8/khk.iUP8FAG', '2026-03-17 15:44:33', '2028-03-17 15:44:33', '2026-2028', NULL, 1, 0, NULL);
+('2030405060', 'Isaac', 'Carvajal', 'isaaccarvajal1356@gmail.com', '3001231231', 1, '$2y$10$ohYytsObuQCUjiQgbrdaPO2tY4xQBFUJezPFlvQ/8/khk.iUP8FAG', '2026-03-17 15:44:33', '2028-03-17 15:44:33', '2026-2028', '2026-03-19 12:00:18', 1, 0, NULL);
 
 --
 -- Disparadores `usuario`
@@ -1825,13 +1843,13 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `archivo`
 --
 ALTER TABLE `archivo`
-  MODIFY `id_archivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar';
+  MODIFY `id_archivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
-  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=95;
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=99;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`
@@ -1861,13 +1879,13 @@ ALTER TABLE `monitoreo`
 -- AUTO_INCREMENT de la tabla `noti_administrador`
 --
 ALTER TABLE `noti_administrador`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_comisionado`
 --
 ALTER TABLE `noti_comisionado`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=109;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
@@ -1897,7 +1915,7 @@ ALTER TABLE `tipo_caso`
 -- AUTO_INCREMENT de la tabla `token_usuario`
 --
 ALTER TABLE `token_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Restricciones para tablas volcadas
@@ -1982,7 +2000,7 @@ CREATE EVENT `ev_caso_caducado` ON SCHEDULE EVERY 1 DAY STARTS '2026-03-17 23:00
     UPDATE caso
     SET id_estado = 3
     WHERE 
-        -- Prioriza la fecha del seguimiento, si no existe usa la de creación
+        
         COALESCE(fecha_ultimo_seguimiento, fecha_inicio) <= NOW() - INTERVAL 2 MONTH
         AND id_estado <> 3;
 END$$
