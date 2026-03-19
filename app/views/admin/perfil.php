@@ -120,8 +120,11 @@
               <!-- Avatar Section -->
               <div class="flex flex-col items-center text-center space-y-4">
                 <div class="relative group">
-                  <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                  <img src="/assets/img/icon account.png" alt="Profile" class="relative w-32 h-32 rounded-full border-4 border-slate-900 object-cover shadow-2xl">
+                  <div
+                    class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200">
+                  </div>
+                  <img src="/assets/img/icon account.png" alt="Profile"
+                    class="relative w-32 h-32 rounded-full border-4 border-slate-900 object-cover shadow-2xl">
                 </div>
                 <div>
                   <h3 class="text-lg font-bold text-white"><?php echo $_SESSION['user']['username'] ?? 'Admin'; ?></h3>
@@ -131,17 +134,19 @@
 
               <!-- Form Section -->
               <div class="flex-1">
-                                <form id="formPerfil" class="space-y-6">
+                <form id="formPerfil" class="space-y-6">
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Documento de Identidad</label>
-                      <input type="text" name="documento" class="glass-input w-full p-3 rounded-lg text-white opacity-60"
+                      <input type="text" name="documento"
+                        class="glass-input w-full p-3 rounded-lg text-white opacity-60"
                         value="<?php echo $_SESSION['user']['documento'] ?? ''; ?>" readonly>
                       <span class="text-[10px] text-slate-500 mt-1 block">No editable por seguridad</span>
                     </div>
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Cargo / Rol</label>
-                      <input type="text" class="glass-input w-full p-3 rounded-lg text-white opacity-60" value="Administrador" readonly>
+                      <input type="text" class="glass-input w-full p-3 rounded-lg text-white opacity-60"
+                        value="Administrador" readonly>
                       <span class="text-[10px] text-slate-500 mt-1 block">No editable por seguridad</span>
                     </div>
                   </div>
@@ -149,22 +154,26 @@
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Nombre(s)</label>
-                      <input type="text" name="nombre" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Ingresa tu nuevo nombre" id="nuevoNombre">
+                      <input type="text" name="nombre" class="glass-input w-full p-3 rounded-lg text-white"
+                        placeholder="Ingresa tu nuevo nombre" id="nuevoNombre">
                     </div>
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Apellido(s)</label>
-                      <input type="text" name="apellido" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Ingresa tu nuevo apellido" id="nuevoApellido">
+                      <input type="text" name="apellido" class="glass-input w-full p-3 rounded-lg text-white"
+                        placeholder="Ingresa tu nuevo apellido" id="nuevoApellido">
                     </div>
                   </div>
 
                   <div>
                     <label class="block text-sm font-medium text-slate-300 mb-2">Numero de celular</label>
-                    <input type="number" name="numero" class="glass-input w-full p-3 rounded-lg text-white" placeholder="Ejemplo: 3101234567" id="numeroNuevo">
+                    <input type="number" name="numero" class="glass-input w-full p-3 rounded-lg text-white"
+                      placeholder="Ejemplo: 3101234567" id="numeroNuevo">
                   </div>
 
                   <div>
                     <label class="block text-sm font-medium text-slate-300 mb-2">Correo Electrónico</label>
-                    <input type="email" name="email" class="glass-input w-full p-3 rounded-lg text-white" placeholder="ejemplo@sena.edu.co" id="nuevoEmail">
+                    <input type="email" name="email" class="glass-input w-full p-3 rounded-lg text-white"
+                      placeholder="ejemplo@sena.edu.co" id="nuevoEmail">
                   </div>
 
                   <div class="pt-4 border-t border-white/5">
@@ -172,17 +181,27 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">Nueva Contraseña</label>
-                        <input type="password" name="password" class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••" id="contrasenaNueva">
+                        <input type="password" name="password" class="glass-input w-full p-3 rounded-lg text-white"
+                          placeholder="••••••••" id="contrasenaNueva">
                       </div>
                       <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">Confirmar Contraseña</label>
-                        <input type="password" name="confirm_password" class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••" id="confirmarContrasena">
+                        <input type="password" name="confirm_password"
+                          class="glass-input w-full p-3 rounded-lg text-white" placeholder="••••••••"
+                          id="confirmarContrasena">
                       </div>
                     </div>
                   </div>
 
-                  <div class="flex justify-end pt-6">
-                    <button type="button" class="btn-search px-10 py-3 rounded-xl font-bold flex items-center gap-2" id="btnActualizar">
+                  <div class="flex justify-between pt-6">
+                    <input type="checkbox" id="activar2FA" class="btn-check items-center bg-indigo-500 py-2 px-3"
+                      autocomplete="off">
+                    <label class=" bg-indigo-500 text-white px-3 py-1 rounded-lg" >
+                      Actualizar 2FA
+                    </label>
+
+                    <button type="button" class="btn-search px-10 py-3 rounded-xl font-bold flex items-center gap-2"
+                      id="btnActualizar">
                       <i class="bi bi-save2-fill"></i> Actualizar Perfil
                     </button>
                   </div>

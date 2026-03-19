@@ -167,4 +167,10 @@ btnVerificar.addEventListener('click', function (e) {
 
 
         })
+        const activar2FA = document.getElementById('activar2FA');
+        activar2FA.addEventListener('change', function (e) {
+            if (activar2FA.checked){
+                
+            }
+            
 })
