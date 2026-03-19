@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . '/baseHelper.php';
 class CasosModel extends baseHelper {
 
     public function cambiarEstadoCaso($nuevoEstado, $documentUser, $id_caso){
@@ -20,11 +20,11 @@ class CasosModel extends baseHelper {
                 throw new Exception("¡No se ha encontrado el usuario que desea cambiar el estado!");
             };
 
-            if ($findCase['estado_caso'] === $nuevoEstado) {
+            if ($findCase['estado'] === $nuevoEstado) {
                 throw new Exception ('es el mismo estado que intentas asignar');
             };
 
-            if ($caseData['estado'] == 'No atendido' && $findUser['rol'] != '1'){
+            if ($findCase['estado'] == 'No atendido' && $findUser['rol'] != '1'){
                 throw new Exception('¡No tienes permisos para cambiar el estado de este casos');
             };
 
