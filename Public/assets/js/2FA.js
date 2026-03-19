@@ -90,19 +90,37 @@ startCountdown(30);
 
 // Reenvía el código por AJAX
 btnReenviar.addEventListener('click', () => {
-    fetch('/reenviar2fa', {
+
+    const data = new FormData();
+    data.append('solicitud', true);
+
+    fetch('/reenviar2FA', {
         method: 'POST',
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        body: data,
     })
         .then(res => res.json())
-        .then(() => startCountdown(30))
-        .catch(() => Swal.fire({
-            icon: 'error',
-            title: 'No se pudo reenviar el código. Inténtalo de nuevo.',
-            theme: 'dark',
-            showConfirmButtom: false,
-            timer: 1500,
-        }));
+        .then(data => {
+            if (data.status == 'error') {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Ha ocurrido un error al validarte!',
+                    text: `${data.mensaje}`,
+                    theme: 'dark',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            };
+
+            if (data.status == 'ok') {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Se te ha enviado un nuevo codigo!',
+                    theme: 'dark',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            }
+        })
 });
 
 // Enviar boton para autentificarlo
@@ -130,7 +148,7 @@ btnVerificar.addEventListener('click', function (e) {
                     theme: 'dark',
                     showConfirmButton: false,
                     timer: 1500,
-                })
+                });
             };
 
             if (data.status == 'ok') {
