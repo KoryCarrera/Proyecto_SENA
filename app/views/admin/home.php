@@ -241,9 +241,9 @@
 
           </div>
 
-          <div class="rounded">
+          <div class="rounded w-full m-2 items-center my-6 flex justify-start items-center">
             <select id="selectGraficas"
-              class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-sm text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+              class="glass-sidebar appearance-none  rounded-lg px-6 py-2 text-base text-white cursor-pointer outline-none hover:bg-white/5 transition-colors bg-indigo-600 ">
               <option selected disabled class="bg-slate-900">Filtrar por...</option>
               <option class="bg-slate-900" value="semana">esta semana</option>
               <option class="bg-slate-900" value="mes">este mes</option>
@@ -252,7 +252,7 @@
           </div>
 
           <!-- Charts Grid -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 ">
             <!-- Chart 3 (Full Width) -->
             <div
               class="glass-card p-6 col-span-1 lg:col-span-2 flex flex-col items-center justify-center min-h-[300px]">
@@ -274,13 +274,7 @@
                 <p class="text-base text-slate-300 max-w-3xl leading-relaxed" id="contextoPolar"></p>
 
                 <div class="rounded">
-                  <select name="" id=""
-                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-sm text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                    <option selected disabled class="bg-slate-900">Filtrar por...</option>
-                    <option class="bg-slate-900" value="semana">esta semana</option>
-                    <option class="bg-slate-900" value="mes">este mes</option>
-                    <option class="bg-slate-900" value="anual">este año</option>
-                  </select>
+                
                 </div>
               </div>
               <div class="w-full h-full flex items-center justify-center">
@@ -297,13 +291,7 @@
                 <p class="text-base text-slate-300 max-w-3xl leading-relaxed" id="contextoBar"></p>
 
                 <div class="relative">
-                  <select id="filtroComisionado"
-                    class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-sm text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                    <option selected disabled class="bg-slate-900">Filtrar por...</option>
-                    <option class="bg-slate-900" value="semana">Esta semana</option>
-                    <option class="bg-slate-900" value="mes">Este mes</option>
-                    <option class="bg-slate-900" value="anual">Este año</option>
-                  </select>
+                  
                 </div>
               </div>
 
