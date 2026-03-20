@@ -18,7 +18,6 @@ require_once __DIR__ . "/../models/getData.php";
 use Dompdf\Dompdf;
 
 //Recibimos los datos del front
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     //Llamamos las funciones necesarias
@@ -40,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $totalAtendidos = ($indiceAtendidos !== false) ? $estados['casos'][$indiceAtendidos] : 0;
         $totalPorAtender = ($indicePorAtender !== false) ? $estados['casos'][$indicePorAtender] : 0;
         $totalNoAtendido = ($indiceNoAtendido !== false) ? $estados['casos'][$indiceNoAtendido] : 0;
-        
+
         //Conseguimos el porcentaje de la cantidad de casos por cada tipo de estado en relacion al total
         if ($totalAtendidos > 0 && $estados['total'] > 0) {
             $porcentajeAtendidos = number_format((($totalAtendidos / $estados['total']) * 100), 1);
@@ -60,17 +59,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $porcentajeNoAtendidos = 0;
         }
 
-        //Convertimos la imagen a base64 para mejor entendimiento de la misma por DOMPDF
         $logoPath = __DIR__ . '/../../Public/assets/img/logo_sena.png';
 
         if (file_exists($logoPath)) {
             $logoData = base64_encode(file_get_contents($logoPath));
             $logoSrc = 'data:image/png;base64,' . $logoData;
         } else {
-            // Si no encuentra el logo, usar el placeholder
             $logoSrc = '';
         }
-        //Usamos las funciones reservadas de ob para obtener el html y almacenarlo en una variable
+
+        $chartCasosConfig = [
+            'type' => 'doughnut',
+            'data' => [
+                'labels' => ['Atendidos', 'Por Atender', 'No Atendidos'],
+                'datasets' => [[
+                    'data' => [$totalAtendidos, $totalPorAtender, $totalNoAtendido],
+                    'backgroundColor' => ['#27ae60', '#f39c12', '#e74c3c'] // Verde, Naranja, Rojo
+                ]]
+            ],
+            'options' => [
+                'plugins' => [
+                    'datalabels' => ['color' => '#fff', 'font' => ['weight' => 'bold']]
+                ]
+            ]
+        ];
+        $chartCasosUrl = "https://quickchart.io/chart?c=" . urlencode(json_encode($chartCasosConfig)) . "&w=400&h=250";
+        $chartCasosData = @file_get_contents($chartCasosUrl);
+        $chartCasosSrc = $chartCasosData ? 'data:image/png;base64,' . base64_encode($chartCasosData) : '';
         ob_start();
 ?>
         <!DOCTYPE html>
@@ -81,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <title>Reporte de PQRSD</title>
             <style>
                 @page {
-                    margin: 2cm 1.5cm;
+                    margin: 1.5cm 1cm;
                     size: A4;
                 }
 
@@ -99,7 +114,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     padding: 1cm;
                 }
 
-                /* --- CABECERA --- */
                 .header {
                     width: 100%;
                     border-bottom: 3px solid #2c3e50;
@@ -136,61 +150,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     line-height: 1.6;
                 }
 
-                /* --- TITULO Y INFO --- */
                 .report-title {
                     text-align: center;
                     background-color: #2c3e50;
                     color: white;
-                    padding: 15px 10px;
-                    margin: 25px 0;
+                    padding: 12px 10px;
+                    margin: 15px 0;
                     font-size: 14pt;
                     font-weight: bold;
                     text-transform: uppercase;
                     letter-spacing: 0.5px;
                 }
 
-                .report-info {
+                /* --- CORRECCIÓN DE LA TABLA DE INFO --- */
+                .report-info-table {
                     width: 100%;
                     margin-bottom: 25px;
+                    border-collapse: collapse;
                     border: 1px solid #ddd;
                 }
 
-                .info-row {
-                    width: 100%;
+                .report-info-table td {
+                    padding: 8px 12px;
                     border-bottom: 1px solid #eee;
                 }
 
-                .info-label {
+                .report-info-table .info-label {
                     width: 30%;
-                    float: left;
                     background-color: #f8f9fa;
-                    padding: 10px 15px;
                     font-weight: bold;
                     color: #2c3e50;
                     border-right: 1px solid #ddd;
                 }
 
-                .info-value {
+                .report-info-table .info-value {
                     width: 70%;
-                    float: left;
-                    padding: 10px 15px;
                 }
 
-                /* --- SOLUCIÓN PARA LAS CAJAS (ESTADÍSTICAS) --- */
-                /* Usamos tablas para garantizar estructura en DOMPDF */
                 .stats-table {
                     width: 100%;
                     border-collapse: separate;
                     border-spacing: 0 15px;
-                    /* Espacio vertical entre filas */
-                    margin-bottom: 30px;
+                    margin-bottom: 15px;
                 }
 
                 .stat-box-td {
                     width: 48%;
-                    /* Ancho fijo para las cajas */
                     border: 2px solid #2c3e50;
-                    padding: 15px 10px;
+                    padding: 10px 10px;
                     text-align: center;
                     background-color: white;
                     vertical-align: middle;
@@ -198,7 +205,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 .stat-gap-td {
                     width: 4%;
-                    /* El espacio exacto en el medio */
                     background-color: transparent;
                     border: none;
                 }
@@ -221,11 +227,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     display: block;
                 }
 
-                /* --- ESTILOS GENERALES --- */
-                .clear {
-                    clear: both;
-                }
-
                 .section-title {
                     background-color: #34495e;
                     color: white;
@@ -245,7 +246,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     line-height: 1.7;
                 }
 
-                /* --- TABLA DE DATOS --- */
                 .data-table {
                     width: 100%;
                     border-collapse: collapse;
@@ -274,7 +274,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     background-color: #f8f9fa;
                 }
 
-                /* --- BADGES --- */
+                /* --- BADGES DINÁMICOS --- */
                 .status-badge {
                     padding: 5px 8px;
                     border-radius: 3px;
@@ -282,6 +282,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     font-weight: bold;
                     display: inline-block;
                     text-align: center;
+                    width: 100%;
                 }
 
                 .status-pendiente {
@@ -290,27 +291,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     border: 1px solid #ffeaa7;
                 }
 
-                .status-proceso {
-                    background-color: #d1ecf1;
-                    color: #0c5460;
-                    border: 1px solid #bee5eb;
-                }
-
                 .status-resuelto {
                     background-color: #d4edda;
                     color: #155724;
                     border: 1px solid #c3e6cb;
                 }
 
-                .observation-box {
-                    border-left: 4px solid #2c3e50;
-                    background-color: #f8f9fa;
-                    padding: 15px 18px;
-                    margin: 15px 0;
-                    line-height: 1.6;
+                .status-peligro {
+                    background-color: #f8d7da;
+                    color: #721c24;
+                    border: 1px solid #f5c6cb;
                 }
 
-                /* --- FIRMAS --- */
+                /* Para No Atendidos */
+
                 .signature-table {
                     width: 100%;
                     margin-top: 80px;
@@ -340,6 +334,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     color: #666;
                     margin-top: 5px;
                 }
+
+                img {
+                    max-width: 100%;
+                    height: auto;
+                    page-break-inside: avoid;
+                }
             </style>
         </head>
 
@@ -349,7 +349,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <tr>
                         <td class='logo-cell'>
                             <div style='width: 70px; height: 70px; background-color: #2c3e50; color: white; text-align: center; line-height: 70px; font-size: 20pt; font-weight: bold;'>
-                                <img width='70px' height="70px" src='<?php echo $logoSrc; ?>' alt='No encontré esa chimbada'>
+                                <?php if ($logoSrc): ?>
+                                    <img width='70px' height="70px" src='<?php echo $logoSrc; ?>' alt='No encontré esa chimbada'>
+                                <?php else: ?>
+                                    SENA
+                                <?php endif; ?>
                             </div>
                         </td>
                         <td class='company-info-cell'>
@@ -363,36 +367,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class='report-title'>
-                Reporte de Casos
+                Reporte de Casos PQRSD
             </div>
 
-            <div class='report-info'>
-                <div class='info-row'>
-                    <div class='info-label'>Fecha de Generación:</div>
-                    <div class='info-value'><?php echo $datosInforme['fecha_registro']; ?></div>
-                    <div class='clear'></div>
-                </div>
-                <div class='info-row'>
-                    <div class='info-label'>Responsable:</div>
-                    <div class='info-value'><?php echo $_SESSION['user']['username']; ?></div>
-                    <div class='clear'></div>
-                </div>
-                <div class='info-row'>
-                    <div class='info-label'>Código de Reporte:</div>
-                    <div class='info-value'><?php echo $datosInforme['id_generado'] ?></div>
-                    <div class='clear'></div>
-                </div>
-            </div>
+            <table class='report-info-table'>
+                <tr>
+                    <td class='info-label'>Fecha de Generación:</td>
+                    <td class='info-value'><?php echo $datosInforme['fecha_registro']; ?></td>
+                </tr>
+                <tr>
+                    <td class='info-label'>Responsable:</td>
+                    <td class='info-value'><?php echo $_SESSION['user']['username']; ?></td>
+                </tr>
+                <tr>
+                    <td class='info-label'>Código de Reporte:</td>
+                    <td class='info-value'><?php echo $datosInforme['id_generado'] ?></td>
+                </tr>
+            </table>
 
             <table class='stats-table'>
                 <tr>
                     <td class='stat-box-td'>
-                        <span class='stat-number'><?php echo $estados['total']; ?></span> <!-- Aqui -->
+                        <span class='stat-number'><?php echo $estados['total']; ?></span>
                         <span class='stat-label'>Total de Casos</span>
                     </td>
                     <td class='stat-gap-td'>&nbsp;</td>
                     <td class='stat-box-td'>
-                        <span class='stat-number'><?php echo $totalAtendidos ?></span> <!-- Aqui -->
+                        <span class='stat-number'><?php echo $totalAtendidos ?></span>
                         <span class='stat-label'>Casos Atendidos</span>
                     </td>
                 </tr>
@@ -401,57 +402,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </tr>
                 <tr>
                     <td class='stat-box-td'>
-                        <span class='stat-number'><?php echo $totalPorAtender ?></span> <!-- Aqui no -->
+                        <span class='stat-number'><?php echo $totalPorAtender ?></span>
                         <span class='stat-label'>Por atender</span>
                     </td>
                     <td class='stat-gap-td'>&nbsp;</td>
                     <td class='stat-box-td'>
-                        <span class='stat-number'><?php echo $totalNoAtendido ?></span> <!-- Aqui no -->
+                        <span class='stat-number'><?php echo $totalNoAtendido ?></span>
                         <span class='stat-label'>No Atendidos</span>
                     </td>
                 </tr>
             </table>
-            <br>
+
             <div class='section-title'>1. RESUMEN EJECUTIVO</div>
-            <br>
             <div class='content-box'>
                 Durante el ciclo analizado, se registró un volumen global de <strong><?php echo $estados['total']; ?></strong> casos de PQRSD en el transcurso del año <strong><?php echo date('Y'); ?></strong>.
                 De este total, el <strong><?php echo $porcentajeAtendidos; ?>%</strong> corresponde a solicitudes que ya han sido <strong>atendidas</strong> formalmente.
                 Por otro lado, se identifica que un <strong><?php echo $porcentajePorAtender; ?>%</strong> de los casos se encuentra actualmente en estado <strong>por atender</strong>,
                 mientras que el <strong><?php echo $porcentajeNoAtendidos; ?>%</strong> restante se clasifica bajo el estatus de <strong>no atendido</strong> en relación con el consolidado general.
             </div>
-            <br>
-            <br>
-            <br>
-            <br>
-            <div class='section-title'>2. Ultimos 10 Casos Registrados En El Transcurso Del Año</div>
+
+            <div style="page-break-inside: avoid;">
+                <div class='section-title'>2. ANÁLISIS VISUAL DE PQRSD</div>
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <?php if ($chartCasosSrc): ?>
+                        <img src="<?php echo $chartCasosSrc; ?>" style="width: 300px; height: auto;" alt="Gráfica de Casos">
+                    <?php else: ?>
+                        <p style="color: red;">No se pudo generar la gráfica de casos.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <div class='section-title'>3. ÚLTIMOS 10 CASOS REGISTRADOS</div>
             <table class='data-table'>
                 <thead>
                     <tr>
-                        <th style='width: 13%;'>ID</th>
-                        <th style='width: 15%;'>Fecha De Registro</th>
-                        <th style='width: 25%;'>Tipo</th>
-                        <th style='width: 14%;'>Fecha respuesta</th>
-                        <th style='width: 18%;'>Estado</th>
-                        <th style='width: 15%;'>Encargado</th>
+                        <th style='width: 10%;'>ID</th>
+                        <th style='width: 18%;'>Fecha Registro</th>
+                        <th style='width: 20%;'>Tipo</th>
+                        <th style='width: 18%;'>Fecha Respuesta</th>
+                        <th style='width: 16%;'>Estado</th>
+                        <th style='width: 18%;'>Encargado</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-
                     foreach ($casosListados['data'] as $temp) {
+
+                        // Lógica para cambiar el color del badge dinámicamente
+                        $estadoStr = strtolower(trim($temp['estado']));
+                        $claseBadge = 'status-pendiente'; // Por defecto amarillo
+
+                        if ($estadoStr == 'atendido') {
+                            $claseBadge = 'status-resuelto'; // Verde
+                        } elseif ($estadoStr == 'no atendido') {
+                            $claseBadge = 'status-peligro'; // Rojo
+                        }
+
                         echo "
-                    <tr>
-                        <td>" . $temp['id_caso'] . "</td>
-                        <td>" . $temp['fecha_inicio'] . "</td>
-                        <td>" . $temp['tipo_caso'] . "</td>
-                        <td>" . $temp['fecha_cierre'] . "</td>
-                        <td><span class='status-badge status-proceso'>" . $temp['estado'] . "</span></td>
-                        <td>" . $temp['comisionado'] . "</td>
-                    </tr>
+                        <tr>
+                            <td>" . $temp['id_caso'] . "</td>
+                            <td>" . $temp['fecha_inicio'] . "</td>
+                            <td>" . $temp['tipo_caso'] . "</td>
+                            <td>" . $temp['fecha_cierre'] . "</td>
+                            <td><span class='status-badge " . $claseBadge . "'>" . $temp['estado'] . "</span></td>
+                            <td>" . $temp['comisionado'] . "</td>
+                        </tr>
                         ";
                     }
-
                     ?>
                 </tbody>
             </table>
@@ -475,8 +492,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php
         $html = ob_get_clean();
 
+        //Evitar bloqueos
+        set_time_limit(60);
+
         //Inicializamos y usamos la clase de Dompdf
         $dompdf = new Dompdf();
+
+        // Permitir carga de imágenes externas
+        $options = $dompdf->getOptions();
+        $options->set('isRemoteEnabled', true);
+        $dompdf->setOptions($options);
 
         //Usamos la variable html previamente generada
         $dompdf->loadHtml($html);
@@ -487,9 +512,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         //Renderizamos el pdf
         $dompdf->render();
 
-
         //Enviamos el pdf al navegador para descargarlo o abrirlo en otra pagina
-        $dompdf->stream("Reporte_Confidencial_SENA.pdf", ['Attachment' => true]);
+        $dompdf->stream("Reporte_PQRSD_SENA.pdf", ['Attachment' => true]);
         exit;
     }
 }
