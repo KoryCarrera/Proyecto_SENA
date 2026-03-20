@@ -106,10 +106,16 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
                 <td>${caso.proceso || "N/A"}</td>
                 <td>${caso.comisionado}</td>
                 <td>
+                    <button class="btn-table bg-red-600 hover:bg-red-500 mr-2 rounded-lg px-3 py-2" onclick="reasignarCaso(${caso.id_caso})">
+                        <i class="bi bi-repeat text-white"></i> 
+                    </button>
+                </td>
+                <td>
                     <button class="btn-table bg-indigo-600 hover:bg-indigo-500 mr-2 rounded-lg px-3 py-2" onclick="supervisarCaso(${caso.id_caso})">
                         <i class="bi bi-eye text-white"></i> 
                     </button>
                 </td>
+              
             </tr>
         `;
   });

@@ -181,8 +181,8 @@
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider">Estado</th>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider">Proceso</th>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider">Comisionado</th>
-                    <th scope="col" class="px-6 py-4 font-medium tracking-wider">Acciones</th>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider">Reasignaciones</th>
+                    <th scope="col" class="px-6 py-4 font-medium tracking-wider">Acciones</th>
                   </tr>
                 </thead>
                 <tbody id="tablaCasos" class="divide-y divide-slate-700/50">
