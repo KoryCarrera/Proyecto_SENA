@@ -1,4 +1,7 @@
 <?php
+
+use Safe\Exceptions\ExecException;
+
 require_once __DIR__ . '/baseHelper.php';
 class CasosModel extends baseHelper {
 
@@ -127,5 +130,29 @@ class CasosModel extends baseHelper {
             throw new Exception($e->getMessage());
     }
 
+    }
+
+    public function registrarSeguimiento($observacion, $idCaso, $documento){
+
+        try{
+            $data = [
+                [ 'value' => $observacion, 'type' => PDO::PARAM_STR ],
+                [ 'value' => $idCaso, 'type' => PDO::PARAM_INT ],
+                [ 'value' => $documento, 'type' => PDO::PARAM_STR ]
+            ];
+
+            $sp = 'sp_registrar_seguimiento(?, ?, ?)';
+
+            $nuevoSeguimiento = parent::insertOrUpdateData($sp, $data);
+
+            if(!$nuevoSeguimiento) {
+                throw new Exception('No se pudo registrar el nuevo seguimiento en la base de datos');
+            }
+
+            return ['success' => true];
+        } catch (Exception $e){
+            error_log('Ha occurrido un error al registrar el seguimiento: '. $e->getMessage());
+            throw new Exception($e->getMessage());
+        }
     }
 }
