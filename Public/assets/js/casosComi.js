@@ -79,6 +79,38 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
         `;
     });
     cuerpoTabla.innerHTML = htmlFilas;
+
+    // Si ya existe una instancia de DataTables, la destruimos antes de crear una nueva
+    if ($.fn.DataTable.isDataTable("#tablaCasoComi")) {
+        $("#tablaCasoComi").DataTable().destroy();
+    }
+
+    // Inicializamos DataTables DESPUÉS de que los datos estén en el DOM
+    var table = $("#tablaCasoComi").DataTable({
+        pageLength: 10,
+        lengthMenu: [10, 25, 50],
+        language: {
+            url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
+        },
+        dom: "rti", // Sin paginación interna, usamos la visual personalizada
+        drawCallback: function () {
+            actualizarPaginacionVisualComi(table);
+        },
+    });
+
+    $("#buscarComi").on("keyup", function () {
+        table.search(this.value).draw();
+    });
+
+    // El select de cantidad debe estar aquí dentro donde 'table' existe
+    $("#filtroCantidadComi")
+        .off("change")
+        .on("change", function () {
+            const valor = parseInt($(this).val());
+            table.page.len(valor).draw();
+        });
+
+        
 };
 
 const gestionarCaso = async (id_caso) => {
@@ -364,6 +396,102 @@ const obtenerBadgeEstado = (estado) => {
             return `<span class="badge bg-secondary"> ${estado}</span> `;
     }
 };
+
+// ─── Paginación visual personalizada ─────────────────────────────────────────
+const actualizarPaginacionVisualComi = (table) => {
+    if (!table) return;
+
+    const info = table.page.info(); // { page (0-based), pages, ... }
+    const paginaActual = info.page;
+    const totalPaginas = info.pages;
+
+    const btnPrev = document.getElementById("btnPaginaAnteriorComi");
+    const btnNext = document.getElementById("btnPaginaSiguienteComi");
+    const contenedor = document.getElementById("pagBotonesComi");
+
+    if (!btnPrev || !btnNext || !contenedor) return;
+
+    // ── Estilos de los botones de número ──────────────────────────────────────
+    const claseNormal = [
+        "w-9",
+        "h-9",
+        "flex",
+        "justify-center",
+        "items-center",
+        "text-white/70",
+        "hover:text-white",
+        "hover:bg-blue-600/80",
+        "text-sm",
+        "rounded-lg",
+        "transition-colors",
+        "cursor-pointer",
+        "font-medium",
+    ].join(" ");
+
+    const claseActiva = [
+        "w-9",
+        "h-9",
+        "flex",
+        "justify-center",
+        "items-center",
+        "bg-blue-600",
+        "text-white",
+        "text-sm",
+        "rounded-lg",
+        "font-semibold",
+        "shadow",
+        "shadow-blue-500/40",
+        "cursor-default",
+    ].join(" ");
+
+    // ── Generar botones de número según páginas reales ─────────────────────────
+    contenedor.innerHTML = "";
+
+    // Ventana deslizante: máx 5 páginas visibles a la vez
+    const ventana = 5;
+    let desde = Math.max(0, paginaActual - Math.floor(ventana / 2));
+    const hasta = Math.min(totalPaginas, desde + ventana);
+    if (hasta - desde < ventana) desde = Math.max(0, hasta - ventana);
+
+    for (let i = desde; i < hasta; i++) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = String(i + 1);
+        btn.className = i === paginaActual ? claseActiva : claseNormal;
+        if (i === paginaActual) {
+            btn.setAttribute("aria-current", "page");
+        } else {
+            btn.addEventListener("click", () => table.page(i).draw("page"));
+        }
+        contenedor.appendChild(btn);
+    }
+
+    // ── Botón Anterior ────────────────────────────────────────────────────────
+    // Clonar para limpiar listeners previos
+    const nuevoPrev = btnPrev.cloneNode(true);
+    btnPrev.parentNode.replaceChild(nuevoPrev, btnPrev);
+
+    if (paginaActual === 0) {
+        nuevoPrev.disabled = true;
+    } else {
+        nuevoPrev.disabled = false;
+        nuevoPrev.addEventListener("click", () =>
+            table.page("previous").draw("page"),
+        );
+    }
+
+    // ── Botón Siguiente ───────────────────────────────────────────────────────
+    const nuevoNext = btnNext.cloneNode(true);
+    btnNext.parentNode.replaceChild(nuevoNext, btnNext);
+
+    if (paginaActual >= totalPaginas - 1) {
+        nuevoNext.disabled = true;
+    } else {
+        nuevoNext.disabled = false;
+        nuevoNext.addEventListener("click", () => table.page("next").draw("page"));
+    }
+};
+// ─────────────────────────────────────────────────────────────────────────────
 
 // Eventos para cerrar el modal
 document.addEventListener('DOMContentLoaded', () => {
