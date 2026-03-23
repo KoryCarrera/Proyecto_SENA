@@ -150,16 +150,6 @@
             <div class="flex items-center justify-between p-2 mb-6 min-w-full">
               <h1 class="text-2xl font-bold text-white mb-4 uppercase tracking-wider">Estadísticas generales anuales
               </h1>
-
-              <div class="rounded">
-                <select id="selectFiltroGeneral"
-                  class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-sm text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
-                  <option selected disabled class="bg-slate-900">Mostrar por...</option>
-                  <option class="bg-slate-900" value="semana">esta semana</option>
-                  <option class="bg-slate-900" value="mes">este mes</option>
-                  <option class="bg-slate-900" value="anual">este año</option>
-                </select>
-              </div>
             </div>
 
             <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-2">

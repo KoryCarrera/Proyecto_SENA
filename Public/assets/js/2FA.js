@@ -173,4 +173,5 @@ btnVerificar.addEventListener('click', function (e) {
                 
             }
             
-})
+        })
+    })
