@@ -146,7 +146,14 @@
             <div class="flex items-center justify-between p-2 mb-6 min-w-full">
               <h2 class="text-3xl font-bold text-white mb-4" id="tituloEstadisticas">Estadísticas</h2>
 
-
+              <div class="rounded">
+                <select id="selectEstadisticas"
+                  class="glass-sidebar appearance-none border border-white/10 rounded-lg px-4 py-1.5 text-xs text-white cursor-pointer outline-none hover:bg-white/5 transition-colors">
+                  <option selected disabled class="bg-slate-900">Mostrar por...</option>
+                  <option class="bg-slate-900" value="propios">Propios</option>
+                  <option class="bg-slate-900" value="generales">Generales</option>
+                </select>
+              </div>
             </div>
 
             <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
@@ -220,7 +227,7 @@
             <select id="selectGraficas"
               class="glass-sidebar appearance-none rounded-lg px-6 py-2 text-base text-white cursor-pointer outline-none hover:bg-white/5 transition-colors
               bg-indigo-600 ">
-              <option selected disabled class="bg-slate-900">Filtrar por...</option>
+              <option selected disabled class="bg-slate-900">Filtrar graficas por...</option>
               <option class="bg-slate-900" value="semana">esta semana</option>
               <option class="bg-slate-900" value="mes">este mes</option>
               <option class="bg-slate-900" value="anual">este año</option>
@@ -264,7 +271,6 @@
                 <canvas id="pieChart"></canvas>
               </div>
             </div>
-          </div>
       </main>
     </div>
   </div>
