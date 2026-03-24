@@ -242,10 +242,7 @@
         <div class="modal-body p-6 text-slate-300" id="modalCasoBody">
           <!-- El contenido se carga dinámicamente con JavaScript -->
         </div>
-        <div class="modal-footer border-slate-700 p-6 bg-slate-900/20">
-          <button type="button"
-            class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm font-medium"
-            data-bs-dismiss="modal">Cerrar</button>
+        <div class="modal-footer border-slate-700 p-6 bg-slate-900/20" id="modalFooter">
         </div>
       </div>
     </div>
