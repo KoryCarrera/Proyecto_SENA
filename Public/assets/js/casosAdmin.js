@@ -2,6 +2,8 @@
 const ENDPOINT_LISTAR = "/listarCasos";
 const ENDPOINT_OBTENER = "/modalCasoAdmin";
 const ENDPOINT_SEGUIMIENTOS = "/listarSeguimientos";
+const ENDPOINT_GESTIONAR = '/gestionarCaso';
+const ENDPOINT_COMISIONADOS = "";
 
 //Definimos una función Async de cargar casos
 const cargarCasos = async () => {
@@ -106,7 +108,7 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
                 <td>${caso.proceso || "N/A"}</td>
                 <td>${caso.comisionado}</td>
                 <td>
-                    <button class="btn-table bg-red-600 hover:bg-red-500 mr-2 rounded-lg px-3 py-2" onclick="reasignarCaso(${caso.id_caso})">
+                    <button class="btn-table bg-red-600 hover:bg-red-500 mr-2 rounded-lg px-3 py-2" onclick="modalReasignar(${caso.id_caso})">
                         <i class="bi bi-repeat text-white"></i> 
                     </button>
                 </td>
@@ -299,6 +301,154 @@ const supervisarCaso = async (idCaso) => {
   }
 };
 
+const cerrarModal = () => {
+  const modalElement = document.getElementById('modalCaso');
+  const modal = bootstrap.Modal.getInstance(modalElement);
+  if (modal) {
+    modal.hide();
+  }
+};
+
+const modalReasignar = async (idCaso) => {
+
+  //Capturamos el modal, reutilizando el modal de supervisar caso
+  const modalElement = document.getElementById('modalCaso');
+  //capturamos partes del modal
+  const modalBody = document.getElementById("modalCasoBody");
+  const modalTitle = document.getElementById("modalCasoLabel");
+  const modalFooter = document.getElementById("modalFooter");
+
+  //Inicializamos la clase de bootstrap para el modal
+  const modal = new bootstrap.Modal(modalElement);
+
+  //Mostramos el cargando
+  document.getElementById("modalCasoBody").innerHTML = `
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-3">Cargando detalles del caso...</p>
+        </div>
+    `;
+
+  modal.show(); //Renderizamos
+
+  //Insertamos el texto del titulo
+  modalTitle.innerText = `Reasignar caso #${idCaso} (Operación sensible)`
+
+  //Recorreremos los usuarios 
+  let optionsComi = '';
+
+  modalFooter.innerHTML = `
+    <button type="button"
+      class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm font-medium"
+      data-bs-dismiss="modal">Cerrar</button>
+    <button type="button" class="btn btn-success" onclick="reasignarCaso(${idCaso})">
+      <i class="bi bi-check-circle"></i> Reasignar
+    </button>
+    `
+
+  try {
+    const res = await fetch(ENDPOINT_COMISIONADOS);
+    const comisionados = await res.json()
+
+    comisionados.forEach((comi) => {
+      optionsComi += `<option value="${comi.documento}" class="bg-slate-900">${comi.nombre} - (${comi.casos})</option>`
+    })
+
+    //Insertamos el body con los inputs que necesitamos
+    modalBody.innerHTML = `
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        <label class="form-label fw-bold">Elegir usuario al cual se va reasignar:</label>
+        <select name="newComi" id="nuevoComisionado">
+        <option value="" selected disabled class="bg-slate-900">Seleccione un comisionado</option>
+        ${optionsComi}
+        </select>
+      </div>
+      <div class="col-md-6 mb-3">
+        <textarea class="form-control glass-input" id="motivo" rows="3" 
+        placeholder="Describa brevemente por qué se cambia el responsable (quedará en el historial del caso)"></textarea>
+      </div>
+    </div>`
+
+  } catch (err) {
+    console.error(err);
+
+    modalBody.innerHTML = `
+      <div class="alert alert-danger m-3">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        No se pudieron cargar los comisionados. Por favor, intente más tarde.
+      </div>`;
+  }
+};
+
+const reasignarCaso = async (idCaso) => {
+  const nuevoComi = document.getElementById("nuevoComisionado");
+  const motivo = document.getElementById("motivo");
+  const body = document.getElementById("modalCasoBody");
+
+  //validamos que nada venga vacio
+  if (!nuevoComi.value || !motivo.value) {
+    body.innerHTML += `<div class="alert alert-danger m-3">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        Para reasignar, todos los datos son necesarios.
+      </div>`
+    return;
+  };
+
+  //armamos el objeto para enviar
+  const params = {
+    'idCaso': idCaso,
+    'documentoNuevo': nuevoComi.value,
+    'motivo': motivo.value,
+  }
+
+  //Enviamos mediante ajax
+  $.ajax({
+    data: params,
+    url: ENDPOINT_GESTIONAR,
+    type: 'POST',
+    dataType: 'json',
+
+
+    success: function (response) {
+      cerrarModal();
+      cargarCasos();
+
+      if (response.status == 'error') {
+        //se muestra una alerta estetica de error
+        Swal.fire({
+          icon: 'error',
+          title: `${response.mensaje}`,
+          showConfirmButton: false,
+          theme: 'dark',
+          timer: 1000
+        });
+        return;
+      };
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Usuario reactivado con exito',
+        theme: 'dark',
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    },
+
+    error: function (jqXHR, textStatus, errorThrown) {
+      console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de conexión',
+        text: 'Ocurrió un error al intentar reactivar al usuario.',
+        theme: 'dark'
+      });
+    }
+  })
+}
+
 //definimos la función previamente declarada
 const mostrarDetallesCaso = (caso) => {
   //capturamos partes del modal
@@ -376,9 +526,8 @@ const mostrarDetallesCaso = (caso) => {
     </div>
 </div>
         
-        ${
-          caso.descripcion
-            ? `
+        ${caso.descripcion
+      ? `
         <div class="row">
             <div class="col-md-12 mb-3">
                 <label class="form-label fw-bold">Descripción:</label>
@@ -386,8 +535,8 @@ const mostrarDetallesCaso = (caso) => {
             </div>
         </div>
         `
-            : ""
-        }
+      : ""
+    }
     `;
 
   //Capturamos el boton para mostrar el historial de seguimientos
