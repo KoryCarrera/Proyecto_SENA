@@ -24,9 +24,11 @@ class CasosModel extends baseHelper {
             };
 
             if ($findCase['estado'] === $nuevoEstado) {
+            if ($findCase['estado'] === $nuevoEstado) {
                 throw new Exception ('es el mismo estado que intentas asignar');
             };
 
+            if ($findCase['estado'] == 'No atendido' && $findUser['rol'] != '1'){
             if ($findCase['estado'] == 'No atendido' && $findUser['rol'] != '1'){
                 throw new Exception('¡No tienes permisos para cambiar el estado de este casos');
             };

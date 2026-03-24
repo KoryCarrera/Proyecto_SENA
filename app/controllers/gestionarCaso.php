@@ -37,18 +37,12 @@ try {
         $model->cambiarEstadoCaso($nuevoEstado, $documentoUser, $idCaso);
         echo json_encode(['status' => 'ok', 'mensaje' => '¡Estado actualizado con éxito!']);
 
-    } elseif($seguimiento){
-        $model->registrarSeguimiento($seguimiento, $idCaso, $documentoUser);
-        echo json_encode([
-            'status' => 'ok',
-            'mensaje' => '¡Seguimiento registrado con exito!'
-        ]);
-
-    } else {
+    } 
+    else {
         // Si llega aquí, es porque $_POST['documento_nuevo'] y $_POST['nuevo_estado'] están vacíos o no existen.
         echo json_encode([
             'status' => 'error', 
-            'mensaje' => 'No se pudo determinar la acción.'
+            'mensaje' => 'No se pudo determinar la acción. Revisa que los nombres de los campos en el HTML sean correctos.'
         ]);
     }
 
