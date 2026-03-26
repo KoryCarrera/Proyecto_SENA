@@ -167,11 +167,53 @@ btnVerificar.addEventListener('click', function (e) {
 
 
         })
-        const activar2FA = document.getElementById('activar2FA');
-        activar2FA.addEventListener('change', function (e) {
-            if (activar2FA.checked){
-                
-            }
-            
+}); // Cerramos btnVerificar.addEventListener
+
+// ── Activar/Desactivar 2FA ─────────────────────────
+const activar2FA = document.getElementById('activar2FA');
+
+if (activar2FA) {
+    activar2FA.addEventListener('change', function () {
+        const formData = new FormData();
+        formData.append('estado_2fa', this.checked ? 1 : 0);
+
+        fetch('/actualizar2FA', {
+            method: 'POST',
+            body: formData
         })
-    })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                Swal.fire({
+                    icon: 'success',
+                    title: this.checked ? '2FA Activado' : '2FA Desactivado',
+                    theme: 'dark',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            } else {
+                this.checked = !this.checked; // Revertir visualmente el botón
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al actualizar',
+                    text: data.mensaje || 'Ocurrió un error inesperado',
+                    theme: 'dark',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        })
+        .catch(error => {
+            this.checked = !this.checked; // Revertir visualmente el botón
+            console.error('Error de fetch:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de conexión',
+                text: 'Hubo un problema al comunicarse con el servidor',
+                theme: 'dark',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        });
+    });
+}

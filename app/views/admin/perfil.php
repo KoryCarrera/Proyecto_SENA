@@ -194,15 +194,17 @@
                   </div>
 
                   <div class="flex justify-between pt-6">
-                    <input type="checkbox" id="activar2FA" class="btn-check items-center bg-indigo-500 py-2 px-3"
-                      autocomplete="off">
-                    <label class=" bg-indigo-500 text-white px-3 py-1 rounded-lg" >
-                      Actualizar 2FA
-                    </label>
+                    <div class="flex items-center">
+                      <input type="checkbox" id="activar2FA" class="hidden peer" autocomplete="off">
+                      <label for="activar2FA" class="cursor-pointer select-none flex items-center gap-2 px-6 py-3 rounded-xl font-bold bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10 transition-all peer-checked:bg-indigo-600/20 peer-checked:text-indigo-400 peer-checked:border-indigo-500/40 peer-checked:shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+                        <i class="bi bi-shield-check text-lg"></i>
+                        <span> Verificación en dos pasos</span>
+                      </label>
+                    </div>
 
                     <button type="button" class="btn-search px-10 py-3 rounded-xl font-bold flex items-center gap-2"
                       id="btnActualizar">
-                      <i class="bi bi-save2-fill"></i> Actualizar Perfil
+                      <i class="bi bi-save2-fill"></i> Actualizar
                     </button>
                   </div>
                 </form>
