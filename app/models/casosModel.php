@@ -21,17 +21,15 @@ class CasosModel extends baseHelper {
 
             if (!$findUser) {
                 throw new Exception("¡No se ha encontrado el usuario que desea cambiar el estado!");
-            };
+            }
 
-            if ($findCase['estado'] === $nuevoEstado) {
             if ($findCase['estado'] === $nuevoEstado) {
                 throw new Exception ('es el mismo estado que intentas asignar');
-            };
+            }
 
             if ($findCase['estado'] == 'No atendido' && $findUser['rol'] != '1'){
-            if ($findCase['estado'] == 'No atendido' && $findUser['rol'] != '1'){
                 throw new Exception('¡No tienes permisos para cambiar el estado de este casos');
-            };
+            }
 
             $newData = [
                 [ 'value' => $id_caso, 'type' => PDO::PARAM_INT ],
@@ -43,7 +41,7 @@ class CasosModel extends baseHelper {
 
             return true;
 
-        }catch (Exception $e) {
+        }catch(Exception $e) {
             error_log('Ha ocurrido un error a la hora de cambiar el estado de caso: '. $e->getMessage());
             throw new Exception('¡Ha ocurrido un error a la hora de cambiar el estado del caso! '. $e->getMessage());
         }
