@@ -163,8 +163,8 @@
           <section class="tabla-procesos">
             <div class="glass-card p-0 overflow-hidden">
               <div class="overflow-x-auto">
-                <table id="tablaProcesos" class="glass-table w-full text-left text-sm text-slate-300">
-                  <thead class="bg-slate-800/50 text-xs uppercase text-slate-400">
+                <table id="tablaProcesos" class="glass-table w-full text-center text-base text-slate-300 h-full">
+                  <thead class="bg-slate-800/50 text-base text-center uppercase text-slate-400">
                     <tr>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Nombre Proceso</th>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Descripción</th>

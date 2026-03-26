@@ -26,6 +26,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
 
   <!--CSS propio-->
   <link rel="stylesheet" href="/assets/css/crear-usuario.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"> <!-- DataTables CSS -->
 
   <script src="/assets/js/jquery-3.7.1.min.js"></script>
 
@@ -134,6 +135,34 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
         </div>
       </header>
 
+      <!-- Filter Bar -->
+      <div class="px-6 py-4 glass-nav z-30 flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div class="flex items-center gap-2 w-full md:w-auto">
+          <div class="relative">
+            <label class="text-slate-400 text-xs uppercase font-bold mr-2">Ver:</label>
+            <select id="filtroCantidadUsuarios"
+              class="bg-slate-800/50 border border-slate-700 text-slate-200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 outline-none cursor-pointer hover:bg-slate-700/50 transition-colors">
+              <option class="px-6 py-4 font-medium tracking-wider" value="10">10 usuarios</option>
+              <option class="px-6 py-4 font-medium tracking-wider" value="25">25 usuarios</option>
+              <option class="px-6 py-4 font-medium tracking-wider" value="50">50 usuarios</option>
+              <option class="px-6 py-4 font-medium tracking-wider" value="100">100 usuarios</option>
+            </select>
+          </div>
+        </div>
+
+        <form class="flex gap-2 w-full md:w-auto" role="search" onsubmit="event.preventDefault();">
+          <div class="relative w-full md:w-64">
+            <input
+              class="glass-search w-full px-4 py-2 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+              type="search" id="buscarUsuarios" placeholder="Buscar palabras clave..." aria-label="Search">
+            <i class="bi bi-search absolute right-3 top-2.5 text-slate-400"></i>
+          </div>
+          <button
+            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors"
+            type="submit">Buscar</button>
+        </form>
+      </div>
+
       <!-- Content -->
       <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
         <div class="max-w-7xl mx-auto space-y-8">
@@ -149,8 +178,8 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
           <section class="tabla-usuarios">
             <div class="glass-card p-0 overflow-hidden">
               <div class="overflow-x-auto">
-                <table class="glass-table w-full text-left text-sm text-slate-300">
-                  <thead class="bg-slate-800/50 text-xs uppercase text-slate-400">
+                <table id="tablaUsuario" class="glass-table w-full text-center text-base text-slate-300 h-full">
+                  <thead class="bg-slate-800/50 text-base text-center uppercase text-slate-400">
                     <tr>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Documento</th>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Nombre</th>
@@ -168,6 +197,40 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
                   </tbody>
                 </table>
               </div>
+            </div>
+            
+            <!-- Paginación externa — JS la controla dinámicamente -->
+            <div id="paginacionUsuarios" class="flex justify-center mt-4">
+              <nav class="flex items-center gap-x-1" aria-label="Pagination">
+
+                <!-- Botón Anterior -->
+                <button type="button" id="btnPaginaAnteriorUsuarios"
+                  class="py-2 px-3 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                  aria-label="Previous" disabled>
+                  <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="m15 18-6-6 6-6" />
+                  </svg>
+                  <span>Anterior</span>
+                </button>
+
+                <!-- Números de página — generados por JS -->
+                <div id="pagBotonesUsuarios" class="flex items-center gap-x-1"></div>
+
+                <!-- Botón Siguiente -->
+                <button type="button" id="btnPaginaSiguienteUsuarios"
+                  class="py-2 px-3 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                  aria-label="Next" disabled>
+                  <span>Siguiente</span>
+                  <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </button>
+
+              </nav>
             </div>
           </section>
         </div>
@@ -254,6 +317,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
   <!-- Hidden anchor tag preservation from original file -->
   <a href="/editarUsuario" style="display:none;">a</a>
 
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <!-- Bootstrap Bundle JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
