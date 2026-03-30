@@ -141,6 +141,7 @@
   <script src="/assets/js/notificacionesAdmin.js"></script>
   <script src="/assets/js/cache.js"></script>
   <script src="/assets/js/logout.js"></script>
+  <script src="/assets/js/inactividad.js"></script>
 
 </body>
 

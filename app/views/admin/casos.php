@@ -258,6 +258,7 @@
 <script src="/assets/js/logout.js"></script>
 <script src="/assets/js/casosAdmin.js"></script>
 <script src="/assets/js/cache.js"></script>
+<script src="/assets/js/inactividad.js"></script>
 
 
 

@@ -4,53 +4,6 @@
 
 use Complex\Functions;
 
-function registrarCasos($pdo, $documento, $proceso, $tipoCaso, $descripcion, $nombre)
-{
-    // PREPARACIÓN DE LA LLAMADA AL PROCEDIMIENTO ALMACENADO
-    $stmt = $pdo->prepare("CALL sp_registrar_caso(?, ?, ?, ?, ?)");
-    $stmt->bindParam(1, $documento, PDO::PARAM_STR);
-    $stmt->bindParam(2, $proceso, PDO::PARAM_INT);
-    $stmt->bindParam(3, $tipoCaso, PDO::PARAM_INT);
-    $stmt->bindParam(4, $descripcion, PDO::PARAM_STR);
-    $stmt->bindParam(5, $nombre, PDO::PARAM_STR);
-
-    // EJECUCIÓN Y MANEJO DE ERRORES (PDOException)
-    try {
-        $stmt->execute();
-        $casoRegistrado = $stmt->fetch(PDO::FETCH_ASSOC);
-        $stmt->closeCursor(); // Limpiar el cursor después de la ejecución
-
-        if (!$casoRegistrado) {
-            return ['success' => false, 'data' => $casoRegistrado];
-        }
-        return ['success' => true, 'data' => $casoRegistrado];
-    } catch (PDOException $e) {
-        error_log("Error al registrar caso: " . $e->getMessage());
-        return ['success' => false];
-    }
-}
-
-//FUNCIÓN: REGISTRAR UN SEGUIMIENTO
-function registrarSeguimiento($pdo, $observacion, $idCaso, $documento)
-{
-    // PREPARACIÓN DE LA LLAMADA AL PROCEDIMIENTO ALMACENADO
-    $stmt = $pdo->prepare("CALL sp_registrar_seguimiento(?, ?, ?)");
-    $stmt->bindParam(1, $observacion, PDO::PARAM_STR);
-    $stmt->bindParam(2, $idCaso, PDO::PARAM_INT);
-    $stmt->bindParam(3, $documento, PDO::PARAM_STR);
-
-    // EJECUCIÓN Y MANEJO DE ERRORES (PDOException)
-    try {
-        $stmt->execute();
-        $stmt->closeCursor(); // Limpiar el cursor después de la ejecución
-        return true;
-    } catch (PDOException $e) {
-        error_log("Error en registrarSeguimiento: " . $e->getMessage());
-        return false;
-    }
-}
-
-//FUNCIÓN: REGISTRAR UN NUEVO USUARIO (LLAMADA A sp_registrar_usuario)
 function registrarUsuario($pdo, $documento, $nombre, $apellido, $email, $rol, $contraseña)
 {
     // GENERACIÓN DEL HASH SEGURO DE LA CONTRASEÑA

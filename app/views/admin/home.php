@@ -302,6 +302,7 @@
   <script src="/assets/js/dashboard_admin.js"></script>
   <script src="/assets/js/cache.js"></script>
   <script src="/assets/js/logout.js"></script>
+  <script src="/assets/js/inactividad.js"></script>
 
 </body>
 

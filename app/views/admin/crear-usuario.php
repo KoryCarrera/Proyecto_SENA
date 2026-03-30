@@ -327,6 +327,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
   <script src="/assets/js/usuariosAdmin.js"></script>
   <script src="/assets/js/modal_usuarios_Admin.js"></script>
   <script src="/assets/js/cache.js"></script>
+  <script src="/assets/js/inactividad.js"></script>
 
 </body>
 
