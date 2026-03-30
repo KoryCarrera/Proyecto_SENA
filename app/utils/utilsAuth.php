@@ -6,6 +6,7 @@ use PHPMailer\PHPMailer\Exception;
 
 error_log('DEBUG EMAIL - Usuario: ' . getenv('SMTP_HOST') . 'Email: ' . getenv('MAIL_FROM') . ' | Contraseña: ' . getenv('APP_KEY'));
 
+//Funcion para enviar correos con PHPMailer
 function enviarCorreo($asunto, $cuerpoHTML, $cuerpoAlt, $destinatarios, $conCopia = null, $conCopiaOculta = null)
 {
     $mail = new PHPMailer(true);
@@ -53,6 +54,10 @@ function enviarCorreo($asunto, $cuerpoHTML, $cuerpoAlt, $destinatarios, $conCopi
         return false;
     }
 }
+
+//
+// CORREO DE 2FA
+//
 function enviarCodigo2FA($codigo2FA, $nombreUsuario, $emailDestino, $tiempoExpiracion = 10, $nombreApp = "Sistema de Gestion SENA")
 {
     $asunto = "Codigo de verificacion para tu inicio de sesion";
@@ -118,6 +123,115 @@ function enviarCodigo2FA($codigo2FA, $nombreUsuario, $emailDestino, $tiempoExpir
     return $correoEnviado;
 }
 
+//
+// CORREO DE REGISTRAR USUARIO
+//
+function correoCrearUsuario($documento, $nombre, $nombreRol, $apellido, $email, $numero, $usuarioRegistrado){
+    $asunto = "Nuevo Usuario Registrado - #{$documento}: {$nombre}";
+
+      $cuerpoHTML = "
+    <html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; }
+            .header { background-color: #28a745; color: white; padding: 15px; }
+            .content { padding: 20px; }
+            .detalle { background-color: #f8f9fa; padding: 15px; border-radius: 5px; }
+            table { width: 100%; border-collapse: collapse; }
+            td { padding: 10px; border-bottom: 1px solid #ddd; }
+            .label { font-weight: bold; width: 150px; background-color: #e9ecef; }
+        </style>
+    </head>
+    <body>
+        <div class='header'>
+            <h2>Notificación de Nuevo Usuario</h2>
+        </div>
+        <div class='content'>
+            <p>Se ha registrado un nuevo caso en el sistema:</p>
+            <div class='detalle'>
+                <table>
+                    <tr>
+                        <td class='label'>Documento del usuario creado:</td>
+                        <td><strong>{$documento}</strong></td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Rol del usuario:</td>
+                        <td>{$nombreRol}</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Nombre:</td>
+                        <td>{$nombre}</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Apellido:</td>
+                        <td>{$apellido}</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Email:</td>
+                        <td>{$email}</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Número:</td>
+                        <td>{$numero}</td>   
+                    </tr>
+                    <tr>
+                        <td class='label'><strong>Su contraseña:</strong></td>
+                        <td><strong>{$usuarioRegistrado}</strong></td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Fecha de registro:</td>
+                        <td>" . date('d/m/Y H:i:s') . "</td>
+                    </tr>
+                </table>
+            </div>";
+
+      $cuerpoHTML .= "
+            <p style='margin-top: 20px;'>Este es un mensaje automático, por favor no responder.</p>
+        </div>
+    </body>
+    </html>";
+
+    $cuerpoAlt = "NUEVO USUARIO REGISTRADO\n" .
+                 "=====================\n\n" .
+                 "Documento del usuario: {$documento}\n" .
+                 "Rol: {$nombreRol}\n" .
+                 "Nombre: {$nombre}\n" .
+                 "Apellido: {$apellido}\n" .
+                 "Email: {$email}\n" .
+                 "Numero: {$numero}\n" .
+                 "Fecha: " . date('d/m/Y H:i:s') . "\n\n" .
+                 "Este es un mensaje automático.";
+
+
+     $destinatarios = [
+        [
+            'emailUser' => $email, 
+            'userName' => $nombre
+        ]
+     ];
+        
+
+
+    $correoEnviado = enviarCorreo(
+        $asunto,                    
+        $cuerpoHTML,              
+        $cuerpoAlt,              
+        $destinatarios,         
+        null,                        
+        null                         
+    );
+
+      if ($correoEnviado) {
+        error_log(" Correo enviado para usuario #{$documento}");
+    } else {
+        error_log(" No se pudo enviar correo para usuario #{$documento}");
+    }
+
+    return $correoEnviado;
+}
+//
+// CORREO DE EDITAR USUARIO 
+//
 function correoEdicionUsuario($token, $nombre, $email, $rol)
 {
 
@@ -178,3 +292,209 @@ Si no solicitaste este cambio, contacta al administrador.";
 
     return $correoEnviado;
 }
+
+//
+// CORREO DE REGISTRAR UN CASO
+//
+function correoRegistroCaso($idCaso, $nombreCaso, $proceso, $tipoCaso, $descripcion, $resultadoArchivos){
+    
+    $asunto = "Nuevo Caso Registrado - #{$idCaso}: {$nombreCaso}";
+
+    $cuerpoHTML = "
+    <html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; }
+            .header { background-color: #28a745; color: white; padding: 15px; }
+            .content { padding: 20px; }
+            .detalle { background-color: #f8f9fa; padding: 15px; border-radius: 5px; }
+            table { width: 100%; border-collapse: collapse; }
+            td { padding: 10px; border-bottom: 1px solid #ddd; }
+            .label { font-weight: bold; width: 150px; background-color: #e9ecef; }
+        </style>
+    </head>
+    <body>
+        <div class='header'>
+            <h2>Notificación de Nuevo Caso</h2>
+        </div>
+        <div class='content'>
+            <p>Se ha registrado un nuevo caso en el sistema:</p>
+            <div class='detalle'>
+                <table>
+                    <tr>
+                        <td class='label'>ID del Caso:</td>
+                        <td><strong>{$idCaso}</strong></td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Nombre del Caso:</td>
+                        <td>{$nombreCaso}</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Proceso:</td>
+                        <td>{$proceso}</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Tipo de Caso:</td>
+                        <td>{$tipoCaso}</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Descripción:</td>
+                        <td>{$descripcion}</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Usuario:</td>
+                        <td>{$_SESSION['user']['username']} ({$_SESSION['user']['documento']})</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Fecha de registro:</td>
+                        <td>" . date('d/m/Y H:i:s') . "</td>
+                    </tr>
+                </table>
+            </div>";
+
+    if (isset($resultadoArchivos['success']) && $resultadoArchivos['success']) {
+        $cuerpoHTML .= "
+            <p style='margin-top: 20px; color: #28a745;'> Archivos subidos exitosamente</p>";
+    }
+
+    $cuerpoHTML .= "
+            <p style='margin-top: 20px;'>Este es un mensaje automático, por favor no responder.</p>
+        </div>
+    </body>
+    </html>";
+
+    $cuerpoAlt = "NUEVO CASO REGISTRADO\n" .
+        "=====================\n\n" .
+        "ID del Caso: {$idCaso}\n" .
+        "Nombre: {$nombreCaso}\n" .
+        "Proceso: {$proceso}\n" .
+        "Tipo: {$tipoCaso}\n" .
+        "Descripción: {$descripcion}\n" .
+        "Usuario: {$_SESSION['user']['username']}\n" .
+        "Fecha: " . date('d/m/Y H:i:s') . "\n\n" .
+        "Este es un mensaje automático.";
+
+
+    $destinatarios = [
+        [
+            'emailUser' => 'isaaccarvajal1356@gmail.com',
+            'userName' => 'Administrador'
+        ]
+    ];
+
+    if (isset($_SESSION['user']['email'])) {
+        $destinatarios[] = [
+            'emailUser' => $_SESSION['user']['email'],
+            'userName' => $_SESSION['user']['username']
+        ];
+    }
+
+    $correoEnviado = enviarCorreo(
+        $asunto,
+        $cuerpoHTML,
+        $cuerpoAlt,
+        $destinatarios,
+        null,
+        null
+    );
+
+    if ($correoEnviado) {
+        error_log(" Correo enviado para caso #{$idCaso}");
+    } else {
+        error_log(" No se pudo enviar correo para caso #{$idCaso}");
+    }
+
+    return $correoEnviado;
+}
+//
+// CORREO DE REGISTRAR PROCESO 
+//
+function correoRegistrarProceso($idProceso, $nombre, $descripcion){
+    
+        $asunto = "Nuevo proceso registrado - #{$idProceso}: {$nombre}";
+
+    $cuerpoHTML = "
+    <html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; }
+            .header { background-color: #28a745; color: white; padding: 15px; }
+            .content { padding: 20px; }
+            .detalle { background-color: #f8f9fa; padding: 15px; border-radius: 5px; }
+            table { width: 100%; border-collapse: collapse; }
+            td { padding: 10px; border-bottom: 1px solid #ddd; }
+            .label { font-weight: bold; width: 150px; background-color: #e9ecef; }
+        </style>
+    </head>
+    <body>
+        <div class='header'>
+            <h2>Notificación de Nuevo Procesox</h2>
+        </div>
+        <div class='content'>
+            <p>Se ha registrado un nuevo caso en el sistema:</p>
+            <div class='detalle'>
+                <table>
+                    <tr>
+                        <td class='label'>ID del proceso:</td>
+                        <td><strong>{$idProceso}</strong></td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Nombre del proceso:</td>
+                        <td>{$nombre}</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Descripcion:</td>
+                        <td>{$descripcion}</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Usuario:</td>
+                        <td>{$_SESSION['user']['username']} ({$_SESSION['user']['documento']})</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Fecha de registro:</td>
+                        <td>" . date('d/m/Y H:i:s') . "</td>
+                    </tr>
+                </table>
+            </div>";
+
+    $cuerpoHTML .= "
+            <p style='margin-top: 20px;'>Este es un mensaje automático, por favor no responder.</p>
+        </div>
+    </body>
+    </html>";
+
+    $cuerpoAlt = "NUEVO PROCESO REGISTRADO\n" .
+        "=====================\n\n" .
+        "ID del Proceso: {$idProceso}\n" .
+        "Nombre: {$nombre}\n" .
+        "Descripción: {$descripcion}\n" .
+        "Usuario: {$_SESSION['user']['documento']}\n" .
+        "Fecha: " . date('d/m/Y H:i:s') . "\n\n" .
+        "Este es un mensaje automático.";
+
+
+    $destinatarios = [
+        [
+            'emailUser' => 'isaaccarvajal1356@gmail.com',
+            'userName' => 'Administrador'
+        ]
+    ];
+
+    $correoEnviado = enviarCorreo(
+        $asunto,                    
+        $cuerpoHTML,              
+        $cuerpoAlt,              
+        $destinatarios,         
+        null,                        
+        null                         
+    );
+
+      if ($correoEnviado) {
+        error_log(" Correo enviado para proceso #{$idProceso}");
+    } else {
+        error_log(" No se pudo enviar correo para proceso #{$idProceso}");
+    }
+
+    return $correoEnviado;
+}
+

@@ -282,6 +282,7 @@
   <script src="/assets/js/dashboard_comi.js"></script>
   <script src="/assets/js/cache.js"></script>
   <script src="/assets/js/logout.js"></script>
+  <script src="/assets/js/inactividad.js"></script>
 
 </body>
 
