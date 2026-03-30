@@ -1,10 +1,16 @@
 <?php require_once __DIR__ . "/../../controllers/checkSessionComi.php"; ?>
-<!DOCTYPE html>
-<html lang="es">
 
+<!--comienzo del documento y la vista de casos de comisionado -->
+<!DOCTYPE html>
+<!-- seleccionamos el lenguaje-->
+<html lang="es"> 
+   <!--encabezado de la pagina-->
 <head>
+  <!-- seleccionamos el utf-8 para poder tener caracteres especiales -->
   <meta charset="UTF-8">
+  <!-- seleccionamos el viewport para que la pagina sea responsiva -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- titulo de la pagina -->
   <title>Casos | Comisionado</title>
 
   <!--Icon de la pagina-->
@@ -27,56 +33,71 @@
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"> <!-- DataTables CSS -->
 
 </head>
-
+<!-- cuerpo de la pagina -->
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- Decorative Background Elements -->
+  <!-- fondo de la pagina -->
   <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
     <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
     <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
+    <!-- gradiente del fondo extraido de vercel -->
     <div
       class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay">
     </div>
   </div>
 
+  <!-- contenedor principal -->
   <div class="flex h-screen overflow-hidden relative z-10">
 
-    <!-- Sidebar -->
+    <!-- cuerpo de la sidebar -->
     <aside
       class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
 
-      <!-- Logo Area -->
+      <!-- logo de la sidebar -->
       <div class="h-20 flex items-center justify-center border-b border-white/5">
         <img src="/assets/img/logo_sena.png" alt="SENA" class="w-10 h-10 object-contain group-hover:block">
       </div>
 
-      <!-- Navigation -->
+      <!-- cuerpo de la sidebar -->
+
       <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
+
+        <!-- enlace de la pagina de inicio -->
 
         <a href="/dashboardComi" class="nav-link">
           <i class="bi bi-house-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Inicio</span>
         </a>
 
+        <!-- enlace de la pagina de registrar casos -->
+
         <a href="/registrarCasos" class="nav-link">
           <i class="bi bi-file-earmark-person-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Registrar Caso</span>
         </a>
+
+        <!-- enlace de la pagina de casos -->
 
         <a href="/casos" class="nav-link active">
           <i class="bi bi-eye-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Casos</span>
         </a>
 
+        <!-- enlace de la pagina de generar informe -->
+
         <a href="/generarInformeComi" class="nav-link">
           <i class="bi bi-file-earmark-text-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Generar Informe</span>
         </a>
 
+        <!-- enlace de la pagina de notificaciones -->
+
         <a href="/notificacionesComi" class="nav-link">
           <i class="bi bi-bell-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Notificación</span>
         </a>
+
+        <!-- enlace de la pagina de perfil -->
 
         <a href="/perfil" class="nav-link">
           <i class="bi bi-person-circle"></i>
@@ -86,14 +107,17 @@
       </nav>
     </aside>
 
-    <!-- Main Content Wrapper -->
+    <!--  -->
     <div class="flex-1 flex flex-col ml-20 h-full">
 
-      <!-- Top Bar -->
+      <!-- top bar -->
       <header class="h-20 glass-nav flex items-center justify-between px-6 sticky top-0 z-10">
+
+        <!-- titulo de la pagina -->
 
         <h2 class="text-xl font-semibold text-white tracking-tight">Seguimiento de Casos</h2>
 
+        <!-- se toma el nombre del usuario y se muestra en la top -->
         <div class="flex items-center gap-6">
           <div class="text-right hidden md:block">
             <?php if (isset($_SESSION['user']['username'])): ?>
@@ -104,10 +128,14 @@
             <p class="text-xs text-slate-400">Comisionado</p>
           </div>
 
+          <!--aqui hay un enlace para ir a la pagina de perfil -->
+
           <div class="flex items-center gap-4">
             <a href="/perfil" class="p-2 rounded-full hover:bg-white/5 transition-colors">
               <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
             </a>
+
+            <!--aqui hay un boton para cerrar sesion -->
 
             <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
             <button type="submit" name="logout" id="logoutButton" value="logout"
@@ -119,13 +147,14 @@
         </div>
       </header>
 
-      <!-- Filter Bar -->
+      <!-- esta es la barra de filtro de cantidades de Datatables con nuestro id y estilos propios -->
       <div class="px-6 py-4 glass-nav z-30 flex flex-col md:flex-row gap-4 items-center justify-between">
         <div class="flex items-center gap-2 w-full md:w-auto">
           <div class="relative">
             <label class="text-slate-400 text-xs uppercase font-bold mr-2">Ver:</label>
             <select id="filtroCantidadComi"
               class="bg-slate-800/50 border border-slate-700 text-slate-200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 outline-none cursor-pointer hover:bg-slate-700/50 transition-colors">
+              <!-- aqui esta el select para filtrar la cantidad de casos -->
               <option class="px-6 py-4 font-medium tracking-wider" value="10">10 casos</option>
               <option class="px-6 py-4 font-medium tracking-wider" value="25">25 casos</option>
               <option class="px-6 py-4 font-medium tracking-wider" value="50">50 casos</option>
@@ -133,6 +162,8 @@
             </select>
           </div>
         </div>
+
+        <!-- esta es la barra de busqueda de Datatables con nuestro id y estilos propios -->
 
         <form class="flex gap-2 w-full md:w-auto" role="search">
           <div class="relative w-full md:w-64">
@@ -146,17 +177,19 @@
         </form>
       </div>
 
-      <!-- Content -->
+      <!-- este es el main de la pagina de casos, especialmente en la que esta la tabla de casos -->
       <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
         <div class="max-w-full mx-auto ">
 
-          <!-- Cases Table -->
+          <!-- esta es la tabla de casos -->
           <section>
             <div class="glass-card p-0 overflow-hidden">
               <div class="overflow-x-auto">
                 <table id="tablaCasoComi" class="glass-table w-full text-center text-base text-slate-300 h-full">
                   <thead class="bg-slate-800/50 text-base text-center uppercase text-slate-400">
                     <tr>
+                      <!-- aqui estan los encabezados de la tabla -->
+
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Id de caso</th>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Fecha de Registro</th>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Tipo de Caso</th>
@@ -168,7 +201,9 @@
                     </tr>
                   </thead>
                   <tbody class="cont-tabla divide-y divide-slate-700/50" id="tablaCasos">
-                    <!-- JS Injected Rows go here -->
+
+                    <!-- aqui se insertan las filas de la tabla por medio del javascript -->
+
                   </tbody>
                 </table>
               </div>
