@@ -183,7 +183,7 @@ if (btnRegistrar) {
 
         //CAPTURAR VALORES
         const nombreCaso = document.getElementById("nombreCaso").value.trim();
-        const radicadoSena = document.getElementById('radicado').value;
+        const radicadoSena = document.getElementById('radicado').value.trim();
         const proceso = document.getElementById("proceso").value;
         const tipoCaso = document.getElementById("tipoCaso").value;
         const descripcion = document.getElementById("descripcion").value.trim();

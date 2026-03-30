@@ -161,6 +161,9 @@ public function __construct(protected  $conexion)
             $dataR = $stmt->fetch(PDO::FETCH_ASSOC);
             $stmt->closeCursor();
 
+            if ($dataR && is_array($dataR)){
+                return $dataR;
+            }
             return true;
         } catch (PDOException $e) {
             error_log("Ha ocurrido un erro sql: ". $e->getMessage());

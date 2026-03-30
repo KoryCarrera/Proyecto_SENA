@@ -166,9 +166,12 @@ require_once __DIR__ . "/../../models/insertData.php";
                     <span class="input-group-text custom-icon">
                       <i class="bi bi-123"></i>
                     </span>
-                    <input type="number" name="radicado" id="radicado" class="form-control custom-input"
-                      placeholder="Ej: 123456789" maxlength="255" required>
+                    <input type="text" name="radicado" id="radicado" class="form-control custom-input"
+                      placeholder="Ej: ASH13854" maxlength="50" required>
                   </div>
+                  <small class="text-slate-500 text-xs mt-1 block">
+                    <i class="bi bi-info-circle-fill"></i> Máximo 50 caracteres
+                  </small>
                 </div>
                 <!-- Proceso Organizacional -->
                 <div>

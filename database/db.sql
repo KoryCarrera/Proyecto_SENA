@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 23-03-2026 a las 22:14:38
+-- Tiempo de generación: 30-03-2026 a las 15:34:10
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -710,10 +710,10 @@ CREATE PROCEDURE `sp_reasignar_caso` (IN `p_documento` VARCHAR(20), IN `p_docume
     COMMIT;
 END$$
 
-CREATE PROCEDURE `sp_registrar_caso` (IN `p_documento` VARCHAR(20), IN `p_id_proceso` INT, IN `p_id_tipo_caso` INT, IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(255))   BEGIN
+CREATE PROCEDURE `sp_registrar_caso` (IN `p_documento` VARCHAR(20), IN `p_id_proceso` INT, IN `p_id_tipo_caso` INT, IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(255), IN `p_radicado` VARCHAR(50))   BEGIN
 DECLARE v_id_caso INT;
     
-INSERT INTO caso (documento, id_proceso, id_tipo_caso, descripcion, nombre) VALUES (p_documento, p_id_proceso, p_id_tipo_caso, p_descripcion, p_nombre);
+INSERT INTO caso (documento, id_proceso, id_tipo_caso, descripcion, nombre, radicado) VALUES (p_documento, p_id_proceso, p_id_tipo_caso, p_descripcion, p_nombre, p_radicado);
     
     SET v_id_caso = LAST_INSERT_ID();
 
@@ -1014,13 +1014,6 @@ CREATE TABLE `archivo` (
   `tipo_archivo` varchar(50) NOT NULL COMMENT 'Formato del archivo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `archivo`
---
-
-INSERT INTO `archivo` (`id_archivo`, `id_caso`, `nombre_archivo`, `fecha_subida`, `ruta`, `tipo_archivo`) VALUES
-(1, 48, 'e', '2026-03-19 16:10:28', 'e', 'e');
-
 -- --------------------------------------------------------
 
 --
@@ -1030,6 +1023,7 @@ INSERT INTO `archivo` (`id_archivo`, `id_caso`, `nombre_archivo`, `fecha_subida`
 CREATE TABLE `caso` (
   `id_caso` int(11) NOT NULL COMMENT 'PK de casos',
   `nombre` varchar(255) NOT NULL,
+  `radicado` varchar(50) DEFAULT NULL,
   `documento` varchar(20) NOT NULL COMMENT 'FK para relacionar casos y usuarios ',
   `id_seguimiento` int(11) DEFAULT NULL,
   `id_proceso` int(11) NOT NULL,
@@ -1045,55 +1039,49 @@ CREATE TABLE `caso` (
 -- Volcado de datos para la tabla `caso`
 --
 
-INSERT INTO `caso` (`id_caso`, `nombre`, `documento`, `id_seguimiento`, `id_proceso`, `fecha_ultimo_seguimiento`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
-(48, 'Reporte de accidente laboral en oficina administrativa', '1020304050', 17, 14, '2026-03-16 16:30:33', '2026-02-10 14:59:17', NULL, 1, 2, 'El día 10 de febrero de 2026 sufrí una caída dentro de la oficina debido a piso mojado sin señalización. Presenté dolor en la muñeca derecha y fui valorado por la ARL. Solicito se realice la investigación correspondiente y se implementen medidas preventivas para evitar futuros incidentes.'),
-(49, 'Derecho de petición – Estado de incentivo institucional', '1656966633', NULL, 13, NULL, '2026-02-02 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
-(50, 'Posible trato desigual en asignación de incentivos', '1020304050', NULL, 13, NULL, '2026-02-09 12:49:15', NULL, 1, 1, 'El funcionario manifiesta inconformidad debido a que considera que los criterios de evaluación no se aplicaron de manera equitativa en su área, afectando la asignación de incentivos.'),
-(51, 'Incumplimiento en entrega de dotación operativa', '1456333298', NULL, 12, NULL, '2026-02-23 12:50:03', NULL, 2, 1, 'Se informa que el personal del área operativa no ha recibido la dotación correspondiente al periodo vigente, lo que afecta el cumplimiento seguro de sus funciones.'),
-(52, 'Presunto maltrato laboral por parte de superior', '1456333298', NULL, 10, NULL, '2026-02-23 12:50:29', NULL, 1, 1, 'El colaborador reporta comportamientos reiterados de trato inapropiado y comunicación inadecuada por parte de su jefe inmediato, solicitando revisión del caso.'),
-(53, 'Programación de examen médico ocupacional', '1756664828', NULL, 11, NULL, '2026-02-19 12:53:33', NULL, 2, 2, 'El colaborador solicita la programación de su examen médico ocupacional periódico para seguimiento de su estado de salud laboral.'),
-(54, 'Capacitación en prevención de riesgos laborales', '1756664828', NULL, 14, NULL, '2026-02-23 12:53:57', NULL, 2, 2, 'Se solicita capacitación para el equipo de trabajo en temas de prevención de riesgos con el fin de fortalecer prácticas seguras.'),
-(55, 'Estado de solicitud de incentivo institucional', '1020304050', NULL, 13, NULL, '2026-02-23 14:11:57', NULL, 2, 3, 'El peticionario solicita conocer el estado actual de su solicitud de incentivo y los tiempos estimados de respuesta.'),
-(56, 'Copia de resultados de examen médico ocupacional', '1020304050', NULL, 11, NULL, '2026-02-23 14:12:24', NULL, 2, 3, 'Se solicita copia de los resultados del examen médico ocupacional realizado recientemente.'),
-(57, 'Solicitud de acceso al plan anual de SST', '1456333298', NULL, 14, NULL, '2026-02-23 14:15:09', NULL, 2, 3, 'Se solicita acceso o copia del plan anual de seguridad y salud en el trabajo para conocer las actividades programadas.'),
-(58, 'Demora en atención médica ocupacional', '1456333298', 19, 11, '2026-03-23 18:13:01', '2026-02-23 14:15:31', NULL, 2, 4, 'El accionante manifiesta que la demora en la asignación de cita médica afecta su derecho fundamental a la salud, solicitando atención prioritaria.'),
-(59, 'Riesgo laboral no atendido oportunamente', '1756664828', NULL, 14, NULL, '2026-02-21 14:17:12', NULL, 2, 4, 'Se solicita protección de derechos fundamentales ante la persistencia de un riesgo laboral que no ha sido intervenido.'),
-(60, 'Negación de apoyo social en situación urgente', '1020304050', NULL, 10, NULL, '2026-02-17 14:17:51', NULL, 1, 4, 'El accionante solicita intervención inmediata al considerar vulnerados sus derechos por la negación de un apoyo social urgente.'),
-(61, 'Denuncia cableado expuesto', '1020304050', NULL, 14, NULL, '2022-01-18 07:40:00', '2022-01-20 15:10:00', 3, 1, 'Denuncia por cableado expuesto en sala de sistemas'),
-(62, 'Solicitud inspección ruido', '1456333298', NULL, 14, NULL, '2022-02-12 09:15:00', NULL, 1, 2, 'Solicitud de inspección por condiciones de ruido en taller'),
-(63, 'Incidente menor área operativa', '1656966633', NULL, 14, NULL, '2022-03-03 10:30:00', '2022-03-07 11:20:00', 3, 1, 'Reporte de incidente menor sin lesiones en área operativa'),
-(64, 'Derecho petición seguimiento SST', '1756664828', NULL, 14, NULL, '2022-04-21 14:10:00', NULL, 2, 3, 'Derecho de petición por seguimiento a reporte de seguridad'),
-(65, 'Denuncia falta señalización', '1020304050', NULL, 14, NULL, '2023-01-11 08:00:00', '2023-01-15 17:00:00', 3, 1, 'Denuncia por falta de señalización en zona de carga'),
-(66, 'Solicitud capacitación SST', '1456333298', NULL, 14, NULL, '2023-02-09 09:55:00', NULL, 1, 2, 'Solicitud de capacitación en prevención de riesgos'),
-(67, 'Incidente leve laboratorio', '1656966633', NULL, 14, NULL, '2023-03-14 11:25:00', '2023-03-18 13:40:00', 3, 1, 'Incidente leve durante práctica en laboratorio'),
-(68, 'Solicitud revisión EPP', '1756664828', NULL, 14, NULL, '2023-05-22 15:00:00', NULL, 2, 2, 'Solicitud de revisión de equipos de protección'),
-(69, 'Derecho petición auditoría SST', '1020304050', NULL, 14, NULL, '2024-01-05 07:50:00', NULL, 1, 3, 'Derecho de petición sobre estado de auditoría de seguridad'),
-(70, 'Denuncia riesgo ergonómico', '1456333298', NULL, 14, NULL, '2024-02-17 10:20:00', '2024-02-21 16:30:00', 3, 1, 'Denuncia por riesgo ergonómico en puesto administrativo'),
-(71, 'Solicitud evaluación riesgos', '1656966633', NULL, 14, NULL, '2024-03-29 12:10:00', NULL, 2, 2, 'Solicitud de evaluación de riesgos en aula técnica'),
-(72, 'Reporte caída leve', '1756664828', NULL, 14, NULL, '2024-05-03 09:00:00', '2024-05-06 14:00:00', 3, 1, 'Reporte de caída sin consecuencias graves'),
-(73, 'Solicitud inspección preventiva', '1020304050', NULL, 14, NULL, '2025-01-09 08:15:00', NULL, 1, 2, 'Solicitud de inspección preventiva general'),
-(74, 'Denuncia incumplimiento SST', '1456333298', NULL, 14, NULL, '2025-02-20 10:45:00', '2025-02-25 12:30:00', 3, 1, 'Denuncia por incumplimiento de protocolo de seguridad'),
-(75, 'Derecho petición seguimiento caso', '1656966633', NULL, 14, NULL, '2025-04-10 13:30:00', NULL, 2, 3, 'Derecho de petición por seguimiento a caso SST'),
-(76, 'Solicitud revisión locativa', '1756664828', NULL, 14, NULL, '2026-01-16 09:10:00', NULL, 1, 2, 'Solicitud de revisión de condiciones locativas'),
-(77, 'Solicitud apoyo psicológico', '1020304050', NULL, 10, NULL, '2022-02-01 10:10:00', '2022-02-03 12:00:00', 3, 2, 'Solicitud de apoyo psicológico institucional'),
-(78, 'Denuncia conflicto interpersonal', '1456333298', NULL, 10, NULL, '2022-06-18 11:20:00', NULL, 1, 1, 'Denuncia por conflicto interpersonal entre funcionarios'),
-(79, 'Solicitud programa bienestar', '1656966633', NULL, 10, NULL, '2023-02-12 08:40:00', '2023-02-18 15:10:00', 3, 2, 'Solicitud de inclusión en programa de bienestar'),
-(80, 'Derecho petición beneficios', '1756664828', NULL, 10, NULL, '2023-07-07 14:25:00', NULL, 2, 3, 'Derecho de petición por información de beneficios'),
-(81, 'Solicitud acompañamiento', '1020304050', 8, 10, '2026-02-23 14:01:18', '2024-01-22 09:30:00', NULL, 1, 2, 'Solicitud de acompañamiento psicosocial'),
-(82, 'Denuncia acoso laboral', '1456333298', NULL, 10, NULL, '2024-04-11 11:15:00', '2024-04-16 16:00:00', 3, 1, 'Denuncia por presunto acoso laboral'),
-(83, 'Solicitud actividad deportiva', '1656966633', NULL, 10, NULL, '2025-03-03 10:50:00', NULL, 1, 2, 'Solicitud de inscripción a actividad deportiva'),
-(84, 'Derecho petición subsidios', '1756664828', NULL, 10, NULL, '2026-02-08 13:05:00', NULL, 2, 3, 'Derecho de petición sobre subsidios'),
-(85, 'Solicitud soporte sistema', '1020304050', 9, 11, '2026-02-23 14:03:02', '2022-03-10 08:30:00', '2022-03-14 17:00:00', 3, 2, 'Solicitud de soporte a sistema institucional'),
-(86, 'Derecho petición tecnológica', '1456333298', NULL, 11, NULL, '2023-06-02 09:10:00', NULL, 1, 3, 'Derecho de petición por respuesta a solicitud tecnológica'),
-(87, 'Solicitud actualización usuario', '1656966633', NULL, 11, NULL, '2024-02-19 11:00:00', '2024-02-23 12:30:00', 3, 2, 'Solicitud de actualización de usuario'),
-(88, 'Denuncia fallas plataforma', '1756664828', NULL, 11, NULL, '2025-05-05 14:10:00', NULL, 2, 1, 'Denuncia por fallas recurrentes en plataforma'),
-(89, 'Solicitud dotación uniforme', '1020304050', NULL, 12, NULL, '2022-04-01 10:10:00', '2022-04-05 11:00:00', 3, 2, 'Solicitud de dotación de uniforme'),
-(90, 'Derecho petición dotación', '1456333298', NULL, 12, NULL, '2023-08-15 09:40:00', NULL, 1, 3, 'Derecho de petición por entrega tardía de dotación'),
-(91, 'Solicitud reposición botas', '1656966633', NULL, 12, NULL, '2024-03-20 12:30:00', '2024-03-25 15:10:00', 3, 2, 'Solicitud de reposición de botas de seguridad'),
-(92, 'Solicitud información incentivos', '1756664828', 10, 13, '2026-02-23 14:03:26', '2022-11-11 08:00:00', '2022-11-15 10:30:00', 3, 2, 'Solicitud de información sobre incentivos'),
-(93, 'Derecho petición convocatoria', '1020304050', 11, 13, '2026-02-23 14:03:53', '2024-06-06 09:45:00', NULL, 1, 3, 'Derecho de petición por resultados de convocatoria'),
-(94, 'Solicitud inscripción incentivos', '1456333298', NULL, 13, NULL, '2026-01-20 11:20:00', NULL, 2, 2, 'Solicitud de inscripción a programa de incentivos'),
-(98, 'd', '1456333298', NULL, 13, NULL, '2026-03-19 16:12:21', NULL, 1, 1, '123ggasdc');
+INSERT INTO `caso` (`id_caso`, `nombre`, `radicado`, `documento`, `id_seguimiento`, `id_proceso`, `fecha_ultimo_seguimiento`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
+(49, 'Derecho de petición – Estado de incentivo institucional', NULL, '1656966633', NULL, 13, NULL, '2026-02-02 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
+(50, 'Posible trato desigual en asignación de incentivos', NULL, '1020304050', NULL, 13, NULL, '2026-02-09 12:49:15', NULL, 1, 1, 'El funcionario manifiesta inconformidad debido a que considera que los criterios de evaluación no se aplicaron de manera equitativa en su área, afectando la asignación de incentivos.'),
+(51, 'Incumplimiento en entrega de dotación operativa', NULL, '1456333298', NULL, 12, NULL, '2026-02-23 12:50:03', NULL, 2, 1, 'Se informa que el personal del área operativa no ha recibido la dotación correspondiente al periodo vigente, lo que afecta el cumplimiento seguro de sus funciones.'),
+(52, 'Presunto maltrato laboral por parte de superior', NULL, '1456333298', NULL, 10, NULL, '2026-02-23 12:50:29', NULL, 1, 1, 'El colaborador reporta comportamientos reiterados de trato inapropiado y comunicación inadecuada por parte de su jefe inmediato, solicitando revisión del caso.'),
+(53, 'Programación de examen médico ocupacional', NULL, '1756664828', NULL, 11, NULL, '2026-02-19 12:53:33', NULL, 2, 2, 'El colaborador solicita la programación de su examen médico ocupacional periódico para seguimiento de su estado de salud laboral.'),
+(54, 'Capacitación en prevención de riesgos laborales', NULL, '1756664828', NULL, 14, NULL, '2026-02-23 12:53:57', NULL, 2, 2, 'Se solicita capacitación para el equipo de trabajo en temas de prevención de riesgos con el fin de fortalecer prácticas seguras.'),
+(55, 'Estado de solicitud de incentivo institucional', NULL, '1020304050', NULL, 13, NULL, '2026-02-23 14:11:57', NULL, 2, 3, 'El peticionario solicita conocer el estado actual de su solicitud de incentivo y los tiempos estimados de respuesta.'),
+(56, 'Copia de resultados de examen médico ocupacional', NULL, '1020304050', NULL, 11, NULL, '2026-02-23 14:12:24', NULL, 2, 3, 'Se solicita copia de los resultados del examen médico ocupacional realizado recientemente.'),
+(57, 'Solicitud de acceso al plan anual de SST', NULL, '1456333298', NULL, 14, NULL, '2026-02-23 14:15:09', NULL, 2, 3, 'Se solicita acceso o copia del plan anual de seguridad y salud en el trabajo para conocer las actividades programadas.'),
+(58, 'Demora en atención médica ocupacional', NULL, '1456333298', 19, 11, '2026-03-23 18:13:01', '2026-02-23 14:15:31', NULL, 2, 4, 'El accionante manifiesta que la demora en la asignación de cita médica afecta su derecho fundamental a la salud, solicitando atención prioritaria.'),
+(59, 'Riesgo laboral no atendido oportunamente', NULL, '1756664828', NULL, 14, NULL, '2026-02-21 14:17:12', NULL, 2, 4, 'Se solicita protección de derechos fundamentales ante la persistencia de un riesgo laboral que no ha sido intervenido.'),
+(60, 'Negación de apoyo social en situación urgente', NULL, '1020304050', NULL, 10, NULL, '2026-02-17 14:17:51', NULL, 1, 4, 'El accionante solicita intervención inmediata al considerar vulnerados sus derechos por la negación de un apoyo social urgente.'),
+(61, 'Denuncia cableado expuesto', NULL, '1020304050', NULL, 14, NULL, '2022-01-18 07:40:00', '2022-01-20 15:10:00', 3, 1, 'Denuncia por cableado expuesto en sala de sistemas'),
+(62, 'Solicitud inspección ruido', NULL, '1456333298', NULL, 14, NULL, '2022-02-12 09:15:00', NULL, 1, 2, 'Solicitud de inspección por condiciones de ruido en taller'),
+(63, 'Incidente menor área operativa', NULL, '1656966633', NULL, 14, NULL, '2022-03-03 10:30:00', '2022-03-07 11:20:00', 3, 1, 'Reporte de incidente menor sin lesiones en área operativa'),
+(64, 'Derecho petición seguimiento SST', NULL, '1756664828', NULL, 14, NULL, '2022-04-21 14:10:00', NULL, 2, 3, 'Derecho de petición por seguimiento a reporte de seguridad'),
+(65, 'Denuncia falta señalización', NULL, '1020304050', NULL, 14, NULL, '2023-01-11 08:00:00', '2023-01-15 17:00:00', 3, 1, 'Denuncia por falta de señalización en zona de carga'),
+(66, 'Solicitud capacitación SST', NULL, '1456333298', NULL, 14, NULL, '2023-02-09 09:55:00', NULL, 1, 2, 'Solicitud de capacitación en prevención de riesgos'),
+(67, 'Incidente leve laboratorio', NULL, '1656966633', NULL, 14, NULL, '2023-03-14 11:25:00', '2023-03-18 13:40:00', 3, 1, 'Incidente leve durante práctica en laboratorio'),
+(68, 'Solicitud revisión EPP', NULL, '1756664828', NULL, 14, NULL, '2023-05-22 15:00:00', NULL, 2, 2, 'Solicitud de revisión de equipos de protección'),
+(69, 'Derecho petición auditoría SST', NULL, '1020304050', NULL, 14, NULL, '2024-01-05 07:50:00', NULL, 1, 3, 'Derecho de petición sobre estado de auditoría de seguridad'),
+(70, 'Denuncia riesgo ergonómico', NULL, '1456333298', NULL, 14, NULL, '2024-02-17 10:20:00', '2024-02-21 16:30:00', 3, 1, 'Denuncia por riesgo ergonómico en puesto administrativo'),
+(71, 'Solicitud evaluación riesgos', NULL, '1656966633', NULL, 14, NULL, '2024-03-29 12:10:00', NULL, 2, 2, 'Solicitud de evaluación de riesgos en aula técnica'),
+(72, 'Reporte caída leve', NULL, '1756664828', NULL, 14, NULL, '2024-05-03 09:00:00', '2024-05-06 14:00:00', 3, 1, 'Reporte de caída sin consecuencias graves'),
+(73, 'Solicitud inspección preventiva', NULL, '1020304050', NULL, 14, NULL, '2025-01-09 08:15:00', NULL, 1, 2, 'Solicitud de inspección preventiva general'),
+(74, 'Denuncia incumplimiento SST', NULL, '1456333298', NULL, 14, NULL, '2025-02-20 10:45:00', '2025-02-25 12:30:00', 3, 1, 'Denuncia por incumplimiento de protocolo de seguridad'),
+(75, 'Derecho petición seguimiento caso', NULL, '1656966633', NULL, 14, NULL, '2025-04-10 13:30:00', NULL, 2, 3, 'Derecho de petición por seguimiento a caso SST'),
+(76, 'Solicitud revisión locativa', NULL, '1756664828', NULL, 14, NULL, '2026-01-16 09:10:00', NULL, 1, 2, 'Solicitud de revisión de condiciones locativas'),
+(77, 'Solicitud apoyo psicológico', NULL, '1020304050', NULL, 10, NULL, '2022-02-01 10:10:00', '2022-02-03 12:00:00', 3, 2, 'Solicitud de apoyo psicológico institucional'),
+(78, 'Denuncia conflicto interpersonal', NULL, '1456333298', NULL, 10, NULL, '2022-06-18 11:20:00', NULL, 1, 1, 'Denuncia por conflicto interpersonal entre funcionarios'),
+(79, 'Solicitud programa bienestar', NULL, '1656966633', NULL, 10, NULL, '2023-02-12 08:40:00', '2023-02-18 15:10:00', 3, 2, 'Solicitud de inclusión en programa de bienestar'),
+(80, 'Derecho petición beneficios', NULL, '1756664828', NULL, 10, NULL, '2023-07-07 14:25:00', NULL, 2, 3, 'Derecho de petición por información de beneficios'),
+(82, 'Denuncia acoso laboral', NULL, '1456333298', NULL, 10, NULL, '2024-04-11 11:15:00', '2024-04-16 16:00:00', 3, 1, 'Denuncia por presunto acoso laboral'),
+(83, 'Solicitud actividad deportiva', NULL, '1656966633', NULL, 10, NULL, '2025-03-03 10:50:00', NULL, 1, 2, 'Solicitud de inscripción a actividad deportiva'),
+(84, 'Derecho petición subsidios', NULL, '1756664828', NULL, 10, NULL, '2026-02-08 13:05:00', NULL, 2, 3, 'Derecho de petición sobre subsidios'),
+(86, 'Derecho petición tecnológica', NULL, '1456333298', NULL, 11, NULL, '2023-06-02 09:10:00', NULL, 1, 3, 'Derecho de petición por respuesta a solicitud tecnológica'),
+(87, 'Solicitud actualización usuario', NULL, '1656966633', NULL, 11, NULL, '2024-02-19 11:00:00', '2024-02-23 12:30:00', 3, 2, 'Solicitud de actualización de usuario'),
+(88, 'Denuncia fallas plataforma', NULL, '1756664828', NULL, 11, NULL, '2025-05-05 14:10:00', NULL, 2, 1, 'Denuncia por fallas recurrentes en plataforma'),
+(89, 'Solicitud dotación uniforme', NULL, '1020304050', NULL, 12, NULL, '2022-04-01 10:10:00', '2022-04-05 11:00:00', 3, 2, 'Solicitud de dotación de uniforme'),
+(90, 'Derecho petición dotación', NULL, '1456333298', NULL, 12, NULL, '2023-08-15 09:40:00', NULL, 1, 3, 'Derecho de petición por entrega tardía de dotación'),
+(91, 'Solicitud reposición botas', NULL, '1656966633', NULL, 12, NULL, '2024-03-20 12:30:00', '2024-03-25 15:10:00', 3, 2, 'Solicitud de reposición de botas de seguridad'),
+(94, 'Solicitud inscripción incentivos', NULL, '1456333298', NULL, 13, NULL, '2026-01-20 11:20:00', NULL, 2, 2, 'Solicitud de inscripción a programa de incentivos');
 
 --
 -- Disparadores `caso`
@@ -1333,9 +1321,7 @@ CREATE TABLE `noti_administrador` (
 
 INSERT INTO `noti_administrador` (`id_notificacion`, `documento`, `mensaje`, `fecha`) VALUES
 (120, '1487569254', 'AVISO: El caso \"d\" CON LA ID: 98 cambió deL estado \"Por atender\" a \"Atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-23 17:48:52'),
-(121, '2030405060', 'AVISO: El caso \"d\" CON LA ID: 98 cambió deL estado \"Por atender\" a \"Atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-23 17:48:52'),
-(123, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Demora en atención médica ocupacional\" con ID: 58 por el comisionado Juan Manuel Correal', '2026-03-23 18:13:01'),
-(124, '2030405060', 'AVISO: Se realizó un seguimiento al caso \"Demora en atención médica ocupacional\" con ID: 58 por el comisionado Juan Manuel Correal', '2026-03-23 18:13:01');
+(123, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Demora en atención médica ocupacional\" con ID: 58 por el comisionado Juan Manuel Correal', '2026-03-23 18:13:01');
 
 -- --------------------------------------------------------
 
@@ -1423,17 +1409,6 @@ CREATE TABLE `seguimiento` (
 --
 
 INSERT INTO `seguimiento` (`id_seguimiento`, `fecha_seguimiento`, `observacion`, `documento`, `id_caso`) VALUES
-(8, '2026-02-23 14:01:18', 'Seguimiento del caso', '1020304050', 81),
-(9, '2026-02-23 14:03:02', 'Seguimiento del caso', '1020304050', 85),
-(10, '2026-02-23 14:03:26', 'Seguimiento del caso', '1020304050', 92),
-(11, '2026-02-23 14:03:53', 'Seguimiento del caso', '1020304050', 93),
-(12, '2026-03-12 15:04:24', 'XD', '1456333298', 58),
-(13, '2026-03-16 15:23:19', 'NO SE', '1756664828', 48),
-(14, '2026-03-16 15:24:02', 'NO SE 2', '1487569254', 48),
-(15, '2026-03-16 15:25:47', '3', '1487569254', 48),
-(16, '2026-03-16 16:07:29', 'TEXT', '1487569254', 48),
-(17, '2026-03-16 16:30:33', 'KORY CARRERA', '1487569254', 48),
-(18, '2026-03-17 14:06:50', 'SEGUIMIENTO PRUEBA 2', '1456333298', 58),
 (19, '2026-03-23 18:13:01', 'El caso aun sigue en proceso, se espera respuesta de las entidades encargadas', '1456333298', 58);
 
 --
@@ -1520,11 +1495,10 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `fecha_caducidad`, `vigencia_usuario`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
 ('1020304050', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$GLchohxxzqrGdqUzrdhkx.W6EDHdax489rqyZskrPiNbNkzdBbjNm', '2026-02-12 14:18:58', '2028-02-12 14:18:58', '2026-2028', '2026-03-23 17:42:46', 1, 0, NULL),
-('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2028-02-12 14:22:31', '2026-2028', '2026-03-23 18:11:53', 1, 0, NULL),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-03-23 15:49:01', 1, 1, '7be3757a753976a4ca6e'),
+('1456333298', 'Juan Manuel', 'Correal', 'gavliscorreal@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2028-02-12 14:22:31', '2026-2028', '2026-03-30 14:49:28', 1, 0, NULL),
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-03-30 14:41:54', 1, 0, '7be3757a753976a4ca6e'),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2028-02-12 14:28:54', '2026-2028', '2026-03-02 15:52:20', 1, 0, NULL),
-('1756664828', 'Zack', 'Lopez', 'isaacmanuelcavajal1356@gmail.com', '3001234567', 2, '$2y$10$ddgxYzealY0ADRBf3t/0NO/ZNWCaJ/aaIXUaAvIJUFIzw9hABitkW', '2026-02-12 14:20:29', '2028-02-12 14:20:29', '2026-2028', '2026-03-12 12:55:03', 1, 1, NULL),
-('2030405060', 'Isaac', 'Carvajal', 'isaaccarvajal1356@gmail.com', '3001231231', 1, '$2y$10$ohYytsObuQCUjiQgbrdaPO2tY4xQBFUJezPFlvQ/8/khk.iUP8FAG', '2026-03-17 15:44:33', '2028-03-17 15:44:33', '2026-2028', '2026-03-23 15:49:47', 1, 0, NULL);
+('1756664828', 'Zack', 'Lopez', 'isaacmanuelcavajal1356@gmail.com', '3001234567', 2, '$2y$10$ddgxYzealY0ADRBf3t/0NO/ZNWCaJ/aaIXUaAvIJUFIzw9hABitkW', '2026-02-12 14:20:29', '2028-02-12 14:20:29', '2026-2028', '2026-03-12 12:55:03', 1, 1, NULL);
 
 --
 -- Disparadores `usuario`
@@ -1674,7 +1648,7 @@ ALTER TABLE `archivo`
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
-  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=99;
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=105;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`
@@ -1704,13 +1678,13 @@ ALTER TABLE `monitoreo`
 -- AUTO_INCREMENT de la tabla `noti_administrador`
 --
 ALTER TABLE `noti_administrador`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_comisionado`
 --
 ALTER TABLE `noti_comisionado`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=115;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=121;
 
 --
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
