@@ -1,6 +1,9 @@
 <?php require_once __DIR__ . "/../../controllers/checkSessionComi.php"; ?>
+<!-- se incluye el archivo de sesion para verificar que el usuario este logueado -->
 
+<!-- comienzo del documento y la vista de generar informe de comisionado -->
 <!DOCTYPE html>
+<!-- lenguaje del documento -->
 <html lang="es">
 
 <head>
@@ -25,60 +28,71 @@
     <!--CSS propio-->
     <link rel="stylesheet" href="/assets/css/generar_informe-admin.css">
 
+    <!--Jquery-->
+
     <script src="/assets/js/jquery-3.7.1.min.js"></script>
 
 </head>
+<!-- cuerpo de la pagina -->
 
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
 
-    <!-- Decorative Background Elements -->
+    <!-- fondo de la pagina -->
     <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
         <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
         <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
+        <!-- gradiente del fondo extraido de vercel -->
         <div
             class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay">
         </div>
     </div>
 
+    <!-- contenedor principal -->
     <div class="flex h-screen overflow-hidden relative z-10">
 
-        <!-- Sidebar -->
+        <!-- cuerpo de la sidebar -->
         <aside
             class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
 
-            <!-- Logo Area -->
+            <!-- logo de la sidebar -->
             <div class="h-20 flex items-center justify-center border-b border-white/5">
                 <img src="/assets/img/logo_sena.png" alt="SENA" class="w-10 h-10 object-contain group-hover:block">
             </div>
 
-            <!-- Navigation -->
+            <!-- barra de navegacion -->
             <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
 
+                <!-- enlace de la pagina de inicio -->
                 <a href="/dashboardComi" class="nav-link">
                     <i class="bi bi-house-fill"></i>
                     <span class="text-[10px] mt-1 font-medium">Inicio</span>
                 </a>
 
+                <!-- enlace de la pagina de registrar casos -->
                 <a href="/registrarCasos" class="nav-link">
                     <i class="bi bi-file-earmark-person-fill"></i>
                     <span class="text-[10px] mt-1 font-medium">Registrar Caso</span>
                 </a>
 
+                <!-- enlace de la pagina de casos -->
                 <a href="/casos" class="nav-link">
                     <i class="bi bi-eye-fill"></i>
                     <span class="text-[10px] mt-1 font-medium">Casos</span>
                 </a>
 
+                <!-- enlace de la pagina de generar informe -->
                 <a href="/generarInformeComi" class="nav-link active">
                     <i class="bi bi-file-earmark-text-fill"></i>
                     <span class="text-[10px] mt-1 font-medium">Generar Informe</span>
                 </a>
 
+                <!-- enlace de la pagina de notificaciones -->
                 <a href="/notificacionesComi" class="nav-link">
                     <i class="bi bi-bell-fill"></i>
                     <span class="text-[10px] mt-1 font-medium">Notificación</span>
                 </a>
 
+                <!-- enlace de la pagina de perfil -->
                 <a href="/perfil" class="nav-link">
                     <i class="bi bi-person-circle"></i>
                     <span class="text-[10px] mt-1 font-medium">Mi Perfil</span>
@@ -87,14 +101,16 @@
             </nav>
         </aside>
 
-        <!-- Main Content Wrapper -->
+        <!-- contenedor principal -->
         <div class="flex-1 flex flex-col ml-20 h-full">
 
-            <!-- Top Bar -->
+            <!-- top bar(barra superior) -->
             <header class="h-20 glass-nav flex items-center justify-between px-6 sticky top-0 z-40">
 
+                <!-- titulo de la pagina -->
                 <h2 class="text-xl font-semibold text-white tracking-tight">Generar Informe</h2>
 
+                <!-- se toma el nombre del usuario y se muestra en la top bar junto con su rol-->
                 <div class="flex items-center gap-6">
                     <div class="text-right hidden md:block">
                         <?php if (isset($_SESSION['user']['username'])): ?>
@@ -105,11 +121,15 @@
                         <p class="text-xs text-slate-400">Comisionado</p>
                     </div>
 
+                    <!--aqui hay un enlace para ir a la pagina de perfil -->
+
                     <div class="flex items-center gap-4">
                         <a href="/perfil" class="p-2 rounded-full hover:bg-white/5 transition-colors">
                             <img src="/assets/img/icon account.png" alt="User"
                                 class="w-8 h-8 rounded-full border border-white/10">
                         </a>
+
+                        <!--aqui hay un boton para cerrar sesion -->
 
                         <input type="hidden" name="csrf_token" id="csrf_token"
                             value="<?php echo htmlspecialchars($token); ?>">
@@ -122,14 +142,19 @@
                 </div>
             </header>
 
-            <!-- Content -->
+            <!-- contenido de la pagina -->
             <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
                 <div class="max-w-2xl mx-auto">
 
+                    <!--aqui se crea el formulario para generar el informe -->
                     <div class="glass-card p-8 md:p-10">
                         <h2 class="text-2xl font-bold text-white text-center mb-6" id="tituloForm"></h2>
 
+                        <!--aqui se crea el formulario para generar el informe -->
+
                         <div id="seccion1" class="form-section space-y-6">
+
+                            <!-- en esta esta el del formulario sale el select de las opciones de la generacion de casos -->
 
                             <div class="relative" id="excluido">
                                 <select
@@ -140,6 +165,8 @@
                                     <option value="2" class="bg-slate-800">EXCEL</option>
                                 </select>
                             </div>
+
+                            <!-- en esta esta sse muestra el select en la que se pide cual sera el reporte que se generara -->
 
                             <div class="relative">
                                 <select
@@ -152,6 +179,8 @@
                                     <option value="3" class="bg-slate-800">Reporte de Procesos Organizacionales</option>
                                 </select>
                             </div>
+
+                            <!-- en esta esta el boton de descargar el informe -->
 
                             <button type="button"
                                 class="btn-siguiente w-full flex items-center justify-center gap-2 mt-4 text-white bg-indigo-500 hover:bg-indigo-600 px-8 py-3 rounded-xl "

@@ -1,4 +1,5 @@
 <?php require_once __DIR__ . "/../../controllers/checkSessionComi.php"; ?>
+<!-- se incluye el archivo de sesion para verificar que el usuario este logueado -->
 
 <!--comienzo del documento y la vista de casos de comisionado -->
 <!DOCTYPE html>
