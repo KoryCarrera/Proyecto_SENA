@@ -1,5 +1,9 @@
 <?php require_once __DIR__ . "/../../controllers/checkSessionComi.php"; ?>
+<!-- se incluye el archivo de sesion para verificar que el usuario este logueado -->
+
+<!-- comienzo del documento y la vista de perfil de comisionado -->
 <!DOCTYPE html>
+<!-- lenguaje del documento -->
 <html lang="es">
 
 <head>
@@ -28,49 +32,55 @@
 
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- Decorative Background Elements -->
+  <!-- elementos decorativos del fondo -->
   <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
     <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
     <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
+    <!-- gradiente del fondo extraido de vercel -->
     <div
       class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay">
     </div>
   </div>
 
+  <!-- contenedor principal -->
   <div class="flex h-screen overflow-hidden relative z-10">
 
-    <!-- Sidebar -->
+    <!-- barra lateral -->
     <aside
       class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
-      <!-- Logo Area -->
+      <!-- logo de la barra lateral -->
       <div class="h-20 flex items-center justify-center border-b border-white/5">
         <img src="/assets/img/logo_sena.png" alt="SENA" class="w-10 h-10 object-contain group-hover:block">
       </div>
 
-      <!-- Navigation -->
+      <!-- barra de navegacion de la barra lateral -->
       <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
+        <!-- enlace de la pagina de inicio -->
         <a href="/dashboardComi" class="nav-link">
           <i class="bi bi-house-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Inicio</span>
         </a>
+        <!-- enlace de la pagina de registrar casos -->
         <a href="/registrarCasos" class="nav-link">
           <i class="bi bi-file-earmark-person-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Registrar Caso</span>
         </a>
+        <!-- enlace de la pagina de casos -->
         <a href="/casos" class="nav-link">
           <i class="bi bi-eye-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Casos</span>
         </a>
-
+        <!-- enlace de la pagina de generar informe -->
         <a href="/generarInformeComi" class="nav-link">
           <i class="bi bi-file-earmark-text-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Generar Informe</span>
         </a>
-
+        <!-- enlace de la pagina de notificaciones -->
         <a href="/notificacionesComi" class="nav-link">
           <i class="bi bi-bell-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Notificación</span>
         </a>
+        <!-- enlace de la pagina de perfil -->
         <a href="/perfil" class="nav-link active">
           <i class="bi bi-person-circle"></i>
           <span class="text-[10px] mt-1 font-medium">Mi Perfil</span>
@@ -78,11 +88,13 @@
       </nav>
     </aside>
 
-    <!-- Main Content Wrapper -->
+    <!-- contenedor principal -->
     <div class="flex-1 flex flex-col ml-20 h-full">
-      <!-- Top Bar -->
+      <!-- barra superior -->
       <header class="h-20 glass-nav flex items-center justify-between px-6 sticky top-0 z-10">
+        <!-- titulo de la pagina -->
         <h2 class="text-xl font-semibold text-white tracking-tight">Configuración de Perfil</h2>
+        <!-- se toma el nombre del usuario y se muestra en la barra superior junto con su rol-->
         <div class="flex items-center gap-6">
           <div class="text-right hidden md:block">
             <?php if (isset($_SESSION['user']['username'])): ?>
@@ -92,11 +104,12 @@
             <?php endif; ?>
             <p class="text-xs text-slate-400">Comisionado</p>
           </div>
+          <!--aqui hay un enlace para ir a la pagina de perfil -->
           <div class="flex items-center gap-4">
             <a href="/perfil" class="p-2 rounded-full hover:bg-white/5 transition-colors border border-indigo-500/30">
               <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
             </a>
-
+            <!--aqui hay un boton para cerrar sesion -->
             <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
             <button type="submit" name="logout" id="logoutButton" value="logout"
               class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
@@ -107,14 +120,15 @@
         </div>
       </header>
 
-      <!-- Content -->
+      <!-- contenido principal -->
       <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
         <div class="max-w-4xl mx-auto">
+          <!--aqui se muestra el contenido de la pagina -->
 
           <div class="glass-card p-8 md:p-10">
             <div class="flex flex-col md:flex-row gap-10">
 
-              <!-- Avatar Section -->
+              <!--aqui se muestra el avatar del usuario -->
               <div class="flex flex-col items-center text-center space-y-4">
                 <div class="relative group">
                   <div
@@ -123,6 +137,7 @@
                   <img src="/assets/img/icon account.png" alt="Profile"
                     class="relative w-32 h-32 rounded-full border-4 border-slate-900 object-cover shadow-2xl">
                 </div>
+                <!--aqui se muestra el nombre del usuario y su rol -->
                 <div>
                   <h3 class="text-lg font-bold text-white"><?php echo $_SESSION['user']['username'] ?? 'Usuario'; ?>
                   </h3>
@@ -130,21 +145,25 @@
                 </div>
               </div>
 
-              <!-- Form Section -->
+              <!--aqui se muestra el formulario de perfil -->
               <div class="flex-1">
                 <form id="formPerfil" class="space-y-6">
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
+                      <!-- se pide el documento de identidad del usuario -->
                       <label class="block text-sm font-medium text-slate-300 mb-2">Documento de Identidad</label>
                       <input type="text" name="documento"
                         class="glass-input w-full p-3 rounded-lg text-white opacity-60"
                         value="<?php echo $_SESSION['user']['documento'] ?? ''; ?>" readonly>
+                      <!-- se muestra un mensaje de que el documento no es editable -->
                       <span class="text-[10px] text-slate-500 mt-1 block">No editable por seguridad</span>
                     </div>
                     <div>
+                      <!-- se pide el cargo del usuario -->
                       <label class="block text-sm font-medium text-slate-300 mb-2">Cargo / Rol</label>
                       <input type="text" class="glass-input w-full p-3 rounded-lg text-white opacity-60"
                         value="Comisionado" readonly>
+                      <!-- se muestra un mensaje de que el cargo no es editable -->
                       <span class="text-[10px] text-slate-500 mt-1 block">No editable por seguridad</span>
                     </div>
                   </div>
@@ -155,6 +174,7 @@
                       <input type="text" name="nombre" class="glass-input w-full p-3 rounded-lg text-white"
                         placeholder="Ingresa tu nuevo nombre" id="nuevoNombre">
                     </div>
+                    <!-- se pide el apellido del usuario -->
                     <div>
                       <label class="block text-sm font-medium text-slate-300 mb-2">Apellido(s)</label>
                       <input type="text" name="apellido" class="glass-input w-full p-3 rounded-lg text-white"
@@ -162,18 +182,21 @@
                     </div>
                   </div>
 
+                  <!-- se pide el numero de celular del usuario -->
                   <div>
                     <label class="block text-sm font-medium text-slate-300 mb-2">Numero de celular</label>
                     <input type="number" name="numero" class="glass-input w-full p-3 rounded-lg text-white"
                       placeholder="Ejemplo: 3101234567" id="numeroNuevo">
                   </div>
 
+                  <!-- se pide el correo electronico del usuario -->
                   <div>
                     <label class="block text-sm font-medium text-slate-300 mb-2">Correo Electrónico</label>
                     <input type="email" name="email" class="glass-input w-full p-3 rounded-lg text-white"
                       placeholder="ejemplo@sena.edu.co" id="nuevoEmail">
                   </div>
 
+                  <!-- se pide la contraseña del usuario -->
                   <div class="pt-4 border-t border-white/5">
                     <label class="block text-sm font-medium text-indigo-400 mb-4">Seguridad</label>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -182,6 +205,8 @@
                         <input type="password" name="password" class="glass-input w-full p-3 rounded-lg text-white"
                           placeholder="••••••••" id="contrasenaNueva">
                       </div>
+
+                      <!-- se pide la confirmacion de la contraseña -->
                       <div>
                         <label class="block text-sm font-medium text-slate-300 mb-2">Confirmar Contraseña</label>
                         <input type="password" name="confirm_password"
@@ -191,6 +216,7 @@
                     </div>
                   </div>
 
+                  <!-- boton para actualizar el perfil -->
                   <div class="flex justify-end pt-6">
                     <button type="button" class="btn-search px-10 py-3 rounded-xl font-bold flex items-center gap-2"
                       id="btnActualizar">
@@ -203,6 +229,7 @@
             </div>
           </div>
 
+          <!-- mensaje de informacion importante -->
           <div class="mt-8 p-6 glass-card border-l-4 border-orange-500/50 bg-orange-500/5">
             <div class="flex gap-4">
               <i class="bi bi-info-circle-fill text-orange-400 text-xl"></i>
