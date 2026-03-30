@@ -24,6 +24,7 @@ try {
 
     // Captura de datos
     $nombreCaso = $_POST["nombreCaso"] ?? null;
+    $radicado = $_POST["radicadoSena"] ?? null;
     $proceso = $_POST["proceso"] ?? null;
     $tipoCaso = $_POST["tipoCaso"] ?? null;
     $descripcion = $_POST["descripcion"] ?? null;
@@ -70,7 +71,8 @@ try {
         $proceso,
         $tipoCaso,
         $descripcion,
-        $nombreCaso
+        $nombreCaso,
+        $radicado
     );
 
     // Verificar resultado
@@ -94,7 +96,6 @@ try {
             error_log("Error subiendo archivos: " . $e->getMessage());
         }
     }
-    echo json_encode(['success' => true, 'mensaje' => 'Caso registrado correctamente']);
 
     $asunto = "Nuevo Caso Registrado - #{$idCaso}: {$nombreCaso}";
 
@@ -212,6 +213,6 @@ try {
     error_log("Error en registrarCasos.php: " . $e->getMessage());
     echo json_encode([
         'status' => 'error',
-        'mensaje' => 'Error del servidor'
+        'mensaje' => 'Error del servidor '
     ]);
 }

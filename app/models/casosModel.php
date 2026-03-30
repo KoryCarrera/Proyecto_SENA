@@ -108,7 +108,7 @@ class CasosModel extends baseHelper {
         }
     }
 
-    public function registrarCaso($documento, $proceso, $tipoCaso, $descripcion, $nombre){
+    public function registrarCaso($documento, $proceso, $tipoCaso, $descripcion, $nombre, $radicado){
 
         try{    
             $data = [
@@ -116,14 +116,16 @@ class CasosModel extends baseHelper {
                 [ 'value' => $proceso, 'type' => PDO::PARAM_INT ],
                 [ 'value' => $tipoCaso, 'type' => PDO::PARAM_INT ],
                 [ 'value' => $descripcion, 'type' => PDO::PARAM_STR ],
-                [ 'value' => $nombre, 'type' => PDO::PARAM_STR ]
+                [ 'value' => $nombre, 'type' => PDO::PARAM_STR ],
+                [ 'value' => $radicado, 'type' => PDO::PARAM_STR ]
             ];
 
-            $casoRegistrado = parent::consultSimpleWithParams('sp_registrar_caso(?, ?, ?, ?, ?)', $data);
+            $casoRegistrado = parent::insertOrUpdateData('sp_registrar_caso(?, ?, ?, ?, ?, ?)', $data);
 
             if(!$casoRegistrado){
                 throw new Exception('No se pudo obtener la confirmación del registro desde la base de datos.');
             }
+            
             return ['success' => true, 'data' => $casoRegistrado];
         } catch(Exception $e) {
             error_log('Ha ocurrido un error al registrar caso: '. $e->getMessage());
