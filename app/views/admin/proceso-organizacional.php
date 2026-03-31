@@ -253,6 +253,7 @@
   <script src="/assets/js/logout.js"></script>
   <script src="/assets/js/registrarProceso.js"></script>
   <script src="/assets/js/procesos-modal.js"></script>
+  <script src="/assets/js/inactividad.js"></script>
 
 </body>
 

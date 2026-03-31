@@ -192,6 +192,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
       <script src="/assets/js/logout.js"></script>
+      <script src="/assets/js/inactividad.js"></script>
 
 </body>
 

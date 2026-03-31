@@ -279,10 +279,10 @@ require_once __DIR__ . "/../../models/insertData.php";
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="/assets/js/logout.js"></script>
-  <script src="assets/js/registrarCaso.js"></script>
-  <script src="assets/js/cache.js"></script>
+  <script src="/assets/js/registrarCaso.js"></script>
+  <script src="/assets/js/cache.js"></script>
+  <script src="/assets/js/inactividad.js"></script>
 
 </body>
 

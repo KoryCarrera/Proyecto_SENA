@@ -271,6 +271,7 @@
 <script src="/assets/js/casosAdmin.js"></script>
 <!-- script de cache(script propio) -->
 <script src="/assets/js/cache.js"></script>
+<script src="/assets/js/inactividad.js"></script>
 
 
 
