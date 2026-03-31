@@ -1,3 +1,5 @@
+
+<!-- utilidades de la pagina,esta es la navbar(ya no lo usamos) -->
 <div class="top-bar">
         <nav class="navbar m-0 p-0 bg-body-tertiary">
             <div class="container-fluid d-flex align-items-center justify-content-between">
