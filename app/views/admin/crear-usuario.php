@@ -1,9 +1,11 @@
 <?php
 require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
 ?>
+<!-- se incluye el archivo checkSessionAdmin.php para verificar que el usuario este logueado-->
 
 <!DOCTYPE html>
 <html lang="es">
+<!-- se inicia el documento y le decimos el lenguaje y que tomara el meta tag para caracteres especiales -->
 
 <head>
   <meta charset="UTF-8">
@@ -28,72 +30,72 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
   <link rel="stylesheet" href="/assets/css/crear-usuario.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"> <!-- DataTables CSS -->
 
+  <!-- jquery -->
   <script src="/assets/js/jquery-3.7.1.min.js"></script>
-
-  <style>
-    /* Override Bootstrap defaults to match Tailwind/Glass theme */
-    .table {
-      --bs-table-bg: transparent;
-      --bs-table-color: #e2e8f0;
-      --bs-table-border-color: rgba(255, 255, 255, 0.1);
-      --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
-    }
-  </style>
-
 </head>
 
+<!-- se inicia el body del documento  -->
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
 
-  <!-- Decorative Background Elements -->
+  <!-- background de la vista -->
   <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
     <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
     <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
+    <!-- gradient extraido de vercel -->
     <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
   </div>
 
+  <!-- contenedor principal -->
   <div class="flex h-screen overflow-hidden relative z-10">
 
-    <!-- Sidebar -->
+    <!-- contenedor de la Sidebar -->
     <aside class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
 
-      <!-- Logo Area -->
+      <!-- Logo del sena en la sidebar -->
       <div class="h-20 flex items-center justify-center border-b border-white/5">
         <img src="/assets/img/logo_sena.png" alt="SENA" class="w-10 h-10 object-contain group-hover:block">
       </div>
 
-      <!-- Navigation -->
+      <!-- Navegacion de la sidebar -->
       <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
 
+        <!-- se define el link de inicio -->
         <a href="/dashboardAdmin" class="nav-link">
           <i class="bi bi-house-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Inicio</span>
         </a>
 
+        <!-- se define el link de generar informe -->
         <a href="/generarInforme" class="nav-link">
           <i class="bi bi-file-earmark-text-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Generar Informe</span>
         </a>
 
+        <!-- se define el link de casos -->
         <a href="/casosAdmin" class="nav-link">
           <i class="bi bi-eye-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Casos</span>
         </a>
 
+        <!-- se define el link de procesos -->
         <a href="/procesoOrganizacional" class="nav-link">
           <i class="bi bi-diagram-3-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Procesos</span>
         </a>
 
+        <!-- se define el link de usuarios -->
         <a href="/usuarios" class="nav-link active">
           <i class="bi bi-person-fill-gear"></i>
           <span class="text-[10px] mt-1 font-medium">Usuarios</span>
         </a>
 
+        <!-- se define el link de notificaciones -->
         <a href="/notificacionesAdmin" class="nav-link">
           <i class="bi bi-bell-fill"></i>
           <span class="text-[10px] mt-1 font-medium">Notificación</span>
         </a>
 
+        <!-- se define el link de perfil -->
         <a href="/perfilAdmin" class="nav-link">
           <i class="bi bi-person-circle"></i>
           <span class="text-[10px] mt-1 font-medium">Mi Perfil</span>
@@ -102,15 +104,18 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
       </nav>
     </aside>
 
-    <!-- Main Content Wrapper -->
+    <!-- Contenedor principal -->
     <div class="flex-1 flex flex-col ml-20 h-full">
 
-      <!-- Top Bar -->
+      <!-- Barra superior -->
       <header class="h-20 glass-nav flex items-center justify-between px-6 sticky top-0 z-40">
 
+        <!-- titulo de la barra superior -->
         <h2 class="text-xl font-semibold text-white tracking-tight">Gestión de Usuarios</h2>
 
+        <!-- se define el contenedor de los iconos -->
         <div class="flex items-center gap-6">
+          <!-- se define el contenedor del nombre del usuario y el rol  -->
           <div class="text-right hidden md:block">
             <?php if (isset($_SESSION['user']['username'])): ?>
               <p class="text-sm font-medium text-white">
@@ -120,12 +125,16 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
             <p class="text-xs text-slate-400">Administrador</p>
           </div>
 
+          <!-- se define el contenedor de los iconos -->
           <div class="flex items-center gap-4">
+            <!-- icono de perfil que es un enlace a la vista de perfil-->
             <a href="/perfilAdmin" class="p-2 rounded-full hover:bg-white/5 transition-colors">
               <img src="/assets/img/icon account.png" alt="User" class="w-8 h-8 rounded-full border border-white/10">
             </a>
 
+            <!-- token de seguridad -->
             <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo htmlspecialchars($token); ?>">
+            <!-- boton de cerrar sesion -->
             <button type="submit" name="logout" id="logoutButton" value="logout"
               class="text-xs font-medium text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-colors border border-red-500/20">
               Cerrar Sesión
@@ -135,10 +144,11 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
         </div>
       </header>
 
-      <!-- Filter Bar -->
+      <!-- Barra de filtros -->
       <div class="px-6 py-4 glass-nav z-30 flex flex-col md:flex-row gap-4 items-center justify-between">
         <div class="flex items-center gap-2 w-full md:w-auto">
           <div class="relative">
+            <!-- se define el filtro de cantidad de usuarios solicitados con la ayuda de datatables -->
             <label class="text-slate-400 text-xs uppercase font-bold mr-2">Ver:</label>
             <select id="filtroCantidadUsuarios"
               class="bg-slate-800/50 border border-slate-700 text-slate-200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 outline-none cursor-pointer hover:bg-slate-700/50 transition-colors">
@@ -150,6 +160,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
           </div>
         </div>
 
+        <!--  buscador de de la tabla, unicamente la funcionalidad es gracias a datatables, no se requiere boton -->
         <form class="flex gap-2 w-full md:w-auto" role="search" onsubmit="event.preventDefault();">
           <div class="relative w-full md:w-64">
             <input
@@ -157,15 +168,12 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
               type="search" id="buscarUsuarios" placeholder="Buscar palabras clave..." aria-label="Search">
             <i class="bi bi-search absolute right-3 top-2.5 text-slate-400"></i>
           </div>
-          <button
-            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors"
-            type="submit">Buscar</button>
         </form>
       </div>
 
-      <!-- Content -->
+      <!-- Contenido real (main) -->
       <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
-        <div class="max-w-7xl mx-auto space-y-8">
+        <div class="max-w-full mx-auto space-y-8">
 
           <!-- Botón para abrir el modal de crear usuario -->
           <div class="flex justify-end">
@@ -174,10 +182,11 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
             </button>
           </div>
 
-          <!-- Users Table -->
+          <!-- Tabla de usuarios -->
           <section class="tabla-usuarios">
             <div class="glass-card p-0 overflow-hidden">
               <div class="overflow-x-auto">
+                <!-- se crea la tabla de usuarios -->
                 <table id="tablaUsuario" class="glass-table w-full text-center text-base text-slate-300 h-full">
                   <thead class="bg-slate-800/50 text-base text-center uppercase text-slate-400">
                     <tr>
@@ -193,7 +202,7 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
                     </tr>
                   </thead>
                   <tbody id="tablaUsuarios" class="divide-y divide-slate-700/50">
-                    <!-- JS Injected Rows go here -->
+                    <!-- se inyecta la informacion con el js-->
                   </tbody>
                 </table>
               </div>
@@ -237,8 +246,9 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
       </main>
     </div>
   </div>
+  <!-- (desde aca es toda la vista creada a partir de boton de crear usuario) -->
 
-  <!-- Modal Wrapper -->
+  <!-- Modal Wrapper de crear usuario -->
   <div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalUsuarioLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content glass-card border-slate-700">
@@ -267,6 +277,9 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
     <div class="contenido-modal">
       <h2 class="titulo-modal">Crear Nuevo Usuario</h2>
       <form id="formCrearUsuario" class="formulario-crear">
+        <!-- formulario para crear un usuario -->
+
+        <!-- sellect de tipo de rol que tendra el nuevo usuario -->
 
         <div class="mb-4">
           <select id="crearRol" name="rol" required class="contenido glass-input">
@@ -276,35 +289,49 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
           </select>
         </div>
 
+        <!-- input para el nombre del nuevo usuario -->
+
         <div class="mb-4">
           <input type="text" id="crearNombre" name="nombre" required placeholder="Nombre" class="contenido glass-input" maxlength="50">
           <span id="contearNombre"></span> /50 caracteres
         </div>
+
+        <!-- input para el apellido del nuevo usuario -->
 
         <div class="mb-4">
           <input type="text" id="crearApellido" name="apellido" required placeholder="Apellido" class="contenido glass-input" maxlength="50">
           <span id="contearApellido"></span> /50 caracteres
         </div>
 
+        <!-- input para el documento del nuevo usuario -->
+
         <div class="mb-4">
           <input type="number" id="crearDocumento" name="documento" required placeholder="Documento" class="contenido glass-input" maxlength="10">
           <span id="contearDocumento"></span> /10 caracteres
         </div>
+
+        <!-- input para el correo electronico del nuevo usuario -->
 
         <div class="mb-4">
           <input type="email" id="crearEmail" name="email" required placeholder="Correo Electrónico" class="contenido glass-input" maxlength="100">
           <span id="contearEmail"></span> /100 caracteres
         </div>
 
+        <!-- input para el telefono del nuevo usuario -->
+
         <div class="mb-4">
           <input type="number" id="crearTelefono" name="telefono" required placeholder="Telefono" class="contenido glass-input" maxlength="10">
            <span id="contearTelefono"></span> /10 caracteres
         </div>
 
+        <!-- boton para guardar el usuario -->
+
         <div class="botones">
           <button type="submit" id="guardar-modal-crear" class="boton flex items-center gap-2">
             <i class="bi bi-person-plus-fill"></i> Crear Usuario
           </button>
+
+          <!-- boton para cerrar el modal -->
           <button type="button" id="cerrar-modal-crear" class="boton flex items-center gap-2">
             <i class="bi bi-x-lg"></i> Cerrar
           </button>
@@ -314,9 +341,9 @@ require_once __DIR__ . "/../../controllers/checkSessionAdmin.php";
     </div>
   </div>
 
-  <!-- Hidden anchor tag preservation from original file -->
+  <!-- se devuelve a la vista anterior y quita el estilo del modal con display none -->
   <a href="/editarUsuario" style="display:none;">a</a>
-
+<!-- script requeridos para la pagina  -->
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <!-- Bootstrap Bundle JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
