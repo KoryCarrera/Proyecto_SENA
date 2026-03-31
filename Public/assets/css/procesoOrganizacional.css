@@ -184,6 +184,10 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+.glass-table tbody td {
+    font-size: 1rem;
+}
+
 /* Modal Custom Styles (Preserving IDs logic but with glass UI) */
 .modal {
     display: none;

@@ -125,7 +125,7 @@
 
       <!-- Content -->
       <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
-        <div class="max-w-7xl mx-auto space-y-6">
+        <div class="max-w-full mx-auto space-y-6">
 
           <!-- Barra de herramientas: cantidad + búsqueda -->
           <div class="flex flex-col md:flex-row gap-4 items-center justify-between mb-4">
