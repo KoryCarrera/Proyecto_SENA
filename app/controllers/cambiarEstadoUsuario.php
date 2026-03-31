@@ -22,9 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
   exit;
 };
 
+//se capturan los datos del usuario
+
 $documentoSession = $_SESSION['user']['documento'];
 $documento = $_POST['documento'];
 $estado = $_POST['estado'];
+
+//se valida que los datos no sean nulos,de serlo,se envia un mensaje de error
 
 if (!$documento && !$estado) {
 
@@ -36,15 +40,23 @@ if (!$documento && !$estado) {
   exit;
 }
 
+//usamos try catch para manejar posibles errores de conexion a la base de datos
+
 try {
   $model = new UsuariosModdel($pdo);
 
+  //se cambia el estado del usuario
 
   $model->cambiarEstadoUsuario($documento, $estado, $documentoSession);
+
+  //de ser exitoso se envia un mensaje de exito
 
   echo json_encode([
     'status' => 'ok'
   ]);
+
+  //manejo de errores
+
 } catch (Exception $e) {
   error_log('Ha ocurrido un error SQL a la hora de cambiar estado usuario: ' . $e->getMessage());
 
@@ -52,6 +64,8 @@ try {
     'status' => 'error',
     'mensaje' => $e->getMessage()
   ]);
+
+  //se lanza la excepcion
 
   throw new Exception($e->getMessage());
 }
