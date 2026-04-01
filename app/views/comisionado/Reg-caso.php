@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . "/../../controllers/checkSessionComi.php";
 require_once __DIR__ . "/../../config/conexion.php";
-require_once __DIR__ . "/../../models/insertData.php";
 ?>
 <!-- se incluye el archivo de sesion para verificar que el usuario este logueado-->
 <!-- tamvien esta el archivo insertData.php que se encarga de insertar los datos en la base de datos y el config de conexion-->
