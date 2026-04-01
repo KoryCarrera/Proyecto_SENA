@@ -12,21 +12,32 @@ try {
     //Se llaman las metodos que necesitamos
     $casosTiposMes = $helper->consultObjectHelper("sp_contear_casos_tipo_mes");
 
+    //se valida que los datos sean correctos
+
     if ($casosTiposMes && count($casosTiposMes) > 0) {
         $nombres = [];
         $totales = [];
+
+        //se recorren los arrays con la palabra reservada
 
         foreach ($casosTiposMes as $temp) {
             $nombres[] = $temp['nombre_caso'];  // 
             $totales[] = (int) $temp['total'];    // 
         }
+
+        //se retorna en array asociativo con los datos corregidos
+
         $casosTiposMes = [
             'tipos' => $nombres,
             'casos' => $totales
         ];
     }
 
+    //se consulta el total de casos por comisionado
+
     $casosComisionadoMes = $helper->consultObjectHelper("sp_casos_por_comi_mes");
+
+    //se valida que los datos sean correctos
 
     if ($casosComisionadoMes) {
         $comisionado = [];
