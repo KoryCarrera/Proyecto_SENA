@@ -29,6 +29,8 @@ $email = $_POST['email'];
 $numero = $_POST['telefono'];
 $rol = $_POST['rol'];
 
+//usamos try catch para manejar posibles errores de conexion a la base de datos
+
 try {
     $model = new UsuariosModdel($pdo);
 
@@ -42,6 +44,8 @@ if(!$documento || !$nombre || !$apellido || !$email || !$numero || !$rol ) {
     exit;
 };
 
+//se valida que el rol sea un numero
+
 if (!is_numeric($rol)) {
     echo json_encode([
         'status' => 'error',
@@ -49,10 +53,15 @@ if (!is_numeric($rol)) {
     ]);
     exit;
 } 
+
+//manejo de errores
+
 } catch (Exception $e) {
     error_log('Error al crear usuario: ' . $e->getMessage());
     throw new Exception($e);
 }
+
+//se valida que los datos sean strings
 
 if(!is_string($nombre) || !is_string($apellido) || !is_string($email) || !is_string($numero)) {
     echo json_encode([
@@ -64,6 +73,8 @@ if(!is_string($nombre) || !is_string($apellido) || !is_string($email) || !is_str
 //si todo está verdadero insertamos el usuario
 $usuarioRegistrado = $model->crearUsuario( $documento,  $nombre, $apellido, $email, $numero, $rol);
 
+//se valida que el usuario se haya registrado correctamente, si no, se detiene el codigo y escribe un error 
+
 if(!$usuarioRegistrado) {
     echo json_encode([
         'status' => 'error',
@@ -71,7 +82,7 @@ if(!$usuarioRegistrado) {
     ]);
     exit;
 
-    
+    //si todo está correcto, se envia un mensaje de exito
 } else {
     echo json_encode([
         'status' => 'ok',
@@ -79,12 +90,18 @@ if(!$usuarioRegistrado) {
     ]);
 };
 
+//se crea un array con los roles
+
 $roles = [
     1 => 'Administrador',
     2 => 'Comisionado', 
 ];
 
+//si no existe el rol, se le asigna 'Rol desconocido'
+
 $nombreRol = $roles[$rol] ?? 'Rol desconocido';
+
+//se envia el correo al usuario
 
 $correo = correoCrearUsuario($documento, $nombre, $nombreRol, $apellido, $email, $numero, $usuarioRegistrado);
     
