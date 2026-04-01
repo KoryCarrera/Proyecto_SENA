@@ -325,3 +325,24 @@ body {
   --bs-table-border-color: rgba(255, 255, 255, 0.1);
   --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
 }
+
+/* Forzar el modo oscuro en los inputs de Bootstrap */
+.glass-input, 
+.glass-input:focus {
+    background-color: #0f172a !important; /* Color slate-900 de Tailwind */
+    color: #cbd5e1 !important; /* Color text-slate-300 */
+    border: 1px solid #334155 !important; /* Borde sutil slate-700 */
+    box-shadow: none !important; /* Quita el brillo azul feo de Bootstrap al hacer clic */
+}
+
+/* Evitar que el texto del placeholder sea negro */
+.glass-input::placeholder {
+    color: #64748b !important; /* text-slate-500 */
+    opacity: 1;
+}
+
+/* Estilo para las opciones desplegables del Select */
+select.glass-input option {
+    background-color: #0f172a;
+    color: #cbd5e1;
+}

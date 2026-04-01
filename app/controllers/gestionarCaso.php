@@ -20,7 +20,7 @@ try {
     $seguimiento   = $_POST['observacion'] ?? '';
     
     // Captura de datos específicos
-    $documentonew  = $_POST['documento_nuevo'] ?? null;
+    $documentonew  = $_POST['documentoNuevo'] ?? null;
     $nuevoEstado   = $_POST['idEstado'] ?? null;
 
     // LÓGICA DE DECISIÓN
