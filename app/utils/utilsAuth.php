@@ -4,7 +4,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-error_log('DEBUG EMAIL - Usuario: ' . getenv('SMTP_HOST') . 'Email: ' . getenv('MAIL_FROM') . ' | Contraseña: ' . getenv('APP_KEY'));
+error_log('DEBUG EMAIL - HOST: ' . getenv('SMTP_HOST') . ' | Email: ' . getenv('MAIL_FROM') . ' | Contraseña: ' . getenv('APP_KEY') . ' | Destino ');
 
 //Funcion para enviar correos con PHPMailer
 function enviarCorreo($asunto, $cuerpoHTML, $cuerpoAlt, $destinatarios, $conCopia = null, $conCopiaOculta = null)
@@ -19,6 +19,15 @@ function enviarCorreo($asunto, $cuerpoHTML, $cuerpoAlt, $destinatarios, $conCopi
         $mail->Password = getenv('APP_KEY');
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
+
+        $mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
+        
         // Origen del correo
         $mail->setFrom(getenv('MAIL_FROM'), 'Sistema Gestion');
 

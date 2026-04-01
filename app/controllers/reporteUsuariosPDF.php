@@ -5,8 +5,7 @@ session_start();
 // Llamar al archivo necesario para dompdf y otros archivos necesarios para obtener datos
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/insertData.php";
-require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
 
 // referenciar dompdf
 use Dompdf\Dompdf;
@@ -14,20 +13,31 @@ use Dompdf\Dompdf;
 // Verificamos si la petición es POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    $model = new baseHelper($pdo);
+    $documento = $_SESSION['user']['documento'];
+    $formato = 'PDF';
+    $descripcion = 'Reporte Usuarios';
+
+    $data = [
+        ['value' => $documento, 'type' => PDO::PARAM_STR],
+        ['value' => $formato, 'type' => PDO::PARAM_STR],
+        ['value' => $descripcion, 'type' => PDO::PARAM_STR]
+    ];
+
     // Llamamos solo las funciones que sabemos que funcionan
-    $usuariosListados = listarUsuarios($pdo);
-    $datosInforme = registrarInforme($pdo, $_SESSION['user']['documento'], 'PDF', 'Reporte Usuarios');
+    $usuariosListados = $model->consultObjectHelper('sp_listar_usuarios');
+    $datosInforme = $model->insertOrUpdateData('sp_registrar_informe(?, ?, ?)', $data);
 
     // Validamos que tengamos la lista de usuarios y el registro del informe
-    if ($usuariosListados && isset($usuariosListados['data']) && $datosInforme) {
+    if ($usuariosListados && isset($usuariosListados) && $datosInforme) {
 
-        $totalUsuarios = count($usuariosListados['data']);
+        $totalUsuarios = count($usuariosListados);
         $totalActivos = 0;
         $totalInactivos = 0;
         $totalAdministradores = 0;
         $totalComisionados = 0;
 
-        foreach ($usuariosListados['data'] as $user) {
+        foreach ($usuariosListados as $user) {
             // Conteo por Estado (según tu dump: 1 es Activo)
             if ($user['id_estado'] == 1) {
                 $totalActivos++;
@@ -48,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $porcentajeInactivos = ($totalUsuarios > 0) ? number_format((($totalInactivos / $totalUsuarios) * 100), 1) : 0;
 
         // Limitamos la tabla para el PDF a los últimos 5 para que no se desborde
-        $dataParaTabla = array_slice($usuariosListados['data'], 0, 5);
+        $dataParaTabla = array_slice($usuariosListados, 0, 5);
 
         // Convertimos el logo a base64
         $logoPath = __DIR__ . '/../../Public/assets/img/logo_sena.png';

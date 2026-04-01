@@ -3,15 +3,17 @@ FROM php:8.2-apache
 
 #Procedemos a instalar dependencias para el proyecto (La imagen es en base Debian por lo cual se utilizan sus comandos de bash)
 RUN apt-get update && apt-get install -y \
-libpng-dev \
-libjpeg-dev \
-libfreetype6-dev \
-libzip-dev \
-zip \
-unzip \
-git \
-&& docker-php-ext-configure gd --with-freetype --with-jpeg \
-&& docker-php-ext-install -j$(nproc) gd pdo pdo_mysql zip
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    git \
+    ca-certificates \
+    && update-ca-certificates \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql zip
 
 #Habilitamos Mod_Rewrite (Necesario para que apache maneje correctamente rutas)
 RUN a2enmod rewrite
@@ -20,6 +22,9 @@ RUN a2enmod rewrite
 ENV APACHE_DOCUMENT_ROOT /var/www/html/Public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+RUN echo "openssl.cafile=/etc/ssl/certs/ca-certificates.crt" > /usr/local/etc/php/conf.d/ssl.ini \
+    && echo "curl.cainfo=/etc/ssl/certs/ca-certificates.crt" >> /usr/local/etc/php/conf.d/ssl.ini
 
 #configuramos los permisos para la subida de archivos
 RUN echo "upload_max_filesize = 10M" > /usr/local/etc/php/conf.d/uploads.ini \

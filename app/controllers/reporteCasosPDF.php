@@ -11,8 +11,8 @@ session_start();
 //Llamar al archivo necesario para dompdf y otros archivos necesarios para obtener datos
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/insertData.php";
-require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
+
 
 //referenciar dompdf
 use Dompdf\Dompdf;
@@ -20,13 +20,39 @@ use Dompdf\Dompdf;
 //Recibimos los datos del front
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    $model = new baseHelper($pdo);
+    $documento = $_SESSION['user']['documento'];
+    $formato = 'PDF';
+    $descripcion = 'Reporte Casos';
+
+    $data = [
+        ['value' => $documento, 'type' => PDO::PARAM_STR],
+        ['value' => $formato, 'type' => PDO::PARAM_STR],
+        ['value' => $descripcion, 'type' => PDO::PARAM_STR]
+    ];
+
     //Llamamos las funciones necesarias
-    $estados = casosPorEstado($pdo);
-    $casosListados = listarCasos($pdo);
-    $datosInforme = registrarInforme($pdo, $_SESSION['user']['documento'], 'PDF', 'Reporte Casos');
+    $estados = $model->consultObjectHelper('sp_casos_por_estado');
+    $casosListados =$model->consultObjectHelper('sp_listar_casos');
+    $datosInforme = $model->insertOrUpdateData('sp_registrar_informe(?, ?, ?)', $data);
+    
 
     //Validamos el retorno datos de todas las funciones
     if ($estados && $casosListados && $datosInforme) {
+
+        $est = [];
+        $casos = [];
+
+        foreach ($estados as $temp) { //Palabra reservada para recorrer arrays
+                $est[] = $temp['nombre_estado'];
+                $casos[] = (int) $temp['total_casos'];
+            }
+
+            $estados = [
+                'estado' => $est,
+                'casos' => $casos,
+                'total' => $estados[0]['gran_total']
+            ];
 
         //Se buscara el indice donde estan los estados para luego usar ese indice para mostrar el total  por estado
         $indiceAtendidos = array_search('Atendido', $estados['estado']);
@@ -34,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $indiceNoAtendido = array_search('No atendido', $estados['estado']);
 
         //Se limita unicamente a los ultimos 10 casos para reutilizar el sp de listar casos con limit 30
-        $casosListados['data'] = array_slice($casosListados['data'], 0, 10);
+        $casosListados = array_slice($casosListados, 0, 10);
 
         $totalAtendidos = ($indiceAtendidos !== false) ? $estados['casos'][$indiceAtendidos] : 0;
         $totalPorAtender = ($indicePorAtender !== false) ? $estados['casos'][$indicePorAtender] : 0;
@@ -446,7 +472,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </thead>
                 <tbody>
                     <?php
-                    foreach ($casosListados['data'] as $temp) {
+                    foreach ($casosListados as $temp) {
 
                         // Lógica para cambiar el color del badge dinámicamente
                         $estadoStr = strtolower(trim($temp['estado']));

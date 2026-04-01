@@ -3,7 +3,7 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/updateData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
@@ -14,10 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
+
+    $model = new baseHelper($pdo);
+
     $input = file_get_contents('php://input');
-    $data = json_decode($input, true);
+    $idData = json_decode($input, true);
     
-    $id_proceso = $data['id'] ?? null;
+    $id_proceso = $idData['id'] ?? null;
     
     if (!$id_proceso || !is_numeric($id_proceso)) {
         echo json_encode([
@@ -26,10 +29,14 @@ try {
         ]);
         exit;
     }
-    
-    $resultado = reactivarProceso($pdo, $id_proceso);
 
-    if ($resultado === true) {
+    $data = [
+        ['value' => $id_proceso, 'type' => PDO::PARAM_INT]
+    ];
+    
+    $resultado = $model->insertOrUpdateData('sp_reactivar_proceso(?)', $data);
+
+    if ($resultado) {
         echo json_encode([
             'status' => 'ok',
             'mensaje' => 'Proceso reactivado exitosamente'

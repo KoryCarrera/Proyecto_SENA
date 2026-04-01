@@ -87,7 +87,7 @@ try {
     $idCaso = $registrar['data']['id_caso'];
 
     // Procesar archivos
-    $resultadoArchivos = ['success' => false]; // Definirla por defecto
+    $resultadoArchivos = ['success' => false];
 
     if (isset($_FILES['archivos']) && !empty($_FILES['archivos']['name'][0])) {
         try {
@@ -100,7 +100,7 @@ try {
         }
     }
 
-    $correo = correoRegistroCaso($idCaso, $nombreCaso, $proceso, $tipoCaso, $descripcion, $resultadoArchivos);
+    $correo = correoRegistroCaso($idCaso, $nombreCaso, $registrar['data']['proceso'], $registrar['data']['tipo_caso'], $descripcion, $resultadoArchivos);
 
     if (!$correo) {
         echo json_encode([

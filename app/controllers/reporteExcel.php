@@ -12,8 +12,7 @@ session_start(); //Cargamos la sesión activa
 //Hacemos los require de los archivos necesarios
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/insertData.php";
-require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
 
 // Importamos todas las herramientas que necesitamos para evitar codigo ilegible
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -26,11 +25,22 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 //Iniciamos un array vacio para mayor facilidad
 $datosReporte = [];
 
+$model = new baseHelper($pdo);
+$documento = $_SESSION['user']['documento'];
+$formato = 'EXCEL';
+$descripcion = 'Reporte general de casos';
+
+$data = [
+    ['value' => $documento, 'type' => PDO::PARAM_STR],
+    ['value' => $formato, 'type' => PDO::PARAM_STR],
+    ['value' => $descripcion, 'type' => PDO::PARAM_STR]
+];
+
 //Ingresamos en la base de datos la generación del reporte
-$datosInforme = registrarInforme($pdo, $_SESSION['user']['documento'], 'EXCEL', null);
+$datosInforme = $model->insertOrUpdateData('sp_registrar_informe(?, ?, ?)', $data);
 
 //En el array vacio asignamos el resultado de la consulta 
-$datosReporte = tablaBaseExcel($pdo);
+$datosReporte = $model->consultObjectHelper('sp_reporte_pqrs_excel');
 
 //Asignamos la clase a una variable con el constructor vacio
 $spreadsheet = new Spreadsheet();
@@ -40,7 +50,7 @@ $sheet->setTitle("Tabla Base"); //definimos el nombre de la hoja que capturamos 
 $sheet->mergeCells('B2:K2'); //Combinamos y centramos de la celda B2 a la K2 para definir el titulo de la pestaña
 $sheet->setCellValue('B2', 'INFORME DE GESTIÓN SENA'); //Ingresamos lo que ira en esas celdas mergeadas
 $sheet->mergeCells('B3:K3'); //Combinamos y centramos una nueva celda para ingresar datos relacionados al reporte
-$sheet->setCellValue('B3', 'ID de reporte: ' . $datosInforme['id_generado']. ' Fecha de generación: ' . $datosInforme['fecha_registro']); //Insertamos los datos de auditoria en el documento (ID y fecha)
+$sheet->setCellValue('B3', 'ID de reporte: ' . $datosInforme['id_generado'] . ' Fecha de generación: ' . $datosInforme['fecha_registro']); //Insertamos los datos de auditoria en el documento (ID y fecha)
 
 $estiloTitulo = [ //En un array definimos las parametros de estilos
     'font' => [
