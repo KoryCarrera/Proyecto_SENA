@@ -3,7 +3,10 @@ const ENDPOINT_LISTAR = "/listarCasos";
 const ENDPOINT_OBTENER = "/modalCasoAdmin";
 const ENDPOINT_SEGUIMIENTOS = "/listarSeguimientos";
 const ENDPOINT_GESTIONAR = '/gestionarCaso';
-const ENDPOINT_COMISIONADOS = "";
+const ENDPOINT_COMISIONADOS = '/listarComisionados';
+
+//Mandar mensaje de error de dataTable a la consola
+$.fn.dataTable.ext.errMode = 'none';
 
 //Definimos una función Async de cargar casos
 const cargarCasos = async () => {
@@ -124,14 +127,15 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
 
   cuerpoTabla.innerHTML = htmlFilas; //insertamos en el cuerpo de la tabla
 
-  // Inicializamos DataTables DESPUÉS de que los datos estén en el DOM
+  // Inicializamos DataTables despues de que los datos estén en el DOM
   var table = $("#tablaCaso").DataTable({
+    destroy: true,
     pageLength: 10,
     lengthMenu: [10, 25, 50],
     language: {
       url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
     },
-    dom: "rti", // Sin paginación interna, usamos la visual personalizada
+    dom: "rti",
     drawCallback: function () {
       actualizarPaginacionVisual(table);
     },
@@ -352,25 +356,28 @@ const modalReasignar = async (idCaso) => {
     const res = await fetch(ENDPOINT_COMISIONADOS);
     const comisionados = await res.json()
 
-    comisionados.forEach((comi) => {
-      optionsComi += `<option value="${comi.documento}" class="bg-slate-900">${comi.nombre} - (${comi.casos})</option>`
+    let optionsComi = '';
+    comisionados.data.forEach((comi) => {
+      // Las opciones heredarán el color del CSS
+      optionsComi += `<option value="${comi.documento}">${comi.comisionado} - (${comi.total_casos})</option>`
     })
 
-    //Insertamos el body con los inputs que necesitamos
+    // Insertamos el body con los inputs limpios usando glass-input
     modalBody.innerHTML = `
-    <div class="row">
-      <div class="col-md-12 mb-3">
-        <label class="form-label fw-bold">Elegir usuario al cual se va reasignar:</label>
-        <select name="newComi" id="nuevoComisionado">
-        <option value="" selected disabled class="bg-slate-900">Seleccione un comisionado</option>
-        ${optionsComi}
-        </select>
-      </div>
-      <div class="col-md-6 mb-3">
-        <textarea class="form-control glass-input" id="motivo" rows="3" 
-        placeholder="Describa brevemente por qué se cambia el responsable (quedará en el historial del caso)"></textarea>
-      </div>
-    </div>`
+<div class="row">
+  <div class="col-md-12 mb-3">
+    <label class="form-label fw-bold text-slate-300">Elegir usuario al cual se va reasignar:</label>
+    <select name="newComi" id="nuevoComisionado" class="form-select glass-input">
+      <option value="" selected disabled>Seleccione un comisionado</option>
+      ${optionsComi}
+    </select>
+  </div>
+  
+  <div class="col-md-12 mb-3">
+    <textarea class="form-control glass-input" id="motivo" rows="3" 
+    placeholder="Describa brevemente por qué se cambia el responsable (quedará en el historial del caso)"></textarea>
+  </div>
+</div>`
 
   } catch (err) {
     console.error(err);

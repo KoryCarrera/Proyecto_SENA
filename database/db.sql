@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 01-04-2026 a las 00:57:07
+-- Tiempo de generación: 01-04-2026 a las 13:21:44
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -554,6 +554,22 @@ CREATE PROCEDURE `sp_listar_caso_por_comisionado` (IN `p_documento` VARCHAR(50))
 		ORDER BY c.fecha_inicio DESC;
     END$$
 
+CREATE PROCEDURE `sp_listar_comisionados_y_casos` ()   BEGIN
+    	
+        SELECT 
+    u.documento,
+    CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
+    COUNT(c.id_caso) AS total_casos
+FROM usuario u
+LEFT JOIN caso c 
+    ON u.documento = c.documento
+WHERE u.id_rol = 2 
+  AND u.id_estado = 1
+GROUP BY u.documento, u.nombre, u.apellido
+ORDER BY total_casos DESC;
+        
+    END$$
+
 CREATE PROCEDURE `sp_listar_estados_caso` ()   BEGIN
     SELECT 
         id_estado,
@@ -1050,16 +1066,12 @@ CREATE TABLE `caso` (
 --
 
 INSERT INTO `caso` (`id_caso`, `nombre`, `radicado`, `documento`, `id_seguimiento`, `id_proceso`, `fecha_ultimo_seguimiento`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
-(49, 'Derecho de petición – Estado de incentivo institucional', NULL, '1656966633', NULL, 13, NULL, '2026-02-02 15:01:46', NULL, 2, 3, 'Mediante el presente derecho de petición solicito información sobre el estado de evaluación de mi postulación al incentivo por desempeño correspondiente al segundo semestre de 2025. Agradezco se me informe el resultado del proceso y los criterios aplicados en la evaluación.'),
 (50, 'Posible trato desigual en asignación de incentivos', NULL, '1020304050', NULL, 13, NULL, '2026-02-09 12:49:15', '2026-03-30 16:36:03', 1, 1, 'El funcionario manifiesta inconformidad debido a que considera que los criterios de evaluación no se aplicaron de manera equitativa en su área, afectando la asignación de incentivos.'),
-(51, 'Incumplimiento en entrega de dotación operativa', NULL, '1456333298', NULL, 12, NULL, '2026-02-23 12:50:03', NULL, 2, 1, 'Se informa que el personal del área operativa no ha recibido la dotación correspondiente al periodo vigente, lo que afecta el cumplimiento seguro de sus funciones.'),
 (52, 'Presunto maltrato laboral por parte de superior', NULL, '1456333298', NULL, 10, NULL, '2026-02-23 12:50:29', '2026-03-30 16:36:03', 1, 1, 'El colaborador reporta comportamientos reiterados de trato inapropiado y comunicación inadecuada por parte de su jefe inmediato, solicitando revisión del caso.'),
 (53, 'Programación de examen médico ocupacional', NULL, '1756664828', NULL, 11, NULL, '2026-02-19 12:53:33', NULL, 2, 2, 'El colaborador solicita la programación de su examen médico ocupacional periódico para seguimiento de su estado de salud laboral.'),
 (54, 'Capacitación en prevención de riesgos laborales', NULL, '1756664828', NULL, 14, NULL, '2026-02-23 12:53:57', NULL, 2, 2, 'Se solicita capacitación para el equipo de trabajo en temas de prevención de riesgos con el fin de fortalecer prácticas seguras.'),
 (55, 'Estado de solicitud de incentivo institucional', NULL, '1020304050', NULL, 13, NULL, '2026-02-23 14:11:57', NULL, 2, 3, 'El peticionario solicita conocer el estado actual de su solicitud de incentivo y los tiempos estimados de respuesta.'),
 (56, 'Copia de resultados de examen médico ocupacional', NULL, '1020304050', NULL, 11, NULL, '2026-02-23 14:12:24', NULL, 2, 3, 'Se solicita copia de los resultados del examen médico ocupacional realizado recientemente.'),
-(57, 'Solicitud de acceso al plan anual de SST', NULL, '1456333298', NULL, 14, NULL, '2026-02-23 14:15:09', NULL, 2, 3, 'Se solicita acceso o copia del plan anual de seguridad y salud en el trabajo para conocer las actividades programadas.'),
-(58, 'Demora en atención médica ocupacional', NULL, '1456333298', 19, 11, '2026-03-23 18:13:01', '2026-02-23 14:15:31', NULL, 2, 4, 'El accionante manifiesta que la demora en la asignación de cita médica afecta su derecho fundamental a la salud, solicitando atención prioritaria.'),
 (59, 'Riesgo laboral no atendido oportunamente', NULL, '1756664828', NULL, 14, NULL, '2026-02-21 14:17:12', NULL, 2, 4, 'Se solicita protección de derechos fundamentales ante la persistencia de un riesgo laboral que no ha sido intervenido.'),
 (60, 'Negación de apoyo social en situación urgente', NULL, '1020304050', NULL, 10, NULL, '2026-02-17 14:17:51', '2026-03-30 16:36:03', 1, 4, 'El accionante solicita intervención inmediata al considerar vulnerados sus derechos por la negación de un apoyo social urgente.'),
 (61, 'Denuncia cableado expuesto', NULL, '1020304050', NULL, 14, NULL, '2022-01-18 07:40:00', '2022-01-20 15:10:00', 3, 1, 'Denuncia por cableado expuesto en sala de sistemas'),
@@ -1310,7 +1322,13 @@ INSERT INTO `monitoreo` (`id_monitoreo`, `documento`, `fecha`, `tipo`, `descripc
 (2, '1487569254', '2026-03-16 15:24:02', 'inicio_sesion', 'NO SE 2'),
 (3, '1487569254', '2026-03-16 15:25:47', 'accion', '3'),
 (4, '1487569254', '2026-03-16 16:07:29', 'accion', 'TEXT'),
-(5, '1487569254', '2026-03-16 16:30:33', 'accion', 'KORY CARRERA');
+(5, '1487569254', '2026-03-16 16:30:33', 'accion', 'KORY CARRERA'),
+(6, '1487569254', '2026-04-01 13:01:01', 'accion', 'gqwgqgbqwsbs'),
+(7, '1487569254', '2026-04-01 13:01:33', 'accion', 'vdssbdsbsfg'),
+(8, '1487569254', '2026-04-01 13:04:33', 'accion', 'fqwgqegwqe4'),
+(9, '1487569254', '2026-04-01 13:04:50', 'accion', 'wfwqagqahrrhn'),
+(10, '1487569254', '2026-04-01 13:05:38', 'accion', 'gsrhrjerjyrryts'),
+(11, '1487569254', '2026-04-01 13:21:22', 'accion', 'Se reasigna');
 
 -- --------------------------------------------------------
 
@@ -1331,7 +1349,10 @@ CREATE TABLE `noti_administrador` (
 
 INSERT INTO `noti_administrador` (`id_notificacion`, `documento`, `mensaje`, `fecha`) VALUES
 (120, '1487569254', 'AVISO: El caso \"d\" CON LA ID: 98 cambió deL estado \"Por atender\" a \"Atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-23 17:48:52'),
-(123, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Demora en atención médica ocupacional\" con ID: 58 por el comisionado Juan Manuel Correal', '2026-03-23 18:13:01');
+(123, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Demora en atención médica ocupacional\" con ID: 58 por el comisionado Juan Manuel Correal', '2026-03-23 18:13:01'),
+(143, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Demora en atención médica ocupacional\" con ID: 58 por el comisionado Simon Gonzalez Pelaez', '2026-04-01 13:01:33'),
+(144, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Derecho de petición – Estado de incentivo institucional\" con ID: 49 por el comisionado Juan Manuel Correal', '2026-04-01 13:04:33'),
+(145, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Demora en atención médica ocupacional\" con ID: 58 por el comisionado Juan Manuel Correal', '2026-04-01 13:04:50');
 
 -- --------------------------------------------------------
 
@@ -1352,7 +1373,22 @@ CREATE TABLE `noti_comisionado` (
 
 INSERT INTO `noti_comisionado` (`id_notificacion`, `documento`, `mensaje`, `fecha`) VALUES
 (113, '1456333298', 'El caso \"d\" con el ID: 98 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Por atender\" al estado: \"Atendido\" por el usuario encargado Juan Manuel Correal', '2026-03-23 17:48:52'),
-(114, '1456333298', 'Realizaste un nuevo seguimiento al caso: \"Demora en atención médica ocupacional\" con ID: 58, en la fecha : 2026-03-23 18:13:01', '2026-03-23 18:13:01');
+(114, '1456333298', 'Realizaste un nuevo seguimiento al caso: \"Demora en atención médica ocupacional\" con ID: 58, en la fecha : 2026-03-23 18:13:01', '2026-03-23 18:13:01'),
+(121, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Derecho de petición – Estado de incentivo institucional\" con la id 49', '2026-04-01 13:01:01'),
+(122, '1656966633', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Marleny\", uno de tus casos con el nombre Derecho de petición – Estado de incentivo institucional y la id 49 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-01 13:01:01'),
+(123, '1020304050', 'Realizaste un nuevo seguimiento al caso: \"Demora en atención médica ocupacional\" con ID: 58, en la fecha : 2026-04-01 13:01:33', '2026-04-01 13:01:33'),
+(124, '1020304050', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Simon Gonzalez Pelaez\", se te ha asignado un caso con el nombre: \"Demora en atención médica ocupacional\" con la id 58', '2026-04-01 13:01:33'),
+(125, '1456333298', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Demora en atención médica ocupacional y la id 58 se le ha asignado al comisonado: \"Simon Gonzalez Pelaez', '2026-04-01 13:01:33'),
+(126, '1456333298', 'Realizaste un nuevo seguimiento al caso: \"Derecho de petición – Estado de incentivo institucional\" con ID: 49, en la fecha : 2026-04-01 13:04:33', '2026-04-01 13:04:33'),
+(127, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Derecho de petición – Estado de incentivo institucional\" con la id 49', '2026-04-01 13:04:33'),
+(128, '1456333298', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Derecho de petición – Estado de incentivo institucional y la id 49 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-01 13:04:33'),
+(129, '1456333298', 'Realizaste un nuevo seguimiento al caso: \"Demora en atención médica ocupacional\" con ID: 58, en la fecha : 2026-04-01 13:04:50', '2026-04-01 13:04:50'),
+(130, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Demora en atención médica ocupacional\" con la id 58', '2026-04-01 13:04:50'),
+(131, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Demora en atención médica ocupacional y la id 58 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-01 13:04:50'),
+(132, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Solicitud de acceso al plan anual de SST\" con la id 57', '2026-04-01 13:05:38'),
+(133, '1456333298', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Solicitud de acceso al plan anual de SST y la id 57 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-01 13:05:38'),
+(134, '1656966633', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Marleny Gaviria\", se te ha asignado un caso con el nombre: \"Incumplimiento en entrega de dotación operativa\" con la id 51', '2026-04-01 13:21:22'),
+(135, '1456333298', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Incumplimiento en entrega de dotación operativa y la id 51 se le ha asignado al comisonado: \"Marleny Gaviria', '2026-04-01 13:21:22');
 
 -- --------------------------------------------------------
 
@@ -1506,7 +1542,7 @@ CREATE TABLE `usuario` (
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `fecha_caducidad`, `vigencia_usuario`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
 ('1020304050', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$GLchohxxzqrGdqUzrdhkx.W6EDHdax489rqyZskrPiNbNkzdBbjNm', '2026-02-12 14:18:58', '2028-02-12 14:18:58', '2026-2028', '2026-03-23 17:42:46', 1, 0, NULL),
 ('1456333298', 'Juan Manuel', 'Correal', 'juangalvis.developer@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2028-02-12 14:22:31', '2026-2028', '2026-03-30 17:14:35', 1, 0, NULL),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-03-30 16:36:23', 1, 0, '7be3757a753976a4ca6e'),
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-01 13:20:26', 1, 0, '7be3757a753976a4ca6e'),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2028-02-12 14:28:54', '2026-2028', '2026-03-02 15:52:20', 1, 0, NULL),
 ('1756664828', 'Zack', 'Lopez', 'isaacmanuelcavajal1356@gmail.com', '3001234567', 2, '$2y$10$ddgxYzealY0ADRBf3t/0NO/ZNWCaJ/aaIXUaAvIJUFIzw9hABitkW', '2026-02-12 14:20:29', '2028-02-12 14:20:29', '2026-2028', '2026-03-12 12:55:03', 1, 1, NULL);
 
@@ -1682,19 +1718,19 @@ ALTER TABLE `informe`
 -- AUTO_INCREMENT de la tabla `monitoreo`
 --
 ALTER TABLE `monitoreo`
-  MODIFY `id_monitoreo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria para reconocimiento y relacion', AUTO_INCREMENT=6;
+  MODIFY `id_monitoreo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria para reconocimiento y relacion', AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_administrador`
 --
 ALTER TABLE `noti_administrador`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_comisionado`
 --
 ALTER TABLE `noti_comisionado`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=121;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=136;
 
 --
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
@@ -1712,7 +1748,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `seguimiento`
 --
 ALTER TABLE `seguimiento`
-  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=20;
+  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_caso`
