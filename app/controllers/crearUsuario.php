@@ -6,7 +6,6 @@ session_start();
 
 //Se llaman los archivos con las dependencias que necesitamos
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "//../models/insertData.php";
 require_once __DIR__ . "/../models/baseHelper.php";
 require_once __DIR__ . "/../models/usuariosModel.php";
 require_once __DIR__ . "/../utils/utilsAuth.php";
@@ -104,6 +103,14 @@ $nombreRol = $roles[$rol] ?? 'Rol desconocido';
 //se envia el correo al usuario
 
 $correo = correoCrearUsuario($documento, $nombre, $nombreRol, $apellido, $email, $numero, $usuarioRegistrado);
+
+if (!$correo) {
+        echo json_encode([
+            'status' => 'ok',
+            'mensaje' => 'no se mando el correo'
+        ]);
+        exit;
+    }
     
 
 

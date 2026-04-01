@@ -847,31 +847,6 @@ function traerCaso($pdo, $idCaso)
     }
 }
 
-
-
-function listarUsuarios($pdo)
-{
-    $stmt = $pdo->prepare("CALL sp_listar_usuarios()");
-
-    try {
-        $stmt->execute();
-        $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt->closeCursor();
-
-        if ($usuarios) {
-            return [
-                'status' => 'ok',
-                'data' => $usuarios
-            ];
-        } else {
-            return false;
-        }
-    } catch (PDOException $e) {
-        error_log("Error al obtener usuarios " . $e->getMessage());
-        return false;
-    }
-}
-
 function gestionarUsuario($pdo, $documento)
 {
     $stmt = $pdo->prepare("CALL sp_traer_usuario(?)");
@@ -950,61 +925,6 @@ function obtenerAnalisisDemanda($pdo)
     }
 }
 
-function listarProceso($pdo)
-{
-    // 1. Preparamos la llamada al procedimiento
-    $stmt = $pdo->prepare("CALL sp_listar_proceso_organizacional()");
-
-    try {
-        // 2. Ejecutar la sentencia
-        $stmt->execute();
-
-        // 3. Traemos TODAS las filas
-        $procesos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Limpiamos el cursor para permitir futuras consultas en la misma conexión
-        $stmt->closeCursor();
-
-        // 4. Verificamos si hay datos
-        if ($procesos !== false) {
-            return [
-                'status' => 'ok',
-                'data' => $procesos // Retorna el array de objetos
-            ];
-        } else {
-            return [
-                'status' => 'error',
-                'message' => 'No se pudieron recuperar los datos'
-            ];
-        }
-    } catch (PDOException $e) {
-        error_log("Error en listarProceso: " . $e->getMessage());
-        return [
-            'status' => 'error',
-            'message' => 'Error interno del servidor'
-        ];
-    }
-}
-
-function tablaBaseExcel($pdo)
-{
-    $stmt = $pdo->prepare("CALL sp_reporte_pqrs_excel()");
-
-    try {
-        $stmt->execute();
-
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        $stmt->closeCursor();
-
-        if ($data !== false) {
-            return $data;
-        } else {
-            return false;
-        }
-    } catch (PDOException) {
-    }
-}
 
 function listarCasosComi($pdo, $documento)
 {

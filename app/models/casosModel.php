@@ -157,4 +157,29 @@ class CasosModel extends baseHelper {
             throw new Exception($e->getMessage());
         }
     }
+
+    public function registrarProceso($descripcion, $nombre, $documentoUsuario){
+
+        try {
+            $data = [
+                [ 'value' => $descripcion, 'type' => PDO::PARAM_STR ],
+                [ 'value' => $nombre, 'type' => PDO::PARAM_STR ],
+                [ 'value' => $documentoUsuario, 'type' => PDO::PARAM_STR ]
+            ];
+
+            $sp = 'sp_registrar_proceso_organizacional(?, ?, ?)';
+
+            $nuevoProceso = parent::insertOrUpdateData($sp, $data);
+
+            if(!$nuevoProceso){
+                throw new Exception('No se pudo crear el nuevo proceso');
+            }
+
+            return ['success' => true, 'data' => $$nuevoProceso];
+
+        } catch (Exception $e){
+            error_log('Ha occurrido un error al registrar el proceso: '. $e->getMessage());
+            throw new Exception($e->getMessage());
+        }
+    }
 }

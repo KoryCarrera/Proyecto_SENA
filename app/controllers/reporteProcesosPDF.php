@@ -5,8 +5,7 @@ session_start();
 // Llamar al archivo necesario para dompdf y otros archivos necesarios para obtener datos
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/insertData.php";
-require_once __DIR__ . "/../models/getData.php";
+require_once __DIR__ . "/../models/baseHelper.php";
 
 // referenciar dompdf
 use Dompdf\Dompdf;
@@ -14,12 +13,23 @@ use Dompdf\Options;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $resProcesos = listarProcesos($pdo);
-    $datosInforme = registrarInforme($pdo, $_SESSION['user']['documento'], 'PDF', 'Reporte Procesos');
+    $model = new baseHelper($pdo);
+    $documento = $_SESSION['user']['documento'];
+    $formato = 'PDF';
+    $descripcion = 'Reporte Procesos';
 
-    if ($resProcesos && $resProcesos['status'] === 'ok' && $datosInforme) {
+    $data = [
+        ['value' => $documento, 'type' => PDO::PARAM_STR],
+        ['value' => $formato, 'type' => PDO::PARAM_STR],
+        ['value' => $descripcion, 'type' => PDO::PARAM_STR]
+    ];
 
-        $listaCompleta = $resProcesos['data'];
+    $resProcesos = $model->consultObjectHelper('sp_listar_proceso_organizacional');
+    $datosInforme = $model->insertOrUpdateData('sp_registrar_informe(?, ?, ?)', $data);
+
+    if ($resProcesos && $datosInforme) {
+
+        $listaCompleta = $resProcesos;
         $totalProcesos = count($listaCompleta);
         $totalActivos = 0;
         $totalInactivos = 0;
@@ -275,7 +285,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php foreach ($listaCompleta as $p): ?>
                         <tr>
                             <td><?php echo $p['id_proceso']; ?></td>
-                            <td><strong><?php echo htmlspecialchars($p['nombre']); ?></strong></td>
+                            <td><strong><?php echo htmlspecialchars($p['nombre_proceso']); ?></strong></td>
                             <td><?php echo date('d/m/Y', strtotime($p['fecha_creacion'])); ?></td>
                             <td class="<?php echo ($p['estado'] == 1) ? 'status-active' : 'status-inactive'; ?>">
                                 <?php echo ($p['estado'] == 1) ? 'ACTIVO' : 'INACTIVO'; ?>

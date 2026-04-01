@@ -19,8 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         'mensaje' => 'Metodo no valido'
     ]);
     exit;
-}
-;
+};
 
 //recibimos todos las datos
 $documento = $_POST['documento'];
@@ -63,13 +62,22 @@ try {
         exit;
     } else {
 
-        correoEdicionUsuario($usuarioActualizado, $nombre, $email, $rol);
+    $correo = correoEdicionUsuario($usuarioActualizado, $nombre, $email, $rol);
 
         echo json_encode([
             'status' => 'ok',
             'mensaje' => 'Usuario actualizado con exito'
         ]);
     }
+
+    if (!$correo) {
+        echo json_encode([
+            'status' => 'ok',
+            'mensaje' => 'no se mando el correo'
+        ]);
+        exit;
+    }
+
     exit;
 } catch (Exception $e) {
     error_log('Error al editar usuario: ' . $e->getMessage());

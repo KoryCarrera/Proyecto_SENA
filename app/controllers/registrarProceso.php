@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 
 require_once __DIR__ . "/checkSessionAdmin.php";
 require_once __DIR__ . "/../config/conexion.php";
-require_once __DIR__ . "/../models/insertData.php";
+require_once __DIR__ . "/../models/casosModel.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
@@ -14,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
+
+    $model = new CasosModel($pdo);
 
     $documentoUsuario = $_SESSION['user']['documento'];
     $nombre = $_POST["nombre-proceso"] ?? null;
@@ -35,9 +37,9 @@ try {
         exit;
     }
 
-    $resultado = registrarProceso($pdo, $descripcion, $nombre, $documentoUsuario);
+    $resultado = $model->registrarProceso($descripcion, $nombre, $documentoUsuario);
 
-    if ($resultado === true) {
+    if ($resultado['success'] == true) {
         echo json_encode([
             'status' => 'ok',
             'mensaje' => 'Proceso registrado exitosamente'
@@ -52,6 +54,14 @@ try {
     $idProceso = $registrar['data']['id_proceso'];
 
     $correo = correoRegistrarProceso($idProceso, $nombre, $descripcion);
+
+    if (!$correo) {
+        echo json_encode([
+            'status' => 'ok',
+            'mensaje' => 'no se mando el correo'
+        ]);
+        exit;
+    }
 
 } catch (Exception $e) {
     error_log("Error en registrarProceso.php: " . $e->getMessage());
