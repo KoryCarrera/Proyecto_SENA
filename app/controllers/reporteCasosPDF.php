@@ -539,7 +539,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $dompdf->render();
 
         //Enviamos el pdf al navegador para descargarlo o abrirlo en otra pagina
-        $dompdf->stream("Reporte_PQRSD_SENA.pdf", ['Attachment' => true]);
+        $dompdf->stream("Reporte_Casos_SENA.pdf", ['Attachment' => true]);
         exit;
     }
 }
