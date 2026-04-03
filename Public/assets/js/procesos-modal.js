@@ -193,108 +193,105 @@ const actualizarPaginacionProcesos = (table) => {
 
 // ─── Desactivar proceso ───────────────────────────────────────────────────────
 const desactivarProceso = async (id_Proceso) => {
-  Swal.fire({
-    icon: "question",
-    title: "¿Estás seguro que deseas desactivar este proceso?",
-    showDenyButton: true,
-    denyButtonText: "No desactivar",
+  const { value: motivo, isConfirmed } = await Swal.fire({
+    icon: "warning",
+    title: "¿Desactivar este proceso?",
+    text: "Quedará un registro de esta acción. Escribe el motivo:",
+    input: "textarea",
+    inputPlaceholder: "Escriba el motivo aquí...",
+    showCancelButton: true,
+    cancelButtonText: "Cancelar",
     confirmButtonText: "Sí, desactivar",
+    confirmButtonColor: "#dc3545", 
     theme: "dark",
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        const response = await fetch(ENDPOINT_DESACTIVAR, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: id_Proceso }),
-        });
-        const data = await response.json();
-
-        if (data.status === "ok") {
-          Swal.fire({
-            icon: "success",
-            title: "Proceso desactivado exitosamente",
-            theme: "dark",
-            showConfirmButton: false,
-            timer: 1000,
-          });
-          cargarProcesos();
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Error al desactivar",
-            text: data.mensaje,
-            theme: "dark",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error de conexión",
-          text: error.message,
-          theme: "dark",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
+    inputValidator: (value) => {
+      if (!value) return "¡El motivo es obligatorio!";
     }
   });
+
+  if (!isConfirmed) return;
+
+  try {
+    const response = await fetch(ENDPOINT_DESACTIVAR, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: id_Proceso, motivo: motivo }), 
+    });
+    
+    const data = await response.json();
+
+    if (data.status !== "ok") throw new Error(data.mensaje);
+
+    Swal.fire({
+      icon: "success",
+      title: "Proceso desactivado exitosamente",
+      theme: "dark",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    
+    cargarProcesos();
+
+  } catch (error) {
+    console.error("Error al desactivar:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error en la operación",
+      text: error.message || "Error de conexión con el servidor",
+      theme: "dark",
+    });
+  }
 };
 
 // ─── Reactivar proceso ────────────────────────────────────────────────────────
 const reactivarProceso = async (id_Proceso) => {
-  Swal.fire({
-    icon: "question",
-    title: "¿Estás seguro que deseas reactivar este proceso?",
-    showDenyButton: true,
-    denyButtonText: "No reactivar",
+  const { value: motivo, isConfirmed } = await Swal.fire({
+    icon: "info",
+    title: "¿Reactivar este proceso?",
+    text: "Quedará un registro de esta acción. Escribe el motivo:",
+    input: "textarea",
+    inputPlaceholder: "Escriba el motivo aquí...",
+    showCancelButton: true,
+    cancelButtonText: "Cancelar",
     confirmButtonText: "Sí, reactivar",
+    confirmButtonColor: "#198754",
     theme: "dark",
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        const response = await fetch(ENDPOINT_REACTIVAR, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: id_Proceso }),
-        });
-        const data = await response.json();
-
-        if (data.status === "ok") {
-          Swal.fire({
-            icon: "success",
-            title: "Proceso reactivado exitosamente",
-            theme: "dark",
-            showConfirmButton: false,
-            timer: 1000,
-          });
-          cargarProcesos();
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Error al reactivar",
-            text: data.mensaje,
-            theme: "dark",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error de conexión",
-          text: error.message,
-          theme: "dark",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
+    inputValidator: (value) => {
+      if (!value) return "¡El motivo es obligatorio!";
     }
   });
+
+  if (!isConfirmed) return;
+
+  try {
+    const response = await fetch(ENDPOINT_REACTIVAR, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: id_Proceso, motivo: motivo }), 
+    });
+    
+    const data = await response.json();
+
+    if (data.status !== "ok") throw new Error(data.mensaje);
+
+    Swal.fire({
+      icon: "success",
+      title: "Proceso reactivado exitosamente",
+      theme: "dark",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    cargarProcesos();
+
+  } catch (error) {
+    console.error("Error al reactivar:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error en la operación",
+      text: error.message || "Error de conexión con el servidor",
+      theme: "dark",
+    });
+  }
 };
 
 // ─── DOMContentLoaded ─────────────────────────────────────────────────────────
