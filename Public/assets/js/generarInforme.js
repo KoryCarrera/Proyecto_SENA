@@ -64,20 +64,30 @@ generarInforme.addEventListener('click', function () {
 
     let ENDPOINT;
 
+    const esComisionado = window.location.pathname.includes('Comi');
+
     switch (tipo.value) {
         case "1":
-            ENDPOINT = ENDPOINT_CASOS;
+            if (esComisionado) {
+                ENDPOINT = '/CasosComiPDF';
+            } else {
+                ENDPOINT = '/CasosPDF'; // Administrador
+            }
             break;
         case "2":
             ENDPOINT = ENDPOINT_USUARIOS;
             break;
         case "3":
-            ENDPOINT = ENDPOINT_PROCESOS;
+            if (esComisionado) {
+                ENDPOINT = '/ProcesosComiPDF';
+            } else {
+                ENDPOINT = '/ProcesosPDF'; // Administrador
+            }
             break;
         default:
             ENDPOINT = '';
     };
-
+    
     if (!formato.value) {
 
         Swal.fire({
