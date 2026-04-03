@@ -110,7 +110,7 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
             table.page.len(valor).draw();
         });
 
-        
+
 };
 
 const gestionarCaso = async (id_caso) => {
@@ -387,11 +387,13 @@ const obtenerBadgeEstado = (estado) => {
 
     switch (estadoLower) {
         case 'por atender':
-            return `<span class="badge bg-primary"> ${estado}</span> `;
+            return `<span class="badge bg-warning text-white"> ${estado}</span> `;
         case 'no atendido':
             return `<span class="badge bg-danger"> ${estado}</span> `;
         case 'atendido':
             return `<span class="badge bg-success"> ${estado}</span> `;
+        case "Por asignar":
+            return `<span class="badge bg-primary">${estado}</span>`;
         default:
             return `<span class="badge bg-secondary"> ${estado}</span> `;
     }

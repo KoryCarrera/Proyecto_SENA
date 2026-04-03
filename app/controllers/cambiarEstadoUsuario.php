@@ -53,6 +53,7 @@ try {
 
   echo json_encode([
     'status' => 'ok'
+
   ]);
 
   //manejo de errores

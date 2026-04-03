@@ -302,6 +302,7 @@ Si no solicitaste este cambio, contacta al administrador.";
     return $correoEnviado;
 }
 
+
 //
 // CORREO DE REGISTRAR UN CASO
 //
