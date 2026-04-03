@@ -230,170 +230,75 @@ const gestionarUsuario = async (documento) => {
 };
 
 //funcion para cambiar estado de usuarios
-const cambiarEstadoUsuario = (nuevoDocumento, nuevoEstado) => {
-
+const cambiarEstadoUsuario = async (nuevoDocumento, nuevoEstado) => {
     cerrarModal();
 
-    if (nuevoEstado == 0) {
-        Swal.fire({
-            icon: 'warning',
-            title: '¡Acción importante! ¿Estás seguro de querer desactivar este usuario?',
-            text: 'Al desactivar a este usuario, si es comisionado, todos sus casos pasan a estado "Por asignar". Deberás reasignarlos manualmente. Continúa con cuidado.',
-            theme: 'dark',
-            showDenyButton: true,
-            showCancelButton: true,
-            confirmButtonText: "Sí, desactivar",
-            denyButtonText: 'No desactivar',
-        }).then((response) => {
+    //Definimos los textos dinámicamente según el estado
+    const esDesactivar = nuevoEstado == 0;
+    const accion = esDesactivar ? 'desactivar' : 'reactivar';
+    const colorBtn = esDesactivar ? '#dc3545' : '#198754';
+    const advertencia = esDesactivar 
+        ? 'Al desactivar, sus casos pasarán a "Por asignar".' 
+        : 'Volverá a tener acceso al sistema con su rol previo.';
 
-            if (response.isConfirmed) {
-                //Encapsulamos al ajax en un try catch para captar errores
-                try {
-                    $.ajax({
-                        data: { //capturamos datos
-                            'documento': nuevoDocumento,
-                            'estado': nuevoEstado
-                        },
-                        //enviamos
-                        url: ENDPOINT_ESTADO,
-                        type: 'POST',
-                        dataType: 'json',
+    //Pedimos confirmación y el motivo en una sola alerta
+    const { value: motivo, isConfirmed } = await Swal.fire({
+        title: `¿Estás seguro de querer ${accion} este usuario?`,
+        text: advertencia,
+        icon: 'warning',
+        input: 'textarea',
+        inputLabel: 'Indique el motivo de esta acción:',
+        inputPlaceholder: 'Escriba brevemente el porqué...',
+        inputAttributes: { 'aria-label': 'Escriba el motivo' },
+        showCancelButton: true,
+        confirmButtonText: `Sí, ${accion}`,
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: colorBtn,
+        theme: 'dark',
+        //No deja continuar si no se escribe el motivo
+        inputValidator: (value) => {
+            if (!value) return '¡El motivo es obligatorio para el historial!';
+        }
+    });
 
-                        success: function (response) {
+    // Si canceló la alerta, no hacemos nada
+    if (!isConfirmed) return;
 
-                            if (response.status != 'ok') {
-
-                                //se muestra una alerta estetica de error
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: `${response.mensaje}`,
-                                    showConfirmButton: false,
-                                    theme: 'dark',
-                                    timer: 1000
-                                });
-                                return;
-                            }
-                            //Se muestra alerta estetica
-                            //Si el usuario fue cambiado exitosamente se actualizaran los modales y la tabla de fondo
-
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Usuario desactivado con exito',
-                                theme: 'dark',
-                                showConfirmButton: false,
-                                timer: 1000,
-                            });
-                            //recargamos la tabla de usuarios
-                            cargarUsuarios();
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error de conexión',
-                                text: 'Ocurrió un error al intentar desactivar al usuario.',
-                                theme: 'dark'
-                            });
-                        }
-                    });
-
-                } catch (error) {
-                    console.error(`Ha ocurrido un error inesperado ${error}`)
-                }
-            };
-
-            if (response.isDenied) {
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Se canceló la acción',
-                    text: 'Continúa tranquilo, el usuario se mantiene activo',
-                    theme: 'dark',
-                })
+    //Ejecutamos la petición AJAX
+    try {
+        const res = await $.ajax({
+            url: ENDPOINT_ESTADO,
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                documento: nuevoDocumento,
+                estado: nuevoEstado,
+                motivo: motivo
             }
+        });
 
-        })
-    };
+        if (res.status !== 'ok') throw new Error(res.mensaje);
 
-    if (nuevoEstado == 1) {
         Swal.fire({
-            icon: 'warning',
-            title: '¡Acción importante! ¿Estás seguro de querer reactivar este usuario?',
-            text: 'Al reactivar a este usuario, volvera a tener accesso al sistema con el permiso correspondiente a su rol.',
+            icon: 'success',
+            title: `Usuario ${accion}do con éxito`,
             theme: 'dark',
-            showDenyButton: true,
-            showCancelButton: true,
-            confirmButtonText: "Sí, reactivar",
-            denyButtonText: 'No reactivar',
-        }).then((response) => {
+            timer: 1500,
+            showConfirmButton: false
+        });
 
-            if (response.isConfirmed) {
-                //Encapsulamos al ajax en un try catch para captar errores
-                try {
-                    $.ajax({
-                        data: { //capturamos datos
-                            'documento': nuevoDocumento,
-                            'estado': nuevoEstado
-                        },
-                        //enviamos
-                        url: ENDPOINT_ESTADO,
-                        type: 'POST',
-                        dataType: 'json',
+        cargarUsuarios(); //Recargamos la tabla
 
-                        success: function (response) {
-
-                            if (response.status != 'ok') {
-
-                                //se muestra una alerta estetica de error
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: `${response.mensaje}`,
-                                    showConfirmButton: false,
-                                    theme: 'dark',
-                                    timer: 1000
-                                });
-                                return;
-                            }
-                            //Se muestra alerta estetica
-                            //Si el usuario fue cambiado exitosamente se actualizaran los modales y la tabla de fondo
-
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Usuario reactivado con exito',
-                                theme: 'dark',
-                                showConfirmButton: false,
-                                timer: 1000,
-                            });
-                            //recargamos la tabla de usuarios
-                            cargarUsuarios();
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error de conexión',
-                                text: 'Ocurrió un error al intentar reactivar al usuario.',
-                                theme: 'dark'
-                            });
-                        }
-                    });
-
-                } catch (error) {
-                    console.error(`Ha ocurrido un error inesperado ${error}`)
-                }
-            };
-
-            if (response.isDenied) {
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Se canceló la acción',
-                    text: 'Continúa tranquilo, el usuario se mantiene desactivo',
-                    theme: 'dark'
-                })
-            }
-
-        })
+    } catch (error) {
+        console.error(`Error al ${accion} usuario:`, error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error en la operación',
+            text: error.message || 'No se pudo conectar con el servidor',
+            theme: 'dark'
+        });
     }
-}
+};
 
 //definimos la funcion anteriormente declarada
 const mostrarDetallesUsuario = (usuario) => {
