@@ -12,6 +12,7 @@ $router->map('GET', '/', '../Public/landing.php');
 
 $router->map('POST', '/login/auth', 'controllers/login.php');
 $router->map('POST', '/logout', 'controllers/logout.php');
+$router->map('POST', '/actualizar2FA', 'controllers/actualizar2FA.php');
 $router->map('POST', '/registrarCaso', 'controllers/registrarCasos.php');
 $router->map('POST', '/registrarUsuario', 'controllers/crearUsuario.php');
 $router->map('POST', '/registrarProceso', 'controllers/registrarProceso.php');
@@ -20,8 +21,10 @@ $router->map('POST', '/modalCasoAdmin', 'controllers/modalCasoAdmin.php');
 $router->map('POST', '/modalUsuario', 'controllers/modalUsuario.php');
 $router->map('POST', '/modalProceso', 'controllers/modalProceso.php');
 $router->map('POST', '/CasosPDF', 'controllers/reporteCasosPDF.php');
+$router->map('POST', '/CasosComiPDF', 'controllers/reporteCasosComiPDF.php');
 $router->map('POST', '/UsuariosPDF', 'controllers/reporteUsuariosPDF.php');
 $router->map('POST', '/ProcesosPDF', 'controllers/reporteProcesosPDF.php');
+$router->map('POST', '/ProcesosComiPDF', 'controllers/reporteProcesosComiPDF.php');
 $router->map('POST', '/desactivarProceso', 'controllers/desactivarProceso.php');
 $router->map('POST', '/reactivarProceso', 'controllers/reactivarProceso.php');
 $router->map('POST', '/generarExcel', 'controllers/reporteExcel.php');

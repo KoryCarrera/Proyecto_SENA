@@ -1,5 +1,7 @@
 <?php
 
+use Dompdf\Exception;
+
 require_once __DIR__ . '/baseHelper.php';
 
     class UsuariosModdel extends baseHelper
@@ -220,6 +222,29 @@ require_once __DIR__ . '/baseHelper.php';
                 error_log('Error al guardar la cookies en la base de datos: ' . $e->getMessage());
 
                 throw new Exception('Ha ocurrido un error con la cookie: ' . $e->getMessage());
+            }
+        }
+
+        public function activar2FA($documento, $estado){
+            try {
+                $data = [
+                    ['value' => $documento, 'type' => PDO::PARAM_STR],
+                    ['value' => $estado, 'type' => PDO::PARAM_INT]
+                ];
+
+                $sp = 'sp_activar_2FA(?, ?)';
+
+                $activar = parent::insertOrUpdateData($sp, $data);
+
+                if(!$activar){
+                    throw new Exception('Error al activar o desactivar la verificacion en dos pasos');
+                }
+
+                return true;
+
+            } catch (Exception $e){
+                error_log('Error al intentar cambiar el estado de la verificacion en dos pasos' .$e->getMessage());
+                throw new Exception('Ha ocurrido un error al intentar activar/desactivar la verificacion en dos pasos' . $e->getMessage());
             }
         }
 

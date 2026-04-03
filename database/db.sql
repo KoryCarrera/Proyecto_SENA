@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 01-04-2026 a las 13:21:44
+-- Tiempo de generación: 03-04-2026 a las 19:10:47
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -25,6 +25,12 @@ DELIMITER $$
 --
 -- Procedimientos
 --
+CREATE PROCEDURE `sp_activar_2FA` (IN `p_documento` VARCHAR(20), IN `p_estado_2fa` INT)   BEGIN
+
+UPDATE usuario SET 2FA = p_estado_2fa WHERE documento = p_documento;
+
+END$$
+
 CREATE PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estado` INT, IN `p_documento` VARCHAR(20))   BEGIN
 	DECLARE v_cierre DATETIME DEFAULT NULL;
     
@@ -139,6 +145,23 @@ LEFT JOIN caso c ON u.documento = c.documento
 WHERE u.id_rol = 2 AND YEAR(c.fecha_inicio) = YEAR(CURRENT_DATE)
 GROUP BY u.documento, u.nombre, u.apellido
 ORDER BY total_casos DESC;
+
+END$$
+
+CREATE PROCEDURE `sp_casos_por_comisionado_doc` (IN `p_documento` VARCHAR(50))   BEGIN
+    DECLARE v_gran_total INT;
+
+    SELECT COUNT(id_caso) INTO v_gran_total 
+    FROM caso
+    WHERE documento = p_documento;
+
+    SELECT 
+        e.estado AS nombre_estado,
+        COUNT(c.id_caso) AS total_casos,
+        v_gran_total AS gran_total
+    FROM estado e
+    LEFT JOIN caso c ON e.id_estado = c.id_estado AND c.documento = p_documento
+    GROUP BY e.id_estado, e.estado;
 
 END$$
 
@@ -534,6 +557,25 @@ CREATE PROCEDURE `sp_listar_casos` ()   BEGIN
 		JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
 		ORDER BY c.fecha_inicio DESC;
 	END$$
+
+CREATE PROCEDURE `sp_listar_casos_comisionado_doc` (IN `p_documento` VARCHAR(50))   BEGIN
+    SELECT 
+        c.id_caso,
+        CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
+        c.fecha_inicio,
+        c.fecha_cierre,
+        e.estado AS estado,
+        t.nombre_caso AS tipo_caso,
+        p.nombre AS proceso,
+        c.descripcion
+    FROM caso c
+    JOIN usuario u ON c.documento = u.documento
+    JOIN estado e ON c.id_estado = e.id_estado
+    JOIN tipo_caso t ON c.id_tipo_caso = t.id_tipo_caso
+    JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
+    WHERE c.documento = p_documento 
+    ORDER BY c.fecha_inicio DESC;
+END$$
 
 CREATE PROCEDURE `sp_listar_caso_por_comisionado` (IN `p_documento` VARCHAR(50))   BEGIN
     SELECT 
@@ -1240,7 +1282,8 @@ CREATE TABLE `estado` (
 INSERT INTO `estado` (`id_estado`, `estado`) VALUES
 (1, 'Atendido'),
 (2, 'Por atender'),
-(3, 'No atendido');
+(3, 'No atendido'),
+(4, 'Por asignar');
 
 -- --------------------------------------------------------
 
@@ -1297,7 +1340,13 @@ INSERT INTO `informe` (`id_informe`, `documento`, `fecha_generacion`, `tipo_info
 (46, '1487569254', '2026-02-14 16:38:02', 'PDF', 'qgr5ert'),
 (47, '1487569254', '2026-02-14 16:45:17', 'PDF', 'trhrthrt'),
 (48, '1487569254', '2026-03-03 14:38:01', 'PDF', 'Reporte Casos'),
-(49, '1487569254', '2026-03-03 14:39:10', 'EXCEL', NULL);
+(49, '1487569254', '2026-03-03 14:39:10', 'EXCEL', NULL),
+(50, '1456333298', '2026-04-02 22:49:41', 'PDF', 'Reporte Mis Casos PQRSD'),
+(51, '1456333298', '2026-04-02 22:49:53', 'PDF', 'Reporte Usuarios'),
+(52, '1456333298', '2026-04-02 22:49:57', 'PDF', 'Reporte Procesos Comisionado'),
+(53, '1487569254', '2026-04-02 22:50:50', 'PDF', 'Reporte Casos'),
+(54, '1487569254', '2026-04-02 22:51:17', 'PDF', 'Reporte Usuarios'),
+(55, '1487569254', '2026-04-02 22:51:44', 'PDF', 'Reporte Procesos');
 
 -- --------------------------------------------------------
 
@@ -1541,8 +1590,8 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `fecha_caducidad`, `vigencia_usuario`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
 ('1020304050', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$GLchohxxzqrGdqUzrdhkx.W6EDHdax489rqyZskrPiNbNkzdBbjNm', '2026-02-12 14:18:58', '2028-02-12 14:18:58', '2026-2028', '2026-03-23 17:42:46', 1, 0, NULL),
-('1456333298', 'Juan Manuel', 'Correal', 'juangalvis.developer@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2028-02-12 14:22:31', '2026-2028', '2026-03-30 17:14:35', 1, 0, NULL),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-01 13:20:26', 1, 0, '7be3757a753976a4ca6e'),
+('1456333298', 'Juan Manuel', 'Correal', 'juangalvis.developer@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2028-02-12 14:22:31', '2026-2028', '2026-04-03 18:34:36', 1, 0, NULL),
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-03 18:34:47', 1, 0, '7be3757a753976a4ca6e'),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2028-02-12 14:28:54', '2026-2028', '2026-03-02 15:52:20', 1, 0, NULL),
 ('1756664828', 'Zack', 'Lopez', 'isaacmanuelcavajal1356@gmail.com', '3001234567', 2, '$2y$10$ddgxYzealY0ADRBf3t/0NO/ZNWCaJ/aaIXUaAvIJUFIzw9hABitkW', '2026-02-12 14:20:29', '2028-02-12 14:20:29', '2026-2028', '2026-03-12 12:55:03', 1, 1, NULL);
 
@@ -1564,6 +1613,14 @@ CREATE TRIGGER `tr_noti_reg_usuario` AFTER INSERT ON `usuario` FOR EACH ROW BEGI
     INNER JOIN rol r ON r.id_rol = NEW.id_rol
     INNER JOIN estado_usuario e ON e.id_estado = NEW.id_estado
     WHERE u_admin.id_rol = 1;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tr_reasignar_casos` AFTER UPDATE ON `usuario` FOR EACH ROW BEGIN
+	IF OLD.id_estado = 1 and NEW.id_estado = 0 THEN
+	UPDATE caso SET id_estado = 4 WHERE documento = OLD.documento;
+    END IF;
 END
 $$
 DELIMITER ;
@@ -1706,13 +1763,13 @@ ALTER TABLE `configuracionusuario`
 -- AUTO_INCREMENT de la tabla `estado`
 --
 ALTER TABLE `estado`
-  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `informe`
 --
 ALTER TABLE `informe`
-  MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=50;
+  MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT de la tabla `monitoreo`
