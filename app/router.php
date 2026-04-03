@@ -12,6 +12,7 @@ $router->map('GET', '/', '../Public/landing.php');
 
 $router->map('POST', '/login/auth', 'controllers/login.php');
 $router->map('POST', '/logout', 'controllers/logout.php');
+$router->map('POST', '/actualizar2FA', 'controllers/actualizar2FA.php');
 $router->map('POST', '/registrarCaso', 'controllers/registrarCasos.php');
 $router->map('POST', '/registrarUsuario', 'controllers/crearUsuario.php');
 $router->map('POST', '/registrarProceso', 'controllers/registrarProceso.php');
