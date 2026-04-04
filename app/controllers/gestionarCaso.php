@@ -5,11 +5,12 @@ session_start();
 require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/casosModel.php";
 
+// se valida que el metodo sea POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['status' => 'error', 'mensaje' => 'Método no permitido']);
     exit;
 }
-
+    // se toma un try catch para manejar errores  
 try {
     $model = new CasosModel($pdo);
     
