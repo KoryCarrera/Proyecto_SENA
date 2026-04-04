@@ -278,6 +278,9 @@ require_once __DIR__ . "/../../config/conexion.php";
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="assets/js/mammoth.browser.min.js"></script>
+<script src="assets/js/pdf.min.js"></script>
+<script src="assets/js/pdf.worker.min.js"></script>
   <script src="/assets/js/logout.js"></script>
   <script src="/assets/js/registrarCaso.js"></script>
   <script src="/assets/js/cache.js"></script>
