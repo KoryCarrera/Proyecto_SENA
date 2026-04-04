@@ -42,6 +42,7 @@ try {
         !is_string($numero)
 
     ) {
+        // se envia un json con el error
         echo json_encode([
             'status' => 'error',
             'mensaje' => 'Tipos de datos no validos'
@@ -62,14 +63,16 @@ try {
         exit;
     } else {
 
+        // se llama a la funcion que envia el correo
     $correo = correoEdicionUsuario($usuarioActualizado, $nombre, $email, $rol);
 
+        // se envia un json con el mensaje exitoso
         echo json_encode([
             'status' => 'ok',
             'mensaje' => 'Usuario actualizado con exito'
         ]);
     }
-
+// el correo esta enviando unerror si no se mando 
     if (!$correo) {
         echo json_encode([
             'status' => 'ok',
@@ -79,7 +82,9 @@ try {
     }
 
     exit;
-} catch (Exception $e) {
+} 
+// se toma el catch para manejar errores  
+catch (Exception $e) {
     error_log('Error al editar usuario: ' . $e->getMessage());
     throw new Exception($e);
 }
