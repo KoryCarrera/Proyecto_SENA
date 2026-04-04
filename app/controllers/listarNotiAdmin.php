@@ -1,6 +1,9 @@
 <?php
 
 header('Content-Type: application/json');
+// se especifica el tipo de comunicacion que tendramos en json
+
+// se carga la session  y 
 
 require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/baseHelper.php";

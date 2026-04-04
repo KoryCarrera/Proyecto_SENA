@@ -1,186 +1,297 @@
-# Sistema de Gestión PQRSD — SENA
+# 📋 Sistema de Gestión PQRSD - SENA
 
-<div align="center">
+[![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/)
+[![MariaDB](https://img.shields.io/badge/MariaDB-10.6-003545?style=for-the-badge&logo=mariadb&logoColor=white)](https://mariadb.org/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square&logo=php&logoColor=white)](https://www.php.net/)
-[![MariaDB](https://img.shields.io/badge/MariaDB-10.6+-003545?style=flat-square&logo=mariadb&logoColor=white)](https://mariadb.org/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
-[![License](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)](LICENSE)
-
-**Sistema web para la gestión eficiente de Peticiones, Quejas, Reclamos, Sugerencias y Denuncias (PQRSD) del personal interno del SENA.**
-
-[Instalación](#-instalación) · [Documentación](#-estructura-del-proyecto) · [Contribuir](#-contribuidores)
-
-</div>
+Sistema web para la gestión eficiente de Peticiones, Quejas, Reclamos, Sugerencias y Denuncias (PQRSD) del personal interno del SENA.
 
 ---
 
-## ¿Qué es este proyecto?
+## 📑 Tabla de Contenidos
 
-La **Comisión de Personal del SENA** recibe un alto volumen de PQRSD que hace inviable su gestión con métodos tradicionales. Este sistema web reemplaza esos flujos con una plataforma estructurada que cubre el ciclo completo de cada caso: desde la radicación inicial hasta el cierre y la evaluación.
-
----
-
-## Características
-
-| Módulo | Descripción |
-|--------|-------------|
-| **Gestión de casos** | Flujo completo de PQRSD: radicación, seguimiento, cierre y evaluación. |
-| **Control de acceso por roles** | Perfiles diferenciados para Administradores y Comisionados. |
-| **Autenticación 2FA** | Verificación de doble factor en el acceso de usuarios. |
-| **Notificaciones y correo** | Alertas internas y envíos SMTP automáticos (cambios de estado, recuperación de contraseña). |
-| **Reportería** | Exportación de informes detallados en PDF y Excel. |
-| **Panel de auditoría** | Monitoreo en tiempo real de acciones administrativas y operativas. |
-| **Enrutamiento dinámico** | Rutas limpias y seguras gestionadas desde el backend. |
+- [Descripción](#-descripción)
+- [Características](#-características)
+- [Tecnologías](#-tecnologías)
+- [Requisitos Previos](#-requisitos-previos)
+- [Instalación](#-instalación)
+- [Uso](#-uso)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Capturas de Pantalla](#-capturas-de-pantalla)
+- [Pendientes Conocidos](#-pendientes-conocidos)
+- [Roadmap](#-roadmap)
+- [Contribuidores](#-contribuidores)
+- [Licencia](#-licencia)
 
 ---
 
-## Stack tecnológico
+## 📖 Descripción
+
+Este sistema está dirigido a la **Comisión de Personal del SENA**, organismo encargado de atender y responder PQRSD del personal interno.
+
+### Problemática
+Actualmente, la comisión maneja un alto flujo de peticiones que hace **insostenible e ineficiente** la correcta resolución de los casos con métodos tradicionales.
+
+### Solución
+Sistema web que proporciona:
+- **Orden y estructura** para que los comisionados atiendan casos de forma eficiente
+- **Herramientas de supervisión** para administradores
+- **Generación automática de informes** (PDF/Excel)
+- **Visualización de estadísticas** en tiempo real
+
+> 🎓 **Proyecto Académico:** Desarrollado como proyecto final de formación técnica en el SENA, con un cliente real (Comisión de Personal) que valida y aprueba requisitos.
+
+---
+
+## ✨ Características
+
+### 👨‍💼 Rol: Administrador
+- ✅ Gestión completa de usuarios (crear, editar, inhabilitar)
+- ✅ Gestión de procesos organizacionales (categorías de casos)
+- ✅ Supervisión de todos los casos registrados
+- ✅ Generación de reportes en **PDF** y **Excel**
+- ✅ Dashboard con estadísticas visuales (Chart.js)
+- 🔄 Notificaciones (En desarrollo)
+
+### 👨‍💻 Rol: Comisionado
+- ✅ Registro de nuevos casos PQRSD
+- ✅ Visualización de casos propios y generales
+- ✅ Dashboard con estadísticas personalizadas
+- 🔄 Adjuntar evidencias (imágenes/videos) - En desarrollo
+- 🔄 Acceso restringido solo a casos asignados - En desarrollo
+
+---
+## 🛠️ Tecnologías
 
 ### Backend
-- **PHP 8.2+** con [AltoRouter](https://github.com/dannyvankooten/AltoRouter) para el manejo de rutas.
-- [vlucas/phpdotenv](https://github.com/vlucas/phpdotenv) para gestión segura de variables de entorno.
-- [PHPMailer](https://github.com/PHPMailer/PHPMailer) para envíos SMTP.
-- [PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet) y [DomPDF](https://github.com/dompdf/dompdf) para generación de reportes.
-
-### Base de datos
-- **MariaDB 10.6+** con uso extensivo de:
-  - **Stored Procedures** para lógica de reportes y caracterización de demanda.
-  - **Eventos automatizados** (`ev_caso_caducado`, `ev_caducar_usuarios_vencidos`) para transición de estados.
-  - **Triggers** para auditoría y consistencia de datos.
+- **PHP 8.2** - Lenguaje principal
+- **MariaDB 10.6** - Base de datos relacional
+- **Stored Procedures** - Prevención de inyecciones SQL
+- **Arquitectura MVC** - Patrón de diseño personalizado
 
 ### Frontend
-- HTML5, CSS3 y JavaScript puro con interfaces responsivas.
+- **Bootstrap 5** - Framework CSS
+- **Chart.js** - Gráficos y estadísticas
+- **jQuery 3.7** - Manipulación del DOM
+- **CSS/JS personalizado** - Estilos únicos del proyecto
 
----
+### Librerías PHP
+- **[AltoRouter](https://altorouter.com/)** - Enrutamiento de URLs
+- **[DOMPDF](https://github.com/dompdf/dompdf)** - Generación de reportes PDF
+- **[PhpSpreadsheet](https://phpspreadsheet.readthedocs.io/)** - Generación de reportes Excel
+- **[phpdotenv](https://github.com/vlucas/phpdotenv)** - Lectura de variables de entorno
+- **[PHPMailer](https://mailtrap.io/es/blog/phpmailer/)** - Envios de notificaciones a gmail automaticamente
+- **[SweetAlert2](https://sweetalert2.github.io/)** - Alertas y pequeños modales esteticos
 
-## Requisitos previos
+### DevOps
+- **Docker** - Contenedorización
+- **Docker Compose** - Orquestación de servicios
+- **Apache 2.4** - Servidor web
 
-- PHP >= 8.2 con extensiones `pdo`, `gd`, `zip` y `mbstring` habilitadas.
-- MariaDB o MySQL.
-- [Composer](https://getcomposer.org/) instalado globalmente.
-- Servidor web (Apache/Nginx) con soporte para reescritura de URLs (`mod_rewrite`).
-
----
-
-## Instalación
-
-### 1. Clonar el repositorio
-
-```bash
-git clone https://github.com/KoryCarrera/tu-repositorio.git
-cd tu-repositorio
-```
-
-### 2. Instalar dependencias PHP
-
-```bash
-composer install
-```
-
-### 3. Configurar variables de entorno
-
-Crea un archivo `.env` en la raíz del proyecto basándote en `.env.example`:
-
-```env
-# Base de datos
-DB_HOST=localhost
-DB_USER=root
-DB_PASS=tu_password
-DB_NAME=proyectosena_db
-
-# SMTP (PHPMailer)
-SMTP_HOST=smtp.ejemplo.com
-SMTP_USER=tu_correo@ejemplo.com
-SMTP_PASS=tu_password_smtp
-```
-
-### 4. Inicializar la base de datos
-
-Importa el archivo `db.sql` en tu gestor preferido (phpMyAdmin, DBeaver, etc.).
-
-> **Importante:** Activa el Event Scheduler de MySQL/MariaDB para que funcionen las caducidades automáticas de casos:
-> ```sql
-> SET GLOBAL event_scheduler = ON;
-> ```
-
-### 5. Levantar el servidor
-
-Con Docker, XAMPP, o el servidor integrado de PHP:
-
-```bash
-php -S localhost:8000
+### Contenedores
+```yaml
+├── app_sena (PHP 8.2 + Apache)
+├── db_sena (MariaDB 10.6)
+└── phpmyadmin (SGBD Web)
 ```
 
 ---
 
-## Estructura del proyecto
+## 📋 Requisitos Previos
 
+- **Docker Desktop** (versión 20.10 o superior)
+- **Git** (para clonar el repositorio)
+- Navegador web moderno (Chrome, Firefox, Edge)
+
+> ⚠️ **Nota:** No es necesario tener PHP, Composer ni MySQL instalados localmente. Docker maneja todo.
+
+---
+
+## 🚀 Instalación
+
+### 1️⃣ Clonar el repositorio
+```bash
+git clone https://github.com/KoryCarrera/Proyecto_SENA.git
+cd Proyecto_SENA
 ```
-/
+
+### 2️⃣ Instalar dependencias con Docker
+```bash
+#Linux
+docker run --rm -v $(pwd):/app composer install --ignore-platform-reqs
+
+#Windows
+docker run --rm -v ${PWD}:/app composer install --ignore-platform-reqs
+#En caso de fallo del anterior usar el siguiente para windows
+docker run --rm -v %cd%:/app composer install --ignore-platform-reqs
+```
+
+### 3️⃣ Levantar contenedores con Docker
+```bash
+docker-compose up --build
+```
+
+Estos comandos:
+- ✅ Traen los cambios mas recientes del repositorio
+- ✅ Instalan dependencias locales con docker
+- ✅ Construye las imágenes Docker
+- ✅ Levanta los 3 contenedores (app, db, phpmyadmin)
+- ✅ Carga automáticamente el esquema y datos de prueba desde `database/db.sql`
+- ✅ Instala dependencias con Composer en los contenedores
+
+### 3️⃣ Acceder al sistema
+
+Una vez levantados los contenedores:
+
+| Servicio | URL | Puerto |
+|----------|-----|--------|
+| **Aplicación** | http://localhost:8000 | 8000 |
+| **phpMyAdmin** | http://localhost:8001 | 8001 |
+
+---
+
+## 🔐 Uso
+
+### Credenciales de Prueba
+
+#### Administrador
+```
+Documento: 1487569254
+Contraseña: 123456
+```
+
+#### Comisionado
+```
+Documento: 1456333298
+Contraseña: galvis123
+```
+
+### Flujo de Uso
+
+1. **Acceder** a http://localhost:8000
+2. **Seleccionar** tipo de usuario (Administrador/Comisionado)
+3. **Iniciar sesión** con credenciales de prueba
+4. **Explorar** las funcionalidades según el rol
+
+---
+
+## 📂 Estructura del Proyecto
+```
+Proyecto_SENA/
 ├── app/
-│   ├── controllers/      # Lógica de negocio por módulo
-│   ├── models/           # Acceso a datos y stored procedures
-│   └── views/            # Plantillas HTML/PHP
-├── config/               # Configuración de BD y entorno
-├── public/               # Punto de entrada (index.php), assets
-├── vendor/               # Dependencias Composer
-├── db.sql                # Esquema completo con eventos y triggers
-├── .env.example
-└── composer.json
+│   ├── config/
+│   │   └── conexion.php          # Configuración de BD
+│   ├── controllers/
+│   │   ├── loginAdmin.php        # Autenticación admin
+│   │   ├── loginComisionado.php  # Autenticación comisionado
+│   │   ├── reportePDF.php        # Generador de PDF
+│   │   ├── reporteExcel.php      # Generador de Excel
+│   │   └── ...
+│   ├── models/
+│   │   ├── getData.php           # Consultas SELECT
+│   │   ├── insertData.php        # Consultas INSERT
+│   │   ├── updateData.php        # Consultas UPDATE
+│   │   ├── disableData.php       # Consultas DELETE lógico
+│   │   └── seguridad.php         # Validaciones
+│   ├── views/
+│   │   ├── admin/                # Vistas de administrador
+│   │   └── comisionado/          # Vistas de comisionado
+│   └── router.php                # Definición de rutas
+├── Public/
+│   ├── assets/
+│   │   ├── css/                  # Estilos personalizados
+│   │   ├── js/                   # Scripts JavaScript
+│   │   └── img/                  # Imágenes y logos
+│   ├── index.php                 # Front Controller
+│   └── landing.php               # Página de inicio
+├── database/
+│   └── db.sql                    # Schema + Data inicial
+├── docker-compose.yml            # Orquestación Docker
+├── Dockerfile                    # Imagen del contenedor
+├── composer.json                 # Dependencias PHP
+└── README.md                     # Este archivo
 ```
 
 ---
 
-## Seguridad
+## 📸 Capturas de Pantalla
 
-- **Variables de entorno:** Credenciales fuera del código fuente con `phpdotenv`.
-- **Autenticación 2FA:** Doble factor de verificación en el acceso.
-- **Tokens con expiración:** Recuperación de contraseñas mediante tokens vinculados a BD con límite de tiempo.
-- **Eventos automáticos:** Limpieza y transición de estados de casos abandonados sin intervención manual.
+### 🏠 Página de Inicio
+![Landing Page](Public/assets/img/img_readme/home.png)
 
-> Próxima iteración incluirá auditorías OWASP y refuerzo de controles de seguridad.
+### 🔐 Login Administrador
+![Login Admin](Public/assets/img/img_readme/loginAdmin.png)
 
----
+### 🔐 Login Comisionado
+![Login Comisionado](Public/assets/img/img_readme/loginComi.png)
 
-## Roadmap
+### 📊 Dashboard Administrador
+![Dashboard Admin](Public/assets/img/img_readme/homeAdmin.png)
 
-### Completado ✅
-- [x] Sistema completo de notificaciones en BD.
-- [x] Envío de alertas y recuperaciones por email (PHPMailer).
-- [x] Panel de auditoría con historial de procesos (`monitoreo`).
-- [x] Generador de reportes en PDF y Excel.
-- [x] Autenticación de doble factor (2FA).
-- [x] Enrutamiento backend moderno con AltoRouter.
-
-### En progreso / Próximo
-- [ ] Gestión avanzada de evidencias multimedia adjuntas a los casos.
-- [ ] Auditorías OWASP y endurecimiento de seguridad.
-- [ ] Refinamiento de UI/UX.
+### 📋 Gestión de Casos
+![Casos Admin](Public/assets/img/img_readme/casosAdmin.png)
 
 ---
 
-## Contribuidores
+## ⚠️ Pendientes Conocidos
 
-| Nombre | Rol | GitHub |
-|--------|-----|--------|
-| Kory Carrera | Líder de proyecto · FullStack | [@KoryCarrera](https://github.com/KoryCarrera) |
-| Zack-Xd | Desarrollador Backend | [@Zack-Xd](https://github.com/Zack-Xd) |
-| Juan Correal | Desarrollador Frontend | [@juan-correal](https://github.com/juan-correal) |
-| Simón Peláez | Analista de BD · Desarrollador Backend | [@pelaezgonzalezsimon919-cyber](https://github.com/pelaezgonzalezsimon919-cyber) |
-
-> Proyecto académico — Formación Técnica SENA 2025.
+### 🚧 Funcionalidades Pendientes
+- Sistema de notificaciones en tiempo real
+- Adjuntar evidencias fotográficas/videos a casos
+- Alertas automáticas por correo electrónico
+- Control de acceso basado en casos asignados (comisionados solo deben ver sus casos)
 
 ---
 
-## Agradecimientos
+## 🗺️ Roadmap
 
-- **Comisión de Personal del SENA** — Cliente y validador de requisitos.
-- **Instructores SENA** — Guía y acompañamiento técnico.
-- Comunidad open source por las librerías utilizadas: DomPDF, PhpSpreadsheet, AltoRouter, PHPMailer.
+### Próximas Implementaciones
+- [ ] Sistema completo de notificaciones
+- [ ] Envío de alertas por email
+- [ ] Gestión de evidencias multimedia
+- [ ] Aplicación de protocolos OWASP
+- [ ] Restricción de acceso por rol refinada
+- [ ] Mejoras en interfaz CSS
+- [ ] Panel de auditoría de acciones
 
 ---
 
-## Licencia
+## 👥 Contribuidores
 
-Distribuido bajo la [Licencia MIT](LICENSE).
+Desarrollado por:
+
+- **[Kory Carrera](https://github.com/KoryCarrera)** - Líder de Proyecto / FullStack
+- **[Zack-Xd](https://github.com/Zack-Xd)** - Desarrollador Backend
+- **[Juan Correal](https://github.com/juan-correal)** - Desarrollador Frontend
+- **[Simón Peláez](https://github.com/pelaezgonzalezsimon919-cyber)** - Analista de BD / Desarrollador Backend
+
+> 🎓 Proyecto académico - Formación Técnica SENA 2025
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+---
+
+## 🙏 Agradecimientos
+
+- **Comisión de Personal del SENA** - Cliente y validador de requisitos
+- **Instructores SENA** - Guía y acompañamiento técnico
+- Comunidad Open Source por las librerías utilizadas
+
+---
+
+## 📞 Contacto
+
+¿Dudas o sugerencias? Abre un [issue](https://github.com/KoryCarrera/Proyecto_SENA/issues) en el repositorio.
+
+---
+
+<div align="center">
+  <strong>Hecho con ❤️ por el equipo de desarrollo SENA</strong>
+  <br>
+  <sub>Proyecto Académico 2025</sub>
+</div>
