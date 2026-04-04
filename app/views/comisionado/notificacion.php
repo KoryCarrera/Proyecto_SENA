@@ -29,6 +29,9 @@
   <link rel="stylesheet" href="/assets/css/notificacion-comisionado.css">
   <script src="/assets/js/jquery-3.7.1.min.js"></script>
 
+  <!--datatables-->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"> <!-- DataTables CSS -->
+
 </head>
 
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
@@ -171,9 +174,16 @@
 
           <!-- lista de notificaciones -->
           <div class="notificaciones glass-card p-6">
-            <ul class="noti space-y-4" id="containerNotis">
-            <!--Relleno dinamico con JS-->
-            </ul>
+            <table class="noti space-y-4" id="containerNotis" style="width:100%">
+              <thead>
+                <tr>
+                  <th>Notificación</th>
+                </tr>
+              </thead>
+              <tbody>
+              <!--Relleno dinamico con JS-->
+              </tbody>
+            </table>
           </div>
 
         </div>
@@ -181,6 +191,8 @@
     </div>
   </div>
 <!-- se incluyen los archivos de javascript -->
+  <!-- script que enlaza a datatables -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"

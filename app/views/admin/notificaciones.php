@@ -28,24 +28,33 @@
   <link rel="stylesheet" href="/assets/css/notificaciones.css">
 
   <script src="/assets/js/jquery-3.7.1.min.js"></script>
+  <!-- jquery -->
+
+  <!--datatables-->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"> <!-- DataTables CSS -->
+
 
 </head>
 
 <!-- se inicia el body del documento -->
+
 <body class="antialiased selection:bg-indigo-500 selection:text-white">
 
   <!-- background de la vista -->
   <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
     <div class="blob-bg top-[-10%] left-[-10%] bg-indigo-500/20 w-[500px] h-[500px]"></div>
     <div class="blob-bg bottom-[-10%] right-[-10%] bg-purple-500/20 w-[500px] h-[500px] animation-delay-2000"></div>
-    <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+    <div
+      class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay">
+    </div>
   </div>
 
   <!-- contenedor principal -->
   <div class="flex h-screen overflow-hidden relative z-10">
 
     <!-- contenedor de la Sidebar -->
-    <aside class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
+    <aside
+      class="glass-sidebar w-20 hover:w-64 transition-all duration-300 ease-in-out flex flex-col group fixed h-full z-50">
 
       <!-- Logo del sena en la sidebar -->
       <div class="h-20 flex items-center justify-center border-b border-white/5">
@@ -145,16 +154,23 @@
 
         <div class="notificaciones">
           <h2 class="text-2xl font-bold text-white mb-6">Últimas Notificaciones</h2>
-
-          <ul class="noti space-y-4" id="containerNotis">
-            <!--Relleno dinamico con js-->
-          </ul>
+          <table class="noti space-y-4" id="containerNotis">
+            <thead>
+              <tr>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <!--Relleno dinamico con js-->
+            </tbody>
+          </table>
         </div>
 
       </main>
     </div>
   </div>
-
+  <!-- script que enlaza a datatables -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <!-- script requeridos para la pagina -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- script de notificacionesAdmin(script propio) -->
