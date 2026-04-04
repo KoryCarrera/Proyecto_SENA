@@ -237,8 +237,8 @@ const cambiarEstadoUsuario = async (nuevoDocumento, nuevoEstado) => {
     const esDesactivar = nuevoEstado == 0;
     const accion = esDesactivar ? 'desactivar' : 'reactivar';
     const colorBtn = esDesactivar ? '#dc3545' : '#198754';
-    const advertencia = esDesactivar 
-        ? 'Al desactivar, sus casos pasarán a "Por asignar".' 
+    const advertencia = esDesactivar
+        ? 'Al desactivar, sus casos pasarán a "Por asignar".'
         : 'Volverá a tener acceso al sistema con su rol previo.';
 
     //Pedimos confirmación y el motivo en una sola alerta
@@ -361,6 +361,10 @@ const mostrarDetallesUsuario = (usuario) => {
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Estado:</label>
                 <p class="form-control-plaintext">${obtenerEstadoUsuario(usuario.id_estado)}</p>
+            </div>
+            <div class="col-md-6 mb-3 ">
+                <label class="form-label fw-bold">Vigencia:</label>
+                <p class="form-control-plaintext text-white">${usuario.vigencia_usuario}</p>
             </div>
         </div>
     `;
