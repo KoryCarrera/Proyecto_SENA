@@ -27,6 +27,7 @@ class FileManager extends BaseHelper {
         $resultados = [];
 
         for ($i = 0; $i < $cantidad; $i++) {
+
             if ($archivos['error'][$i] !== UPLOAD_ERR_OK) continue;
 
             $nombreOriginal = $archivos['name'][$i];
@@ -45,7 +46,7 @@ class FileManager extends BaseHelper {
             if (move_uploaded_file($archivos['tmp_name'][$i], $rutaFisica)) {
                 
                 // 3. Guardar en BD (Sin SP por ahora, usamos SQL directo vía BaseHelper)
-                $sql = "sp_insertar_archivo_caso";
+                $sql = "sp_insertar_archivo_caso(?, ?, ?, ?)";
                 $tipo = $this->determinarTipo($archivos['type'][$i]);
                 
                 $data = [
