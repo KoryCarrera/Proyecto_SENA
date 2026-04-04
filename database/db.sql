@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 03-04-2026 a las 19:10:47
+-- Tiempo de generación: 04-04-2026 a las 00:42:51
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -114,12 +114,140 @@ CREATE PROCEDURE `sp_cambiar_contrasena_con_token` (IN `p_token` VARCHAR(255), I
     END IF;
 END$$
 
-CREATE PROCEDURE `sp_cambiar_estado_usuario` (IN `p_documento` VARCHAR(50), IN `p_estado` INT)   BEGIN 	
+CREATE PROCEDURE `sp_cambiar_estado_proceso` (IN `p_id_proceso` INT, IN `p_motivo` TEXT, IN `p_documento` VARCHAR(20), IN `p_estado` INT)   BEGIN 
+	
+	DECLARE v_nombre VARCHAR(100);
+	DECLARE v_nombre_admin VARCHAR(200);
+    
+	DECLARE v_mensaje_admin TEXT;
+	DECLARE v_mensaje_comi TEXT;
+	DECLARE v_mensaje_encargado TEXT;
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        ROLLBACK;
+    END;
 
+	START TRANSACTION;
+    
+	SELECT nombre INTO v_nombre FROM procesoorganizacional WHERE id_proceso = p_id_proceso;
+	SELECT CONCAT(nombre, ' ', apellido) INTO v_nombre_admin FROM usuario WHERE documento = p_documento;
+
+	IF p_estado = 0 THEN
+	
+    SET v_mensaje_admin = CONCAT('El proceso "', v_nombre, '" ha sido desactivado por el administrador ', v_nombre_admin, ', por el siguiente motivo: "', p_motivo, '". Todos los casos relacionados a este proceso seguiran siendo del mismo, pero ahora no se podran registrar casos para este proceso.');
+
+	SET v_mensaje_comi = CONCAT('El proceso "', v_nombre, '" ha sido desactivado por el administrador ', v_nombre_admin, ', por el siguiente motivo: "', p_motivo, '". Todos los casos relacionados a este proceso seguiran siendo del mismo, pero ahora no se podran registrar casos para este proceso.');
+
+	SET v_mensaje_encargado = CONCAT('Has desactivado el proceso "', v_nombre,'", ten en cuenta que esto no hara que los casos relacionado a este proceso se desligen del mismo, pero los comisionados ya no podran registrar casos para este proceso');
+
+	ELSEIF p_estado = 1 THEN
+
+	SET v_mensaje_admin = CONCAT('El proceso "', v_nombre, '" ha sido activado por el administrador ', v_nombre_admin, ', por el siguiente motivo: "', p_motivo, '". Todos los casos relacionados a este proceso seguiran siendo del mismo.');
+
+	SET v_mensaje_comi = CONCAT('El proceso "', v_nombre, '" ha sido activado por el administrador ', v_nombre_admin, ', por el siguiente motivo: "', p_motivo, '". Todos los casos relacionados a este proceso seguiran siendo del mismo.');
+
+	SET v_mensaje_encargado = CONCAT('Has activado el proceso "', v_nombre,'", ten en cuenta que esto hara que los comisionados ahora podran registrar casos para este proceso');
+    
+    END IF;
+
+	UPDATE procesoorganizacional SET estado = p_estado WHERE id_proceso = p_id_proceso;
+    
+    INSERT INTO monitoreo(documento, fecha, tipo, descripcion) 
+	VALUES(p_documento, NOW(), 2, p_motivo);
+    
+    INSERT INTO noti_administrador (documento, mensaje, fecha)
+    SELECT documento, v_mensaje_admin, NOW()
+	FROM usuario WHERE id_rol = 1 AND documento <> p_documento;
+
+	INSERT INTO noti_comisionado (documento, mensaje, fecha) 
+	SELECT documento, v_mensaje_comi, NOW()
+	FROM usuario WHERE id_rol = 2; 
+
+	INSERT INTO noti_administrador (documento, mensaje, fecha)
+	VALUES (p_documento, v_mensaje_encargado, NOW());
+
+    COMMIT;
+END$$
+
+CREATE PROCEDURE `sp_cambiar_estado_usuario` (IN `p_documento` VARCHAR(50), IN `p_estado` INT, IN `p_motivo` TEXT, IN `p_documento_admin` VARCHAR(50))   BEGIN 	
+
+DECLARE v_nombre VARCHAR(200);
+DECLARE v_nombre_admin VARCHAR(200);
+DECLARE v_admin_email VARCHAR(100);
+DECLARE v_documento_admin_2 VARCHAR(20);
+DECLARE v_documento_comi VARCHAR(20);
+DECLARE v_rol INT;
+
+DECLARE v_mensaje_admin TEXT;
+DECLARE v_mensaje_comi TEXT;
+DECLARE v_mensaje_admin_2 TEXT;
+
+DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN
+        ROLLBACK;
+    END;
+
+START TRANSACTION;
+
+SELECT CONCAT(nombre, ' ', apellido) INTO v_nombre FROM usuario WHERE documento = p_documento;
+SELECT CONCAT(nombre, ' ', apellido), email INTO v_nombre_admin, v_admin_email FROM usuario WHERE documento = p_documento_admin;
+
+SELECT id_rol INTO v_rol FROM usuario WHERE documento = p_documento;
+
+IF p_estado = 0 AND v_rol = 2 THEN
+
+	SET v_mensaje_admin = CONCAT('HAS INHABILITADO AL USUARIO "', v_nombre, '" DEL SISTEMA el dia: ',  CURRENT_DATE, ', por el siguiente motivo: "', p_motivo, '" en caso de error revierta de inmediato la accion, y tenga en cuenta que los casos Por Atender del usuario que ha desabilitado se encontraran en el estado "Por Reasignar", y para volver a asignar dichos casos a su Comisionado encargado debera hacerlo manualmente uno por uno, recuerde que desactivar un usuario es una accion riesgoza, y se aconseja realizarse unicamente en casos de absoluta necesidad, recuerde que el sistema por si solo, una vez se cumple con la vigencia, desactiva de forma automatica a todos los usuarios caducados.');
+	
+	SET v_mensaje_comi = CONCAT('HAS SIDO INHABILITADO DEL SISTEMA: ', v_nombre, ' el dia: ',  CURRENT_DATE, 
+' has sido INHABILITADO por el administrardor encargado: ', v_nombre_admin, ', por el siguiente motivo: "', p_motivo, '" en caso de error comuniquese con el administrador encargado a travez del siguiente correo: ', v_admin_email, '.');
+
+ELSEIF p_estado = 1 AND v_rol = 2 THEN 
+
+	SET v_mensaje_admin = CONCAT('HAS HABILITADO AL USUARIO "', v_nombre, '" el dia: ',  CURRENT_DATE, ', por el siguiente motivo: "', p_motivo, '" en caso de error revierta de inmediato la accion, y se aconseja realizar esta acciónn unicamente en casos de absoluta necesidad.');
+    
+	SET v_mensaje_comi = CONCAT('HAS SIDO HABILITADO EN EL SISTEMA: ', v_nombre, ' el dia: ',  CURRENT_DATE, 
+' has sido HABILITADO por el administrardor encargado: ', v_nombre_admin, ', por el siguiente motivo: "', p_motivo, '",  ahora tienes acceso nuevamente a las funciones de tu rol como comisionado, pero tus casos antiguos han sido asignados a otro comisionado, o en su defecto se encuentran en el estado Por Asignar, en caso de error comuniquese con el administrador encargado a travez del siguiente correo: ', v_admin_email, '.');
+
+ELSEIF p_estado = 0 AND v_rol = 1 THEN
+
+	SET v_mensaje_admin = CONCAT('HAS INHABILITADO AL ADMINISTRADOR "', v_nombre, '" DEL SISTEMA el dia: ',  CURRENT_DATE, ', por el siguiente motivo: "', p_motivo, '" en caso de error revierta de inmediato la accion, y recuerde que desactivar un usuario es una accion riesgoza, y se aconseja realizarse unicamente en casos de absoluta necesidad.');
+	
+	SET v_mensaje_admin_2 = CONCAT('HAS SIDO INHABILITADO DEL SISTEMA: ', v_nombre, ' el dia: ',  CURRENT_DATE, 
+' has sido INHABILITADO por el administrardor: ', v_nombre_admin, ', por el siguiente motivo: "', p_motivo, '" en caso de error comuniquese con el administrador encargado a travez del siguiente correo: ', v_admin_email, '.');
+
+ELSEIF p_estado = 1 AND v_rol = 1 THEN 
+
+	SET v_mensaje_admin = CONCAT('HAS HABILITADO AL USUARIO "', v_nombre, '" el dia: ',  CURRENT_DATE, ', por el siguiente motivo: "', p_motivo, '", el usuario en cuestion es un administrador, asi que tenga en cuenta que al habilitarlo nuevamente lo hace con dicho rol, en caso de error revierta de inmediato la accion, y se aconseja realizar esta acciónn unicamente en casos de absoluta necesidad.');
+    
+	SET v_mensaje_admin_2 = CONCAT('HAS SIDO HABILITADO EN EL SISTEMA: ', v_nombre, ' el dia: ',  CURRENT_DATE, 
+' has sido HABILITADO por el administrardor encargado: ', v_nombre_admin, ' por el siguiente motivo: "', p_motivo, '",  nuevamente tienes acceso a las funciones de tu rol como administrador, en caso de error comuniquese con el administrador encargado a travez del siguiente correo: ', v_admin_email, '.');
+
+END IF;
 
 UPDATE usuario SET id_estado = p_estado WHERE documento = p_documento;
 
-SELECT id_estado WHERE documento = p_documento; 
+INSERT INTO monitoreo(documento, fecha, tipo, descripcion) VALUES(p_documento, NOW(), 2, p_motivo);
+
+IF v_mensaje_comi IS NOT NULL THEN 
+
+	INSERT INTO noti_comisionado(documento, mensaje, fecha) 
+	VALUES(p_documento, v_mensaje_comi,  NOW());
+
+ELSEIF v_mensaje_admin_2 IS NOT NULL THEN
+
+	INSERT INTO noti_administrador(documento, mensaje, fecha) 
+	VALUES(p_documento, v_mensaje_admin_2,  NOW());
+
+END IF;
+
+IF v_mensaje_admin IS NOT NULL THEN
+	INSERT INTO noti_administrador(documento, mensaje, fecha) VALUES(p_documento_admin, v_mensaje_admin, NOW());
+END IF;
+
+COMMIT;
+
+SELECT id_estado FROM usuario WHERE documento = p_documento;
 
 END$$
 
@@ -481,10 +609,6 @@ GROUP BY tc.nombre_caso
 ORDER BY tc.nombre_caso;
 END$$
 
-CREATE PROCEDURE `sp_desactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
-	UPDATE procesoorganizacional SET estado = 0 WHERE id_proceso = p_id_proceso;
-END$$
-
 CREATE PROCEDURE `sp_editar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_rol` INT, IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN
     UPDATE usuario 
     SET 
@@ -620,13 +744,14 @@ CREATE PROCEDURE `sp_listar_estados_caso` ()   BEGIN
     ORDER BY id_estado ASC;
 END$$
 
-CREATE PROCEDURE `sp_listar_noti_admin` ()   BEGIN
-SELECT 
+CREATE PROCEDURE `sp_listar_noti_admin` (IN `p_documento` VARCHAR(20))   BEGIN
+SELECT	
 	id_notificacion AS id, 
 	documento, 
 	mensaje AS descripción,
-    fecha
-FROM noti_administrador 
+    fecha 
+FROM noti_administrador
+WHERE documento = p_documento
 ORDER BY fecha DESC, id_notificacion DESC;
 END$$
 
@@ -750,7 +875,7 @@ CREATE PROCEDURE `sp_reasignar_caso` (IN `p_documento` VARCHAR(20), IN `p_docume
 
     UPDATE caso 
     SET documento = p_documento_nuevo 
-    WHERE id_caso = p_id_caso;
+    WHERE id_caso = p_id_caso AND id_estado = 2;
 
     INSERT INTO monitoreo(documento, fecha, tipo, descripcion) 
     VALUES(p_documento, NOW(), 2, p_descripcion);
@@ -1206,10 +1331,10 @@ SELECT CONCAT (
 	IF mensaje_comi IS NOT NULL THEN
 	
 	INSERT INTO noti_comisionado(documento, mensaje, fecha)
-	VALUES(
+	SELECT
     NEW.documento, 
    	mensaje_comi,
-    NOW());
+    NOW() WHERE id_estado = 1;
 	END IF;
 
 IF mensaje_admin IS NOT NULL THEN
@@ -1220,7 +1345,7 @@ SELECT
     mensaje_admin, 
     NOW()
 FROM usuario u_admin
-WHERE u_admin.id_rol = 1;
+WHERE u_admin.id_rol = 1 AND id_estado = 1;
 END IF;
 END
 $$
@@ -1377,7 +1502,9 @@ INSERT INTO `monitoreo` (`id_monitoreo`, `documento`, `fecha`, `tipo`, `descripc
 (8, '1487569254', '2026-04-01 13:04:33', 'accion', 'fqwgqegwqe4'),
 (9, '1487569254', '2026-04-01 13:04:50', 'accion', 'wfwqagqahrrhn'),
 (10, '1487569254', '2026-04-01 13:05:38', 'accion', 'gsrhrjerjyrryts'),
-(11, '1487569254', '2026-04-01 13:21:22', 'accion', 'Se reasigna');
+(11, '1487569254', '2026-04-01 13:21:22', 'accion', 'Se reasigna'),
+(16, '1487569254', '2026-04-04 00:20:13', 'accion', 'Prueba de reasignacion'),
+(17, '1487569254', '2026-04-04 00:23:09', 'accion', 'Prueba 2, hubo un error');
 
 -- --------------------------------------------------------
 
@@ -1401,7 +1528,19 @@ INSERT INTO `noti_administrador` (`id_notificacion`, `documento`, `mensaje`, `fe
 (123, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Demora en atención médica ocupacional\" con ID: 58 por el comisionado Juan Manuel Correal', '2026-03-23 18:13:01'),
 (143, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Demora en atención médica ocupacional\" con ID: 58 por el comisionado Simon Gonzalez Pelaez', '2026-04-01 13:01:33'),
 (144, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Derecho de petición – Estado de incentivo institucional\" con ID: 49 por el comisionado Juan Manuel Correal', '2026-04-01 13:04:33'),
-(145, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Demora en atención médica ocupacional\" con ID: 58 por el comisionado Juan Manuel Correal', '2026-04-01 13:04:50');
+(145, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Demora en atención médica ocupacional\" con ID: 58 por el comisionado Juan Manuel Correal', '2026-04-01 13:04:50'),
+(146, '1487569254', 'Nuevo registro: El usuario Isaac Carvajal con el documento: 2030405060 se ha unido con el rol de \"administrador\". Fecha de registro: 2026-04-03 23:35:24. Vigencia: 2026-2028.', '2026-04-03 23:35:24'),
+(150, '1487569254', 'HAS INHABILITADO AL ADMINISTRADOR \"Isaac Carvajal\" DEL SISTEMA el dia: 2026-04-03, por el siguiente motivo: \"por que si\" en caso de error revierta de inmediato la accion, y recuerde que desactivar un usuario es una accion riesgoza, y se aconseja realizarse unicamente en casos de absoluta necesidad.', '2026-04-03 23:39:36'),
+(152, '1487569254', 'HAS HABILITADO AL USUARIO \"Isaac Carvajal\" el dia: 2026-04-04, por el siguiente motivo: \"Es para la prueba\", el usuario en cuestion es un administrador, asi que tenga en cuenta que al habilitarlo nuevamente lo hace con dicho rol, en caso de error revierta de inmediato la accion, y se aconseja realizar esta acciónn unicamente en casos de absoluta necesidad.', '2026-04-04 00:06:22'),
+(153, '1487569254', 'Nuevo registro: El usuario Saimon Pelaez con el documento: 3040506070 se ha unido con el rol de \"comisionado\". Fecha de registro: 2026-04-04 00:08:43. Vigencia: 2026-2028.', '2026-04-04 00:08:43'),
+(156, '1487569254', 'NUEVO CASO: \"Le robaron la dignidad\" ID CASO: 105. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Saimon Pelaez', '2026-04-04 00:11:34'),
+(160, '1487569254', 'HAS INHABILITADO AL ADMINISTRADOR \"Isaac Carvajal\" DEL SISTEMA el dia: 2026-04-04, por el siguiente motivo: \"Es necesario probar\" en caso de error revierta de inmediato la accion, y recuerde que desactivar un usuario es una accion riesgoza, y se aconseja realizarse unicamente en casos de absoluta necesidad.', '2026-04-04 00:18:16'),
+(161, '1487569254', 'AVISO: El caso \"Le robaron la dignidad\" CON LA ID: 105 cambió deL estado \"Por atender\" a \"Por asignar\". Por su Comisionado Responsable: Saimon Pelaez', '2026-04-04 00:18:39'),
+(164, '1487569254', 'HAS INHABILITADO AL USUARIO \"Saimon Pelaez\" DEL SISTEMA el dia: 2026-04-04, por el siguiente motivo: \"Prueba nuevamente\" en caso de error revierta de inmediato la accion, y tenga en cuenta que los casos Por Atender del usuario que ha desabilitado se encontraran en el estado \"Por Reasignar\", y para volver a asignar dichos casos a su Comisionado encargado debera hacerlo manualmente uno por uno, recuerde que desactivar un usuario es una accion riesgoza, y se aconseja realizarse unicamente en casos de absoluta necesidad, recuerde que el sistema por si solo, una vez se cumple con la vigencia, desactiva de forma automatica a todos los usuarios caducados.', '2026-04-04 00:18:39'),
+(165, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Le robaron la dignidad\" con ID: 105 por el comisionado Simon Gonzalez Pelaez', '2026-04-04 00:23:09'),
+(168, '1487569254', 'AVISO: El caso \"Le robaron la dignidad\" CON LA ID: 105 cambió deL estado \"Por asignar\" a \"Por atender\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-04-04 00:24:05'),
+(172, '1487569254', 'HAS HABILITADO AL USUARIO \"Isaac Carvajal\" el dia: 2026-04-04, por el siguiente motivo: \"desactive por error\", el usuario en cuestion es un administrador, asi que tenga en cuenta que al habilitarlo nuevamente lo hace con dicho rol, en caso de error revierta de inmediato la accion, y se aconseja realizar esta acciónn unicamente en casos de absoluta necesidad.', '2026-04-04 00:25:00'),
+(173, '1487569254', 'HAS HABILITADO AL USUARIO \"Saimon Pelaez\" el dia: 2026-04-04, por el siguiente motivo: \"prueba con comisionado\" en caso de error revierta de inmediato la accion, y se aconseja realizar esta acciónn unicamente en casos de absoluta necesidad.', '2026-04-04 00:25:13');
 
 -- --------------------------------------------------------
 
@@ -1437,7 +1576,12 @@ INSERT INTO `noti_comisionado` (`id_notificacion`, `documento`, `mensaje`, `fech
 (132, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Solicitud de acceso al plan anual de SST\" con la id 57', '2026-04-01 13:05:38'),
 (133, '1456333298', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Solicitud de acceso al plan anual de SST y la id 57 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-01 13:05:38'),
 (134, '1656966633', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Marleny Gaviria\", se te ha asignado un caso con el nombre: \"Incumplimiento en entrega de dotación operativa\" con la id 51', '2026-04-01 13:21:22'),
-(135, '1456333298', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Incumplimiento en entrega de dotación operativa y la id 51 se le ha asignado al comisonado: \"Marleny Gaviria', '2026-04-01 13:21:22');
+(135, '1456333298', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Incumplimiento en entrega de dotación operativa y la id 51 se le ha asignado al comisonado: \"Marleny Gaviria', '2026-04-01 13:21:22'),
+(139, '1020304050', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Simon Gonzalez Pelaez\", se te ha asignado un caso con el nombre: \"Le robaron la dignidad\" con la id 105', '2026-04-04 00:20:13'),
+(141, '1020304050', 'Realizaste un nuevo seguimiento al caso: \"Le robaron la dignidad\" con ID: 105, en la fecha : 2026-04-04 00:23:09', '2026-04-04 00:23:09'),
+(142, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Le robaron la dignidad\" con la id 105', '2026-04-04 00:23:09'),
+(143, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Le robaron la dignidad y la id 105 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-04 00:23:09'),
+(144, '1020304050', 'El caso \"Le robaron la dignidad\" con el ID: 105 perteneciente al proceso \"Ropa de Trabajo\", pasó del estado: \"Por asignar\" al estado: \"Por atender\" por el usuario encargado Simon Gonzalez Pelaez', '2026-04-04 00:24:05');
 
 -- --------------------------------------------------------
 
@@ -1504,7 +1648,9 @@ CREATE TABLE `seguimiento` (
 --
 
 INSERT INTO `seguimiento` (`id_seguimiento`, `fecha_seguimiento`, `observacion`, `documento`, `id_caso`) VALUES
-(19, '2026-03-23 18:13:01', 'El caso aun sigue en proceso, se espera respuesta de las entidades encargadas', '1456333298', 58);
+(19, '2026-03-23 18:13:01', 'El caso aun sigue en proceso, se espera respuesta de las entidades encargadas', '1456333298', 58),
+(26, '2026-04-04 00:20:13', 'Prueba de reasignacion', '1487569254', 105),
+(27, '2026-04-04 00:23:09', 'Prueba 2, hubo un error', '1487569254', 105);
 
 --
 -- Disparadores `seguimiento`
@@ -1591,9 +1737,9 @@ CREATE TABLE `usuario` (
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `fecha_caducidad`, `vigencia_usuario`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
 ('1020304050', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', NULL, 2, '$2y$10$GLchohxxzqrGdqUzrdhkx.W6EDHdax489rqyZskrPiNbNkzdBbjNm', '2026-02-12 14:18:58', '2028-02-12 14:18:58', '2026-2028', '2026-03-23 17:42:46', 1, 0, NULL),
 ('1456333298', 'Juan Manuel', 'Correal', 'juangalvis.developer@gmail.com', NULL, 2, '$2y$10$fTBbRgMER/FyoOVR5e2eGuKdn0x.lxRxYQa9ZOSrYwQWylv4M6z4O', '2026-02-12 14:22:31', '2028-02-12 14:22:31', '2026-2028', '2026-04-03 18:34:36', 1, 0, NULL),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-03 18:34:47', 1, 0, '7be3757a753976a4ca6e'),
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-04 00:16:54', 1, 0, '7be3757a753976a4ca6e'),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2028-02-12 14:28:54', '2026-2028', '2026-03-02 15:52:20', 1, 0, NULL),
-('1756664828', 'Zack', 'Lopez', 'isaacmanuelcavajal1356@gmail.com', '3001234567', 2, '$2y$10$ddgxYzealY0ADRBf3t/0NO/ZNWCaJ/aaIXUaAvIJUFIzw9hABitkW', '2026-02-12 14:20:29', '2028-02-12 14:20:29', '2026-2028', '2026-03-12 12:55:03', 1, 1, NULL);
+('1756664828', 'Zack', 'Lopez', 'isaaccavajal1356@gmail.com', '3001234567', 2, '$2y$10$ddgxYzealY0ADRBf3t/0NO/ZNWCaJ/aaIXUaAvIJUFIzw9hABitkW', '2026-02-12 14:20:29', '2028-02-12 14:20:29', '2026-2028', '2026-03-12 12:55:03', 1, 1, NULL);
 
 --
 -- Disparadores `usuario`
@@ -1605,7 +1751,7 @@ CREATE TRIGGER `tr_noti_reg_usuario` AFTER INSERT ON `usuario` FOR EACH ROW BEGI
         u_admin.documento,
         CONCAT(
             'Nuevo registro: El usuario ', NEW.nombre, ' ', NEW.apellido, 
-            ' con el documento: ', NEW.documento, ') se ha unido con el rol de "', r.nombre_rol, 
+            ' con el documento: ', NEW.documento, ' se ha unido con el rol de "', r.nombre_rol, 
             '". Fecha de registro: ', NEW.fecha_registro, '. Vigencia: ', NEW.vigencia_usuario, '.'
         ),
         NOW()
@@ -1619,7 +1765,7 @@ DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `tr_reasignar_casos` AFTER UPDATE ON `usuario` FOR EACH ROW BEGIN
 	IF OLD.id_estado = 1 and NEW.id_estado = 0 THEN
-	UPDATE caso SET id_estado = 4 WHERE documento = OLD.documento;
+	UPDATE caso SET id_estado = 4 WHERE documento = OLD.documento AND id_estado = 2;
     END IF;
 END
 $$
@@ -1751,7 +1897,7 @@ ALTER TABLE `archivo`
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
-  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=105;
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=106;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`
@@ -1775,19 +1921,19 @@ ALTER TABLE `informe`
 -- AUTO_INCREMENT de la tabla `monitoreo`
 --
 ALTER TABLE `monitoreo`
-  MODIFY `id_monitoreo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria para reconocimiento y relacion', AUTO_INCREMENT=12;
+  MODIFY `id_monitoreo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria para reconocimiento y relacion', AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_administrador`
 --
 ALTER TABLE `noti_administrador`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=174;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_comisionado`
 --
 ALTER TABLE `noti_comisionado`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=136;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=146;
 
 --
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
@@ -1805,7 +1951,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `seguimiento`
 --
 ALTER TABLE `seguimiento`
-  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=26;
+  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_caso`
@@ -1911,7 +2057,7 @@ CREATE EVENT `ev_caducar_usuarios_vencidos` ON SCHEDULE EVERY 1 DAY STARTS '2026
 UPDATE usuario
 SET id_estado = 0
 WHERE fecha_caducidad <= NOW()
-AND id_estado = 1;
+AND id_estado = 1 AND id_rol <> 1;
 END$$
 
 DELIMITER ;

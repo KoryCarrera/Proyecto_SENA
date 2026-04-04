@@ -156,7 +156,7 @@ function correoCrearUsuario($documento, $nombre, $nombreRol, $apellido, $email, 
             <h2>Notificación de Nuevo Usuario</h2>
         </div>
         <div class='content'>
-            <p>Se ha registrado un nuevo caso en el sistema:</p>
+            <p>Se ha registrado un nuevo usuario en el sistema:</p>
             <div class='detalle'>
                 <table>
                     <tr>
@@ -219,8 +219,6 @@ function correoCrearUsuario($documento, $nombre, $nombreRol, $apellido, $email, 
         ]
      ];
         
-
-
     $correoEnviado = enviarCorreo(
         $asunto,                    
         $cuerpoHTML,              

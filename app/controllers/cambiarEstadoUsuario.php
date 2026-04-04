@@ -27,10 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 $documentoSession = $_SESSION['user']['documento'];
 $documento = $_POST['documento'];
 $estado = $_POST['estado'];
+$motivo = $_POST['motivo'];
 
 //se valida que los datos no sean nulos,de serlo,se envia un mensaje de error
 
-if (!$documento && !$estado) {
+if (!$documento && !$estado && $motivo) {
 
   echo json_encode([
     'status' => 'error',
@@ -47,13 +48,12 @@ try {
 
   //se cambia el estado del usuario
 
-  $model->cambiarEstadoUsuario($documento, $estado, $documentoSession);
+  $model->cambiarEstadoUsuario($documento, $estado, $documentoSession, $motivo);
 
   //de ser exitoso se envia un mensaje de exito
 
   echo json_encode([
     'status' => 'ok'
-
   ]);
 
   //manejo de errores

@@ -18,9 +18,12 @@ try {
     $model = new baseHelper($pdo);
 
     $input = file_get_contents('php://input');
-    $idData = json_decode($input, true);
+    $procesoData = json_decode($input, true);
     
-    $id_proceso = $idData['id'] ?? null;
+    $id_proceso = $procesoData['id'] ?? null;
+    $documento = $_SESSION['user']['documento'];
+    $motivo = $procesoData['motivo'] ?? null;
+    $estado = 1;
     
     if (!$id_proceso || !is_numeric($id_proceso)) {
         echo json_encode([
@@ -31,10 +34,13 @@ try {
     }
 
     $data = [
-        ['value' => $id_proceso, 'type' => PDO::PARAM_INT]
+        ['value' => $id_proceso, 'type' => PDO::PARAM_INT],
+        ['value' => $motivo, 'type' => PDO::PARAM_STR],
+        ['value' => $documento, 'type' => PDO::PARAM_STR],
+        ['value' => $estado, 'type' => PDO::PARAM_STR],
     ];
     
-    $resultado = $model->insertOrUpdateData('sp_reactivar_proceso(?)', $data);
+    $resultado = $model->insertOrUpdateData('sp_cambiar_estado_proceso(?, ?, ?, ?)', $data);
 
     if ($resultado) {
         echo json_encode([

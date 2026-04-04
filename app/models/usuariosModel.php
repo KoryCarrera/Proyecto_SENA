@@ -6,7 +6,7 @@ require_once __DIR__ . '/baseHelper.php';
 
     class UsuariosModdel extends baseHelper
     {
-        public function cambiarEstadoUsuario($documentoFind, $nuevoEstado, $documentoSession)
+        public function cambiarEstadoUsuario($documentoFind, $nuevoEstado, $documentoSession, $motivo)
         {
 
             if ($documentoFind == $documentoSession) {
@@ -18,11 +18,18 @@ require_once __DIR__ . '/baseHelper.php';
                 $data = [
                     ['value' => $documentoFind, 'type' => PDO::PARAM_STR],
                     ['value' => $nuevoEstado, 'type' => PDO::PARAM_INT],
+                    ['value' => $motivo, 'type' => PDO::PARAM_STR],
+                    ['value' => $documentoSession, 'type' => PDO::PARAM_STR]
                 ];
 
-                $cambioEstado = parent::insertOrUpdateData('sp_cambiar_estado_usuario(?, ?)', $data);
+                $cambioEstado = parent::insertOrUpdateData('sp_cambiar_estado_usuario(?, ?, ?, ?)', $data);
+
+                if(!$cambioEstado){
+                    throw new Exception('¡Error al cambiar el estado del usuario!');
+                }
 
                 return true;
+
             } catch (Exception $e) {
 
                 error_log('Ha ocurrido un error SQL a la hora de cambiar estado usuario: ' . $e->getMessage());
