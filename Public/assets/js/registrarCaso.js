@@ -1,3 +1,5 @@
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'assets/js/pdf.worker.min.js';
+
 const ENDPOINT_ENVIAR = '/registrarCaso';
 const ENDPOINT_OBTENER = '/opcionesRegistro';
 
@@ -72,85 +74,77 @@ document.addEventListener("DOMContentLoaded", function () {
 // ============================================
 const inputArchivos = document.getElementById('archivos');
 const vistaArchivos = document.getElementById('vistaArchivos');
+const formulario    = document.getElementById('tuFormulario');
 let archivosSeleccionados = [];
 
 if (inputArchivos) {
-    inputArchivos.addEventListener('change', function (e) {
+    inputArchivos.addEventListener('change', async function(e) {
         const archivos = Array.from(e.target.files);
 
-        // Validación de la cantidad de archivos (máximo 3)
+        // Validación cantidad
         if (archivos.length > 3) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Solo puede subir 3 archivos como máximo',
-                theme: 'dark',
-                showConfirmButton: false,
-                timer: 1000,
-            });
+            Swal.fire({ icon: 'error', title: 'Solo puede subir 3 archivos como máximo', theme: 'dark', showConfirmButton: false, timer: 1500 });
             this.value = '';
             return;
         }
 
-        // Validación del tamaño del archivo (máximo 10MB)
-        const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
+        // Validación tamaño
+        const MAX_SIZE = 10 * 1024 * 1024;
         const archivosGrandes = archivos.filter(f => f.size > MAX_SIZE);
-
         if (archivosGrandes.length > 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Algunos archivos exceden el tamaño máximo permitido (10MB)',
-                text: `Los siguientes archivos superan el límite de 10 MB:\n${archivosGrandes.map(f => f.name).join('\n')}`,
-                theme: 'dark',
-                showConfirmButton: false,
-                timer: 1000,
-            });
+            Swal.fire({ icon: 'error', title: 'Algunos archivos superan 10MB', theme: 'dark', showConfirmButton: false, timer: 1500 });
             this.value = '';
             return;
         }
 
-        // Guardar archivos y mostrar preview
+        // 1️⃣ Guardar referencia y previsualizar
         archivosSeleccionados = archivos;
-        mostrarPreviewArchivos(archivos);
+        await mostrarPreviewArchivos(archivos);
     });
 }
 
-function mostrarPreviewArchivos(archivos) {
-    if (!vistaArchivos) return;
+// PREVISUALIZACIÓN 
 
+async function mostrarPreviewArchivos(archivos) {
     vistaArchivos.innerHTML = '';
 
-    archivos.forEach((archivo, index) => {
-        const div = document.createElement('div');
-        div.className = 'archivo-preview';
+    for (const file of archivos) {
+        const card = document.createElement('div');
+        card.classList.add('archivo-card');
 
-        // Icono según el tipo de archivo
-        let icono = 'bi-file-earmark';
-        if (archivo.type.startsWith('image/')) {
-            icono = 'bi-file-image';
-        } else if (archivo.type.startsWith('video/')) {
-            icono = 'bi-file-play';
-        } else if (archivo.type.includes('pdf')) {
-            icono = 'bi-file-pdf';
-        } else if (archivo.type.includes('word')) {
-            icono = 'bi-file-word';
-        } else if (archivo.type.includes('excel') || archivo.type.includes('spreadsheet')) {
-            icono = 'bi-file-excel';
+        if (file.type.startsWith('image/')) {
+            // Imagen: URL temporal en memoria, no sale del navegador
+            const url = URL.createObjectURL(file);
+            card.innerHTML = `<img src="${url}" alt="${file.name}" class="w-full h-full object-cover rounded-lg">`;
+
+        } else if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+            // PDF: renderiza la primera página en un canvas
+            const buf  = await file.arrayBuffer();
+            const pdf  = await pdfjsLib.getDocument({ data: buf }).promise;
+            const page = await pdf.getPage(1);
+            const viewport = page.getViewport({ scale: 1 });
+            const canvas   = document.createElement('canvas');
+            canvas.width   = viewport.width;
+            canvas.height  = viewport.height;
+            await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+            card.appendChild(canvas);
+
+        } else if (file.name.endsWith('.docx')) {
+            // DOCX: extrae el HTML del documento
+            const buf    = await file.arrayBuffer();
+            const result = await mammoth.convertToHtml({ arrayBuffer: buf });
+            const div    = document.createElement('div');
+            div.innerHTML = result.value;
+            card.appendChild(div);
+
+        } else {
+            card.innerHTML = `<span>${file.name}</span>`;
         }
 
-        div.innerHTML = `
-            <i class="bi ${icono}"></i>
-            <div>
-                <div class="archivo-nombre" title="${archivo.name}">${archivo.name}</div>
-                <div class="archivo-size">${formatBytes(archivo.size)}</div>
-            </div>
-            <button type="button" class="btn-eliminar-archivo" onclick="eliminarArchivo(${index})">
-                <i class="bi bi-x-circle-fill"></i>
-            </button>
-        `;
-
-        vistaArchivos.appendChild(div);
-    });
+        vistaArchivos.appendChild(card);
+    }
 }
+
 
 // ELIMINAR ARCHIVO DE LA SELECCIÓN
 function eliminarArchivo(index) {
