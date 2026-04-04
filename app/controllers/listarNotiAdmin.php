@@ -4,10 +4,19 @@ header('Content-Type: application/json');
 
 require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/baseHelper.php";
+session_start();
 
 try {
     $helper = new baseHelper($pdo);
-    $listarNotiAdmin = $helper->consultObjectHelper("sp_listar_noti_admin()");
+    $documento = $_SESSION['user']['documento'] ?? null;
+    $documentData = [
+        [
+            'value' => $documento,
+            'type' => PDO::PARAM_STR
+        ]
+    ];
+    
+    $listarNotiAdmin = $helper->consultObjectWithParams("sp_listar_noti_admin(?)", $documentData);
 
     if($listarNotiAdmin){
         echo json_encode([

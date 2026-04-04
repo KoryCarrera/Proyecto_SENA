@@ -13,16 +13,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-
-
 try {
 
     $model = new baseHelper($pdo);
 
     $input = file_get_contents('php://input');
-    $idData = json_decode($input, true);
+    $procesoData = json_decode($input, true);
     
-    $id_proceso = $idData['id'] ?? null;
+    $id_proceso = $procesoData['id'] ?? null;
+    $documento = $_SESSION['user']['documento'];
+    $motivo = $procesoData['motivo'] ?? null;
+    $estado = 0;
     
     // Validar que se recibió el ID
     if (!$id_proceso || !is_numeric($id_proceso)) {
@@ -35,14 +36,14 @@ try {
     
     // Llamar a el metodo
     $data = [
-        [
-            'value' => $id_proceso,
-            'type' => PDO::PARAM_INT
-        ]
+        ['value' => $id_proceso, 'type' => PDO::PARAM_INT],
+        ['value' => $motivo, 'type' => PDO::PARAM_STR],
+        ['value' => $documento, 'type' => PDO::PARAM_STR],
+        ['value' => $estado, 'type' => PDO::PARAM_STR],
     ];
 
 
-    $resultado = $model->insertOrUpdateData('sp_desactivar_proceso(?)', $data);
+    $resultado = $model->insertOrUpdateData('sp_cambiar_estado_proceso(?, ?, ?, ?)', $data);
     if ($resultado) {
         echo json_encode([
             'status' => 'ok',
