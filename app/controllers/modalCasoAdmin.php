@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') { //Validamos que es el metodo que ne
 try {
     $idCaso = $_POST['id_caso'] ?? null; 
     
+    // se valida si el id del caso es valido, de no serlo , se envia un json con el estado error y el mensaje id de caso no valido
     if (!$idCaso || !is_numeric($idCaso)) {
         echo json_encode([
             'status' => 'error',
@@ -28,10 +29,12 @@ try {
         exit;
     }
 
+    // se crea un array con el id del caso
     $data = [
         ['value' => $idCaso, 'type' => PDO::PARAM_INT],
     ];
     
+    // se llama al metodo consultSimpleWithParams
     $casoSolicitado = $helper->consultSimpleWithParams('sp_obtener_caso_por_id(?)', $data); //Llamamos la funcion que trae unicamente el caso que necesitamos
     
 

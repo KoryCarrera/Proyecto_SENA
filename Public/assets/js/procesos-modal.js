@@ -86,6 +86,7 @@ const renderizarTablaProcesos = (procesos, cuerpoTabla) => {
       url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
     },
     dom: "rti", // Sin paginación nativa,para que recuerden,falta la f,la l y la p,
+    autoWidth: false,
     drawCallback: function () {
       actualizarPaginacionProcesos(table);
     },

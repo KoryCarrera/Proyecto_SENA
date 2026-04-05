@@ -93,6 +93,7 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
             url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
         },
         dom: "rti", // Sin paginación interna, usamos la visual personalizada
+        autoWidth: false,
         drawCallback: function () {
             actualizarPaginacionVisualComi(table);
         },

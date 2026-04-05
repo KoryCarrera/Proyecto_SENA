@@ -73,6 +73,8 @@ try {
         //Regeneramos la session
         session_regenerate_id(true);
 
+        // si el usuario no tiene 2FA, se envia un json con el estado ok y la redireccion
+
         if (!$verificacion['2FA']) {
             $_SESSION['user']['verify'] = true;
             echo json_encode([
@@ -82,7 +84,11 @@ try {
             exit;
         };
 
+        // si el usuario tiene 2FA, se valida el dispositivo
+
         $validacion = $model->validarDispositivo($documento);
+
+        // si el dispositivo es valido, se envia un json con el estado ok y la redireccion
 
         if ($validacion) {
             $_SESSION['user']['verify'] = true;
@@ -93,17 +99,23 @@ try {
             exit;
         };
 
-        $token = bin2hex(random_bytes(3));
+        // si el dispositivo no es valido, se genera un token y se envia un json con el estado ok y la redireccion
 
+        $token = bin2hex(random_bytes(3));
+        
+        // se crea un array con el documento y el token
         $dataToken = [
             ['value' => $documento, 'type' => PDO::PARAM_STR],
             ['value' => $token, 'type' => PDO::PARAM_STR],
         ];
 
+        // se llama al metodo insertOrUpdateData
         $helper->insertOrUpdateData('sp_guardar_token_2fa(?, ?)', $dataToken);
 
+        // se envia el codigo 2FA
         enviarCodigo2FA($token, $verificacion['username'], $verificacion['email']);
 
+        // se envia un json con el estado ok y la redireccion
         echo json_encode([
             'status' => 'ok',
             'redirect' => '/2FA'
@@ -111,11 +123,13 @@ try {
         exit;
     };
 
+    // si el usuario es comisionado, se envia un json con el estado ok y la redireccion
     if ($verificacion['id_rol'] == 2) {
 
         //Regeneramos la session
         session_regenerate_id(true);
 
+        //si el usuario no tiene 2FA, se envia un json con el estado ok y la redireccion
         if (!$verificacion['2FA']) {
             $_SESSION['user']['verify'] = true;
             echo json_encode([
@@ -125,8 +139,10 @@ try {
             exit;
         };
 
+        // si el usuario tiene 2FA, se valida el dispositivo
         $validacion = $model->validarDispositivo($documento);
 
+        // si el dispositivo es valido, se envia un json con el estado ok y la redireccion
         if ($validacion) {
             $_SESSION['user']['verify'] = true;
             echo json_encode([
@@ -136,16 +152,21 @@ try {
             exit;
         };
 
+        // si el dispositivo no es valido, se genera un token
         $token = bin2hex(random_bytes(3));
 
+        // se crea un array con el documento y el token
         $dataToken = [
             ['value' => $documento, 'type' => PDO::PARAM_STR],
             ['value' => $token, 'type' => PDO::PARAM_STR],
         ];
 
+        // se llama al metodo insertOrUpdateData
         $helper->insertOrUpdateData('sp_guardar_token_2FA(?, ?)', $dataToken);
+        // se envia el codigo 2FA
         enviarCodigo2FA($token, $verificacion['username'], $verificacion['email']);
 
+        // se envia un json con el estado ok y la redireccion
         echo json_encode([
             'status' => 'ok',
             'redirect' => '/2FA'
@@ -153,15 +174,18 @@ try {
         exit;
     }
 
+    // si el rol es desconocido, se envia un json con el estado error y el mensaje rol desconocido
     echo json_encode([
         'status' => 'error',
         'mensaje' => 'Rol desconocido'
     ]);
     exit;
+    // se toma el catch para manejar errores
 } catch (Exception $e) {
-
+    // se registra el error
     error_log('¡Ha ocurrido un error al loguear: ' . $e->getMessage());
 
+    // se envia un json con el estado error y el mensaje de error
     echo json_encode([
         'status' => 'error',
         'mensaje' => $e->getMessage()

@@ -426,3 +426,121 @@ input[type="number"] {
   --bs-table-border-color: rgba(255, 255, 255, 0.1);
   --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
 }
+
+/* ── DataTables override — evita que DataTables inyecte width fijo en px ── */
+/* Mismo patrón que procesoOrganizacional.css usa implícitamente.            */
+#tablaUsuario,
+#tablaUsuario.dataTable {
+  width: 100% !important;
+  table-layout: auto !important;
+}
+
+/* El wrapper que DataTables genera también debe ser 100% del contenedor */
+#tablaUsuario_wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+
+/* --- Mobile: 320px – 767px --- */
+@media (max-width: 767px) {
+
+  /* Fuerza scroll horizontal en la tabla para no romper el layout */
+  .glass-card {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Reduce el tamaño de fuente de cabeceras para que quepan en pantalla pequeña */
+  .glass-table thead th {
+    font-size: 0.75rem;
+    padding: 0.65rem 0.5rem;
+    white-space: nowrap;
+  }
+
+  /* Celdas de datos compactas en pantallas pequeñas */
+  .glass-table tbody td,
+  .glass-table tbody th {
+    font-size: 0.8rem;
+    padding: 0.65rem 0.5rem;
+    white-space: nowrap;
+  }
+
+  /* El modal ocupa casi toda la pantalla en móvil */
+  .contenido-modal {
+    width: 96%;
+    padding: 1.5rem 1rem;
+  }
+
+  /* Las columnas del formulario modal pasan a 100% en móvil */
+  .col-md-6 {
+    width: 100%;
+  }
+
+  /* Los botones del modal se apilan verticalmente */
+  .botones {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .boton {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* --- Tablet: 768px – 1023px --- */
+@media (min-width: 768px) and (max-width: 1023px) {
+
+  /* Cabeceras con padding intermedio */
+  .glass-table thead th {
+    font-size: 0.85rem;
+    padding: 0.75rem 0.75rem;
+  }
+
+  /* Celdas con tamaño intermedio */
+  .glass-table tbody td,
+  .glass-table tbody th {
+    font-size: 0.875rem;
+    padding: 0.75rem 0.75rem;
+  }
+
+  /* El modal se adapta al ancho disponible de tablet */
+  .contenido-modal {
+    width: 80%;
+    max-width: 520px;
+  }
+
+  /* Columnas del formulario modal a 100% en tablet */
+  .col-md-6 {
+    width: 100%;
+  }
+}
+
+/* --- Desktop: 1024px+ --- */
+@media (min-width: 1024px) {
+
+  /* Comportamiento estándar: cabeceras a tamaño completo */
+  .glass-table thead th {
+    font-size: 0.875rem;
+    padding: 1rem;
+  }
+
+  /* Celdas a tamaño completo */
+  .glass-table tbody td,
+  .glass-table tbody th {
+    font-size: 1rem;
+    padding: 1rem 1.5rem;
+  }
+
+  /* El modal vuelve a su ancho máximo definido */
+  .contenido-modal {
+    width: 90%;
+    max-width: 520px;
+  }
+
+  /* Columnas del modal a 50% en pantallas amplias */
+  .col-md-6 {
+    width: 50%;
+  }
+}

@@ -1,8 +1,12 @@
 <?php
 
+// se especifica que la respuesta sera en formato JSON
 header('Content-Type: application/json');
+
+// se inicia la sesion
 session_start();
 
+// se incluyen los archivos necesarios
 require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/casosModel.php";
 require_once __DIR__ . "/../models/fileManager.php";
@@ -20,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 try {
 
+    // se crea una instancia del modelo de casos
     $modelCaso = new CasosModel($pdo);
 
     // Captura de datos
@@ -84,11 +89,13 @@ try {
         exit;
     }
 
+    // se obtiene el id del caso
     $idCaso = $registrar['data']['id_caso'];
 
     // Procesar archivos
     $resultadoArchivos = ['success' => false];
 
+    // se valida si se han enviado archivos
     if (isset($_FILES['archivos']) && !empty($_FILES['archivos']['name'][0])) {
         try {
             $fileManager = new FileManager($pdo);
@@ -100,8 +107,10 @@ try {
         }
     }
 
+    // se envia el correo de registro
     $correo = correoRegistroCaso($idCaso, $nombreCaso, $registrar['data']['proceso'], $registrar['data']['tipo_caso'], $descripcion, $resultadoArchivos);
 
+    // se valida si se pudo enviar el correo
     if (!$correo) {
         echo json_encode([
             'status' => 'ok',

@@ -74,15 +74,18 @@ Sistema web que proporciona:
 - **Bootstrap 5** - Framework CSS
 - **Chart.js** - Gráficos y estadísticas
 - **jQuery 3.7** - Manipulación del DOM
-- **CSS/JS personalizado** - Estilos únicos del proyecto
+- **DataTables 1.13** - Tablas dinámicas con paginación, búsqueda y ordenamiento (Casos, Usuarios, Notificaciones)
+- **PDF.js** - Previsualización nativa de documentos PDF adjuntos sin salir de la plataforma
+- **Mammoth.js** - Decodificación de documentos Word (.docx) directamente en el navegador
+- **SweetAlert2** - Alertas estéticas emergentes e interactivas
+- **CSS/JS personalizado** - Estilos únicos del proyecto (UI Glassmorphism)
 
 ### Librerías PHP
 - **[AltoRouter](https://altorouter.com/)** - Enrutamiento de URLs
 - **[DOMPDF](https://github.com/dompdf/dompdf)** - Generación de reportes PDF
 - **[PhpSpreadsheet](https://phpspreadsheet.readthedocs.io/)** - Generación de reportes Excel
 - **[phpdotenv](https://github.com/vlucas/phpdotenv)** - Lectura de variables de entorno
-- **[PHPMailer](https://mailtrap.io/es/blog/phpmailer/)** - Envios de notificaciones a gmail automaticamente
-- **[SweetAlert2](https://sweetalert2.github.io/)** - Alertas y pequeños modales esteticos
+- **[PHPMailer](https://mailtrap.io/es/blog/phpmailer/)** - Envíos de notificaciones a Gmail automáticamente
 
 ### DevOps
 - **Docker** - Contenedorización
@@ -245,16 +248,6 @@ Proyecto_SENA/
 ---
 
 ## 🗺️ Roadmap
-
-### Próximas Implementaciones
-- [ ] Sistema completo de notificaciones
-- [ ] Envío de alertas por email
-- [ ] Gestión de evidencias multimedia
-- [ ] Aplicación de protocolos OWASP
-- [ ] Restricción de acceso por rol refinada
-- [ ] Mejoras en interfaz CSS
-- [ ] Panel de auditoría de acciones
-
 ---
 
 ## 👥 Contribuidores

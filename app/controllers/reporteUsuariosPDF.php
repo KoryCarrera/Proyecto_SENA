@@ -68,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $logoSrc = 'data:image/png;base64,' . $logoData;
         }
 
+        //Configuramos el primer grafico
         $chartEstadosConfig = [
             'type' => 'pie',
             'data' => [
@@ -78,10 +79,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]]
             ]
         ];
+        //Se define la url del grafico
         $chartEstadosUrl = "https://quickchart.io/chart?c=" . urlencode(json_encode($chartEstadosConfig)) . "&w=300&h=200";
         $chartEstadosData = @file_get_contents($chartEstadosUrl); // El @ evita que un error de red tumbe el PDF
         $chartEstadosSrc = $chartEstadosData ? 'data:image/png;base64,' . base64_encode($chartEstadosData) : '';
 
+        //Configuramos el segundo grafico
         $chartRolesConfig = [
             'type' => 'doughnut',
             'data' => [
@@ -92,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]]
             ]
         ];
+        //Se define la url del grafico
         $chartRolesUrl = "https://quickchart.io/chart?c=" . urlencode(json_encode($chartRolesConfig)) . "&w=300&h=200";
         $chartRolesData = @file_get_contents($chartRolesUrl);
         $chartRolesSrc = $chartRolesData ? 'data:image/png;base64,' . base64_encode($chartRolesData) : '';

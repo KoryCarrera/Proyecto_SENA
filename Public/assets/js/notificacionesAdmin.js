@@ -136,7 +136,8 @@ async function cargarNotificaciones(url) {
         ordering: false,
         destroy: true,
         paging: true,
-        info: true
+        info: true,
+        autoWidth: false
       });
       // Aseguramos que dataTables no le quite el fondo transparente.
       $('#containerNotis').css('background', 'transparent');
