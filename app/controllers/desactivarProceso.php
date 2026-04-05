@@ -3,6 +3,9 @@
 header('Content-Type: application/json');
  // se indica que se va a trabajar con json 
 
+//Se inicializa la session
+session_start();
+
 // se incluye la conexion a la base de datos 
 require_once __DIR__ . "/../config/conexion.php";
 // se incluye el modelo baseHelper

@@ -7,16 +7,9 @@ const nuevoEmail = document.getElementById("nuevoEmail");
 const numeroNuevo = document.getElementById("numeroNuevo");
 const contrasenaNueva = document.getElementById("contrasenaNueva");
 const confirmarContrasena = document.getElementById("confirmarContrasena");
-const infoImportante = document.getElementById("infoImportante");
 
 //capturamos el botón de guardar cambios
 const btnGuardarCambios = document.getElementById("btnActualizar");
-
-//Insertamos el contenido por defecto de la infoImportante para dar claridad al usuario
-
-if (infoImportante) {
-    infoImportante.textContent = "Tenga en cuenta que cualquier cambio realizado en su perfil será reportado al administrador, incluyendo un registro de su información antigua y la nueva. Además, por tratarse de información sensible, la modificación de su contraseña requerirá la aprobación previa de la administración antes de hacerse efectiva.";
-}
 
 btnGuardarCambios.addEventListener('click', function (event) {
 
