@@ -10,7 +10,7 @@ require_once __DIR__ . '/../config/conexion.php';
 require_once __DIR__ . '/../models/baseHelper.php';
 require_once __DIR__ . '/../models/usuariosModel.php';
 require_once __DIR__ . '/../models/seguridad.php';
-require_once __DIR__ . '/../utils/utilsAuth.php';
+require_once __DIR__ . '/../utils/utilsEmail.php';
 
 $helper = new baseHelper($pdo);
 $model = new UsuariosModdel($pdo);

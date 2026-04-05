@@ -12,7 +12,7 @@ session_start();
 require_once __DIR__ . '/../config/conexion.php';
 require_once __DIR__ . '/../models/usuariosModel.php';
 require_once __DIR__ . '/../models/baseHelper.php';
-require_once __DIR__ . '/../utils/utilsAuth.php';
+require_once __DIR__ . '/../utils/utilsEmail.php';
 
 // se valida que el metodo sea POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

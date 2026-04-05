@@ -8,7 +8,7 @@ session_start();
 require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/baseHelper.php";
 require_once __DIR__ . "/../models/usuariosModel.php";
-require_once __DIR__ . "/../utils/utilsAuth.php";
+require_once __DIR__ . "/../utils/utilsEmail.php";
 
 //matamos el script con exit para matar el codigo en cada validacion incorrecta
 //validamos que el metodo sea post
