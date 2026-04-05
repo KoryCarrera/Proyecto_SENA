@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 04-04-2026 a las 21:14:46
+-- Tiempo de generación: 05-04-2026 a las 18:18:35
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -46,6 +46,12 @@ CREATE PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estad
     UPDATE caso SET id_estado = p_id_estado, fecha_cierre = v_cierre WHERE id_caso = p_id_caso AND documento = p_documento;
     
     END$$
+
+CREATE PROCEDURE `sp_actualizar_password_usuario` (IN `p_documento` VARCHAR(20), IN `p_nueva_password` VARCHAR(255))   BEGIN
+    UPDATE usuario
+    SET contraseña = p_nueva_password
+    WHERE documento = p_documento;
+END$$
 
 CREATE PROCEDURE `sp_analisis_demanda` ()   BEGIN
     SELECT
@@ -656,7 +662,7 @@ END$$
 
 CREATE PROCEDURE `sp_guardar_cookie` (IN `p_documento` VARCHAR(20), IN `p_cookie` VARCHAR(20))   UPDATE usuario SET cookie = p_cookie WHERE documento = p_documento$$
 
-CREATE PROCEDURE `sp_guardar_token_2fa` (IN `p_documento` VARCHAR(20), IN `p_token` VARCHAR(10))   INSERT INTO token_usuario(documento, token) VALUES(p_documento, p_token)$$
+CREATE PROCEDURE `sp_guardar_token_2fa` (IN `p_documento` VARCHAR(20), IN `p_token` VARCHAR(70))   INSERT INTO token_usuario(documento, token) VALUES(p_documento, p_token)$$
 
 CREATE PROCEDURE `sp_insertar_archivo_caso` (IN `p_id_caso` INT, IN `p_nombre_archivo` VARCHAR(255), IN `p_ruta` VARCHAR(255), IN `p_tipo_archivo` VARCHAR(50))   BEGIN
 INSERT INTO archivo (id_caso, nombre_archivo, ruta, tipo_archivo, fecha_subida)
@@ -1182,6 +1188,18 @@ CREATE PROCEDURE `sp_traer_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
 
 SELECT documento, nombre, apellido, email, numero, id_rol, id_estado, vigencia_usuario, ultimo_inicio_sesion, 2FA FROM usuario WHERE documento = TRIM(p_documento COLLATE utf8mb4_general_ci);
 
+END$$
+
+CREATE PROCEDURE `sp_usuario_por_token` (IN `p_token` VARCHAR(255))   BEGIN
+    SELECT 
+        u.documento,
+        u.nombre,
+        u.email
+    FROM token_usuario tu
+    INNER JOIN usuario u 
+        ON u.documento = tu.documento
+    WHERE tu.token = p_token
+    LIMIT 1;
 END$$
 
 CREATE PROCEDURE `sp_validacion_estado_caso` (IN `p_id_caso` INT)   BEGIN
@@ -1778,13 +1796,6 @@ CREATE TABLE `token_usuario` (
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `token_usuario`
---
-
-INSERT INTO `token_usuario` (`id`, `documento`, `token`, `fecha_creacion`) VALUES
-(17, '1487569254', '11af60', '2026-03-23 15:49:01');
-
 -- --------------------------------------------------------
 
 --
@@ -1815,7 +1826,7 @@ CREATE TABLE `usuario` (
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `fecha_caducidad`, `vigencia_usuario`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
 ('1020304050', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', '', 2, '$2y$10$/adpXMz4t00apED8Njy3j.2u8oRPBehzxuXwppb8MMW7wKdAMBTDm', '2026-02-12 14:18:58', '2028-02-12 14:18:58', '2026-2028', '2026-04-04 21:00:49', 1, 0, NULL),
 ('1456333298', 'Juan Manuel', 'Correal', 'juangalvis.developer@gmail.com', '', 2, '$2y$10$D9v783uPM.afAM21MN7D8.KbSDy9uLEQryCieSOkleXydooL18oAS', '2026-02-12 14:22:31', '2028-02-12 14:22:31', '2026-2028', '2026-04-04 20:44:02', 1, 0, NULL),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$.ojGM8lAXRkAo9tY8JFuEOF5RJ0jrcwL05ErUzfZnaS5/fJWt6Xxq', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-04 21:02:30', 1, 0, '7be3757a753976a4ca6e'),
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$Jv38fJwprb95GT4MUs8n1elsr42/1fWNevWmOlYixG.NgZdhbF9US', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-05 18:17:23', 1, 0, '7be3757a753976a4ca6e'),
 ('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2028-02-12 14:28:54', '2026-2028', '2026-04-04 20:51:34', 1, 0, NULL),
 ('1756664828', 'Zack', 'Lopez', 'isaaccarvajal1356@gmail.com', '3001234567', 2, '$2y$10$W/vgvd7nQdS3CScecEZy2OY9VokePpeSRmUitXPY24KRs3.yg3fRW', '2026-02-12 14:20:29', '2028-02-12 14:20:29', '2026-2028', '2026-04-04 21:09:18', 1, 1, '1fc92e49b1c758f80f27');
 
@@ -2041,7 +2052,7 @@ ALTER TABLE `tipo_caso`
 -- AUTO_INCREMENT de la tabla `token_usuario`
 --
 ALTER TABLE `token_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- Restricciones para tablas volcadas

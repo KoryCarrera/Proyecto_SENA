@@ -506,3 +506,81 @@ function correoRegistrarProceso($idProceso, $nombre, $descripcion){
     return $correoEnviado;
 }
 
+function correoRecuperacionPassword($emailDestino, $nombreUsuario, $linkRecuperacion)
+{
+    $asunto = "Recuperacion de contrasena - Sistema de Gestion";
+
+    //Cuerpo HTML
+    $cuerpoHTML = "
+    <html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+            .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+            .header { background-color: #007bff; color: white; padding: 20px; text-align: center; }
+            .content { padding: 30px; text-align: center; color: #333333; }
+            .btn { background-color: #007bff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; margin: 20px 0; }
+            .footer { background-color: #f8f9fa; color: #6c757d; padding: 15px; text-align: center; font-size: 12px; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h2>Recuperación de Contraseña</h2>
+            </div>
+            <div class='content'>
+                <p>Hola <strong>{$nombreUsuario}</strong>,</p>
+                <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta.</p>
+                <p>Para crear una nueva contraseña, haz clic en el siguiente botón:</p>
+                
+                <a href='{$linkRecuperacion}' class='btn' style='color: white;'>Restablecer Contraseña</a>
+                
+                <p style='font-size: 13px; color: #777; margin-top: 25px;'>Si el botón no funciona, copia y pega el siguiente enlace en tu navegador:</p>
+                <p style='font-size: 12px; word-break: break-all; color: #007bff;'>{$linkRecuperacion}</p>
+                
+                <hr style='border: none; border-top: 1px solid #eee; margin: 20px 0;'>
+                <p style='font-size: 13px;'>Si no solicitaste este cambio, puedes ignorar este correo de forma segura. Tu contraseña actual no cambiará.</p>
+            </div>
+            <div class='footer'>
+                &copy; " . date('Y') . " Sistema de Gestión SENA. Todos los derechos reservados.
+            </div>
+        </div>
+    </body>
+    </html>
+    ";
+
+    //Cuerpo alternativo en texto plano
+    $cuerpoAlt = "Hola {$nombreUsuario},\n\n" .
+                 "Hemos recibido una solicitud para restablecer tu contraseña.\n" .
+                 "Para crear una nueva contraseña, copia y pega el siguiente enlace en tu navegador:\n\n" .
+                 "{$linkRecuperacion}\n\n" .
+                 "Si no solicitaste este cambio, ignora este mensaje. Tu contraseña no cambiará.\n\n" .
+                 "Sistema de Gestión SENA";
+
+    //Destinatarios
+    $destinatarios = [
+        [
+            'emailUser' => $emailDestino,
+            'userName' => $nombreUsuario
+        ]
+    ];
+
+    //Llamada a tu función principal
+    $correoEnviado = enviarCorreo(
+        $asunto,
+        $cuerpoHTML,
+        $cuerpoAlt,
+        $destinatarios,
+        null,
+        null
+    );
+
+    //Logs de éxito o error
+    if ($correoEnviado) {
+        error_log("Correo de recuperación enviado exitosamente a {$emailDestino}");
+    } else {
+        error_log("Error al enviar correo de recuperación a {$emailDestino}");
+    }
+
+    return $correoEnviado;
+}

@@ -34,6 +34,8 @@ $router->map('POST', '/gestionarCaso', '/controllers/gestionarCaso.php');
 $router->map('POST', '/ConfiUsuario', '/controllers/configuracionUsuario.php');
 $router->map('POST', '/auth2FA', '/controllers/2FA.php');
 $router->map('POST', '/reenviar2FA', '/controllers/reenviar2FA.php');
+$router->map('POST', '/actualizarPass', '/controllers/resetPass.php');
+$router->map('POST', '/olvidastePass', '/controllers/olvidarContrasena.php');
 
 //GET
 
@@ -80,5 +82,9 @@ $router->map('GET', '/perfil', 'views/comisionado/perfil.php');
 $router->map('GET', '/login', '../Public/pages/entrada.php');
 $router->map('GET', '/saber-mas', '../Public/pages/saber_mas.php');
 $router->map('GET', '/2FA', '../Public/pages/2FAViews.php');
+
+//Ruta de recuperacion
+
+$router->map('GET', '/Recuperar_Password/[*:token]', '../Public/pages/resetPassword.php');
 return $router;
 ?>

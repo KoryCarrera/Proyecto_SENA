@@ -11,7 +11,7 @@ require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/casosModel.php";
 require_once __DIR__ . "/../models/fileManager.php";
 require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . "/../utils/utilsAuth.php";
+require_once __DIR__ . "/../utils/utilsEmail.php";
 
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

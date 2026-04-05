@@ -1,77 +1,91 @@
-const ENDPOINT_OLVIDASTE = ''
+const ENDPOINT_OLVIDASTE = '/olvidastePass';
 const botonOlvidaste = document.getElementById('olvidarContrasena');
 
-botonOlvidaste.addEventListener('click', function (){
-
+botonOlvidaste.addEventListener('click', function () {
     Swal.fire({
-        title: '¿Has olvidado tu contraseña? ¡Rellena el formulario!',
+        title: '¿Has olvidado tu contraseña?',
         html: `
-        <label for="email">Ingrese el correo electronico con el que se registro en el sistema</label>
-        <input type="email" id="email" class="swal2-input" placeholder="Correo electrónico" required>
-        <br><br>
-        <label for="documento">Ingrese el número de documento</label>
-        <input type="number" id="documento" class="swal2-input" placeholder="Número de documento" required>
-        <br><br>
-        <label for="nombre">Ingrese su nombre completo</label>
-        <input type="text" id="nombre" placeholder="Nombre completo" class="swal2-input" required>
-        <br><br>
-        <label for="telefono">Ingrese el número de teléfono</label>
-        <input type="number" id="telefono" placeholder="Número de teléfono" class="swal2-input" required>
+            <div style="text-align: left; font-size: 14px; margin-top: 10px;">
+                <label for="swal-email" style="color: #cbd5e1; display: block; margin-bottom: 5px;">Correo electrónico</label>
+                <input type="email" id="swal-email" class="swal2-input" style="width: 85%; margin: 0 auto 15px; display: block;" placeholder="ejemplo@correo.com" required>
+                
+                <label for="swal-documento" style="color: #cbd5e1; display: block; margin-bottom: 5px;">Número de documento</label>
+                <input type="number" id="swal-documento" class="swal2-input" style="width: 85%; margin: 0 auto 15px; display: block;" placeholder="Ej: 1000000000" required>
+                
+                <label for="swal-nombre" style="color: #cbd5e1; display: block; margin-bottom: 5px;">Primer nombre</label>
+                <input type="text" id="swal-nombre" class="swal2-input" style="width: 85%; margin: 0 auto 15px; display: block;" placeholder="Tu primer nombre" required>
+                
+                <label for="swal-telefono" style="color: #cbd5e1; display: block; margin-bottom: 5px;">Número de teléfono</label>
+                <input type="number" id="swal-telefono" class="swal2-input" style="width: 85%; margin: 0 auto; display: block;" placeholder="Tu celular" required>
+            </div>
         `,
+        background: '#1e293b', // Color slate-800
+        color: '#ffffff',
         showCancelButton: true,
-        theme: 'dark',
         confirmButtonText: 'Enviar',
         cancelButtonText: 'Cancelar',
-
+        confirmButtonColor: '#6366f1', // Color indigo-500
+        cancelButtonColor: '#ef4444',  // Color red-500
+        showLoaderOnConfirm: true,     // Activa el spinner de carga
+        
+        // El preConfirm es perfecto para capturar los datos y hacer la validación
         preConfirm: () => {
-            const email = document.getElementById('email').value;
-            const documento = document.getElementById('documento').value;
-            const nombre = document.getElementById('nombre').value;
-            const telefono = document.getElementById('telefono').value;
+            const email = document.getElementById('swal-email').value;
+            const documento = document.getElementById('swal-documento').value;
+            const nombre = document.getElementById('swal-nombre').value;
+            const telefono = document.getElementById('swal-telefono').value;
 
-            return {
-                'email': email,
-                'documento': documento,
-                'nombre': nombre,
-                'telefono': telefono
-            }.then((data) => {
+            // 1. Validación básica en el frontend
+            if (!email || !documento || !nombre || !telefono) {
+                Swal.showValidationMessage('Todos los campos son obligatorios');
+                return false; // Detiene el proceso
+            }
+
+            // 2. Retornamos una Promesa con el AJAX
+            return new Promise((resolve, reject) => {
                 $.ajax({
                     url: ENDPOINT_OLVIDASTE,
                     method: 'POST',
-                    data: data,
+                    data: {
+                        email: email,
+                        documento: documento,
+                        nombre: nombre,
+                        telefono: telefono
+                    },
+                    dataType: 'json',
                     success: function (response) {
-                        if (response.status === 'ok') {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Correo enviado con exito',
-                                text: response.message,
-                                showConfirmButton: false,
-                                timer: 2000,
-                                theme: 'dark'
-                            });
+                        // Verificamos si el backend respondió con 'ok' o 'success'
+                        if (response.status === 'ok' || response.status === 'success') {
+                            resolve(response); // Pasamos la respuesta al .then()
                         } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error al enviar correo',
-                                text: response.message,
-                                showConfirmButton: false,
-                                timer: 2000,
-                                theme: 'dark'
-                            });
+                            // Si los datos no coinciden, mostramos el error sin cerrar el modal
+                            Swal.showValidationMessage(response.mensaje || response.message || 'Datos incorrectos');
+                            resolve(false); 
                         }
                     },
-                    error: function (xhr, status, error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error en la solicitud',
-                            text: 'Ocurrió un error al enviar la solicitud. Por favor, inténtalo de nuevo.',
-                            showConfirmButton: false,
-                            timer: 2000,
-                            theme: 'dark'
-                        });
+                    error: function () {
+                        Swal.showValidationMessage('Error de conexión con el servidor.');
+                        resolve(false);
                     }
-                })
-            })
+                });
+            });
+        },
+        // Evitamos que el usuario cierre el modal haciendo clic afuera mientras carga
+        allowOutsideClick: () => !Swal.isLoading() 
+        
+    }).then((result) => {
+        // 3. Este .then() se ejecuta solo si el preConfirm hizo el resolve(response) exitosamente
+        if (result.isConfirmed && result.value) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Correo enviado con éxito!',
+                text: result.value.mensaje || result.value.message || 'Revisa tu bandeja de entrada.',
+                background: '#1e293b',
+                color: '#ffffff',
+                confirmButtonColor: '#6366f1',
+                timer: 3000,
+                showConfirmButton: false
+            });
         }
-    })
-})
+    });
+});

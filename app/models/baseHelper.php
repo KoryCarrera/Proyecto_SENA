@@ -89,7 +89,7 @@ public function __construct(protected  $conexion)
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
             $stmt->closeCursor();
 
-            if ($data && is_array($data)){
+            if ($data || is_array($data)){
                 return $data;
             } else {
                 throw new Exception("No se ha podido obtener datos de la consulta con parametros");
