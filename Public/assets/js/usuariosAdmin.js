@@ -125,6 +125,7 @@ const renderizarTablaUsuarios = (usuarios, cuerpoTabla) => { //definimos la func
     var table = $("#tablaUsuario").DataTable({
         pageLength: 10,
         lengthMenu: [10, 25, 50],
+        autoWidth: false,
         language: {
             url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
         },
@@ -132,7 +133,8 @@ const renderizarTablaUsuarios = (usuarios, cuerpoTabla) => { //definimos la func
         drawCallback: function () {
             actualizarPaginacionVisualUsuarios(table);
         },
-    });
+      
+    });  
 
     $("#buscarUsuarios").on("keyup", function () {
         table.search(this.value).draw();

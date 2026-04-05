@@ -25,9 +25,13 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 //Iniciamos un array vacio para mayor facilidad
 $datosReporte = [];
 
+//Se crea una instancia del modelo de casos
 $model = new baseHelper($pdo);
+//Se obtiene el documento del usuario
 $documento = $_SESSION['user']['documento'];
+//Se define el formato
 $formato = 'EXCEL';
+//Se define la descripcion
 $descripcion = 'Reporte general de casos';
 
 $data = [
