@@ -102,7 +102,7 @@ class CasosModel extends baseHelper {
             $reasignar = parent::insertOrUpdateData('sp_reasignar_caso(?, ?, ?, ?, ?)', $reasignarCaso);
 
             if($reasignar || count($reasignar) > 0){
-                throw new Exception('Exito al hacer la reasignación');
+                return true;
             } else {
                 throw new Exception('No se pudo hacer la reasignación');
             }

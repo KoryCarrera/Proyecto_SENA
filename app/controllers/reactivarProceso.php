@@ -4,6 +4,9 @@ header('Content-Type: application/json');
 
 // se indica que solo se trabajara con json
 
+//Se inicializa la session
+session_start();
+
 //se incluyen las dependencias necesarias
 
 require_once __DIR__ . "/../config/conexion.php";
