@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 06-04-2026 a las 00:21:19
+-- Tiempo de generación: 06-04-2026 a las 01:49:19
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -231,7 +231,7 @@ END IF;
 
 UPDATE usuario SET id_estado = p_estado WHERE documento = p_documento;
 
--- Cambiado el 2 por 'accion' para coincidir exactamente con el ENUM
+
 INSERT INTO monitoreo(documento, fecha, tipo, descripcion) VALUES(p_documento, NOW(), 'accion', p_motivo);
 
 IF v_mensaje_comi IS NOT NULL THEN 
@@ -1137,6 +1137,7 @@ CREATE PROCEDURE `sp_resumen_casos_global` ()   BEGIN
 
         SUM(CASE WHEN e.estado = 'Atendido'    THEN 1 ELSE 0 END)                AS total_atendidos,
         SUM(CASE WHEN e.estado = 'Por atender' THEN 1 ELSE 0 END)                AS total_pendientes,
+        SUM(CASE WHEN e.estado = 'Por asignar' THEN 1 ELSE 0 END)                AS total_por_asignar,
         SUM(CASE WHEN e.estado = 'No atendido' THEN 1 ELSE 0 END)                AS total_no_atendidos
 
     FROM caso c
@@ -1248,15 +1249,6 @@ CREATE TABLE `archivo` (
   `tipo_archivo` varchar(50) NOT NULL COMMENT 'Formato del archivo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `archivo`
---
-
-INSERT INTO `archivo` (`id_archivo`, `id_caso`, `nombre_archivo`, `fecha_subida`, `ruta`, `tipo_archivo`) VALUES
-(2, 135, 'Los 12 Trabajos de Heracles y su significado profundo.pdf', '2026-04-06 00:17:53', 'uploads/casos/caso#135/archivo_69d2fbb1c3dcd.pdf', 'documento'),
-(3, 135, 'Reporte_Usuarios_SENA.pdf', '2026-04-06 00:17:53', 'uploads/casos/caso#135/archivo_69d2fbb1d91cd.pdf', 'documento'),
-(4, 135, '579e4c2063571440.png', '2026-04-06 00:17:54', 'uploads/casos/caso#135/archivo_69d2fbb1ea740.png', 'imagen');
-
 -- --------------------------------------------------------
 
 --
@@ -1283,72 +1275,54 @@ CREATE TABLE `caso` (
 --
 
 INSERT INTO `caso` (`id_caso`, `nombre`, `radicado`, `documento`, `id_seguimiento`, `id_proceso`, `fecha_ultimo_seguimiento`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
-(50, 'Posible trato desigual en asignación de incentivos', NULL, '1020304050', NULL, 13, NULL, '2026-02-09 12:49:15', '2026-03-30 16:36:03', 1, 1, 'El funcionario manifiesta inconformidad debido a que considera que los criterios de evaluación no se aplicaron de manera equitativa en su área, afectando la asignación de incentivos.'),
-(52, 'Presunto maltrato laboral por parte de superior', NULL, '1456333298', NULL, 10, NULL, '2026-02-23 12:50:29', '2026-03-30 16:36:03', 1, 1, 'El colaborador reporta comportamientos reiterados de trato inapropiado y comunicación inadecuada por parte de su jefe inmediato, solicitando revisión del caso.'),
-(53, 'Programación de examen médico ocupacional', NULL, '1656966633', 50, 11, '2026-04-05 23:49:26', '2026-02-19 12:53:33', '2026-04-05 22:28:50', 2, 2, 'El colaborador solicita la programación de su examen médico ocupacional periódico para seguimiento de su estado de salud laboral.'),
-(54, 'Capacitación en prevención de riesgos laborales', NULL, '1756664828', NULL, 14, NULL, '2026-02-23 12:53:57', '2026-04-05 22:23:59', 1, 2, 'Se solicita capacitación para el equipo de trabajo en temas de prevención de riesgos con el fin de fortalecer prácticas seguras.'),
-(55, 'Estado de solicitud de incentivo institucional', NULL, '1020304050', NULL, 13, NULL, '2026-02-23 14:11:57', NULL, 2, 3, 'El peticionario solicita conocer el estado actual de su solicitud de incentivo y los tiempos estimados de respuesta.'),
-(56, 'Copia de resultados de examen médico ocupacional', NULL, '1756664828', 44, 11, '2026-04-05 23:41:18', '2026-02-23 14:12:24', NULL, 2, 3, 'Se solicita copia de los resultados del examen médico ocupacional realizado recientemente.'),
-(59, 'Riesgo laboral no atendido oportunamente', NULL, '1756664828', 42, 14, '2026-04-05 23:39:37', '2026-02-21 14:17:12', NULL, 2, 4, 'Se solicita protección de derechos fundamentales ante la persistencia de un riesgo laboral que no ha sido intervenido.'),
-(60, 'Negación de apoyo social en situación urgente', NULL, '1020304050', NULL, 10, NULL, '2026-02-17 14:17:51', '2026-03-30 16:36:03', 1, 4, 'El accionante solicita intervención inmediata al considerar vulnerados sus derechos por la negación de un apoyo social urgente.'),
-(61, 'Denuncia cableado expuesto', NULL, '1756664828', 45, 14, '2026-04-05 23:44:12', '2022-01-18 07:40:00', '2022-01-20 15:10:00', 2, 1, 'Denuncia por cableado expuesto en sala de sistemas'),
-(62, 'Solicitud inspección ruido', NULL, '1456333298', NULL, 14, NULL, '2022-02-12 09:15:00', '2026-03-30 16:36:03', 1, 2, 'Solicitud de inspección por condiciones de ruido en taller'),
-(63, 'Incidente menor área operativa', NULL, '1020304050', NULL, 14, NULL, '2022-03-03 10:30:00', '2022-03-07 11:20:00', 2, 1, 'Reporte de incidente menor sin lesiones en área operativa'),
-(64, 'Derecho petición seguimiento SST', NULL, '1756664828', NULL, 14, NULL, '2022-04-21 14:10:00', NULL, 2, 3, 'Derecho de petición por seguimiento a reporte de seguridad'),
-(65, 'Denuncia falta señalización', NULL, '1020304050', NULL, 14, NULL, '2023-01-11 08:00:00', '2023-01-15 17:00:00', 2, 1, 'Denuncia por falta de señalización en zona de carga'),
-(66, 'Solicitud capacitación SST', NULL, '1456333298', NULL, 14, NULL, '2023-02-09 09:55:00', '2026-03-30 16:36:03', 1, 2, 'Solicitud de capacitación en prevención de riesgos'),
-(67, 'Incidente leve laboratorio', NULL, '1756664828', 48, 14, '2026-04-05 23:45:40', '2023-03-14 11:25:00', '2023-03-18 13:40:00', 2, 1, 'Incidente leve durante práctica en laboratorio'),
-(68, 'Solicitud revisión EPP', NULL, '1756664828', NULL, 14, NULL, '2023-05-22 15:00:00', NULL, 2, 2, 'Solicitud de revisión de equipos de protección'),
-(69, 'Derecho petición auditoría SST', NULL, '1020304050', NULL, 14, NULL, '2024-01-05 07:50:00', '2026-03-30 16:36:03', 1, 3, 'Derecho de petición sobre estado de auditoría de seguridad'),
-(70, 'Denuncia riesgo ergonómico', NULL, '1456333298', 49, 14, '2026-04-05 23:46:16', '2024-02-17 10:20:00', '2024-02-21 16:30:00', 4, 1, 'Denuncia por riesgo ergonómico en puesto administrativo'),
-(71, 'Solicitud evaluación riesgos', NULL, '1020304050', 32, 14, '2026-04-05 23:10:52', '2024-03-29 12:10:00', NULL, 2, 2, 'Solicitud de evaluación de riesgos en aula técnica'),
-(72, 'Reporte caída leve', NULL, '1020304050', NULL, 14, NULL, '2024-05-03 09:00:00', '2024-05-06 14:00:00', 2, 1, 'Reporte de caída sin consecuencias graves'),
-(73, 'Solicitud inspección preventiva', NULL, '1020304050', NULL, 14, NULL, '2025-01-09 08:15:00', '2026-03-30 16:36:03', 1, 2, 'Solicitud de inspección preventiva general'),
-(74, 'Denuncia incumplimiento SST', NULL, '1020304050', NULL, 14, NULL, '2025-02-20 10:45:00', '2025-02-25 12:30:00', 2, 1, 'Denuncia por incumplimiento de protocolo de seguridad'),
-(75, 'Derecho petición seguimiento caso', NULL, '1020304050', NULL, 14, NULL, '2025-04-10 13:30:00', NULL, 2, 3, 'Derecho de petición por seguimiento a caso SST'),
-(76, 'Solicitud revisión locativa', NULL, '1756664828', NULL, 14, NULL, '2026-01-16 09:10:00', '2026-03-30 16:36:03', 1, 2, 'Solicitud de revisión de condiciones locativas'),
-(77, 'Solicitud apoyo psicológico', NULL, '1020304050', NULL, 10, NULL, '2022-02-01 10:10:00', '2022-02-03 12:00:00', 2, 2, 'Solicitud de apoyo psicológico institucional'),
-(78, 'Denuncia conflicto interpersonal', NULL, '1456333298', NULL, 10, NULL, '2022-06-18 11:20:00', '2026-03-30 16:36:03', 1, 1, 'Denuncia por conflicto interpersonal entre funcionarios'),
-(79, 'Solicitud programa bienestar', NULL, '1020304050', NULL, 10, NULL, '2023-02-12 08:40:00', '2023-02-18 15:10:00', 2, 2, 'Solicitud de inclusión en programa de bienestar'),
-(80, 'Derecho petición beneficios', NULL, '1756664828', NULL, 10, NULL, '2023-07-07 14:25:00', NULL, 2, 3, 'Derecho de petición por información de beneficios'),
-(82, 'Denuncia acoso laboral', NULL, '1020304050', NULL, 10, NULL, '2024-04-11 11:15:00', '2024-04-16 16:00:00', 2, 1, 'Denuncia por presunto acoso laboral'),
-(83, 'Solicitud actividad deportiva', NULL, '1656966633', NULL, 10, NULL, '2025-03-03 10:50:00', '2026-03-30 16:36:03', 1, 2, 'Solicitud de inscripción a actividad deportiva'),
-(84, 'Derecho petición subsidios', NULL, '1756664828', NULL, 10, NULL, '2026-02-08 13:05:00', NULL, 2, 3, 'Derecho de petición sobre subsidios'),
-(86, 'Derecho petición tecnológica', NULL, '1456333298', NULL, 11, NULL, '2023-06-02 09:10:00', '2026-03-30 16:36:03', 1, 3, 'Derecho de petición por respuesta a solicitud tecnológica'),
-(87, 'Solicitud actualización usuario', NULL, '1020304050', NULL, 11, NULL, '2024-02-19 11:00:00', '2024-02-23 12:30:00', 2, 2, 'Solicitud de actualización de usuario'),
-(88, 'Denuncia fallas plataforma', NULL, '1756664828', NULL, 11, NULL, '2025-05-05 14:10:00', NULL, 2, 1, 'Denuncia por fallas recurrentes en plataforma'),
-(89, 'Solicitud dotación uniforme', NULL, '1020304050', NULL, 12, NULL, '2022-04-01 10:10:00', '2022-04-05 11:00:00', 2, 2, 'Solicitud de dotación de uniforme'),
-(90, 'Derecho petición dotación', NULL, '1456333298', NULL, 12, NULL, '2023-08-15 09:40:00', '2026-03-30 16:36:03', 1, 3, 'Derecho de petición por entrega tardía de dotación'),
-(91, 'Solicitud reposición botas', NULL, '1756664828', 46, 12, '2026-04-05 23:44:57', '2024-03-20 12:30:00', '2024-03-25 15:10:00', 2, 2, 'Solicitud de reposición de botas de seguridad'),
-(94, 'Solicitud inscripción incentivos', NULL, '1456333298', NULL, 13, NULL, '2026-01-20 11:20:00', NULL, 4, 2, 'Solicitud de inscripción a programa de incentivos'),
-(106, 'Denuncia riesgo eléctrico', NULL, '1756664828', NULL, 14, NULL, '2026-01-10 08:15:00', NULL, 1, 1, 'Se reporta posible riesgo eléctrico por tomas sobrecargadas en oficina administrativa'),
-(107, 'Solicitud inspección seguridad', NULL, '1656966633', NULL, 14, NULL, '2026-01-22 10:20:00', NULL, 1, 2, 'Se solicita inspección preventiva en zona de almacenamiento'),
-(108, 'Denuncia falta señalización', NULL, '1456333298', NULL, 14, NULL, '2026-02-03 09:10:00', NULL, 1, 1, 'Se reporta ausencia de señalización en área de tránsito interno'),
-(109, 'Solicitud capacitación SST', NULL, '1020304050', NULL, 14, NULL, '2026-02-18 11:40:00', NULL, 2, 2, 'Funcionario solicita capacitación sobre prevención de riesgos laborales'),
-(110, 'Derecho petición seguimiento', NULL, '1756664828', NULL, 14, NULL, '2026-03-02 14:30:00', NULL, 2, 3, 'Se solicita información sobre seguimiento de reporte de seguridad'),
-(111, 'Denuncia condiciones inseguras', NULL, '1656966633', NULL, 14, NULL, '2026-03-19 08:55:00', NULL, 1, 1, 'Se reportan condiciones inseguras en zona de carga'),
-(112, 'Solicitud revisión extintores', NULL, '1456333298', NULL, 14, NULL, '2026-04-07 10:05:00', NULL, 1, 2, 'Se solicita verificación de estado de extintores'),
-(113, 'Denuncia accidente leve', NULL, '1020304050', NULL, 14, NULL, '2026-04-21 13:10:00', NULL, 2, 1, 'Se reporta accidente menor durante jornada laboral'),
-(114, 'Solicitud evaluación riesgos', NULL, '1756664828', NULL, 14, NULL, '2026-05-04 09:30:00', NULL, 1, 2, 'Se solicita evaluación de riesgos en área técnica'),
-(115, 'Denuncia incumplimiento protocolo', NULL, '1656966633', NULL, 14, NULL, '2026-05-16 15:20:00', NULL, 1, 1, 'Se reporta incumplimiento de normas de seguridad'),
-(116, 'Solicitud inspección preventiva', NULL, '1456333298', NULL, 14, NULL, '2026-06-01 08:40:00', NULL, 1, 2, 'Se solicita inspección preventiva en área administrativa'),
-(117, 'Denuncia cableado deteriorado', NULL, '1020304050', NULL, 14, NULL, '2026-06-20 11:10:00', NULL, 2, 1, 'Se detecta cableado deteriorado en zona de equipos'),
-(118, 'Solicitud apoyo psicológico', NULL, '1756664828', NULL, 10, NULL, '2026-01-15 09:10:00', NULL, 1, 2, 'Funcionario solicita acompañamiento psicológico institucional'),
-(119, 'Denuncia conflicto laboral', NULL, '1656966633', NULL, 10, NULL, '2026-02-12 10:20:00', NULL, 1, 1, 'Se reporta conflicto interpersonal entre funcionarios'),
-(120, 'Derecho petición beneficios', NULL, '1456333298', NULL, 10, NULL, '2026-03-28 11:00:00', NULL, 4, 3, 'Se solicita información sobre beneficios institucionales'),
-(121, 'Solicitud actividad bienestar', NULL, '1020304050', NULL, 10, NULL, '2026-04-18 14:10:00', NULL, 1, 2, 'Se solicita participación en actividad de bienestar laboral'),
-(122, 'Denuncia acoso laboral', NULL, '1756664828', NULL, 10, NULL, '2026-05-26 13:30:00', NULL, 1, 1, 'Se presenta denuncia por presunto acoso laboral'),
-(123, 'Solicitud apoyo social', NULL, '1020304050', NULL, 10, NULL, '2026-06-09 10:10:00', NULL, 2, 2, 'Funcionario solicita apoyo social por situación familiar'),
-(124, 'Solicitud soporte plataforma', NULL, '1456333298', NULL, 11, NULL, '2026-01-27 08:50:00', NULL, 1, 2, 'Se solicita soporte técnico en plataforma institucional'),
-(125, 'Derecho petición sistema', NULL, '1456333298', 33, 11, '2026-04-05 23:14:00', '2026-03-05 10:15:00', NULL, 4, 3, 'Se solicita información sobre estado de solicitud tecnológica'),
-(126, 'Denuncia fallas sistema', NULL, '1756664828', NULL, 11, NULL, '2026-04-30 09:45:00', NULL, 1, 1, 'Se reportan fallas recurrentes en plataforma institucional'),
-(127, 'Solicitud actualización usuario', NULL, '1656966633', NULL, 11, NULL, '2026-06-11 11:25:00', NULL, 1, 2, 'Se solicita actualización de permisos de usuario'),
-(128, 'Solicitud dotación uniforme', NULL, '1456333298', NULL, 12, NULL, '2026-02-14 09:30:00', NULL, 1, 2, 'Se solicita entrega de uniforme institucional'),
-(129, 'Derecho petición dotación', NULL, '1020304050', NULL, 12, NULL, '2026-04-09 10:50:00', NULL, 2, 3, 'Se solicita información sobre entrega de dotación pendiente'),
-(130, 'Solicitud información incentivos', NULL, '1756664828', NULL, 13, NULL, '2026-03-11 08:20:00', NULL, 1, 2, 'Funcionario solicita información sobre plan de incentivos'),
-(131, 'Derecho petición incentivos', NULL, '1020304050', NULL, 13, NULL, '2026-05-08 11:40:00', NULL, 2, 3, 'Se solicita respuesta sobre participación en programa de incentivos'),
-(132, 'Juanito le pego a una profesora', '123456', '1456333298', 34, 11, '2026-04-05 23:24:39', '2026-04-05 23:19:01', NULL, 4, 1, 'Juanito le pego a una profesora por que no le dio la nota que merecia'),
-(135, 'Reporte comisionado', '56723', '1756664828', NULL, 10, NULL, '2026-04-06 00:17:53', NULL, 2, 2, 'Ver archivos adjuntos en registrar caso');
+(136, 'Denuncia cable suelto', NULL, '1013341532', NULL, 14, NULL, '2026-01-06 08:20:00', '2026-01-08 03:20:00', 1, 1, 'Se reporta cable suelto en zona de trabajo que puede generar riesgo eléctrico'),
+(137, 'Solicitud inspección seguridad', NULL, '1027961396', NULL, 14, NULL, '2026-01-18 10:15:00', '2026-01-19 17:15:00', 1, 2, 'Se solicita inspección preventiva de seguridad en área operativa'),
+(138, 'Denuncia caída trabajador', NULL, '1013342119', NULL, 14, NULL, '2026-02-04 09:10:00', NULL, 2, 1, 'Se reporta caída leve de trabajador durante jornada laboral'),
+(139, 'Solicitud revisión herramientas', NULL, '1020304050', NULL, 14, NULL, '2026-02-22 11:30:00', '2026-02-23 11:30:00', 1, 2, 'Se solicita revisión de herramientas deterioradas'),
+(140, 'Derecho petición accidente', NULL, '1013341532', NULL, 14, NULL, '2026-03-03 14:20:00', NULL, 2, 3, 'Se solicita información sobre accidente laboral reportado'),
+(141, 'Denuncia falta señalización', NULL, '1027961396', NULL, 14, NULL, '2026-03-16 09:40:00', '2026-03-17 12:40:00', 1, 1, 'Se reporta falta de señalización en zona de tránsito interno'),
+(142, 'Solicitud capacitación riesgos', NULL, '1013342119', NULL, 14, NULL, '2026-04-02 10:50:00', '2026-04-03 01:50:00', 1, 2, 'Funcionario solicita capacitación en prevención de riesgos'),
+(143, 'Denuncia riesgo eléctrico', NULL, '1020304050', NULL, 14, NULL, '2026-04-19 13:15:00', '2026-04-21 06:15:00', 1, 1, 'Se detecta posible riesgo eléctrico en tomas de corriente'),
+(144, 'Solicitud revisión extintores', NULL, '1013341532', NULL, 14, NULL, '2026-05-07 08:45:00', '2026-05-07 22:45:00', 1, 2, 'Se solicita revisión del estado de los extintores'),
+(145, 'Denuncia obstrucción salida', NULL, '1027961396', NULL, 14, NULL, '2026-05-24 12:20:00', '2026-05-26 07:20:00', 1, 1, 'Se reporta salida de emergencia bloqueada por materiales'),
+(146, 'Derecho petición seguimiento SST', NULL, '1013342119', NULL, 14, NULL, '2026-06-05 09:00:00', NULL, 2, 3, 'Se solicita seguimiento a reporte de condiciones inseguras'),
+(147, 'Solicitud evaluación riesgos', NULL, '1020304050', NULL, 14, NULL, '2026-06-18 11:35:00', '2026-06-19 16:35:00', 1, 2, 'Se solicita evaluación de riesgos en área administrativa'),
+(148, 'Solicitud apoyo psicológico', NULL, '1013341532', NULL, 10, NULL, '2026-01-12 09:30:00', '2026-01-13 03:30:00', 1, 2, 'Funcionario solicita acompañamiento psicológico'),
+(149, 'Denuncia conflicto laboral', NULL, '1027961396', NULL, 10, NULL, '2026-02-11 10:20:00', '2026-02-13 09:20:00', 1, 1, 'Se reporta conflicto interpersonal entre compañeros'),
+(150, 'Derecho petición subsidios', NULL, '1013342119', NULL, 10, NULL, '2026-03-27 11:10:00', NULL, 2, 3, 'Se solicita información sobre subsidios institucionales'),
+(151, 'Solicitud actividad bienestar', NULL, '1020304050', NULL, 10, NULL, '2026-04-14 14:05:00', '2026-04-16 05:05:00', 1, 2, 'Se solicita participación en jornada de bienestar laboral'),
+(152, 'Denuncia trato inadecuado', NULL, '1013341532', NULL, 10, NULL, '2026-05-29 13:50:00', '2026-05-29 19:50:00', 1, 1, 'Se reporta trato inadecuado por parte de un superior'),
+(153, 'Solicitud soporte sistema', NULL, '1027961396', NULL, 11, NULL, '2026-01-28 08:10:00', '2026-01-28 17:10:00', 1, 2, 'Se solicita soporte para acceso a sistema institucional'),
+(154, 'Derecho petición tecnológica', NULL, '1013342119', NULL, 11, NULL, '2026-03-10 09:45:00', NULL, 2, 3, 'Se solicita información sobre estado de solicitud tecnológica'),
+(155, 'Denuncia fallas plataforma', NULL, '1020304050', NULL, 11, NULL, '2026-05-12 10:25:00', '2026-05-13 13:25:00', 1, 1, 'Se reportan fallas recurrentes en plataforma institucional'),
+(156, 'Solicitud dotación uniforme', NULL, '1013341532', NULL, 12, NULL, '2026-02-08 09:15:00', '2026-02-08 19:15:00', 1, 2, 'Se solicita dotación de uniforme institucional'),
+(157, 'Derecho petición botas', NULL, '1027961396', NULL, 12, NULL, '2026-04-25 10:40:00', NULL, 2, 3, 'Se solicita información sobre entrega de botas de seguridad'),
+(158, 'Solicitud inscripción incentivos', NULL, '1013342119', NULL, 13, NULL, '2026-03-15 11:20:00', '2026-03-16 04:20:00', 1, 2, 'Funcionario solicita inscripción al plan de incentivos'),
+(159, 'Derecho petición resultados', NULL, '1020304050', NULL, 13, NULL, '2026-06-09 12:00:00', NULL, 2, 3, 'Se solicita información sobre resultados del programa de incentivos'),
+(160, 'Reporte luminaria fundida', NULL, '1013341532', NULL, 14, NULL, '2026-01-10 08:15:22', '2026-01-12 14:30:10', 3, 1, 'Se reporta falta de iluminación en el pasillo principal del bloque B'),
+(161, 'Solicitud recarga botiquín', NULL, '1027961396', NULL, 14, NULL, '2026-01-15 10:30:45', '2026-01-16 15:20:11', 1, 2, 'Elementos de primer auxilio agotados tras simulacro de evacuación'),
+(162, 'Denuncia piso resbaladizo', NULL, '1013342119', NULL, 14, NULL, '2026-01-22 09:12:05', '2026-01-22 17:05:30', 3, 1, 'Se detecta filtración de agua que genera riesgo de caída en la entrada peatonal'),
+(163, 'Solicitud señalética seguridad', NULL, '1020304050', NULL, 14, NULL, '2026-02-05 14:15:00', '2026-02-10 09:12:44', 1, 2, 'Se requiere actualización de avisos de peligro en el área de máquinas'),
+(164, 'Solicitud auxilio educativo', NULL, '1013341532', NULL, 10, NULL, '2026-02-12 11:05:33', '2026-02-18 16:30:00', 3, 2, 'Funcionario radica documentos para solicitud de auxilio de postgrado'),
+(165, 'Denuncia ruido excesivo', NULL, '1027961396', NULL, 10, NULL, '2026-02-20 15:45:12', '2026-02-21 11:10:05', 1, 1, 'Reporte de contaminación auditiva por reparaciones en la oficina contigua'),
+(166, 'Derecho petición clima laboral', NULL, '1013342119', NULL, 10, NULL, '2026-03-02 08:30:00', '2026-03-05 14:22:18', 3, 3, 'Solicitud de intervención por presunto ambiente laboral tenso en el equipo'),
+(167, 'Falla restablecimiento clave', NULL, '1020304050', NULL, 11, NULL, '2026-03-05 10:05:44', '2026-03-05 10:55:12', 1, 1, 'Usuario reporta que no recibe el correo de recuperación de contraseña'),
+(168, 'Solicitud licencia software', NULL, '1013341532', NULL, 11, NULL, '2026-03-10 13:20:10', '2026-03-12 08:15:00', 3, 2, 'Se requiere activación de licencia para suite de herramientas de diseño'),
+(169, 'Solicitud cambio de talla', NULL, '1027961396', NULL, 12, NULL, '2026-03-15 09:10:55', '2026-03-16 11:30:22', 1, 2, 'Funcionario solicita cambio de pantalón de dotación por talla incorrecta'),
+(170, 'Reporte dotación incompleta', NULL, '1013342119', NULL, 12, NULL, '2026-03-18 16:00:15', '2026-03-20 09:30:45', 3, 1, 'Se recibió el calzado pero faltan los guantes de protección industrial'),
+(171, 'Postulación empleado del mes', NULL, '1020304050', NULL, 13, NULL, '2026-03-22 11:45:00', '2026-03-25 17:05:11', 1, 2, 'Envío de formulario y evidencias para reconocimiento por desempeño'),
+(172, 'Queja puntaje incentivos', NULL, '1013341532', NULL, 13, NULL, '2026-03-28 14:30:20', '2026-04-01 10:00:55', 3, 1, 'Funcionario manifiesta inconformidad con el cálculo de puntos del trimestre'),
+(173, 'Reporte extintor vencido', NULL, '1013341532', NULL, 14, NULL, '2026-01-05 09:22:15', NULL, 4, 1, 'Se identifica extintor con fecha de recarga vencida en bloque C'),
+(174, 'Solicitud examen periódico', NULL, '1020304050', 51, 14, '2026-04-06 01:38:45', '2026-01-14 14:45:10', NULL, 2, 2, 'Funcionario solicita agendamiento de exámenes médicos ocupacionales'),
+(175, 'Denuncia falta de EPP', NULL, '1013342119', NULL, 14, NULL, '2026-02-02 10:12:55', NULL, 4, 1, 'Se reporta personal operando sin los elementos de protección adecuados'),
+(176, 'Solicitud permiso calamidad', NULL, '1020304050', NULL, 10, NULL, '2026-02-10 07:30:22', NULL, 4, 2, 'Funcionario solicita permiso por calamidad doméstica familiar'),
+(177, 'Derecho petición vivienda', NULL, '1013341532', NULL, 10, NULL, '2026-02-15 11:15:40', NULL, 4, 3, 'Se solicita información sobre convenios de vivienda institucional'),
+(178, 'Reporte equipo lento', NULL, '1027961396', NULL, 11, NULL, '2026-03-01 08:55:12', NULL, 4, 1, 'Equipo de cómputo presenta lentitud extrema al abrir el IDE'),
+(179, 'Solicitud acceso VPN', NULL, '1013342119', NULL, 11, NULL, '2026-03-08 13:10:05', NULL, 4, 2, 'Se requiere acceso remoto para realizar tareas de soporte'),
+(180, 'Solicitud chaqueta térmica', NULL, '1020304050', NULL, 12, NULL, '2026-03-12 15:40:22', NULL, 4, 2, 'Personal de archivo solicita chaqueta por bajas temperaturas en sótano'),
+(181, 'Denuncia dotación dañada', NULL, '1013341532', NULL, 12, NULL, '2026-03-20 09:20:11', NULL, 4, 1, 'Calzado de seguridad presenta desprendimiento de suela'),
+(182, 'Consulta puntos acumulados', NULL, '1027961396', NULL, 13, NULL, '2026-03-25 10:05:33', NULL, 4, 2, 'Funcionario desea conocer el saldo actual de sus puntos de incentivo'),
+(183, 'Sugerencia programa bienestar', NULL, '1027961396', 52, 13, '2026-04-06 01:39:29', '2026-03-29 16:30:45', NULL, 2, 1, 'Propuesta para incluir actividades deportivas en el plan de incentivos');
 
 --
 -- Disparadores `caso`
@@ -1412,7 +1386,7 @@ SELECT CONCAT (
 	SELECT
     NEW.documento, 
    	mensaje_comi,
-    NOW() WHERE OLD.id_estado = 1;
+    NOW() WHERE NEW.id_estado = 1;
 	END IF;
 
 IF mensaje_admin IS NOT NULL THEN
@@ -1423,7 +1397,7 @@ SELECT
     mensaje_admin, 
     NOW()
 FROM usuario u_admin
-WHERE u_admin.id_rol = 1 AND OLD.id_estado = 1;
+WHERE u_admin.id_rol = 1 AND NEW.id_estado = 1;
 END IF;
 END
 $$
@@ -1526,30 +1500,10 @@ CREATE TABLE `informe` (
 --
 
 INSERT INTO `informe` (`id_informe`, `documento`, `fecha_generacion`, `tipo_informe`, `contenido`) VALUES
-(30, '1487569254', '2026-02-07 04:50:36', 'EXCEL', ''),
-(31, '1487569254', '2026-02-07 04:51:54', 'EXCEL', ''),
-(32, '1487569254', '2026-02-07 04:54:54', 'EXCEL', ''),
-(33, '1487569254', '2026-02-07 04:57:12', 'PDF', 'example'),
-(34, '1487569254', '2026-02-07 05:01:47', 'EXCEL', NULL),
-(35, '1487569254', '2026-02-07 05:02:26', 'EXCEL', NULL),
-(36, '1487569254', '2026-02-07 05:09:40', 'EXCEL', NULL),
-(37, '1487569254', '2026-02-07 05:10:43', 'PDF', '111111111111111111111'),
-(38, '1487569254', '2026-02-07 05:16:52', 'EXCEL', NULL),
-(41, '1487569254', '2026-02-07 05:30:34', 'EXCEL', NULL),
-(42, '1487569254', '2026-02-10 00:11:57', 'EXCEL', NULL),
-(43, '1487569254', '2026-02-14 16:35:47', 'PDF', 'RHAHGTREHTG'),
-(44, '1487569254', '2026-02-14 16:37:50', 'PDF', 'qgr5ert'),
-(45, '1487569254', '2026-02-14 16:37:54', 'PDF', 'qgr5ert'),
-(46, '1487569254', '2026-02-14 16:38:02', 'PDF', 'qgr5ert'),
-(47, '1487569254', '2026-02-14 16:45:17', 'PDF', 'trhrthrt'),
-(48, '1487569254', '2026-03-03 14:38:01', 'PDF', 'Reporte Casos'),
-(49, '1487569254', '2026-03-03 14:39:10', 'EXCEL', NULL),
-(50, '1456333298', '2026-04-02 22:49:41', 'PDF', 'Reporte Mis Casos PQRSD'),
-(51, '1456333298', '2026-04-02 22:49:53', 'PDF', 'Reporte Usuarios'),
-(52, '1456333298', '2026-04-02 22:49:57', 'PDF', 'Reporte Procesos Comisionado'),
-(53, '1487569254', '2026-04-02 22:50:50', 'PDF', 'Reporte Casos'),
-(54, '1487569254', '2026-04-02 22:51:17', 'PDF', 'Reporte Usuarios'),
-(55, '1487569254', '2026-04-02 22:51:44', 'PDF', 'Reporte Procesos');
+(56, '1487569254', '2026-04-06 01:40:20', 'PDF', 'Reporte Casos'),
+(57, '1487569254', '2026-04-06 01:40:53', 'PDF', 'Reporte Usuarios'),
+(58, '1487569254', '2026-04-06 01:41:29', 'PDF', 'Reporte Procesos'),
+(59, '1487569254', '2026-04-06 01:41:54', 'EXCEL', 'Reporte general de casos');
 
 -- --------------------------------------------------------
 
@@ -1570,47 +1524,8 @@ CREATE TABLE `monitoreo` (
 --
 
 INSERT INTO `monitoreo` (`id_monitoreo`, `documento`, `fecha`, `tipo`, `descripcion`) VALUES
-(1, '1756664828', '2026-03-16 15:23:19', 'inicio_sesion', 'NO SE'),
-(2, '1487569254', '2026-03-16 15:24:02', 'inicio_sesion', 'NO SE 2'),
-(3, '1487569254', '2026-03-16 15:25:47', 'accion', '3'),
-(4, '1487569254', '2026-03-16 16:07:29', 'accion', 'TEXT'),
-(5, '1487569254', '2026-03-16 16:30:33', 'accion', 'KORY CARRERA'),
-(6, '1487569254', '2026-04-01 13:01:01', 'accion', 'gqwgqgbqwsbs'),
-(7, '1487569254', '2026-04-01 13:01:33', 'accion', 'vdssbdsbsfg'),
-(8, '1487569254', '2026-04-01 13:04:33', 'accion', 'fqwgqegwqe4'),
-(9, '1487569254', '2026-04-01 13:04:50', 'accion', 'wfwqagqahrrhn'),
-(10, '1487569254', '2026-04-01 13:05:38', 'accion', 'gsrhrjerjyrryts'),
-(11, '1487569254', '2026-04-01 13:21:22', 'accion', 'Se reasigna'),
-(16, '1487569254', '2026-04-04 00:20:13', 'accion', 'Prueba de reasignacion'),
-(17, '1487569254', '2026-04-04 00:23:09', 'accion', 'Prueba 2, hubo un error'),
-(20, '1656966633', '2026-04-05 22:31:33', 'accion', 'Por que si'),
-(21, '1487569254', '2026-04-05 22:33:45', 'accion', 'Se desactivo el usuario anterior'),
-(22, '1487569254', '2026-04-05 22:34:52', 'accion', 'Por que si'),
-(23, '1656966633', '2026-04-05 22:35:59', 'accion', 'Prueba'),
-(24, '1487569254', '2026-04-05 22:38:27', 'accion', 'xd'),
-(25, '1487569254', '2026-04-05 22:43:09', 'accion', 'Por que si'),
-(26, '1487569254', '2026-04-05 23:10:52', 'accion', '71'),
-(27, '1487569254', '2026-04-05 23:14:00', 'accion', 'OTRO INTENTO'),
-(28, '1656966633', '2026-04-05 23:23:31', 'accion', 'Hola bb'),
-(29, '1487569254', '2026-04-05 23:24:39', 'accion', 'Caso sin usuario asignado'),
-(30, '1487569254', '2026-04-05 23:36:50', 'accion', 'hola'),
-(31, '1487569254', '2026-04-05 23:37:24', 'accion', 'Usuario con muchos casos'),
-(32, '1487569254', '2026-04-05 23:37:25', 'accion', 'Usuario con muchos casos'),
-(33, '1487569254', '2026-04-05 23:37:40', 'accion', 'Usuario con muchos casos'),
-(34, '1487569254', '2026-04-05 23:37:55', 'accion', 'Usuario con muchos casos'),
-(35, '1487569254', '2026-04-05 23:38:18', 'accion', 'Usuario con muchos casos'),
-(36, '1487569254', '2026-04-05 23:38:58', 'accion', 'Usuario con muchos casos'),
-(37, '1487569254', '2026-04-05 23:39:37', 'accion', 'Usuario con muchos casos'),
-(38, '1487569254', '2026-04-05 23:41:18', 'accion', 'Usuario con muchos casos'),
-(39, '1487569254', '2026-04-05 23:41:18', 'accion', 'Usuario con muchos casos'),
-(40, '1487569254', '2026-04-05 23:44:12', 'accion', 'Usuario con muchos casos'),
-(41, '1487569254', '2026-04-05 23:44:57', 'accion', 'Usuario con muchos casos'),
-(42, '1487569254', '2026-04-05 23:45:39', 'accion', 'Usuario con muchos casos'),
-(43, '1487569254', '2026-04-05 23:45:40', 'accion', 'Usuario con muchos casos'),
-(44, '1487569254', '2026-04-05 23:46:16', 'accion', 'Usuario con muchos casos'),
-(45, '1656966633', '2026-04-05 23:47:00', 'accion', 'Prueba'),
-(46, '1456333298', '2026-04-05 23:47:47', 'accion', 'Prueba'),
-(47, '1487569254', '2026-04-05 23:49:26', 'accion', 'Sin casos por atender');
+(48, '1487569254', '2026-04-06 01:38:45', 'accion', 'Caso por asignar'),
+(49, '1487569254', '2026-04-06 01:39:29', 'accion', 'Caso por asignar');
 
 -- --------------------------------------------------------
 
@@ -1630,57 +1545,58 @@ CREATE TABLE `noti_administrador` (
 --
 
 INSERT INTO `noti_administrador` (`id_notificacion`, `documento`, `mensaje`, `fecha`) VALUES
-(120, '1487569254', 'AVISO: El caso \"d\" CON LA ID: 98 cambió deL estado \"Por atender\" a \"Atendido\". Por su Comisionado Responsable: Juan Manuel Correal', '2026-03-23 17:48:52'),
-(123, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Demora en atención médica ocupacional\" con ID: 58 por el comisionado Juan Manuel Correal', '2026-03-23 18:13:01'),
-(143, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Demora en atención médica ocupacional\" con ID: 58 por el comisionado Simon Gonzalez Pelaez', '2026-04-01 13:01:33'),
-(144, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Derecho de petición – Estado de incentivo institucional\" con ID: 49 por el comisionado Juan Manuel Correal', '2026-04-01 13:04:33'),
-(145, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Demora en atención médica ocupacional\" con ID: 58 por el comisionado Juan Manuel Correal', '2026-04-01 13:04:50'),
-(146, '1487569254', 'Nuevo registro: El usuario Isaac Carvajal con el documento: 2030405060 se ha unido con el rol de \"administrador\". Fecha de registro: 2026-04-03 23:35:24. Vigencia: 2026-2028.', '2026-04-03 23:35:24'),
-(150, '1487569254', 'HAS INHABILITADO AL ADMINISTRADOR \"Isaac Carvajal\" DEL SISTEMA el dia: 2026-04-03, por el siguiente motivo: \"por que si\" en caso de error revierta de inmediato la accion, y recuerde que desactivar un usuario es una accion riesgoza, y se aconseja realizarse unicamente en casos de absoluta necesidad.', '2026-04-03 23:39:36'),
-(152, '1487569254', 'HAS HABILITADO AL USUARIO \"Isaac Carvajal\" el dia: 2026-04-04, por el siguiente motivo: \"Es para la prueba\", el usuario en cuestion es un administrador, asi que tenga en cuenta que al habilitarlo nuevamente lo hace con dicho rol, en caso de error revierta de inmediato la accion, y se aconseja realizar esta acciónn unicamente en casos de absoluta necesidad.', '2026-04-04 00:06:22'),
-(153, '1487569254', 'Nuevo registro: El usuario Saimon Pelaez con el documento: 3040506070 se ha unido con el rol de \"comisionado\". Fecha de registro: 2026-04-04 00:08:43. Vigencia: 2026-2028.', '2026-04-04 00:08:43'),
-(156, '1487569254', 'NUEVO CASO: \"Le robaron la dignidad\" ID CASO: 105. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Saimon Pelaez', '2026-04-04 00:11:34'),
-(160, '1487569254', 'HAS INHABILITADO AL ADMINISTRADOR \"Isaac Carvajal\" DEL SISTEMA el dia: 2026-04-04, por el siguiente motivo: \"Es necesario probar\" en caso de error revierta de inmediato la accion, y recuerde que desactivar un usuario es una accion riesgoza, y se aconseja realizarse unicamente en casos de absoluta necesidad.', '2026-04-04 00:18:16'),
-(161, '1487569254', 'AVISO: El caso \"Le robaron la dignidad\" CON LA ID: 105 cambió deL estado \"Por atender\" a \"Por asignar\". Por su Comisionado Responsable: Saimon Pelaez', '2026-04-04 00:18:39'),
-(164, '1487569254', 'HAS INHABILITADO AL USUARIO \"Saimon Pelaez\" DEL SISTEMA el dia: 2026-04-04, por el siguiente motivo: \"Prueba nuevamente\" en caso de error revierta de inmediato la accion, y tenga en cuenta que los casos Por Atender del usuario que ha desabilitado se encontraran en el estado \"Por Reasignar\", y para volver a asignar dichos casos a su Comisionado encargado debera hacerlo manualmente uno por uno, recuerde que desactivar un usuario es una accion riesgoza, y se aconseja realizarse unicamente en casos de absoluta necesidad, recuerde que el sistema por si solo, una vez se cumple con la vigencia, desactiva de forma automatica a todos los usuarios caducados.', '2026-04-04 00:18:39'),
-(165, '1487569254', 'AVISO: Se realizó un seguimiento al caso \"Le robaron la dignidad\" con ID: 105 por el comisionado Simon Gonzalez Pelaez', '2026-04-04 00:23:09'),
-(168, '1487569254', 'AVISO: El caso \"Le robaron la dignidad\" CON LA ID: 105 cambió deL estado \"Por asignar\" a \"Por atender\". Por su Comisionado Responsable: Simon Gonzalez Pelaez', '2026-04-04 00:24:05'),
-(172, '1487569254', 'HAS HABILITADO AL USUARIO \"Isaac Carvajal\" el dia: 2026-04-04, por el siguiente motivo: \"desactive por error\", el usuario en cuestion es un administrador, asi que tenga en cuenta que al habilitarlo nuevamente lo hace con dicho rol, en caso de error revierta de inmediato la accion, y se aconseja realizar esta acciónn unicamente en casos de absoluta necesidad.', '2026-04-04 00:25:00'),
-(173, '1487569254', 'HAS HABILITADO AL USUARIO \"Saimon Pelaez\" el dia: 2026-04-04, por el siguiente motivo: \"prueba con comisionado\" en caso de error revierta de inmediato la accion, y se aconseja realizar esta acciónn unicamente en casos de absoluta necesidad.', '2026-04-04 00:25:13'),
-(174, '1487569254', 'NUEVO CASO: \"Denuncia riesgo eléctrico\" ID CASO: 106. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(175, '1487569254', 'NUEVO CASO: \"Solicitud inspección seguridad\" ID CASO: 107. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
-(176, '1487569254', 'NUEVO CASO: \"Denuncia falta señalización\" ID CASO: 108. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal', '2026-04-04 20:49:06'),
-(177, '1487569254', 'NUEVO CASO: \"Solicitud capacitación SST\" ID CASO: 109. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-04 20:49:06'),
-(178, '1487569254', 'NUEVO CASO: \"Derecho petición seguimiento\" ID CASO: 110. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(179, '1487569254', 'NUEVO CASO: \"Denuncia condiciones inseguras\" ID CASO: 111. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
-(180, '1487569254', 'NUEVO CASO: \"Solicitud revisión extintores\" ID CASO: 112. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal', '2026-04-04 20:49:06'),
-(181, '1487569254', 'NUEVO CASO: \"Denuncia accidente leve\" ID CASO: 113. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-04 20:49:06'),
-(182, '1487569254', 'NUEVO CASO: \"Solicitud evaluación riesgos\" ID CASO: 114. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(183, '1487569254', 'NUEVO CASO: \"Denuncia incumplimiento protocolo\" ID CASO: 115. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
-(184, '1487569254', 'NUEVO CASO: \"Solicitud inspección preventiva\" ID CASO: 116. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal', '2026-04-04 20:49:06'),
-(185, '1487569254', 'NUEVO CASO: \"Denuncia cableado deteriorado\" ID CASO: 117. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-04 20:49:06'),
-(186, '1487569254', 'NUEVO CASO: \"Solicitud apoyo psicológico\" ID CASO: 118. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(187, '1487569254', 'NUEVO CASO: \"Denuncia conflicto laboral\" ID CASO: 119. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
-(188, '1487569254', 'NUEVO CASO: \"Derecho petición beneficios\" ID CASO: 120. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Juan Manuel Correal', '2026-04-04 20:49:06'),
-(189, '1487569254', 'NUEVO CASO: \"Solicitud actividad bienestar\" ID CASO: 121. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simon Gonzalez Pelaez', '2026-04-04 20:49:06'),
-(190, '1487569254', 'NUEVO CASO: \"Denuncia acoso laboral\" ID CASO: 122. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(191, '1487569254', 'NUEVO CASO: \"Solicitud apoyo social\" ID CASO: 123. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
-(192, '1487569254', 'NUEVO CASO: \"Solicitud soporte plataforma\" ID CASO: 124. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Juan Manuel Correal', '2026-04-04 20:49:06'),
-(193, '1487569254', 'NUEVO CASO: \"Derecho petición sistema\" ID CASO: 125. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Simon Gonzalez Pelaez', '2026-04-04 20:49:06'),
-(194, '1487569254', 'NUEVO CASO: \"Denuncia fallas sistema\" ID CASO: 126. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(195, '1487569254', 'NUEVO CASO: \"Solicitud actualización usuario\" ID CASO: 127. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
-(196, '1487569254', 'NUEVO CASO: \"Solicitud dotación uniforme\" ID CASO: 128. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Juan Manuel Correal', '2026-04-04 20:49:06'),
-(197, '1487569254', 'NUEVO CASO: \"Derecho petición dotación\" ID CASO: 129. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Simon Gonzalez Pelaez', '2026-04-04 20:49:06'),
-(198, '1487569254', 'NUEVO CASO: \"Solicitud información incentivos\" ID CASO: 130. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(199, '1487569254', 'NUEVO CASO: \"Derecho petición incentivos\" ID CASO: 131. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
-(200, '1487569254', 'AVISO: El caso \"Programación de examen médico ocupacional\" CON LA ID: 53 cambió deL estado \"Atendido\" a \"No atendido\". Por su Comisionado Responsable: Zack Lopez', '2026-04-05 22:28:50'),
-(201, '1487569254', 'HAS INHABILITADO AL USUARIO \"Marleny Gaviria\" DEL SISTEMA el día: 2026-04-05, por el siguiente motivo: \"Por que si\". En caso de error, revierta de inmediato la acción. Tenga en cuenta que los casos \"Por Atender\" del usuario que ha deshabilitado se encontrarán en el estado \"Por Reasignar\", y para volver a asignar dichos casos a su Comisionado encargado deberá hacerlo manualmente uno por uno. Recuerde que desactivar un usuario es una acción riesgosa, y se aconseja realizarse únicamente en casos de absoluta necesidad. El sistema por sí solo, una vez se cumple con la vigencia, desactiva de forma automática a todos los usuarios caducados.', '2026-04-05 22:31:33'),
-(202, '1487569254', 'HAS HABILITADO AL USUARIO \"Marleny Gaviria\" el día: 2026-04-05, por el siguiente motivo: \"Prueba\". En caso de error revierta de inmediato la acción, y se aconseja realizar esta acción únicamente en casos de absoluta necesidad.', '2026-04-05 22:35:59'),
-(203, '1487569254', 'NUEVO CASO: \"Juanito le pego a una profesora\" ID CASO: 132. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Marleny Gaviria', '2026-04-05 23:19:01'),
-(205, '1487569254', 'HAS INHABILITADO AL USUARIO \"Marleny Gaviria\" DEL SISTEMA el día: 2026-04-05, por el siguiente motivo: \"Hola bb\". En caso de error, revierta de inmediato la acción. Tenga en cuenta que los casos \"Por Atender\" del usuario que ha deshabilitado se encontrarán en el estado \"Por Reasignar\", y para volver a asignar dichos casos a su Comisionado encargado deberá hacerlo manualmente uno por uno. Recuerde que desactivar un usuario es una acción riesgosa, y se aconseja realizarse únicamente en casos de absoluta necesidad. El sistema por sí solo, una vez se cumple con la vigencia, desactiva de forma automática a todos los usuarios caducados.', '2026-04-05 23:23:31'),
-(206, '1487569254', 'HAS HABILITADO AL USUARIO \"Marleny Gaviria\" el día: 2026-04-05, por el siguiente motivo: \"Prueba\". En caso de error revierta de inmediato la acción, y se aconseja realizar esta acción únicamente en casos de absoluta necesidad.', '2026-04-05 23:47:00'),
-(207, '1487569254', 'HAS INHABILITADO AL USUARIO \"Juan Manuel Correal\" DEL SISTEMA el día: 2026-04-05, por el siguiente motivo: \"Prueba\". En caso de error, revierta de inmediato la acción. Tenga en cuenta que los casos \"Por Atender\" del usuario que ha deshabilitado se encontrarán en el estado \"Por Reasignar\", y para volver a asignar dichos casos a su Comisionado encargado deberá hacerlo manualmente uno por uno. Recuerde que desactivar un usuario es una acción riesgosa, y se aconseja realizarse únicamente en casos de absoluta necesidad. El sistema por sí solo, una vez se cumple con la vigencia, desactiva de forma automática a todos los usuarios caducados.', '2026-04-05 23:47:47'),
-(208, '1487569254', 'NUEVO CASO: \"Reporte comisionado\" ID CASO: 135. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Zack Lopez', '2026-04-06 00:17:53');
+(209, '1487569254', 'Nuevo registro: El usuario Simon Gonzalez Pelaez con el documento: 1013341532 se ha unido con el rol de \"comisionado\". Fecha de registro: 2026-04-06 01:11:50. Vigencia: 2026-2028.', '2026-04-06 01:11:50'),
+(210, '1487569254', 'Nuevo registro: El usuario Juan Manuel Correal Galvis con el documento: 1027961396 se ha unido con el rol de \"comisionado\". Fecha de registro: 2026-04-06 01:20:43. Vigencia: 2026-2028.', '2026-04-06 01:20:43'),
+(211, '1487569254', 'Nuevo registro: El usuario Isaac Manuel Carvajal Lopez con el documento: 1013342119 se ha unido con el rol de \"comisionado\". Fecha de registro: 2026-04-06 01:22:41. Vigencia: 2026-2028.', '2026-04-06 01:22:41'),
+(212, '1487569254', 'Nuevo registro: El usuario Marleny Gaviria con el documento: 1020304050 se ha unido con el rol de \"comisionado\". Fecha de registro: 2026-04-06 01:24:53. Vigencia: 2026-2028.', '2026-04-06 01:24:53'),
+(213, '1487569254', 'NUEVO CASO: \"Denuncia cable suelto\" ID CASO: 136. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:28:58'),
+(214, '1487569254', 'NUEVO CASO: \"Solicitud inspección seguridad\" ID CASO: 137. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:28:58'),
+(215, '1487569254', 'NUEVO CASO: \"Denuncia caída trabajador\" ID CASO: 138. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:28:58'),
+(216, '1487569254', 'NUEVO CASO: \"Solicitud revisión herramientas\" ID CASO: 139. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-04-06 01:28:58'),
+(217, '1487569254', 'NUEVO CASO: \"Derecho petición accidente\" ID CASO: 140. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:28:58'),
+(218, '1487569254', 'NUEVO CASO: \"Denuncia falta señalización\" ID CASO: 141. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:28:58'),
+(219, '1487569254', 'NUEVO CASO: \"Solicitud capacitación riesgos\" ID CASO: 142. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:28:58'),
+(220, '1487569254', 'NUEVO CASO: \"Denuncia riesgo eléctrico\" ID CASO: 143. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-04-06 01:28:58'),
+(221, '1487569254', 'NUEVO CASO: \"Solicitud revisión extintores\" ID CASO: 144. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:28:58'),
+(222, '1487569254', 'NUEVO CASO: \"Denuncia obstrucción salida\" ID CASO: 145. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:28:58'),
+(223, '1487569254', 'NUEVO CASO: \"Derecho petición seguimiento SST\" ID CASO: 146. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:28:58'),
+(224, '1487569254', 'NUEVO CASO: \"Solicitud evaluación riesgos\" ID CASO: 147. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-04-06 01:28:58'),
+(225, '1487569254', 'NUEVO CASO: \"Solicitud apoyo psicológico\" ID CASO: 148. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:28:58'),
+(226, '1487569254', 'NUEVO CASO: \"Denuncia conflicto laboral\" ID CASO: 149. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:28:58'),
+(227, '1487569254', 'NUEVO CASO: \"Derecho petición subsidios\" ID CASO: 150. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:28:58'),
+(228, '1487569254', 'NUEVO CASO: \"Solicitud actividad bienestar\" ID CASO: 151. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Marleny Gaviria', '2026-04-06 01:28:58'),
+(229, '1487569254', 'NUEVO CASO: \"Denuncia trato inadecuado\" ID CASO: 152. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:28:58'),
+(230, '1487569254', 'NUEVO CASO: \"Solicitud soporte sistema\" ID CASO: 153. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:28:58'),
+(231, '1487569254', 'NUEVO CASO: \"Derecho petición tecnológica\" ID CASO: 154. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:28:58'),
+(232, '1487569254', 'NUEVO CASO: \"Denuncia fallas plataforma\" ID CASO: 155. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Marleny Gaviria', '2026-04-06 01:28:58'),
+(233, '1487569254', 'NUEVO CASO: \"Solicitud dotación uniforme\" ID CASO: 156. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:28:58'),
+(234, '1487569254', 'NUEVO CASO: \"Derecho petición botas\" ID CASO: 157. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:28:58'),
+(235, '1487569254', 'NUEVO CASO: \"Solicitud inscripción incentivos\" ID CASO: 158. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:28:58'),
+(236, '1487569254', 'NUEVO CASO: \"Derecho petición resultados\" ID CASO: 159. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Marleny Gaviria', '2026-04-06 01:28:58'),
+(237, '1487569254', 'NUEVO CASO: \"Reporte luminaria fundida\" ID CASO: 160. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:35:50'),
+(238, '1487569254', 'NUEVO CASO: \"Solicitud recarga botiquín\" ID CASO: 161. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:35:50'),
+(239, '1487569254', 'NUEVO CASO: \"Denuncia piso resbaladizo\" ID CASO: 162. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:35:50'),
+(240, '1487569254', 'NUEVO CASO: \"Solicitud señalética seguridad\" ID CASO: 163. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-04-06 01:35:50'),
+(241, '1487569254', 'NUEVO CASO: \"Solicitud auxilio educativo\" ID CASO: 164. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:35:50'),
+(242, '1487569254', 'NUEVO CASO: \"Denuncia ruido excesivo\" ID CASO: 165. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:35:50'),
+(243, '1487569254', 'NUEVO CASO: \"Derecho petición clima laboral\" ID CASO: 166. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:35:50'),
+(244, '1487569254', 'NUEVO CASO: \"Falla restablecimiento clave\" ID CASO: 167. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Marleny Gaviria', '2026-04-06 01:35:50'),
+(245, '1487569254', 'NUEVO CASO: \"Solicitud licencia software\" ID CASO: 168. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:35:50'),
+(246, '1487569254', 'NUEVO CASO: \"Solicitud cambio de talla\" ID CASO: 169. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:35:50'),
+(247, '1487569254', 'NUEVO CASO: \"Reporte dotación incompleta\" ID CASO: 170. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:35:50'),
+(248, '1487569254', 'NUEVO CASO: \"Postulación empleado del mes\" ID CASO: 171. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Marleny Gaviria', '2026-04-06 01:35:50'),
+(249, '1487569254', 'NUEVO CASO: \"Queja puntaje incentivos\" ID CASO: 172. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:35:50'),
+(250, '1487569254', 'NUEVO CASO: \"Reporte extintor vencido\" ID CASO: 173. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:37:51'),
+(251, '1487569254', 'NUEVO CASO: \"Solicitud examen periódico\" ID CASO: 174. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:37:51'),
+(252, '1487569254', 'NUEVO CASO: \"Denuncia falta de EPP\" ID CASO: 175. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:37:51'),
+(253, '1487569254', 'NUEVO CASO: \"Solicitud permiso calamidad\" ID CASO: 176. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Marleny Gaviria', '2026-04-06 01:37:51'),
+(254, '1487569254', 'NUEVO CASO: \"Derecho petición vivienda\" ID CASO: 177. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:37:51'),
+(255, '1487569254', 'NUEVO CASO: \"Reporte equipo lento\" ID CASO: 178. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:37:51'),
+(256, '1487569254', 'NUEVO CASO: \"Solicitud acceso VPN\" ID CASO: 179. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:37:51'),
+(257, '1487569254', 'NUEVO CASO: \"Solicitud chaqueta térmica\" ID CASO: 180. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Marleny Gaviria', '2026-04-06 01:37:51'),
+(258, '1487569254', 'NUEVO CASO: \"Denuncia dotación dañada\" ID CASO: 181. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:37:51'),
+(259, '1487569254', 'NUEVO CASO: \"Consulta puntos acumulados\" ID CASO: 182. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:37:51'),
+(260, '1487569254', 'NUEVO CASO: \"Sugerencia programa bienestar\" ID CASO: 183. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:37:51');
 
 -- --------------------------------------------------------
 
@@ -1700,109 +1616,58 @@ CREATE TABLE `noti_comisionado` (
 --
 
 INSERT INTO `noti_comisionado` (`id_notificacion`, `documento`, `mensaje`, `fecha`) VALUES
-(113, '1456333298', 'El caso \"d\" con el ID: 98 perteneciente al proceso \"Plan de incentivos\", pasó del estado: \"Por atender\" al estado: \"Atendido\" por el usuario encargado Juan Manuel Correal', '2026-03-23 17:48:52'),
-(114, '1456333298', 'Realizaste un nuevo seguimiento al caso: \"Demora en atención médica ocupacional\" con ID: 58, en la fecha : 2026-03-23 18:13:01', '2026-03-23 18:13:01'),
-(121, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Derecho de petición – Estado de incentivo institucional\" con la id 49', '2026-04-01 13:01:01'),
-(122, '1656966633', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Marleny\", uno de tus casos con el nombre Derecho de petición – Estado de incentivo institucional y la id 49 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-01 13:01:01'),
-(123, '1020304050', 'Realizaste un nuevo seguimiento al caso: \"Demora en atención médica ocupacional\" con ID: 58, en la fecha : 2026-04-01 13:01:33', '2026-04-01 13:01:33'),
-(124, '1020304050', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Simon Gonzalez Pelaez\", se te ha asignado un caso con el nombre: \"Demora en atención médica ocupacional\" con la id 58', '2026-04-01 13:01:33'),
-(125, '1456333298', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Demora en atención médica ocupacional y la id 58 se le ha asignado al comisonado: \"Simon Gonzalez Pelaez', '2026-04-01 13:01:33'),
-(126, '1456333298', 'Realizaste un nuevo seguimiento al caso: \"Derecho de petición – Estado de incentivo institucional\" con ID: 49, en la fecha : 2026-04-01 13:04:33', '2026-04-01 13:04:33'),
-(127, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Derecho de petición – Estado de incentivo institucional\" con la id 49', '2026-04-01 13:04:33'),
-(128, '1456333298', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Derecho de petición – Estado de incentivo institucional y la id 49 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-01 13:04:33'),
-(129, '1456333298', 'Realizaste un nuevo seguimiento al caso: \"Demora en atención médica ocupacional\" con ID: 58, en la fecha : 2026-04-01 13:04:50', '2026-04-01 13:04:50'),
-(130, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Demora en atención médica ocupacional\" con la id 58', '2026-04-01 13:04:50'),
-(131, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Demora en atención médica ocupacional y la id 58 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-01 13:04:50'),
-(132, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Solicitud de acceso al plan anual de SST\" con la id 57', '2026-04-01 13:05:38'),
-(133, '1456333298', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Solicitud de acceso al plan anual de SST y la id 57 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-01 13:05:38'),
-(134, '1656966633', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Marleny Gaviria\", se te ha asignado un caso con el nombre: \"Incumplimiento en entrega de dotación operativa\" con la id 51', '2026-04-01 13:21:22'),
-(135, '1456333298', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Incumplimiento en entrega de dotación operativa y la id 51 se le ha asignado al comisonado: \"Marleny Gaviria', '2026-04-01 13:21:22'),
-(139, '1020304050', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Simon Gonzalez Pelaez\", se te ha asignado un caso con el nombre: \"Le robaron la dignidad\" con la id 105', '2026-04-04 00:20:13'),
-(141, '1020304050', 'Realizaste un nuevo seguimiento al caso: \"Le robaron la dignidad\" con ID: 105, en la fecha : 2026-04-04 00:23:09', '2026-04-04 00:23:09'),
-(142, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Le robaron la dignidad\" con la id 105', '2026-04-04 00:23:09'),
-(143, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Le robaron la dignidad y la id 105 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-04 00:23:09'),
-(144, '1020304050', 'El caso \"Le robaron la dignidad\" con el ID: 105 perteneciente al proceso \"Ropa de Trabajo\", pasó del estado: \"Por asignar\" al estado: \"Por atender\" por el usuario encargado Simon Gonzalez Pelaez', '2026-04-04 00:24:05'),
-(146, '1756664828', 'NUEVO CASO: \"Denuncia riesgo eléctrico\" ID CASO: 106. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(147, '1656966633', 'NUEVO CASO: \"Solicitud inspección seguridad\" ID CASO: 107. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
-(148, '1456333298', 'NUEVO CASO: \"Denuncia falta señalización\" ID CASO: 108. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal', '2026-04-04 20:49:06'),
-(149, '1020304050', 'NUEVO CASO: \"Solicitud capacitación SST\" ID CASO: 109. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-04 20:49:06'),
-(150, '1756664828', 'NUEVO CASO: \"Derecho petición seguimiento\" ID CASO: 110. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(151, '1656966633', 'NUEVO CASO: \"Denuncia condiciones inseguras\" ID CASO: 111. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
-(152, '1456333298', 'NUEVO CASO: \"Solicitud revisión extintores\" ID CASO: 112. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal', '2026-04-04 20:49:06'),
-(153, '1020304050', 'NUEVO CASO: \"Denuncia accidente leve\" ID CASO: 113. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-04 20:49:06'),
-(154, '1756664828', 'NUEVO CASO: \"Solicitud evaluación riesgos\" ID CASO: 114. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(155, '1656966633', 'NUEVO CASO: \"Denuncia incumplimiento protocolo\" ID CASO: 115. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
-(156, '1456333298', 'NUEVO CASO: \"Solicitud inspección preventiva\" ID CASO: 116. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal', '2026-04-04 20:49:06'),
-(157, '1020304050', 'NUEVO CASO: \"Denuncia cableado deteriorado\" ID CASO: 117. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-04 20:49:06'),
-(158, '1756664828', 'NUEVO CASO: \"Solicitud apoyo psicológico\" ID CASO: 118. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(159, '1656966633', 'NUEVO CASO: \"Denuncia conflicto laboral\" ID CASO: 119. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
-(160, '1456333298', 'NUEVO CASO: \"Derecho petición beneficios\" ID CASO: 120. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Juan Manuel Correal', '2026-04-04 20:49:06'),
-(161, '1020304050', 'NUEVO CASO: \"Solicitud actividad bienestar\" ID CASO: 121. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simon Gonzalez Pelaez', '2026-04-04 20:49:06'),
-(162, '1756664828', 'NUEVO CASO: \"Denuncia acoso laboral\" ID CASO: 122. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(163, '1656966633', 'NUEVO CASO: \"Solicitud apoyo social\" ID CASO: 123. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
-(164, '1456333298', 'NUEVO CASO: \"Solicitud soporte plataforma\" ID CASO: 124. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Juan Manuel Correal', '2026-04-04 20:49:06'),
-(165, '1020304050', 'NUEVO CASO: \"Derecho petición sistema\" ID CASO: 125. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Simon Gonzalez Pelaez', '2026-04-04 20:49:06'),
-(166, '1756664828', 'NUEVO CASO: \"Denuncia fallas sistema\" ID CASO: 126. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(167, '1656966633', 'NUEVO CASO: \"Solicitud actualización usuario\" ID CASO: 127. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
-(168, '1456333298', 'NUEVO CASO: \"Solicitud dotación uniforme\" ID CASO: 128. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Juan Manuel Correal', '2026-04-04 20:49:06'),
-(169, '1020304050', 'NUEVO CASO: \"Derecho petición dotación\" ID CASO: 129. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Simon Gonzalez Pelaez', '2026-04-04 20:49:06'),
-(170, '1756664828', 'NUEVO CASO: \"Solicitud información incentivos\" ID CASO: 130. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(171, '1656966633', 'NUEVO CASO: \"Derecho petición incentivos\" ID CASO: 131. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
-(172, '1756664828', 'El caso \"Programación de examen médico ocupacional\" con el ID: 53 perteneciente al proceso \"SSEMI\", pasó del estado: \"Atendido\" al estado: \"No atendido\" por el usuario encargado Zack Lopez', '2026-04-05 22:28:50'),
-(173, '1656966633', 'HAS SIDO INHABILITADO DEL SISTEMA: Marleny Gaviria el día: 2026-04-05. Has sido INHABILITADO por el administrador encargado: Kory Carrerita, por el siguiente motivo: \"Por que si\". En caso de error comuníquese con el administrador encargado a través del siguiente correo: kory.carrera.dev@gmail.com.', '2026-04-05 22:31:33'),
-(174, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Solicitud evaluación riesgos\" con la id 71', '2026-04-05 22:33:45'),
-(175, '1656966633', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Marleny\", uno de tus casos con el nombre Solicitud evaluación riesgos y la id 71 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 22:33:45'),
-(176, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Solicitud evaluación riesgos\" con la id 71', '2026-04-05 22:34:52'),
-(177, '1656966633', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Marleny\", uno de tus casos con el nombre Solicitud evaluación riesgos y la id 71 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-05 22:34:52'),
-(178, '1656966633', 'HAS SIDO HABILITADO EN EL SISTEMA: Marleny Gaviria el día: 2026-04-05. Has sido HABILITADO por el administrador encargado: Kory Carrerita, por el siguiente motivo: \"Prueba\". Ahora tienes acceso nuevamente a las funciones de tu rol como comisionado, pero tus casos antiguos han sido asignados a otro comisionado, o en su defecto se encuentran en el estado \"Por Asignar\". En caso de error comuníquese con el administrador encargado a través del siguiente correo: kory.carrera.dev@gmail.com.', '2026-04-05 22:35:59'),
-(179, '1020304050', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Simon Gonzalez Pelaez\", se te ha asignado un caso con el nombre: \"Solicitud evaluación riesgos\" con la id 71', '2026-04-05 22:38:27'),
-(180, '1656966633', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Marleny\", uno de tus casos con el nombre Solicitud evaluación riesgos y la id 71 se le ha asignado al comisonado: \"Simon Gonzalez Pelaez', '2026-04-05 22:38:27'),
-(181, '1020304050', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Simon Gonzalez Pelaez\", se te ha asignado un caso con el nombre: \"Solicitud evaluación riesgos\" con la id 71', '2026-04-05 22:43:09'),
-(182, '1656966633', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Marleny\", uno de tus casos con el nombre Solicitud evaluación riesgos y la id 71 se le ha asignado al comisonado: \"Simon Gonzalez Pelaez', '2026-04-05 22:43:09'),
-(183, '1020304050', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Simon Gonzalez Pelaez\", se te ha asignado un caso con el nombre: \"Solicitud evaluación riesgos\" con la id 71', '2026-04-05 23:10:52'),
-(184, '1656966633', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Marleny\", uno de tus casos con el nombre Solicitud evaluación riesgos y la id 71 se le ha asignado al comisonado: \"Simon Gonzalez Pelaez', '2026-04-05 23:10:52'),
-(185, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Derecho petición sistema\" con la id 125', '2026-04-05 23:14:00'),
-(186, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Derecho petición sistema y la id 125 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-05 23:14:00'),
-(187, '1656966633', 'NUEVO CASO: \"Juanito le pego a una profesora\" ID CASO: 132. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Marleny Gaviria', '2026-04-05 23:19:01'),
-(188, '1656966633', 'NUEVO CASO: \"Se eyaculo en el salon\" ID CASO: 134. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Marleny Gaviria', '2026-04-05 23:20:42'),
-(189, '1656966633', 'HAS SIDO INHABILITADO DEL SISTEMA: Marleny Gaviria el día: 2026-04-05. Has sido INHABILITADO por el administrador encargado: Kory Carrerita, por el siguiente motivo: \"Hola bb\". En caso de error comuníquese con el administrador encargado a través del siguiente correo: kory.carrera.dev@gmail.com.', '2026-04-05 23:23:31'),
-(190, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Juanito le pego a una profesora\" con la id 132', '2026-04-05 23:24:39'),
-(191, '1656966633', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Marleny\", uno de tus casos con el nombre Juanito le pego a una profesora y la id 132 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-05 23:24:39'),
-(192, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Programación de examen médico ocupacional\" con la id 53', '2026-04-05 23:36:50'),
-(193, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Programación de examen médico ocupacional y la id 53 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-05 23:36:50'),
-(194, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Copia de resultados de examen médico ocupacional\" con la id 56', '2026-04-05 23:37:24'),
-(195, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Copia de resultados de examen médico ocupacional y la id 56 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:37:24'),
-(196, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Copia de resultados de examen médico ocupacional\" con la id 56', '2026-04-05 23:37:25'),
-(197, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Copia de resultados de examen médico ocupacional y la id 56 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:37:25'),
-(198, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Copia de resultados de examen médico ocupacional\" con la id 56', '2026-04-05 23:37:40'),
-(199, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Copia de resultados de examen médico ocupacional y la id 56 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:37:40'),
-(200, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Riesgo laboral no atendido oportunamente\" con la id 59', '2026-04-05 23:37:55'),
-(201, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Riesgo laboral no atendido oportunamente y la id 59 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:37:55'),
-(202, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Riesgo laboral no atendido oportunamente\" con la id 59', '2026-04-05 23:38:18'),
-(203, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Riesgo laboral no atendido oportunamente y la id 59 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:38:18'),
-(204, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Copia de resultados de examen médico ocupacional\" con la id 56', '2026-04-05 23:38:58'),
-(205, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Copia de resultados de examen médico ocupacional y la id 56 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:38:58'),
-(206, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Riesgo laboral no atendido oportunamente\" con la id 59', '2026-04-05 23:39:37'),
-(207, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Riesgo laboral no atendido oportunamente y la id 59 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:39:37'),
-(208, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Copia de resultados de examen médico ocupacional\" con la id 56', '2026-04-05 23:41:18'),
-(209, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Copia de resultados de examen médico ocupacional y la id 56 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:41:18'),
-(210, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Copia de resultados de examen médico ocupacional\" con la id 56', '2026-04-05 23:41:18'),
-(211, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Copia de resultados de examen médico ocupacional y la id 56 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:41:18'),
-(212, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Denuncia cableado expuesto\" con la id 61', '2026-04-05 23:44:12'),
-(213, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Denuncia cableado expuesto y la id 61 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:44:12'),
-(214, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Solicitud reposición botas\" con la id 91', '2026-04-05 23:44:57'),
-(215, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Solicitud reposición botas y la id 91 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:44:57'),
-(216, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Incidente leve laboratorio\" con la id 67', '2026-04-05 23:45:39'),
-(217, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Incidente leve laboratorio y la id 67 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:45:39'),
-(218, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Incidente leve laboratorio\" con la id 67', '2026-04-05 23:45:40'),
-(219, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Incidente leve laboratorio y la id 67 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:45:40'),
-(220, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Denuncia riesgo ergonómico\" con la id 70', '2026-04-05 23:46:16'),
-(221, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Denuncia riesgo ergonómico y la id 70 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-05 23:46:16'),
-(222, '1656966633', 'HAS SIDO HABILITADO EN EL SISTEMA: Marleny Gaviria el día: 2026-04-05. Has sido HABILITADO por el administrador encargado: Kory Carrerita, por el siguiente motivo: \"Prueba\". Ahora tienes acceso nuevamente a las funciones de tu rol como comisionado, pero tus casos antiguos han sido asignados a otro comisionado, o en su defecto se encuentran en el estado \"Por Asignar\". En caso de error comuníquese con el administrador encargado a través del siguiente correo: kory.carrera.dev@gmail.com.', '2026-04-05 23:47:00'),
-(223, '1456333298', 'HAS SIDO INHABILITADO DEL SISTEMA: Juan Manuel Correal el día: 2026-04-05. Has sido INHABILITADO por el administrador encargado: Kory Carrerita, por el siguiente motivo: \"Prueba\". En caso de error comuníquese con el administrador encargado a través del siguiente correo: kory.carrera.dev@gmail.com.', '2026-04-05 23:47:47'),
-(224, '1656966633', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Marleny Gaviria\", se te ha asignado un caso con el nombre: \"Programación de examen médico ocupacional\" con la id 53', '2026-04-05 23:49:26'),
-(225, '1456333298', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Programación de examen médico ocupacional y la id 53 se le ha asignado al comisonado: \"Marleny Gaviria', '2026-04-05 23:49:26'),
-(226, '1756664828', 'NUEVO CASO: \"Reporte comisionado\" ID CASO: 135. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Zack Lopez', '2026-04-06 00:17:53');
+(227, '1013341532', 'NUEVO CASO: \"Denuncia cable suelto\" ID CASO: 136. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:28:58'),
+(228, '1027961396', 'NUEVO CASO: \"Solicitud inspección seguridad\" ID CASO: 137. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:28:58'),
+(229, '1013342119', 'NUEVO CASO: \"Denuncia caída trabajador\" ID CASO: 138. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:28:58'),
+(230, '1020304050', 'NUEVO CASO: \"Solicitud revisión herramientas\" ID CASO: 139. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-04-06 01:28:58'),
+(231, '1013341532', 'NUEVO CASO: \"Derecho petición accidente\" ID CASO: 140. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:28:58'),
+(232, '1027961396', 'NUEVO CASO: \"Denuncia falta señalización\" ID CASO: 141. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:28:58'),
+(233, '1013342119', 'NUEVO CASO: \"Solicitud capacitación riesgos\" ID CASO: 142. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:28:58'),
+(234, '1020304050', 'NUEVO CASO: \"Denuncia riesgo eléctrico\" ID CASO: 143. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-04-06 01:28:58'),
+(235, '1013341532', 'NUEVO CASO: \"Solicitud revisión extintores\" ID CASO: 144. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:28:58'),
+(236, '1027961396', 'NUEVO CASO: \"Denuncia obstrucción salida\" ID CASO: 145. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:28:58'),
+(237, '1013342119', 'NUEVO CASO: \"Derecho petición seguimiento SST\" ID CASO: 146. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:28:58'),
+(238, '1020304050', 'NUEVO CASO: \"Solicitud evaluación riesgos\" ID CASO: 147. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-04-06 01:28:58'),
+(239, '1013341532', 'NUEVO CASO: \"Solicitud apoyo psicológico\" ID CASO: 148. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:28:58'),
+(240, '1027961396', 'NUEVO CASO: \"Denuncia conflicto laboral\" ID CASO: 149. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:28:58'),
+(241, '1013342119', 'NUEVO CASO: \"Derecho petición subsidios\" ID CASO: 150. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:28:58'),
+(242, '1020304050', 'NUEVO CASO: \"Solicitud actividad bienestar\" ID CASO: 151. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Marleny Gaviria', '2026-04-06 01:28:58'),
+(243, '1013341532', 'NUEVO CASO: \"Denuncia trato inadecuado\" ID CASO: 152. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:28:58'),
+(244, '1027961396', 'NUEVO CASO: \"Solicitud soporte sistema\" ID CASO: 153. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:28:58'),
+(245, '1013342119', 'NUEVO CASO: \"Derecho petición tecnológica\" ID CASO: 154. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:28:58'),
+(246, '1020304050', 'NUEVO CASO: \"Denuncia fallas plataforma\" ID CASO: 155. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Marleny Gaviria', '2026-04-06 01:28:58'),
+(247, '1013341532', 'NUEVO CASO: \"Solicitud dotación uniforme\" ID CASO: 156. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:28:58'),
+(248, '1027961396', 'NUEVO CASO: \"Derecho petición botas\" ID CASO: 157. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:28:58'),
+(249, '1013342119', 'NUEVO CASO: \"Solicitud inscripción incentivos\" ID CASO: 158. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:28:58'),
+(250, '1020304050', 'NUEVO CASO: \"Derecho petición resultados\" ID CASO: 159. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Marleny Gaviria', '2026-04-06 01:28:58'),
+(251, '1013341532', 'NUEVO CASO: \"Reporte luminaria fundida\" ID CASO: 160. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:35:50'),
+(252, '1027961396', 'NUEVO CASO: \"Solicitud recarga botiquín\" ID CASO: 161. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:35:50'),
+(253, '1013342119', 'NUEVO CASO: \"Denuncia piso resbaladizo\" ID CASO: 162. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:35:50'),
+(254, '1020304050', 'NUEVO CASO: \"Solicitud señalética seguridad\" ID CASO: 163. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Marleny Gaviria', '2026-04-06 01:35:50'),
+(255, '1013341532', 'NUEVO CASO: \"Solicitud auxilio educativo\" ID CASO: 164. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:35:50'),
+(256, '1027961396', 'NUEVO CASO: \"Denuncia ruido excesivo\" ID CASO: 165. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:35:50'),
+(257, '1013342119', 'NUEVO CASO: \"Derecho petición clima laboral\" ID CASO: 166. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:35:50'),
+(258, '1020304050', 'NUEVO CASO: \"Falla restablecimiento clave\" ID CASO: 167. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Marleny Gaviria', '2026-04-06 01:35:50'),
+(259, '1013341532', 'NUEVO CASO: \"Solicitud licencia software\" ID CASO: 168. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:35:50'),
+(260, '1027961396', 'NUEVO CASO: \"Solicitud cambio de talla\" ID CASO: 169. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:35:50'),
+(261, '1013342119', 'NUEVO CASO: \"Reporte dotación incompleta\" ID CASO: 170. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:35:50'),
+(262, '1020304050', 'NUEVO CASO: \"Postulación empleado del mes\" ID CASO: 171. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Marleny Gaviria', '2026-04-06 01:35:50'),
+(263, '1013341532', 'NUEVO CASO: \"Queja puntaje incentivos\" ID CASO: 172. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:35:50'),
+(264, '1013341532', 'NUEVO CASO: \"Reporte extintor vencido\" ID CASO: 173. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:37:51'),
+(265, '1027961396', 'NUEVO CASO: \"Solicitud examen periódico\" ID CASO: 174. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:37:51'),
+(266, '1013342119', 'NUEVO CASO: \"Denuncia falta de EPP\" ID CASO: 175. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SST asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:37:51'),
+(267, '1020304050', 'NUEVO CASO: \"Solicitud permiso calamidad\" ID CASO: 176. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Marleny Gaviria', '2026-04-06 01:37:51'),
+(268, '1013341532', 'NUEVO CASO: \"Derecho petición vivienda\" ID CASO: 177. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:37:51'),
+(269, '1027961396', 'NUEVO CASO: \"Reporte equipo lento\" ID CASO: 178. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:37:51'),
+(270, '1013342119', 'NUEVO CASO: \"Solicitud acceso VPN\" ID CASO: 179. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:37:51'),
+(271, '1020304050', 'NUEVO CASO: \"Solicitud chaqueta térmica\" ID CASO: 180. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Marleny Gaviria', '2026-04-06 01:37:51'),
+(272, '1013341532', 'NUEVO CASO: \"Denuncia dotación dañada\" ID CASO: 181. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:37:51'),
+(273, '1027961396', 'NUEVO CASO: \"Consulta puntos acumulados\" ID CASO: 182. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:37:51'),
+(274, '1013342119', 'NUEVO CASO: \"Sugerencia programa bienestar\" ID CASO: 183. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:37:51'),
+(275, '1020304050', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Marleny Gaviria\", se te ha asignado un caso con el nombre: \"Solicitud examen periódico\" con la id 174', '2026-04-06 01:38:45'),
+(276, '1027961396', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Solicitud examen periódico y la id 174 se le ha asignado al comisonado: \"Marleny Gaviria', '2026-04-06 01:38:45'),
+(277, '1027961396', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal Galvis\", se te ha asignado un caso con el nombre: \"Sugerencia programa bienestar\" con la id 183', '2026-04-06 01:39:29'),
+(278, '1013342119', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Isaac Manuel\", uno de tus casos con el nombre Sugerencia programa bienestar y la id 183 se le ha asignado al comisonado: \"Juan Manuel Correal Galvis', '2026-04-06 01:39:29');
 
 -- --------------------------------------------------------
 
@@ -1869,32 +1734,8 @@ CREATE TABLE `seguimiento` (
 --
 
 INSERT INTO `seguimiento` (`id_seguimiento`, `fecha_seguimiento`, `observacion`, `documento`, `id_caso`) VALUES
-(19, '2026-03-23 18:13:01', 'El caso aun sigue en proceso, se espera respuesta de las entidades encargadas', '1456333298', 58),
-(26, '2026-04-04 00:20:13', 'Prueba de reasignacion', '1487569254', 105),
-(27, '2026-04-04 00:23:09', 'Prueba 2, hubo un error', '1487569254', 105),
-(28, '2026-04-05 22:33:45', 'Se desactivo el usuario anterior', '1487569254', 71),
-(29, '2026-04-05 22:34:52', 'Por que si', '1487569254', 71),
-(30, '2026-04-05 22:38:27', 'xd', '1487569254', 71),
-(31, '2026-04-05 22:43:09', 'Por que si', '1487569254', 71),
-(32, '2026-04-05 23:10:52', '71', '1487569254', 71),
-(33, '2026-04-05 23:14:00', 'OTRO INTENTO', '1487569254', 125),
-(34, '2026-04-05 23:24:39', 'Caso sin usuario asignado', '1487569254', 132),
-(35, '2026-04-05 23:36:50', 'hola', '1487569254', 53),
-(36, '2026-04-05 23:37:24', 'Usuario con muchos casos', '1487569254', 56),
-(37, '2026-04-05 23:37:25', 'Usuario con muchos casos', '1487569254', 56),
-(38, '2026-04-05 23:37:40', 'Usuario con muchos casos', '1487569254', 56),
-(39, '2026-04-05 23:37:55', 'Usuario con muchos casos', '1487569254', 59),
-(40, '2026-04-05 23:38:18', 'Usuario con muchos casos', '1487569254', 59),
-(41, '2026-04-05 23:38:58', 'Usuario con muchos casos', '1487569254', 56),
-(42, '2026-04-05 23:39:37', 'Usuario con muchos casos', '1487569254', 59),
-(43, '2026-04-05 23:41:18', 'Usuario con muchos casos', '1487569254', 56),
-(44, '2026-04-05 23:41:18', 'Usuario con muchos casos', '1487569254', 56),
-(45, '2026-04-05 23:44:12', 'Usuario con muchos casos', '1487569254', 61),
-(46, '2026-04-05 23:44:57', 'Usuario con muchos casos', '1487569254', 91),
-(47, '2026-04-05 23:45:39', 'Usuario con muchos casos', '1487569254', 67),
-(48, '2026-04-05 23:45:40', 'Usuario con muchos casos', '1487569254', 67),
-(49, '2026-04-05 23:46:16', 'Usuario con muchos casos', '1487569254', 70),
-(50, '2026-04-05 23:49:26', 'Sin casos por atender', '1487569254', 53);
+(51, '2026-04-06 01:38:45', 'Caso por asignar', '1487569254', 174),
+(52, '2026-04-06 01:39:29', 'Caso por asignar', '1487569254', 183);
 
 --
 -- Disparadores `seguimiento`
@@ -1972,11 +1813,11 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `fecha_caducidad`, `vigencia_usuario`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
-('1020304050', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', '', 2, '$2y$10$/adpXMz4t00apED8Njy3j.2u8oRPBehzxuXwppb8MMW7wKdAMBTDm', '2026-02-12 14:18:58', '2028-02-12 14:18:58', '2026-2028', '2026-04-04 21:00:49', 1, 0, NULL),
-('1456333298', 'Juan Manuel', 'Correal', 'juangalvis.developer@gmail.com', '', 2, '$2y$10$D9v783uPM.afAM21MN7D8.KbSDy9uLEQryCieSOkleXydooL18oAS', '2026-02-12 14:22:31', '2028-02-12 14:22:31', '2026-2028', '2026-04-04 20:44:02', 0, 0, NULL),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$Jv38fJwprb95GT4MUs8n1elsr42/1fWNevWmOlYixG.NgZdhbF9US', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-06 00:11:43', 1, 0, '7be3757a753976a4ca6e'),
-('1656966633', 'Marleny', 'Gaviria', 'koritocarrera@gmail.com', '', 2, '$2y$10$D5GVEeDtEo.Obd0zjk.IxO0M2WZ5iTz1t.B9TGWYgdlJ3mahQT4/u', '2026-02-12 14:28:54', '2028-02-12 14:28:54', '2026-2028', '2026-04-05 23:18:03', 1, 0, NULL),
-('1756664828', 'Zack', 'Lopez', 'isaaccarvajal1356@gmail.com', '3001234567', 2, '$2y$10$w4lPg411h/NW/uu2KYJFtec20RxgOG1eX28ReWtrhyjWQtzh.bruW', '2026-02-12 14:20:29', '2028-02-12 14:20:29', '2026-2028', '2026-04-06 00:14:13', 1, 1, '4f629435a7217caa25cc');
+('1013341532', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', '3207619679', 2, '$2y$10$9/SLzD/EK5z.H428GsH3.uKgWVAJpbE6v.Dy508UPDzslms0eD8Jm', '2026-04-06 01:11:50', '2028-04-06 01:11:50', '2026-2028', NULL, 1, 0, NULL),
+('1013342119', 'Isaac Manuel', 'Carvajal Lopez', 'isaaccarvajal1356@gmail.com', '3243389897', 2, '$2y$10$MsUHwJtTJ9Txsd1o7mvQ2uV/rEkKfRFfaWTHYFZDOMUbKMi.fvKGy', '2026-04-06 01:22:41', '2028-04-06 01:22:41', '2026-2028', NULL, 1, 0, NULL),
+('1020304050', 'Marleny', 'Gaviria', 'koritocarrera@gmail.com', '3001234567', 2, '$2y$10$MO98eVba1jIkuZgsDsZ3NOmMQwwXRnpL650wjeTSGnhstE0dh17h6', '2026-04-06 01:24:53', '2028-04-06 01:24:53', '2026-2028', NULL, 1, 0, NULL),
+('1027961396', 'Juan Manuel', 'Correal Galvis', 'juangalvis.developer@gmail.com', '3243740191', 2, '$2y$10$rpd99onGDNu3Mm7g2f0uoOhX9P00afAeEsilbuegithqkfrDUaIPK', '2026-04-06 01:20:43', '2028-04-06 01:20:43', '2026-2028', NULL, 1, 0, NULL),
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$Jv38fJwprb95GT4MUs8n1elsr42/1fWNevWmOlYixG.NgZdhbF9US', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-06 01:10:01', 1, 0, '7be3757a753976a4ca6e');
 
 --
 -- Disparadores `usuario`
@@ -2128,13 +1969,13 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `archivo`
 --
 ALTER TABLE `archivo`
-  MODIFY `id_archivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=5;
+  MODIFY `id_archivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar';
 
 --
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
-  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=136;
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=184;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`
@@ -2152,25 +1993,25 @@ ALTER TABLE `estado`
 -- AUTO_INCREMENT de la tabla `informe`
 --
 ALTER TABLE `informe`
-  MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=56;
+  MODIFY `id_informe` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT de la tabla `monitoreo`
 --
 ALTER TABLE `monitoreo`
-  MODIFY `id_monitoreo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria para reconocimiento y relacion', AUTO_INCREMENT=48;
+  MODIFY `id_monitoreo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria para reconocimiento y relacion', AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_administrador`
 --
 ALTER TABLE `noti_administrador`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=209;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=261;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_comisionado`
 --
 ALTER TABLE `noti_comisionado`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=227;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=279;
 
 --
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
@@ -2188,7 +2029,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `seguimiento`
 --
 ALTER TABLE `seguimiento`
-  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=51;
+  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_caso`

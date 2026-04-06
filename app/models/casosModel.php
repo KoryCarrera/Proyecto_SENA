@@ -27,6 +27,10 @@ class CasosModel extends baseHelper {
                 throw new Exception ('es el mismo estado que intentas asignar');
             }
 
+            if ($findCase['estado'] == 'Por asignar') {
+                throw new Exception ('No puedes asignarte un estado que esta Por asignar');
+            }
+
             if ($findCase['estado'] == 'No atendido' && $findUser['rol'] != '1'){
                 throw new Exception('¡No tienes permisos para cambiar el estado de este casos');
             }
