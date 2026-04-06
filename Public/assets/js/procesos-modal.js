@@ -85,7 +85,7 @@ const renderizarTablaProcesos = (procesos, cuerpoTabla) => {
     language: {
       url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
     },
-    dom: "rti", // Sin paginación nativa,para que recuerden,falta la f,la l y la p,
+    dom: "rti", 
     autoWidth: false,
     drawCallback: function () {
       actualizarPaginacionProcesos(table);
@@ -122,38 +122,17 @@ const actualizarPaginacionProcesos = (table) => {
   if (!btnPrev || !btnNext || !contenedor) return;
 
   const claseNormal = [
-    "w-9",
-    "h-9",
-    "flex",
-    "justify-center",
-    "items-center",
-    "text-white/70",
-    "hover:text-white",
-    "hover:bg-blue-600/80",
-    "text-sm",
-    "rounded-lg",
-    "transition-colors",
-    "cursor-pointer",
-    "font-medium",
+    "w-9", "h-9", "flex", "justify-center", "items-center",
+    "text-white/70", "hover:text-white", "hover:bg-blue-600/80",
+    "text-sm", "rounded-lg", "transition-colors", "cursor-pointer", "font-medium",
   ].join(" ");
 
   const claseActiva = [
-    "w-9",
-    "h-9",
-    "flex",
-    "justify-center",
-    "items-center",
-    "bg-blue-600",
-    "text-white",
-    "text-sm",
-    "rounded-lg",
-    "font-semibold",
-    "shadow",
-    "shadow-blue-500/40",
-    "cursor-default",
+    "w-9", "h-9", "flex", "justify-center", "items-center",
+    "bg-blue-600", "text-white", "text-sm", "rounded-lg",
+    "font-semibold", "shadow", "shadow-blue-500/40", "cursor-default",
   ].join(" ");
 
-  // ── Botones de número ──────────────────────────────────────────────────────
   contenedor.innerHTML = "";
   const ventana = 5;
   let desde = Math.max(0, paginaActual - Math.floor(ventana / 2));
@@ -173,7 +152,6 @@ const actualizarPaginacionProcesos = (table) => {
     contenedor.appendChild(btn);
   }
 
-  // ── Botón Anterior ─────────────────────────────────────────────────────────
   const nuevoPrev = btnPrev.cloneNode(true);
   btnPrev.parentNode.replaceChild(nuevoPrev, btnPrev);
   nuevoPrev.disabled = paginaActual === 0;
@@ -183,7 +161,6 @@ const actualizarPaginacionProcesos = (table) => {
     );
   }
 
-  // ── Botón Siguiente ────────────────────────────────────────────────────────
   const nuevoNext = btnNext.cloneNode(true);
   btnNext.parentNode.replaceChild(nuevoNext, btnNext);
   nuevoNext.disabled = paginaActual >= totalPaginas - 1;
@@ -314,10 +291,16 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.overflow = "hidden";
   });
 
-  const cerrarModal = () => {
+const cerrarModal = () => {
     modal.style.display = "none";
     document.body.style.overflow = "auto";
-    formulario.reset();
+    
+    // Limpiamos los campos manualmente uno por uno
+    const inputNombre = document.getElementById("nombre-proceso");
+    const inputDesc = document.getElementById("descripcion");
+    
+    if (inputNombre) inputNombre.value = "";
+    if (inputDesc) inputDesc.value = "";
   };
 
   botonCerrar.addEventListener("click", cerrarModal);
@@ -332,10 +315,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Guardar proceso
   if (btnRegistrar) {
-    btnRegistrar.addEventListener("click", async () => {
-      const nombreProceso = document
-        .getElementById("nombre-proceso")
-        .value.trim();
+    // 1. Añadimos la 'e' de evento a la función
+    btnRegistrar.addEventListener("click", async (e) => {
+      // 2. Prevenimos el comportamiento por defecto (Doble petición)
+      e.preventDefault(); 
+
+      const nombreProceso = document.getElementById("nombre-proceso").value.trim();
       const descripcion = document.getElementById("descripcion").value.trim();
 
       if (!nombreProceso) {
@@ -364,16 +349,21 @@ document.addEventListener("DOMContentLoaded", () => {
       btnRegistrar.disabled = true;
       btnRegistrar.textContent = "Creando...";
 
+      // 3. Preparamos los datos como FormData para que PHP los reciba en $_POST
+      const formData = new FormData();
+      formData.append("nombre-proceso", nombreProceso);
+      formData.append("descripcion", descripcion);
+
       try {
         const response = await fetch(ENDPOINT_CREAR, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nombre: nombreProceso, descripcion }),
+          body: formData, 
         });
 
         if (!response.ok) throw new Error(`Error HTTP ${response.status}`);
         const data = await response.json();
 
+        // 4. Si el status es 'ok', cerramos el modal correctamente
         if (data.status === "ok") {
           Swal.fire({
             icon: "success",
@@ -382,8 +372,8 @@ document.addEventListener("DOMContentLoaded", () => {
             showConfirmButton: false,
             timer: 1000,
           });
-          cerrarModal();
-          cargarProcesos();
+          cerrarModal(); // Cierra el modal de registro
+          cargarProcesos(); // Refresca la tabla
         } else {
           throw new Error(data.mensaje || "Error al crear");
         }
