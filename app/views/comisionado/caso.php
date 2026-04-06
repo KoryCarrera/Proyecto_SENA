@@ -274,13 +274,53 @@
     </div>
   </div>
 
+  <!-- Modal Ver Archivos (Sub-modal) -->
+  <div id="modalArchivos" class="modal" style="z-index: 2100;">
+    <div class="contenido-modal" style="max-width: 800px;">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            <i class="bi bi-collection-play text-emerald-400"></i> Archivos Adjuntos
+        </h2>
+        <button type="button" onclick="cerrarModalArchivos()" class="text-slate-400 hover:text-white transition-colors">
+            <i class="bi bi-x-lg text-xl"></i>
+        </button>
+      </div>
+
+      <div id="galeriaArchivos" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Los archivos se cargarán aquí dinámicamente -->
+      </div>
+
+      <div class="mt-8 flex justify-end">
+        <button type="button" onclick="cerrarModalArchivos()" class="boton bg-slate-700 hover:bg-slate-600">
+            Cerrar Galería
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Visualización a Pantalla Completa (Lightbox) -->
+  <div id="modalLightbox" class="modal" style="z-index: 2200; background-color: rgba(0,0,0,0.9);">
+     <div class="flex flex-col items-center justify-center h-full p-4 relative">
+        <button type="button" onclick="cerrarLightbox()" class="absolute top-6 right-6 text-white text-3xl hover:text-slate-300">
+            <i class="bi bi-x-circle"></i>
+        </button>
+        <div id="contenidoLightbox" class="max-w-4xl max-h-[80vh] flex items-center justify-center">
+            <!-- Imagen o PDF aquí -->
+        </div>
+        <div id="footerLightbox" class="mt-4 text-white font-medium text-center"></div>
+     </div>
+  </div>
+
   <!--JS de bootstrap-->
+
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
   <!--JS Propio-->
+  <script src="/assets/js/pdf.min.js"></script>
+  <script src="/assets/js/mammoth.browser.min.js"></script>
   <script src="/assets/js/cache.js"></script>
   <script src="/assets/js/casosComi.js"></script>
   <script src="/assets/js/logout.js"></script>

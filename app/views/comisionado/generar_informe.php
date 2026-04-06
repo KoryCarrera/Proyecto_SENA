@@ -166,22 +166,6 @@
                                 </select>
                             </div>
 
-                            <!-- en esta esta sse muestra el select en la que se pide cual sera el reporte que se generara -->
-
-                            <div class="relative">
-                                <select
-                                    class="glass-input w-full p-3 pl-12 rounded-lg text-white appearance-none cursor-pointer"
-                                    id="tipoReporte">
-                                    <option selected disabled class="bg-slate-800">Selecione el tipo de reporte anual
-                                    </option>
-                                    <option value="1" class="bg-slate-800">Reporte de Casos</option>
-                                    <option value="2" class="bg-slate-800">Reporte de Usuarios</option>
-                                    <option value="3" class="bg-slate-800">Reporte de Procesos Organizacionales</option>
-                                </select>
-                            </div>
-
-                            <!-- en esta esta el boton de descargar el informe -->
-
                             <button type="button"
                                 class="btn-siguiente w-full flex items-center justify-center gap-2 mt-4 text-white bg-indigo-500 hover:bg-indigo-600 px-8 py-3 rounded-xl "
                                 id="informe">
@@ -205,7 +189,7 @@
     <!-- JS propio (Keep order) -->
     <script src="/assets/js/logout.js"></script>
     <script src="/assets/js/cache.js"></script>
-    <script src="/assets/js/generarInforme.js"></script>
+    <script src="/assets/js/generarinformecomi.js?v=1"></script>
     <script src="/assets/js/inactividad.js"></script>
 
 </body>

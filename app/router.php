@@ -30,12 +30,14 @@ $router->map('POST', '/reactivarProceso', 'controllers/reactivarProceso.php');
 $router->map('POST', '/generarExcel', 'controllers/reporteExcel.php');
 $router->map('POST', '/editarUsuario', '/controllers/editarUsuario.php');
 $router->map('POST', '/cambiarEstadoUsuario', '/controllers/cambiarEstadoUsuario.php');
-$router->map('POST', '/gestionarCaso', '/controllers/gestionarCaso.php');
-$router->map('POST', '/ConfiUsuario', '/controllers/configuracionUsuario.php');
-$router->map('POST', '/auth2FA', '/controllers/2FA.php');
-$router->map('POST', '/reenviar2FA', '/controllers/reenviar2FA.php');
-$router->map('POST', '/actualizarPass', '/controllers/resetPass.php');
-$router->map('POST', '/olvidastePass', '/controllers/olvidarContrasena.php');
+$router->map('POST', '/gestionarCaso', 'controllers/gestionarCaso.php');
+$router->map('POST', '/ConfiUsuario', 'controllers/configuracionUsuario.php');
+$router->map('POST', '/auth2FA', 'controllers/2FA.php');
+$router->map('POST', '/reenviar2FA', 'controllers/reenviar2FA.php');
+$router->map('POST', '/actualizarPass', 'controllers/resetPass.php');
+$router->map('POST', '/olvidastePass', 'controllers/olvidarContrasena.php');
+$router->map('POST', '/listarArchivosCaso', 'controllers/listarArchivosCaso.php');
+
 
 //GET
 
@@ -49,12 +51,14 @@ $router->map('GET', '/listarCasos', '/controllers/listarCasos.php');
 $router->map('GET', '/listarUsuarios', '/controllers/listarUsuariosAdmin.php');
 $router->map('GET', '/listarProceso', '/controllers/listarProceso.php');
 $router->map('GET', '/listarCasosComi', '/controllers/listarCasosComi.php');
-$router->map('GET', '/listarNotiAdmin', '/controllers/listarNotiAdmin.php');
-$router->map('GET', '/listarNotiComi', '/controllers/listarNotiComi.php');
-$router->map('GET', '/estadisticasGenerales', '/controllers/conteoGeneral.php');
-$router->map('GET', '/estadisticasUsuario', '/controllers/conteoPorUsuario.php');
-$router->map('GET', '/opcionesRegistro', '/controllers/listarOpcionesRegistro.php');
-$router->map('GET', '/listarComisionados', '/controllers/listarComisionados.php');
+$router->map('GET', '/listarNotiAdmin', 'controllers/listarNotiAdmin.php');
+$router->map('GET', '/listarNotiComi', 'controllers/listarNotiComi.php');
+$router->map('GET', '/estadisticasGenerales', 'controllers/conteoGeneral.php');
+$router->map('GET', '/estadisticasUsuario', 'controllers/conteoPorUsuario.php');
+$router->map('GET', '/opcionesRegistro', 'controllers/listarOpcionesRegistro.php');
+$router->map('GET', '/listarComisionados', 'controllers/listarComisionados.php');
+$router->map('GET', '/verArchivo', 'controllers/verArchivo.php');
+
 
 //Rutas hacia views admin
 

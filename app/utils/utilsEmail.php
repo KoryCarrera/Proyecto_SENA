@@ -584,3 +584,83 @@ function correoRecuperacionPassword($emailDestino, $nombreUsuario, $linkRecupera
 
     return $correoEnviado;
 }
+
+function correoCambioEstado($emailDestino, $nombreUsuario, $estado, $motivo, $nombreApp = "Sistema de Gestion SENA")
+{
+    $asunto = "Actualización en el estado de tu cuenta";
+    
+    // Formateamos el estado y asignamos un color dependiendo de si es activo o inactivo
+    $estadoTexto = ($estado == 1 || strtolower($estado) == 'activo') ? 'Activada' : 'Inactivada / Suspendida';
+    $colorEstado = ($estadoTexto == 'Activada') ? '#28a745' : '#dc3545'; // Verde para activo, Rojo para inactivo
+
+    // Cuerpo HTML
+    $cuerpoHTML = "
+    <html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+            .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+            .header { background-color: #007bff; color: white; padding: 20px; text-align: center; }
+            .content { padding: 30px; text-align: center; color: #333; }
+            .estado { font-size: 28px; font-weight: bold; color: {$colorEstado}; margin: 20px 0; text-transform: uppercase;}
+            .motivo { background-color: #e9ecef; padding: 15px; border-radius: 8px; display: inline-block; margin-bottom: 20px; font-style: italic; color: #495057;}
+            .footer { background-color: #f8f9fa; color: #6c757d; padding: 15px; text-align: center; font-size: 12px; }
+        </style>
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h2>Actualización de Cuenta</h2>
+            </div>
+            <div class='content'>
+                <p>Hola <strong>{$nombreUsuario}</strong>,</p>
+                <p>Te informamos que el estado de tu cuenta ha sido actualizado en nuestro sistema.</p>
+                <p>Nuevo estado:</p>
+                <div class='estado'>{$estadoTexto}</div>
+                <p>Motivo del cambio:</p>
+                <div class='motivo'>" . htmlspecialchars($motivo) . "</div>
+                <p>Si tienes alguna duda o consideras que se trata de un error, por favor contáctanos.</p>
+            </div>
+            <div class='footer'>
+                &copy; " . date('Y') . " {$nombreApp}. Todos los derechos reservados.
+            </div>
+        </div>
+    </body>
+    </html>
+    ";
+
+    // Cuerpo alternativo en texto plano
+    $cuerpoAlt = 
+        "Hola {$nombreUsuario},\n\n" .
+        "Te informamos que el estado de tu cuenta ha sido actualizado a: {$estadoTexto}.\n" .
+        "Motivo: {$motivo}\n\n" .
+        "Si tienes alguna duda, por favor contáctanos.\n\n" .
+        "Gracias.";
+
+    // Destinatario en el formato esperado por tu función base
+    $destinatarios = [
+        [
+            'emailUser' => $emailDestino,
+            'userName' => $nombreUsuario
+        ]
+    ];
+
+    // Llamar a la función de envío principal
+    $correoEnviado = enviarCorreo(
+        $asunto,
+        $cuerpoHTML,
+        $cuerpoAlt,
+        $destinatarios,
+        null, // CC
+        null  // BCC
+    );
+
+    // Registrar el resultado en los logs del servidor
+    if ($correoEnviado) {
+        error_log("Correo de cambio de estado enviado a {$emailDestino}");
+    } else {
+        error_log("Error al enviar correo de cambio de estado a {$emailDestino}");
+    }
+
+    return $correoEnviado;
+}
