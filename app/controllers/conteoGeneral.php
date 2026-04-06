@@ -48,6 +48,7 @@ $parametros = [
     'atendidos' => $conteo['total_atendidos'] ?? 0,
     'porAtender' => $conteo['total_pendientes'] ?? 0,
     'noAtendidos' => $conteo['total_no_atendidos'] ?? 0,
+    'porAsignar' => $conteo['total_por_asignar'] ?? 0,
 ];
 
 echo json_encode($parametros);
