@@ -230,7 +230,7 @@ const mostrarDetallesCaso = (caso) => {
     modalTitle.textContent = `Gestionar Caso #${caso.id_caso} `;
 
     modalBody.innerHTML = `
-                <div class="row">
+    <div class="row">
         <div class="col-md-6 mb-3">
             <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">ID del Caso</label>
             <p class="text-slate-300 mb-0">${caso.id_caso}</p>
@@ -240,7 +240,7 @@ const mostrarDetallesCaso = (caso) => {
             <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Tipo de Caso</label>
             <p class="text-slate-300 mb-0">${caso.tipo_caso || 'N/A'}</p>
         </div>
-    </ >
+    </div>
 
     <div class="row">
         <div class="col-md-6 mb-3">
@@ -264,79 +264,96 @@ const mostrarDetallesCaso = (caso) => {
         </div>
     </div>
 
-         ${caso.description || caso.descripcion ? `
-        <div class="row">
-            <div class="col-12 mb-4">
-                <div class=" bg-slate-800/40 rounded-lg">
-                    <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Descripción Original</label>
-                    <p class="descripcion text-slate-300 mb-0 mt-1" style="font-size: 1rem; white-space: pre-wrap;">${caso.description || caso.descripcion}</p>
-                </div>
+    ${caso.description || caso.descripcion ? `
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="bg-slate-800/40 rounded-lg">
+                <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Descripción Original</label>
+                <p class="descripcion text-slate-300 mb-0 mt-1" style="font-size: 1rem; white-space: pre-wrap;">${caso.description || caso.descripcion}</p>
             </div>
         </div>
-        ` : ''
-        }
+    </div>
+    ` : ''}
 
-        <div class="row mb-4">
-            <div class="col-12">
+    <div class="row mb-4">
+        <div class="col-12">
             <button type="button" class="boton-tabla" id="btnMostrar">
                 <i class="bi bi-table"></i> Mostrar tabla de seguimiento
             </button>
 
-<div id="tablaSeguimientosContainer" class="bg-slate-800/40 rounded-lg p-3 border border-slate-700/50 w-100" style="display: none;">
-    <label class="fw-bold text-indigo-400 uppercase mb-2 d-block" style="font-size: 0.75rem; letter-spacing: 0.05em;">
-        <i class="bi bi-clock-history me-1"></i> Historial de Seguimientos
-    </label>
-    <div class="table-responsive w-100" style="max-height: 250px; overflow-y: auto;">
-        <table class="table table-dark table-borderless align-middle mb-0 bg-transparent w-100">
-            <thead class="text-slate-400 border-bottom border-slate-700 bg-transparent" style="font-size: 0.7rem;">
-                <tr>
-                    <th class="pb-2 bg-transparent">ID</th>
-                    <th class="pb-2 bg-transparent">FECHA</th>
-                    <th class="pb-2 bg-transparent">USUARIO</th>
-                    <th class="pb-2 bg-transparent">OBSERVACIÓN</th>
-                </tr>
-            </thead>
-            <tbody id="tablaSeguimientosBody" class="text-slate-300 bg-transparent" style="font-size: 0.85rem;">
-                </tbody>
-        </table>
-    </div>
-</div>
+            <div id="tablaSeguimientosContainer" class="bg-slate-800/40 rounded-lg p-3 border border-slate-700/50 w-100" style="display: none;">
+                <label class="fw-bold text-indigo-400 uppercase mb-2 d-block" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+                    <i class="bi bi-clock-history me-1"></i> Historial de Seguimientos
+                </label>
+                <div class="table-responsive w-100" style="max-height: 250px; overflow-y: auto;">
+                    <table class="table table-dark table-borderless align-middle mb-0 bg-transparent w-100">
+                        <thead class="text-slate-400 border-bottom border-slate-700 bg-transparent" style="font-size: 0.7rem;">
+                            <tr>
+                                <th class="pb-2 bg-transparent">ID</th>
+                                <th class="pb-2 bg-transparent">FECHA</th>
+                                <th class="pb-2 bg-transparent">USUARIO</th>
+                                <th class="pb-2 bg-transparent">OBSERVACIÓN</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaSeguimientosBody" class="text-slate-300 bg-transparent" style="font-size: 0.85rem;">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+    </div>
         
-        <div class="mb-4">
-            <label class="fw-bold text-indigo-400 uppercase mb-2" style="font-size: 0.75rem; letter-spacing: 0.05em;">
-                <i class="bi bi-gear-fill me-1"></i> Acción de Gestión
-            </label>
-            <div class="row g-3">
-                <div class="col-md-12">
-                    <label class="text-xs text-slate-400 mb-1 d-block">Actualizar Estado</label>
-                    <select name="id_estado" id="selectEstado" class="contenido">
+    <div class="mb-4">
+        <label class="fw-bold text-indigo-400 uppercase mb-2" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+            <i class="bi bi-gear-fill me-1"></i> Acción de Gestión
+        </label>
+        <div class="row g-3">
+            <div class="col-md-12">
+                <label class="text-xs text-slate-400 mb-1 d-block">Actualizar Estado</label>
+                <select name="id_estado" id="selectEstado" class="contenido">
                     <option value="" selected disabled class="bg-slate-900">Seleccione un estado</option>
                     <option value="1" class="bg-slate-900">Atendido</option>
                     <option value="2" class="bg-slate-900">Por Atender</option>
                     <option value="3" class="bg-slate-900">No Atendido</option>
-                    </select>
-                    <span class="badge bg-warning text-dark" id="mensajeEstado"></span>
-                </div>
-                <div class="col-md-12">
-                    <label class="text-xs text-slate-400 mb-1 d-block">Agregar Observación / Seguimiento</label>
-                    <textarea name="observacion" class="contenido" rows="3" placeholder="Escriba aquí los avances o detalles de la gestión..." id="observacion"></textarea>
-                </div>
+                </select>
+                <span class="badge bg-warning text-dark" id="mensajeEstado"></span>
+            </div>
+            
+            <div class="col-md-12" id="contenedorMotivo" style="display: none;">
+                <label class="text-xs text-slate-400 mb-1 d-block">Motivo del Cambio de Estado</label>
+                <textarea name="motivo_cambio" class="contenido" rows="2" placeholder="Especifique el motivo por el cual se cambia a este estado..." id="motivoCambio"></textarea>
+            </div>
+            
+            <div class="col-md-12">
+                <label class="text-xs text-slate-400 mb-1 d-block">Agregar Observación / Seguimiento</label>
+                <textarea name="observacion" class="contenido" rows="3" placeholder="Escriba aquí los avances o detalles de la gestión..." id="observacion"></textarea>
             </div>
         </div>
+    </div>
 
-        <!-- Botón Ver Archivos Adjuntos -->
-        <div class="d-flex justify-content-end mt-2 mb-1">
-            <button type="button"
-                class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-emerald-400 bg-emerald-900/20 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/20 transition-colors"
-                id="btnVerArchivos"
-                onclick="abrirModalArchivos(${caso.id_caso})">
-                <i class="bi bi-paperclip"></i> Ver archivos adjuntos
-            </button>
-        </div>
-            `;
+    <div class="d-flex justify-content-end mt-2 mb-1">
+        <button type="button"
+            class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-emerald-400 bg-emerald-900/20 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/20 transition-colors"
+            id="btnVerArchivos"
+            onclick="abrirModalArchivos(${caso.id_caso})">
+            <i class="bi bi-paperclip"></i> Ver archivos adjuntos
+        </button>
+    </div>
+    `;
 
+    const contenedorMotivo = document.getElementById('contenedorMotivo');
+    const inputMotivo = document.getElementById('motivoCambio');
+
+    document.getElementById('selectEstado').addEventListener('change', (e) => {
+        const estadoSeleccionado = e.target.value;
+        // '1' = Atendido | '2' = Por Atender
+        if (estadoSeleccionado === '1' || estadoSeleccionado === '2') {
+            contenedorMotivo.style.display = 'block';
+        } else {
+            contenedorMotivo.style.display = 'none';
+            inputMotivo.value = ''; // Limpiamos el valor por si el usuario lo llenó y luego cambió de opinión
+        }
+    });
 
     //Capturamos el boton para mostrar el historial de seguimientos
     const btnSeguimientos = document.getElementById('btnMostrar');
@@ -357,16 +374,6 @@ const mostrarDetallesCaso = (caso) => {
         llenarTablaSeguimientos(caso.id_caso);
 
     });
-
-
-
-    if (caso.estado === 'No atendido') {
-        const mensajeEstado = document.getElementById('mensajeEstado');
-        mensajeEstado.innerHTML = `Solo el administrador puede cambiar el estado de este caso.`;
-
-        const selectEstado = document.getElementById('selectEstado');
-        selectEstado.disabled = true;
-    }
 
     // Auto-scroll del modal cuando se redimensiona el textarea
     const textareaObservacion = document.getElementById('observacion');
@@ -534,11 +541,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btnGuardarCambios.addEventListener('click', (e) => {
 
+        const idCaso = document.getElementById('idCaso').value;
+        const idEstado = document.getElementById('selectEstado').value;
+        const observacion = document.getElementById('observacion').value
+        const motivoElemento = document.getElementById('motivoCambio');
+        const motivoCambio = motivoElemento ? motivoElemento.value : '';
+
         e.preventDefault();
         const cambiosCasos = {
-            'idCaso': document.getElementById('idCaso').value,
-            'idEstado': document.getElementById('selectEstado').value,
-            'observacion': document.getElementById('observacion').value
+            'idCaso': idCaso,
+            'idEstado': idEstado,
+            'observacion': observacion,
+            'motivo': motivoCambio
         }
 
         $.ajax({
@@ -689,10 +703,10 @@ const renderizarArchivos = (archivos) => {
     archivos.forEach((archivo) => {
         const extension = archivo.ruta.split('.').pop().toLowerCase();
         const urlBridge = `/verArchivo?ruta=${encodeURIComponent(archivo.ruta)}`;
-        
+
         const card = document.createElement('div');
         card.className = "group relative bg-slate-800/40 border border-slate-700 hover:border-emerald-500/50 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/10";
-        
+
         card.innerHTML = `
             <div class="aspect-video bg-slate-900 flex items-center justify-center overflow-hidden relative border-b border-slate-700/50">
                 <!-- Contenedor del Preview -->
@@ -729,7 +743,7 @@ const renderizarArchivos = (archivos) => {
                 </div>
             </div>
         `;
-        
+
         galeria.appendChild(card);
         setTimeout(() => generarPreviewRemoto(urlBridge, archivo, `preview-${archivo.id_archivo}`), 100);
     });
@@ -741,25 +755,25 @@ async function generarPreviewRemoto(url, archivo, containerId) {
 
     try {
         const extension = archivo.ruta.split('.').pop().toLowerCase();
-        
+
         if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(extension)) {
             container.innerHTML = `<img src="${url}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Preview">`;
-        } 
+        }
         else if (extension === 'pdf') {
             try {
                 const response = await fetch(url);
                 const blob = await response.blob();
                 const arrayBuffer = await blob.arrayBuffer();
-                
+
                 const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
                 const page = await pdf.getPage(1);
                 const viewport = page.getViewport({ scale: 0.4 });
-                
+
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
-                
+
                 await page.render({ canvasContext: context, viewport: viewport }).promise;
                 container.innerHTML = '';
                 container.appendChild(canvas);
@@ -811,7 +825,7 @@ window.abrirLightbox = async (url, nombre) => {
     try {
         if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(extension)) {
             contenido.innerHTML = `<img src="${url}" class="max-w-full max-h-[80vh] object-contain shadow-2xl animate-fade-in" alt="${nombre}">`;
-        } 
+        }
         else if (extension === 'pdf') {
             contenido.innerHTML = `<iframe src="${url}" class="w-full h-[80vh] rounded-xl border-0" title="${nombre}"></iframe>`;
         }
