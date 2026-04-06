@@ -274,40 +274,66 @@
     </div>
   </div>
 
+   <!-- Modal Detalles del Caso -->
+  <div id="modalReasignar" class="modal">
+    <div class="contenido-modal">
+      <div class="titulo-modal" id="modalReasignarLabel">Reasignar Caso</div>
+
+      <form id="formReasignar">
+        <div class="modal-body p-0" id="modalReasignarBody">
+          <!-- Contenido dinámico via JS -->
+        </div>
+        <div class="div-boton-tabla mb-4 px-3">
+
+        </div>
+        <div class="botones">
+          <button type="button" id="cerrar-modal" class="boton bg-slate-600 hover:bg-slate-700">
+            <i class="bi bi-x-lg"></i> Cerrar
+          </button>
+          <button type="submit" class="boton flex items-center gap-2" id="guardarCambios">
+            <i class="bi bi-check-circle"></i> Guardar Cambios
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Modal Ver Archivos (Sub-modal) -->
-  <div id="modalArchivos" class="modal" style="z-index: 2100;">
-    <div class="contenido-modal" style="max-width: 800px;">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+  <div id="modalArchivos" class="modal" style="z-index: 2100; background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content glass-card border-slate-700">
+        <div class="modal-header border-slate-700 p-6 flex justify-between items-center">
+          <h5 class="modal-title text-xl font-bold text-white flex items-center gap-2">
             <i class="bi bi-collection-play text-emerald-400"></i> Archivos Adjuntos
-        </h2>
-        <button type="button" onclick="cerrarModalArchivos()" class="text-slate-400 hover:text-white transition-colors">
+          </h5>
+          <button type="button" onclick="cerrarModalArchivos()" class="text-slate-400 hover:text-white transition-colors">
             <i class="bi bi-x-lg text-xl"></i>
-        </button>
-      </div>
-
-      <div id="galeriaArchivos" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Los archivos se cargarán aquí dinámicamente -->
-      </div>
-
-      <div class="mt-8 flex justify-end">
-        <button type="button" onclick="cerrarModalArchivos()" class="boton bg-slate-700 hover:bg-slate-600">
+          </button>
+        </div>
+        <div class="modal-body p-6">
+          <div id="galeriaArchivos" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Los archivos se cargarán aquí dinámicamente -->
+          </div>
+        </div>
+        <div class="modal-footer border-slate-700 p-6 bg-slate-900/20">
+          <button type="button" onclick="cerrarModalArchivos()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm font-medium">
             Cerrar Galería
-        </button>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Modal para Visualización a Pantalla Completa (Lightbox) -->
-  <div id="modalLightbox" class="modal" style="z-index: 2200; background-color: rgba(0,0,0,0.9);">
+  <div id="modalLightbox" class="modal" style="z-index: 2200; background-color: rgba(0,0,0,0.95);">
      <div class="flex flex-col items-center justify-center h-full p-4 relative">
-        <button type="button" onclick="cerrarLightbox()" class="absolute top-6 right-6 text-white text-3xl hover:text-slate-300">
+        <button type="button" onclick="cerrarLightbox()" class="absolute top-6 right-6 text-white text-3xl hover:text-slate-300 transition-colors z-50">
             <i class="bi bi-x-circle"></i>
         </button>
-        <div id="contenidoLightbox" class="max-w-4xl max-h-[80vh] flex items-center justify-center">
+        <div id="contenidoLightbox" class="w-full h-full flex items-center justify-center">
             <!-- Imagen o PDF aquí -->
         </div>
-        <div id="footerLightbox" class="mt-4 text-white font-medium text-center"></div>
+        <div id="footerLightbox" class="mt-4 text-white font-medium text-center bg-slate-900/50 px-4 py-2 rounded-full backdrop-blur-md"></div>
      </div>
   </div>
 
@@ -323,6 +349,8 @@
   <script src="/assets/js/mammoth.browser.min.js"></script>
   <script src="/assets/js/cache.js"></script>
   <script src="/assets/js/casosComi.js"></script>
+  <!-- Visor avanzado de documentos -->
+  <script src="/assets/js/visor-avanzado.js"></script>
   <script src="/assets/js/logout.js"></script>
   <script src="/assets/js/inactividad.js"></script>
 

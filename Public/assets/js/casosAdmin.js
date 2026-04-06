@@ -4,6 +4,7 @@ const ENDPOINT_OBTENER = "/modalCasoAdmin";
 const ENDPOINT_SEGUIMIENTOS = "/listarSeguimientos";
 const ENDPOINT_GESTIONAR = '/gestionarCaso';
 const ENDPOINT_COMISIONADOS = '/listarComisionados';
+const ENDPOINT_ARCHIVOS = "/listarArchivosCaso";
 
 //Mandar mensaje de error de dataTable a la consola
 $.fn.dataTable.ext.errMode = 'none';
@@ -269,6 +270,10 @@ const supervisarCaso = async (idCaso) => {
         </div>
     `;
 
+  //agregamos boton cerrar
+  document.getElementById("modalFooter").innerHTML = `    <button type="button"
+      class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm font-medium"
+      data-bs-dismiss="modal">Cerrar</button>`
   //agregamos boton cerrar
   document.getElementById("modalFooter").innerHTML = `    <button type="button"
       class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm font-medium"
@@ -547,6 +552,15 @@ const mostrarDetallesCaso = (caso) => {
         `
       : ""
     }
+
+<div class="d-flex justify-content-end mt-2 mb-1">
+    <button type="button"
+        class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-emerald-400 bg-emerald-900/20 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/20 transition-colors"
+        id="btnVerArchivos"
+        onclick="abrirModalArchivos(${caso.id_caso})">
+        <i class="bi bi-paperclip"></i> Ver archivos adjuntos
+    </button>
+</div>
     `;
 
   //Capturamos el boton para mostrar el historial de seguimientos
@@ -668,4 +682,12 @@ const actualizarPaginacionVisual = (table) => {
 
 document.addEventListener("DOMContentLoaded", () => {
   cargarCasos(); // Los datos llegan → renderizarTablaCasos → DataTables se inicia allí
+
+  // Los listeners de cierre de modal para archivos ahora están en visor-archivos.js
 });
+
+// ============================================================
+// FUNCIONES PARA EL VISOR DE ARCHIVOS ADJUNTOS (Avanzado)
+// ============================================================
+// El visor de archivos ahora se maneja de forma centralizada en visor-archivos.js
+
