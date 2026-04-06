@@ -30,7 +30,7 @@ try {
         
         $model->reasignarCaso($documentoUser, $documentonew, $idCaso, $motivo);
         echo json_encode(['status' => 'ok', 'mensaje' => '¡El caso ha sido reasignado exitosamente!']);
-
+        
     } 
     // Si no hay documento nuevo, pero sí hay un nuevo estado, actualizamos.
     elseif ($nuevoEstado) {
@@ -52,6 +52,7 @@ try {
             'status' => 'error', 
             'mensaje' => 'No se pudo determinar la acción. Revisa que los nombres de los campos en el HTML sean correctos.'
         ]);
+        exit;
     }
 
 } catch(Exception $e) {

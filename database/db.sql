@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 05-04-2026 a las 18:18:35
+-- Tiempo de generación: 06-04-2026 a las 00:21:19
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -176,13 +176,11 @@ CREATE PROCEDURE `sp_cambiar_estado_proceso` (IN `p_id_proceso` INT, IN `p_motiv
     COMMIT;
 END$$
 
-CREATE PROCEDURE `sp_cambiar_estado_usuario` (IN `p_documento` VARCHAR(50), IN `p_estado` INT, IN `p_motivo` TEXT, IN `p_documento_admin` VARCHAR(50))   BEGIN 	
+CREATE PROCEDURE `sp_cambiar_estado_usuario` (IN `p_documento` VARCHAR(20), IN `p_estado` INT, IN `p_motivo` TEXT, IN `p_documento_admin` VARCHAR(20))   BEGIN 	
 
 DECLARE v_nombre VARCHAR(200);
 DECLARE v_nombre_admin VARCHAR(200);
 DECLARE v_admin_email VARCHAR(100);
-DECLARE v_documento_admin_2 VARCHAR(20);
-DECLARE v_documento_comi VARCHAR(20);
 DECLARE v_rol INT;
 
 DECLARE v_mensaje_admin TEXT;
@@ -203,37 +201,38 @@ SELECT id_rol INTO v_rol FROM usuario WHERE documento = p_documento;
 
 IF p_estado = 0 AND v_rol = 2 THEN
 
-	SET v_mensaje_admin = CONCAT('HAS INHABILITADO AL USUARIO "', v_nombre, '" DEL SISTEMA el dia: ',  CURRENT_DATE, ', por el siguiente motivo: "', p_motivo, '" en caso de error revierta de inmediato la accion, y tenga en cuenta que los casos Por Atender del usuario que ha desabilitado se encontraran en el estado "Por Reasignar", y para volver a asignar dichos casos a su Comisionado encargado debera hacerlo manualmente uno por uno, recuerde que desactivar un usuario es una accion riesgoza, y se aconseja realizarse unicamente en casos de absoluta necesidad, recuerde que el sistema por si solo, una vez se cumple con la vigencia, desactiva de forma automatica a todos los usuarios caducados.');
+	SET v_mensaje_admin = CONCAT('HAS INHABILITADO AL USUARIO "', v_nombre, '" DEL SISTEMA el día: ',  CURRENT_DATE, ', por el siguiente motivo: "', p_motivo, '". En caso de error, revierta de inmediato la acción. Tenga en cuenta que los casos "Por Atender" del usuario que ha deshabilitado se encontrarán en el estado "Por Reasignar", y para volver a asignar dichos casos a su Comisionado encargado deberá hacerlo manualmente uno por uno. Recuerde que desactivar un usuario es una acción riesgosa, y se aconseja realizarse únicamente en casos de absoluta necesidad. El sistema por sí solo, una vez se cumple con la vigencia, desactiva de forma automática a todos los usuarios caducados.');
 	
-	SET v_mensaje_comi = CONCAT('HAS SIDO INHABILITADO DEL SISTEMA: ', v_nombre, ' el dia: ',  CURRENT_DATE, 
-' has sido INHABILITADO por el administrardor encargado: ', v_nombre_admin, ', por el siguiente motivo: "', p_motivo, '" en caso de error comuniquese con el administrador encargado a travez del siguiente correo: ', v_admin_email, '.');
+	SET v_mensaje_comi = CONCAT('HAS SIDO INHABILITADO DEL SISTEMA: ', v_nombre, ' el día: ',  CURRENT_DATE,  
+'. Has sido INHABILITADO por el administrador encargado: ', v_nombre_admin, ', por el siguiente motivo: "', p_motivo, '". En caso de error comuníquese con el administrador encargado a través del siguiente correo: ', v_admin_email, '.');
 
 ELSEIF p_estado = 1 AND v_rol = 2 THEN 
 
-	SET v_mensaje_admin = CONCAT('HAS HABILITADO AL USUARIO "', v_nombre, '" el dia: ',  CURRENT_DATE, ', por el siguiente motivo: "', p_motivo, '" en caso de error revierta de inmediato la accion, y se aconseja realizar esta acciónn unicamente en casos de absoluta necesidad.');
+	SET v_mensaje_admin = CONCAT('HAS HABILITADO AL USUARIO "', v_nombre, '" el día: ',  CURRENT_DATE, ', por el siguiente motivo: "', p_motivo, '". En caso de error revierta de inmediato la acción, y se aconseja realizar esta acción únicamente en casos de absoluta necesidad.');
     
-	SET v_mensaje_comi = CONCAT('HAS SIDO HABILITADO EN EL SISTEMA: ', v_nombre, ' el dia: ',  CURRENT_DATE, 
-' has sido HABILITADO por el administrardor encargado: ', v_nombre_admin, ', por el siguiente motivo: "', p_motivo, '",  ahora tienes acceso nuevamente a las funciones de tu rol como comisionado, pero tus casos antiguos han sido asignados a otro comisionado, o en su defecto se encuentran en el estado Por Asignar, en caso de error comuniquese con el administrador encargado a travez del siguiente correo: ', v_admin_email, '.');
+	SET v_mensaje_comi = CONCAT('HAS SIDO HABILITADO EN EL SISTEMA: ', v_nombre, ' el día: ',  CURRENT_DATE,  
+'. Has sido HABILITADO por el administrador encargado: ', v_nombre_admin, ', por el siguiente motivo: "', p_motivo, '". Ahora tienes acceso nuevamente a las funciones de tu rol como comisionado, pero tus casos antiguos han sido asignados a otro comisionado, o en su defecto se encuentran en el estado "Por Asignar". En caso de error comuníquese con el administrador encargado a través del siguiente correo: ', v_admin_email, '.');
 
 ELSEIF p_estado = 0 AND v_rol = 1 THEN
 
-	SET v_mensaje_admin = CONCAT('HAS INHABILITADO AL ADMINISTRADOR "', v_nombre, '" DEL SISTEMA el dia: ',  CURRENT_DATE, ', por el siguiente motivo: "', p_motivo, '" en caso de error revierta de inmediato la accion, y recuerde que desactivar un usuario es una accion riesgoza, y se aconseja realizarse unicamente en casos de absoluta necesidad.');
+	SET v_mensaje_admin = CONCAT('HAS INHABILITADO AL ADMINISTRADOR "', v_nombre, '" DEL SISTEMA el día: ',  CURRENT_DATE, ', por el siguiente motivo: "', p_motivo, '". En caso de error revierta de inmediato la acción, y recuerde que desactivar un usuario es una acción riesgosa, y se aconseja realizarse únicamente en casos de absoluta necesidad.');
 	
-	SET v_mensaje_admin_2 = CONCAT('HAS SIDO INHABILITADO DEL SISTEMA: ', v_nombre, ' el dia: ',  CURRENT_DATE, 
-' has sido INHABILITADO por el administrardor: ', v_nombre_admin, ', por el siguiente motivo: "', p_motivo, '" en caso de error comuniquese con el administrador encargado a travez del siguiente correo: ', v_admin_email, '.');
+	SET v_mensaje_admin_2 = CONCAT('HAS SIDO INHABILITADO DEL SISTEMA: ', v_nombre, ' el día: ',  CURRENT_DATE,  
+'. Has sido INHABILITADO por el administrador: ', v_nombre_admin, ', por el siguiente motivo: "', p_motivo, '". En caso de error comuníquese con el administrador encargado a través del siguiente correo: ', v_admin_email, '.');
 
 ELSEIF p_estado = 1 AND v_rol = 1 THEN 
 
-	SET v_mensaje_admin = CONCAT('HAS HABILITADO AL USUARIO "', v_nombre, '" el dia: ',  CURRENT_DATE, ', por el siguiente motivo: "', p_motivo, '", el usuario en cuestion es un administrador, asi que tenga en cuenta que al habilitarlo nuevamente lo hace con dicho rol, en caso de error revierta de inmediato la accion, y se aconseja realizar esta acciónn unicamente en casos de absoluta necesidad.');
+	SET v_mensaje_admin = CONCAT('HAS HABILITADO AL USUARIO "', v_nombre, '" el día: ',  CURRENT_DATE, ', por el siguiente motivo: "', p_motivo, '". El usuario en cuestión es un administrador, así que tenga en cuenta que al habilitarlo nuevamente lo hace con dicho rol. En caso de error revierta de inmediato la acción, y se aconseja realizar esta acción únicamente en casos de absoluta necesidad.');
     
-	SET v_mensaje_admin_2 = CONCAT('HAS SIDO HABILITADO EN EL SISTEMA: ', v_nombre, ' el dia: ',  CURRENT_DATE, 
-' has sido HABILITADO por el administrardor encargado: ', v_nombre_admin, ' por el siguiente motivo: "', p_motivo, '",  nuevamente tienes acceso a las funciones de tu rol como administrador, en caso de error comuniquese con el administrador encargado a travez del siguiente correo: ', v_admin_email, '.');
+	SET v_mensaje_admin_2 = CONCAT('HAS SIDO HABILITADO EN EL SISTEMA: ', v_nombre, ' el día: ',  CURRENT_DATE,  
+'. Has sido HABILITADO por el administrador encargado: ', v_nombre_admin, ' por el siguiente motivo: "', p_motivo, '". Nuevamente tienes acceso a las funciones de tu rol como administrador. En caso de error comuníquese con el administrador encargado a través del siguiente correo: ', v_admin_email, '.');
 
 END IF;
 
 UPDATE usuario SET id_estado = p_estado WHERE documento = p_documento;
 
-INSERT INTO monitoreo(documento, fecha, tipo, descripcion) VALUES(p_documento, NOW(), 2, p_motivo);
+-- Cambiado el 2 por 'accion' para coincidir exactamente con el ENUM
+INSERT INTO monitoreo(documento, fecha, tipo, descripcion) VALUES(p_documento, NOW(), 'accion', p_motivo);
 
 IF v_mensaje_comi IS NOT NULL THEN 
 
@@ -251,9 +250,10 @@ IF v_mensaje_admin IS NOT NULL THEN
 	INSERT INTO noti_administrador(documento, mensaje, fecha) VALUES(p_documento_admin, v_mensaje_admin, NOW());
 END IF;
 
+SELECT id_estado FROM usuario WHERE documento = p_documento;
+
 COMMIT;
 
-SELECT id_estado FROM usuario WHERE documento = p_documento;
 
 END$$
 
@@ -632,6 +632,22 @@ END$$
 
 CREATE PROCEDURE `sp_eliminar_token_2fa` (IN `p_documento` VARCHAR(20))   DELETE FROM token_usuario WHERE documento = p_documento$$
 
+CREATE PROCEDURE `sp_estadisticas_procesos_comisionado` (IN `p_documento` VARCHAR(50))   BEGIN
+    SELECT 
+        p.nombre AS proceso,
+        COUNT(c.id_caso) AS total_casos
+    FROM 
+        caso c
+    INNER JOIN 
+        procesoorganizacional p ON c.id_proceso = p.id_proceso
+    WHERE 
+        c.documento = p_documento
+    GROUP BY 
+        p.id_proceso, p.nombre
+    ORDER BY 
+        total_casos DESC;
+END$$
+
 CREATE PROCEDURE `sp_generar_token_recuperacion` (IN `p_documento` VARCHAR(50))   BEGIN
     DECLARE v_token VARCHAR(255);
     DECLARE v_expira DATETIME;
@@ -667,6 +683,13 @@ CREATE PROCEDURE `sp_guardar_token_2fa` (IN `p_documento` VARCHAR(20), IN `p_tok
 CREATE PROCEDURE `sp_insertar_archivo_caso` (IN `p_id_caso` INT, IN `p_nombre_archivo` VARCHAR(255), IN `p_ruta` VARCHAR(255), IN `p_tipo_archivo` VARCHAR(50))   BEGIN
 INSERT INTO archivo (id_caso, nombre_archivo, ruta, tipo_archivo, fecha_subida)
 VALUES (p_id_caso, p_nombre_archivo, p_ruta, p_tipo_archivo, NOW());
+END$$
+
+CREATE PROCEDURE `sp_listar_archivos_caso` (IN `p_id_caso` INT)   BEGIN
+	SELECT id_archivo, nombre_archivo, ruta, tipo_archivo, fecha_subida
+	FROM archivo
+   	WHERE id_caso = p_id_caso
+	ORDER BY fecha_subida DESC;
 END$$
 
 CREATE PROCEDURE `sp_listar_casos` ()   BEGIN
@@ -880,8 +903,8 @@ CREATE PROCEDURE `sp_reasignar_caso` (IN `p_documento` VARCHAR(20), IN `p_docume
     FROM usuario WHERE documento = p_documento_viejo;
 
     UPDATE caso 
-    SET documento = p_documento_nuevo 
-    WHERE id_caso = p_id_caso AND id_estado = 2;
+    SET documento = p_documento_nuevo, id_estado = 2
+    WHERE id_caso = p_id_caso AND id_estado = 2 OR id_caso = p_id_caso AND id_estado = 3 OR id_caso = p_id_caso AND id_estado = 4;
 
     INSERT INTO monitoreo(documento, fecha, tipo, descripcion) 
     VALUES(p_documento, NOW(), 2, p_descripcion);
@@ -1225,6 +1248,15 @@ CREATE TABLE `archivo` (
   `tipo_archivo` varchar(50) NOT NULL COMMENT 'Formato del archivo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `archivo`
+--
+
+INSERT INTO `archivo` (`id_archivo`, `id_caso`, `nombre_archivo`, `fecha_subida`, `ruta`, `tipo_archivo`) VALUES
+(2, 135, 'Los 12 Trabajos de Heracles y su significado profundo.pdf', '2026-04-06 00:17:53', 'uploads/casos/caso#135/archivo_69d2fbb1c3dcd.pdf', 'documento'),
+(3, 135, 'Reporte_Usuarios_SENA.pdf', '2026-04-06 00:17:53', 'uploads/casos/caso#135/archivo_69d2fbb1d91cd.pdf', 'documento'),
+(4, 135, '579e4c2063571440.png', '2026-04-06 00:17:54', 'uploads/casos/caso#135/archivo_69d2fbb1ea740.png', 'imagen');
+
 -- --------------------------------------------------------
 
 --
@@ -1253,42 +1285,42 @@ CREATE TABLE `caso` (
 INSERT INTO `caso` (`id_caso`, `nombre`, `radicado`, `documento`, `id_seguimiento`, `id_proceso`, `fecha_ultimo_seguimiento`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
 (50, 'Posible trato desigual en asignación de incentivos', NULL, '1020304050', NULL, 13, NULL, '2026-02-09 12:49:15', '2026-03-30 16:36:03', 1, 1, 'El funcionario manifiesta inconformidad debido a que considera que los criterios de evaluación no se aplicaron de manera equitativa en su área, afectando la asignación de incentivos.'),
 (52, 'Presunto maltrato laboral por parte de superior', NULL, '1456333298', NULL, 10, NULL, '2026-02-23 12:50:29', '2026-03-30 16:36:03', 1, 1, 'El colaborador reporta comportamientos reiterados de trato inapropiado y comunicación inadecuada por parte de su jefe inmediato, solicitando revisión del caso.'),
-(53, 'Programación de examen médico ocupacional', NULL, '1756664828', NULL, 11, NULL, '2026-02-19 12:53:33', NULL, 2, 2, 'El colaborador solicita la programación de su examen médico ocupacional periódico para seguimiento de su estado de salud laboral.'),
-(54, 'Capacitación en prevención de riesgos laborales', NULL, '1756664828', NULL, 14, NULL, '2026-02-23 12:53:57', NULL, 2, 2, 'Se solicita capacitación para el equipo de trabajo en temas de prevención de riesgos con el fin de fortalecer prácticas seguras.'),
+(53, 'Programación de examen médico ocupacional', NULL, '1656966633', 50, 11, '2026-04-05 23:49:26', '2026-02-19 12:53:33', '2026-04-05 22:28:50', 2, 2, 'El colaborador solicita la programación de su examen médico ocupacional periódico para seguimiento de su estado de salud laboral.'),
+(54, 'Capacitación en prevención de riesgos laborales', NULL, '1756664828', NULL, 14, NULL, '2026-02-23 12:53:57', '2026-04-05 22:23:59', 1, 2, 'Se solicita capacitación para el equipo de trabajo en temas de prevención de riesgos con el fin de fortalecer prácticas seguras.'),
 (55, 'Estado de solicitud de incentivo institucional', NULL, '1020304050', NULL, 13, NULL, '2026-02-23 14:11:57', NULL, 2, 3, 'El peticionario solicita conocer el estado actual de su solicitud de incentivo y los tiempos estimados de respuesta.'),
-(56, 'Copia de resultados de examen médico ocupacional', NULL, '1020304050', NULL, 11, NULL, '2026-02-23 14:12:24', NULL, 2, 3, 'Se solicita copia de los resultados del examen médico ocupacional realizado recientemente.'),
-(59, 'Riesgo laboral no atendido oportunamente', NULL, '1756664828', NULL, 14, NULL, '2026-02-21 14:17:12', NULL, 2, 4, 'Se solicita protección de derechos fundamentales ante la persistencia de un riesgo laboral que no ha sido intervenido.'),
+(56, 'Copia de resultados de examen médico ocupacional', NULL, '1756664828', 44, 11, '2026-04-05 23:41:18', '2026-02-23 14:12:24', NULL, 2, 3, 'Se solicita copia de los resultados del examen médico ocupacional realizado recientemente.'),
+(59, 'Riesgo laboral no atendido oportunamente', NULL, '1756664828', 42, 14, '2026-04-05 23:39:37', '2026-02-21 14:17:12', NULL, 2, 4, 'Se solicita protección de derechos fundamentales ante la persistencia de un riesgo laboral que no ha sido intervenido.'),
 (60, 'Negación de apoyo social en situación urgente', NULL, '1020304050', NULL, 10, NULL, '2026-02-17 14:17:51', '2026-03-30 16:36:03', 1, 4, 'El accionante solicita intervención inmediata al considerar vulnerados sus derechos por la negación de un apoyo social urgente.'),
-(61, 'Denuncia cableado expuesto', NULL, '1020304050', NULL, 14, NULL, '2022-01-18 07:40:00', '2022-01-20 15:10:00', 3, 1, 'Denuncia por cableado expuesto en sala de sistemas'),
+(61, 'Denuncia cableado expuesto', NULL, '1756664828', 45, 14, '2026-04-05 23:44:12', '2022-01-18 07:40:00', '2022-01-20 15:10:00', 2, 1, 'Denuncia por cableado expuesto en sala de sistemas'),
 (62, 'Solicitud inspección ruido', NULL, '1456333298', NULL, 14, NULL, '2022-02-12 09:15:00', '2026-03-30 16:36:03', 1, 2, 'Solicitud de inspección por condiciones de ruido en taller'),
-(63, 'Incidente menor área operativa', NULL, '1656966633', NULL, 14, NULL, '2022-03-03 10:30:00', '2022-03-07 11:20:00', 3, 1, 'Reporte de incidente menor sin lesiones en área operativa'),
+(63, 'Incidente menor área operativa', NULL, '1020304050', NULL, 14, NULL, '2022-03-03 10:30:00', '2022-03-07 11:20:00', 2, 1, 'Reporte de incidente menor sin lesiones en área operativa'),
 (64, 'Derecho petición seguimiento SST', NULL, '1756664828', NULL, 14, NULL, '2022-04-21 14:10:00', NULL, 2, 3, 'Derecho de petición por seguimiento a reporte de seguridad'),
-(65, 'Denuncia falta señalización', NULL, '1020304050', NULL, 14, NULL, '2023-01-11 08:00:00', '2023-01-15 17:00:00', 3, 1, 'Denuncia por falta de señalización en zona de carga'),
+(65, 'Denuncia falta señalización', NULL, '1020304050', NULL, 14, NULL, '2023-01-11 08:00:00', '2023-01-15 17:00:00', 2, 1, 'Denuncia por falta de señalización en zona de carga'),
 (66, 'Solicitud capacitación SST', NULL, '1456333298', NULL, 14, NULL, '2023-02-09 09:55:00', '2026-03-30 16:36:03', 1, 2, 'Solicitud de capacitación en prevención de riesgos'),
-(67, 'Incidente leve laboratorio', NULL, '1656966633', NULL, 14, NULL, '2023-03-14 11:25:00', '2023-03-18 13:40:00', 3, 1, 'Incidente leve durante práctica en laboratorio'),
+(67, 'Incidente leve laboratorio', NULL, '1756664828', 48, 14, '2026-04-05 23:45:40', '2023-03-14 11:25:00', '2023-03-18 13:40:00', 2, 1, 'Incidente leve durante práctica en laboratorio'),
 (68, 'Solicitud revisión EPP', NULL, '1756664828', NULL, 14, NULL, '2023-05-22 15:00:00', NULL, 2, 2, 'Solicitud de revisión de equipos de protección'),
 (69, 'Derecho petición auditoría SST', NULL, '1020304050', NULL, 14, NULL, '2024-01-05 07:50:00', '2026-03-30 16:36:03', 1, 3, 'Derecho de petición sobre estado de auditoría de seguridad'),
-(70, 'Denuncia riesgo ergonómico', NULL, '1456333298', NULL, 14, NULL, '2024-02-17 10:20:00', '2024-02-21 16:30:00', 3, 1, 'Denuncia por riesgo ergonómico en puesto administrativo'),
-(71, 'Solicitud evaluación riesgos', NULL, '1656966633', NULL, 14, NULL, '2024-03-29 12:10:00', NULL, 2, 2, 'Solicitud de evaluación de riesgos en aula técnica'),
-(72, 'Reporte caída leve', NULL, '1756664828', NULL, 14, NULL, '2024-05-03 09:00:00', '2024-05-06 14:00:00', 3, 1, 'Reporte de caída sin consecuencias graves'),
+(70, 'Denuncia riesgo ergonómico', NULL, '1456333298', 49, 14, '2026-04-05 23:46:16', '2024-02-17 10:20:00', '2024-02-21 16:30:00', 4, 1, 'Denuncia por riesgo ergonómico en puesto administrativo'),
+(71, 'Solicitud evaluación riesgos', NULL, '1020304050', 32, 14, '2026-04-05 23:10:52', '2024-03-29 12:10:00', NULL, 2, 2, 'Solicitud de evaluación de riesgos en aula técnica'),
+(72, 'Reporte caída leve', NULL, '1020304050', NULL, 14, NULL, '2024-05-03 09:00:00', '2024-05-06 14:00:00', 2, 1, 'Reporte de caída sin consecuencias graves'),
 (73, 'Solicitud inspección preventiva', NULL, '1020304050', NULL, 14, NULL, '2025-01-09 08:15:00', '2026-03-30 16:36:03', 1, 2, 'Solicitud de inspección preventiva general'),
-(74, 'Denuncia incumplimiento SST', NULL, '1456333298', NULL, 14, NULL, '2025-02-20 10:45:00', '2025-02-25 12:30:00', 3, 1, 'Denuncia por incumplimiento de protocolo de seguridad'),
-(75, 'Derecho petición seguimiento caso', NULL, '1656966633', NULL, 14, NULL, '2025-04-10 13:30:00', NULL, 2, 3, 'Derecho de petición por seguimiento a caso SST'),
+(74, 'Denuncia incumplimiento SST', NULL, '1020304050', NULL, 14, NULL, '2025-02-20 10:45:00', '2025-02-25 12:30:00', 2, 1, 'Denuncia por incumplimiento de protocolo de seguridad'),
+(75, 'Derecho petición seguimiento caso', NULL, '1020304050', NULL, 14, NULL, '2025-04-10 13:30:00', NULL, 2, 3, 'Derecho de petición por seguimiento a caso SST'),
 (76, 'Solicitud revisión locativa', NULL, '1756664828', NULL, 14, NULL, '2026-01-16 09:10:00', '2026-03-30 16:36:03', 1, 2, 'Solicitud de revisión de condiciones locativas'),
-(77, 'Solicitud apoyo psicológico', NULL, '1020304050', NULL, 10, NULL, '2022-02-01 10:10:00', '2022-02-03 12:00:00', 3, 2, 'Solicitud de apoyo psicológico institucional'),
+(77, 'Solicitud apoyo psicológico', NULL, '1020304050', NULL, 10, NULL, '2022-02-01 10:10:00', '2022-02-03 12:00:00', 2, 2, 'Solicitud de apoyo psicológico institucional'),
 (78, 'Denuncia conflicto interpersonal', NULL, '1456333298', NULL, 10, NULL, '2022-06-18 11:20:00', '2026-03-30 16:36:03', 1, 1, 'Denuncia por conflicto interpersonal entre funcionarios'),
-(79, 'Solicitud programa bienestar', NULL, '1656966633', NULL, 10, NULL, '2023-02-12 08:40:00', '2023-02-18 15:10:00', 3, 2, 'Solicitud de inclusión en programa de bienestar'),
+(79, 'Solicitud programa bienestar', NULL, '1020304050', NULL, 10, NULL, '2023-02-12 08:40:00', '2023-02-18 15:10:00', 2, 2, 'Solicitud de inclusión en programa de bienestar'),
 (80, 'Derecho petición beneficios', NULL, '1756664828', NULL, 10, NULL, '2023-07-07 14:25:00', NULL, 2, 3, 'Derecho de petición por información de beneficios'),
-(82, 'Denuncia acoso laboral', NULL, '1456333298', NULL, 10, NULL, '2024-04-11 11:15:00', '2024-04-16 16:00:00', 3, 1, 'Denuncia por presunto acoso laboral'),
+(82, 'Denuncia acoso laboral', NULL, '1020304050', NULL, 10, NULL, '2024-04-11 11:15:00', '2024-04-16 16:00:00', 2, 1, 'Denuncia por presunto acoso laboral'),
 (83, 'Solicitud actividad deportiva', NULL, '1656966633', NULL, 10, NULL, '2025-03-03 10:50:00', '2026-03-30 16:36:03', 1, 2, 'Solicitud de inscripción a actividad deportiva'),
 (84, 'Derecho petición subsidios', NULL, '1756664828', NULL, 10, NULL, '2026-02-08 13:05:00', NULL, 2, 3, 'Derecho de petición sobre subsidios'),
 (86, 'Derecho petición tecnológica', NULL, '1456333298', NULL, 11, NULL, '2023-06-02 09:10:00', '2026-03-30 16:36:03', 1, 3, 'Derecho de petición por respuesta a solicitud tecnológica'),
-(87, 'Solicitud actualización usuario', NULL, '1656966633', NULL, 11, NULL, '2024-02-19 11:00:00', '2024-02-23 12:30:00', 3, 2, 'Solicitud de actualización de usuario'),
+(87, 'Solicitud actualización usuario', NULL, '1020304050', NULL, 11, NULL, '2024-02-19 11:00:00', '2024-02-23 12:30:00', 2, 2, 'Solicitud de actualización de usuario'),
 (88, 'Denuncia fallas plataforma', NULL, '1756664828', NULL, 11, NULL, '2025-05-05 14:10:00', NULL, 2, 1, 'Denuncia por fallas recurrentes en plataforma'),
-(89, 'Solicitud dotación uniforme', NULL, '1020304050', NULL, 12, NULL, '2022-04-01 10:10:00', '2022-04-05 11:00:00', 3, 2, 'Solicitud de dotación de uniforme'),
+(89, 'Solicitud dotación uniforme', NULL, '1020304050', NULL, 12, NULL, '2022-04-01 10:10:00', '2022-04-05 11:00:00', 2, 2, 'Solicitud de dotación de uniforme'),
 (90, 'Derecho petición dotación', NULL, '1456333298', NULL, 12, NULL, '2023-08-15 09:40:00', '2026-03-30 16:36:03', 1, 3, 'Derecho de petición por entrega tardía de dotación'),
-(91, 'Solicitud reposición botas', NULL, '1656966633', NULL, 12, NULL, '2024-03-20 12:30:00', '2024-03-25 15:10:00', 3, 2, 'Solicitud de reposición de botas de seguridad'),
-(94, 'Solicitud inscripción incentivos', NULL, '1456333298', NULL, 13, NULL, '2026-01-20 11:20:00', NULL, 2, 2, 'Solicitud de inscripción a programa de incentivos'),
+(91, 'Solicitud reposición botas', NULL, '1756664828', 46, 12, '2026-04-05 23:44:57', '2024-03-20 12:30:00', '2024-03-25 15:10:00', 2, 2, 'Solicitud de reposición de botas de seguridad'),
+(94, 'Solicitud inscripción incentivos', NULL, '1456333298', NULL, 13, NULL, '2026-01-20 11:20:00', NULL, 4, 2, 'Solicitud de inscripción a programa de incentivos'),
 (106, 'Denuncia riesgo eléctrico', NULL, '1756664828', NULL, 14, NULL, '2026-01-10 08:15:00', NULL, 1, 1, 'Se reporta posible riesgo eléctrico por tomas sobrecargadas en oficina administrativa'),
 (107, 'Solicitud inspección seguridad', NULL, '1656966633', NULL, 14, NULL, '2026-01-22 10:20:00', NULL, 1, 2, 'Se solicita inspección preventiva en zona de almacenamiento'),
 (108, 'Denuncia falta señalización', NULL, '1456333298', NULL, 14, NULL, '2026-02-03 09:10:00', NULL, 1, 1, 'Se reporta ausencia de señalización en área de tránsito interno'),
@@ -1303,18 +1335,20 @@ INSERT INTO `caso` (`id_caso`, `nombre`, `radicado`, `documento`, `id_seguimient
 (117, 'Denuncia cableado deteriorado', NULL, '1020304050', NULL, 14, NULL, '2026-06-20 11:10:00', NULL, 2, 1, 'Se detecta cableado deteriorado en zona de equipos'),
 (118, 'Solicitud apoyo psicológico', NULL, '1756664828', NULL, 10, NULL, '2026-01-15 09:10:00', NULL, 1, 2, 'Funcionario solicita acompañamiento psicológico institucional'),
 (119, 'Denuncia conflicto laboral', NULL, '1656966633', NULL, 10, NULL, '2026-02-12 10:20:00', NULL, 1, 1, 'Se reporta conflicto interpersonal entre funcionarios'),
-(120, 'Derecho petición beneficios', NULL, '1456333298', NULL, 10, NULL, '2026-03-28 11:00:00', NULL, 2, 3, 'Se solicita información sobre beneficios institucionales'),
+(120, 'Derecho petición beneficios', NULL, '1456333298', NULL, 10, NULL, '2026-03-28 11:00:00', NULL, 4, 3, 'Se solicita información sobre beneficios institucionales'),
 (121, 'Solicitud actividad bienestar', NULL, '1020304050', NULL, 10, NULL, '2026-04-18 14:10:00', NULL, 1, 2, 'Se solicita participación en actividad de bienestar laboral'),
 (122, 'Denuncia acoso laboral', NULL, '1756664828', NULL, 10, NULL, '2026-05-26 13:30:00', NULL, 1, 1, 'Se presenta denuncia por presunto acoso laboral'),
-(123, 'Solicitud apoyo social', NULL, '1656966633', NULL, 10, NULL, '2026-06-09 10:10:00', NULL, 2, 2, 'Funcionario solicita apoyo social por situación familiar'),
+(123, 'Solicitud apoyo social', NULL, '1020304050', NULL, 10, NULL, '2026-06-09 10:10:00', NULL, 2, 2, 'Funcionario solicita apoyo social por situación familiar'),
 (124, 'Solicitud soporte plataforma', NULL, '1456333298', NULL, 11, NULL, '2026-01-27 08:50:00', NULL, 1, 2, 'Se solicita soporte técnico en plataforma institucional'),
-(125, 'Derecho petición sistema', NULL, '1020304050', NULL, 11, NULL, '2026-03-05 10:15:00', NULL, 2, 3, 'Se solicita información sobre estado de solicitud tecnológica'),
+(125, 'Derecho petición sistema', NULL, '1456333298', 33, 11, '2026-04-05 23:14:00', '2026-03-05 10:15:00', NULL, 4, 3, 'Se solicita información sobre estado de solicitud tecnológica'),
 (126, 'Denuncia fallas sistema', NULL, '1756664828', NULL, 11, NULL, '2026-04-30 09:45:00', NULL, 1, 1, 'Se reportan fallas recurrentes en plataforma institucional'),
 (127, 'Solicitud actualización usuario', NULL, '1656966633', NULL, 11, NULL, '2026-06-11 11:25:00', NULL, 1, 2, 'Se solicita actualización de permisos de usuario'),
 (128, 'Solicitud dotación uniforme', NULL, '1456333298', NULL, 12, NULL, '2026-02-14 09:30:00', NULL, 1, 2, 'Se solicita entrega de uniforme institucional'),
 (129, 'Derecho petición dotación', NULL, '1020304050', NULL, 12, NULL, '2026-04-09 10:50:00', NULL, 2, 3, 'Se solicita información sobre entrega de dotación pendiente'),
 (130, 'Solicitud información incentivos', NULL, '1756664828', NULL, 13, NULL, '2026-03-11 08:20:00', NULL, 1, 2, 'Funcionario solicita información sobre plan de incentivos'),
-(131, 'Derecho petición incentivos', NULL, '1656966633', NULL, 13, NULL, '2026-05-08 11:40:00', NULL, 2, 3, 'Se solicita respuesta sobre participación en programa de incentivos');
+(131, 'Derecho petición incentivos', NULL, '1020304050', NULL, 13, NULL, '2026-05-08 11:40:00', NULL, 2, 3, 'Se solicita respuesta sobre participación en programa de incentivos'),
+(132, 'Juanito le pego a una profesora', '123456', '1456333298', 34, 11, '2026-04-05 23:24:39', '2026-04-05 23:19:01', NULL, 4, 1, 'Juanito le pego a una profesora por que no le dio la nota que merecia'),
+(135, 'Reporte comisionado', '56723', '1756664828', NULL, 10, NULL, '2026-04-06 00:17:53', NULL, 2, 2, 'Ver archivos adjuntos en registrar caso');
 
 --
 -- Disparadores `caso`
@@ -1378,7 +1412,7 @@ SELECT CONCAT (
 	SELECT
     NEW.documento, 
    	mensaje_comi,
-    NOW() WHERE id_estado = 1;
+    NOW() WHERE OLD.id_estado = 1;
 	END IF;
 
 IF mensaje_admin IS NOT NULL THEN
@@ -1389,7 +1423,7 @@ SELECT
     mensaje_admin, 
     NOW()
 FROM usuario u_admin
-WHERE u_admin.id_rol = 1 AND id_estado = 1;
+WHERE u_admin.id_rol = 1 AND OLD.id_estado = 1;
 END IF;
 END
 $$
@@ -1548,7 +1582,35 @@ INSERT INTO `monitoreo` (`id_monitoreo`, `documento`, `fecha`, `tipo`, `descripc
 (10, '1487569254', '2026-04-01 13:05:38', 'accion', 'gsrhrjerjyrryts'),
 (11, '1487569254', '2026-04-01 13:21:22', 'accion', 'Se reasigna'),
 (16, '1487569254', '2026-04-04 00:20:13', 'accion', 'Prueba de reasignacion'),
-(17, '1487569254', '2026-04-04 00:23:09', 'accion', 'Prueba 2, hubo un error');
+(17, '1487569254', '2026-04-04 00:23:09', 'accion', 'Prueba 2, hubo un error'),
+(20, '1656966633', '2026-04-05 22:31:33', 'accion', 'Por que si'),
+(21, '1487569254', '2026-04-05 22:33:45', 'accion', 'Se desactivo el usuario anterior'),
+(22, '1487569254', '2026-04-05 22:34:52', 'accion', 'Por que si'),
+(23, '1656966633', '2026-04-05 22:35:59', 'accion', 'Prueba'),
+(24, '1487569254', '2026-04-05 22:38:27', 'accion', 'xd'),
+(25, '1487569254', '2026-04-05 22:43:09', 'accion', 'Por que si'),
+(26, '1487569254', '2026-04-05 23:10:52', 'accion', '71'),
+(27, '1487569254', '2026-04-05 23:14:00', 'accion', 'OTRO INTENTO'),
+(28, '1656966633', '2026-04-05 23:23:31', 'accion', 'Hola bb'),
+(29, '1487569254', '2026-04-05 23:24:39', 'accion', 'Caso sin usuario asignado'),
+(30, '1487569254', '2026-04-05 23:36:50', 'accion', 'hola'),
+(31, '1487569254', '2026-04-05 23:37:24', 'accion', 'Usuario con muchos casos'),
+(32, '1487569254', '2026-04-05 23:37:25', 'accion', 'Usuario con muchos casos'),
+(33, '1487569254', '2026-04-05 23:37:40', 'accion', 'Usuario con muchos casos'),
+(34, '1487569254', '2026-04-05 23:37:55', 'accion', 'Usuario con muchos casos'),
+(35, '1487569254', '2026-04-05 23:38:18', 'accion', 'Usuario con muchos casos'),
+(36, '1487569254', '2026-04-05 23:38:58', 'accion', 'Usuario con muchos casos'),
+(37, '1487569254', '2026-04-05 23:39:37', 'accion', 'Usuario con muchos casos'),
+(38, '1487569254', '2026-04-05 23:41:18', 'accion', 'Usuario con muchos casos'),
+(39, '1487569254', '2026-04-05 23:41:18', 'accion', 'Usuario con muchos casos'),
+(40, '1487569254', '2026-04-05 23:44:12', 'accion', 'Usuario con muchos casos'),
+(41, '1487569254', '2026-04-05 23:44:57', 'accion', 'Usuario con muchos casos'),
+(42, '1487569254', '2026-04-05 23:45:39', 'accion', 'Usuario con muchos casos'),
+(43, '1487569254', '2026-04-05 23:45:40', 'accion', 'Usuario con muchos casos'),
+(44, '1487569254', '2026-04-05 23:46:16', 'accion', 'Usuario con muchos casos'),
+(45, '1656966633', '2026-04-05 23:47:00', 'accion', 'Prueba'),
+(46, '1456333298', '2026-04-05 23:47:47', 'accion', 'Prueba'),
+(47, '1487569254', '2026-04-05 23:49:26', 'accion', 'Sin casos por atender');
 
 -- --------------------------------------------------------
 
@@ -1610,7 +1672,15 @@ INSERT INTO `noti_administrador` (`id_notificacion`, `documento`, `mensaje`, `fe
 (196, '1487569254', 'NUEVO CASO: \"Solicitud dotación uniforme\" ID CASO: 128. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Juan Manuel Correal', '2026-04-04 20:49:06'),
 (197, '1487569254', 'NUEVO CASO: \"Derecho petición dotación\" ID CASO: 129. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Simon Gonzalez Pelaez', '2026-04-04 20:49:06'),
 (198, '1487569254', 'NUEVO CASO: \"Solicitud información incentivos\" ID CASO: 130. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(199, '1487569254', 'NUEVO CASO: \"Derecho petición incentivos\" ID CASO: 131. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06');
+(199, '1487569254', 'NUEVO CASO: \"Derecho petición incentivos\" ID CASO: 131. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
+(200, '1487569254', 'AVISO: El caso \"Programación de examen médico ocupacional\" CON LA ID: 53 cambió deL estado \"Atendido\" a \"No atendido\". Por su Comisionado Responsable: Zack Lopez', '2026-04-05 22:28:50'),
+(201, '1487569254', 'HAS INHABILITADO AL USUARIO \"Marleny Gaviria\" DEL SISTEMA el día: 2026-04-05, por el siguiente motivo: \"Por que si\". En caso de error, revierta de inmediato la acción. Tenga en cuenta que los casos \"Por Atender\" del usuario que ha deshabilitado se encontrarán en el estado \"Por Reasignar\", y para volver a asignar dichos casos a su Comisionado encargado deberá hacerlo manualmente uno por uno. Recuerde que desactivar un usuario es una acción riesgosa, y se aconseja realizarse únicamente en casos de absoluta necesidad. El sistema por sí solo, una vez se cumple con la vigencia, desactiva de forma automática a todos los usuarios caducados.', '2026-04-05 22:31:33'),
+(202, '1487569254', 'HAS HABILITADO AL USUARIO \"Marleny Gaviria\" el día: 2026-04-05, por el siguiente motivo: \"Prueba\". En caso de error revierta de inmediato la acción, y se aconseja realizar esta acción únicamente en casos de absoluta necesidad.', '2026-04-05 22:35:59'),
+(203, '1487569254', 'NUEVO CASO: \"Juanito le pego a una profesora\" ID CASO: 132. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Marleny Gaviria', '2026-04-05 23:19:01'),
+(205, '1487569254', 'HAS INHABILITADO AL USUARIO \"Marleny Gaviria\" DEL SISTEMA el día: 2026-04-05, por el siguiente motivo: \"Hola bb\". En caso de error, revierta de inmediato la acción. Tenga en cuenta que los casos \"Por Atender\" del usuario que ha deshabilitado se encontrarán en el estado \"Por Reasignar\", y para volver a asignar dichos casos a su Comisionado encargado deberá hacerlo manualmente uno por uno. Recuerde que desactivar un usuario es una acción riesgosa, y se aconseja realizarse únicamente en casos de absoluta necesidad. El sistema por sí solo, una vez se cumple con la vigencia, desactiva de forma automática a todos los usuarios caducados.', '2026-04-05 23:23:31'),
+(206, '1487569254', 'HAS HABILITADO AL USUARIO \"Marleny Gaviria\" el día: 2026-04-05, por el siguiente motivo: \"Prueba\". En caso de error revierta de inmediato la acción, y se aconseja realizar esta acción únicamente en casos de absoluta necesidad.', '2026-04-05 23:47:00'),
+(207, '1487569254', 'HAS INHABILITADO AL USUARIO \"Juan Manuel Correal\" DEL SISTEMA el día: 2026-04-05, por el siguiente motivo: \"Prueba\". En caso de error, revierta de inmediato la acción. Tenga en cuenta que los casos \"Por Atender\" del usuario que ha deshabilitado se encontrarán en el estado \"Por Reasignar\", y para volver a asignar dichos casos a su Comisionado encargado deberá hacerlo manualmente uno por uno. Recuerde que desactivar un usuario es una acción riesgosa, y se aconseja realizarse únicamente en casos de absoluta necesidad. El sistema por sí solo, una vez se cumple con la vigencia, desactiva de forma automática a todos los usuarios caducados.', '2026-04-05 23:47:47'),
+(208, '1487569254', 'NUEVO CASO: \"Reporte comisionado\" ID CASO: 135. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Zack Lopez', '2026-04-06 00:17:53');
 
 -- --------------------------------------------------------
 
@@ -1677,7 +1747,62 @@ INSERT INTO `noti_comisionado` (`id_notificacion`, `documento`, `mensaje`, `fech
 (168, '1456333298', 'NUEVO CASO: \"Solicitud dotación uniforme\" ID CASO: 128. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Juan Manuel Correal', '2026-04-04 20:49:06'),
 (169, '1020304050', 'NUEVO CASO: \"Derecho petición dotación\" ID CASO: 129. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Simon Gonzalez Pelaez', '2026-04-04 20:49:06'),
 (170, '1756664828', 'NUEVO CASO: \"Solicitud información incentivos\" ID CASO: 130. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Zack Lopez', '2026-04-04 20:49:06'),
-(171, '1656966633', 'NUEVO CASO: \"Derecho petición incentivos\" ID CASO: 131. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06');
+(171, '1656966633', 'NUEVO CASO: \"Derecho petición incentivos\" ID CASO: 131. \nSe ha registrado un nuevo caso de Derecho de Petición Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Marleny Gaviria', '2026-04-04 20:49:06'),
+(172, '1756664828', 'El caso \"Programación de examen médico ocupacional\" con el ID: 53 perteneciente al proceso \"SSEMI\", pasó del estado: \"Atendido\" al estado: \"No atendido\" por el usuario encargado Zack Lopez', '2026-04-05 22:28:50'),
+(173, '1656966633', 'HAS SIDO INHABILITADO DEL SISTEMA: Marleny Gaviria el día: 2026-04-05. Has sido INHABILITADO por el administrador encargado: Kory Carrerita, por el siguiente motivo: \"Por que si\". En caso de error comuníquese con el administrador encargado a través del siguiente correo: kory.carrera.dev@gmail.com.', '2026-04-05 22:31:33'),
+(174, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Solicitud evaluación riesgos\" con la id 71', '2026-04-05 22:33:45'),
+(175, '1656966633', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Marleny\", uno de tus casos con el nombre Solicitud evaluación riesgos y la id 71 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 22:33:45'),
+(176, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Solicitud evaluación riesgos\" con la id 71', '2026-04-05 22:34:52'),
+(177, '1656966633', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Marleny\", uno de tus casos con el nombre Solicitud evaluación riesgos y la id 71 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-05 22:34:52'),
+(178, '1656966633', 'HAS SIDO HABILITADO EN EL SISTEMA: Marleny Gaviria el día: 2026-04-05. Has sido HABILITADO por el administrador encargado: Kory Carrerita, por el siguiente motivo: \"Prueba\". Ahora tienes acceso nuevamente a las funciones de tu rol como comisionado, pero tus casos antiguos han sido asignados a otro comisionado, o en su defecto se encuentran en el estado \"Por Asignar\". En caso de error comuníquese con el administrador encargado a través del siguiente correo: kory.carrera.dev@gmail.com.', '2026-04-05 22:35:59'),
+(179, '1020304050', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Simon Gonzalez Pelaez\", se te ha asignado un caso con el nombre: \"Solicitud evaluación riesgos\" con la id 71', '2026-04-05 22:38:27'),
+(180, '1656966633', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Marleny\", uno de tus casos con el nombre Solicitud evaluación riesgos y la id 71 se le ha asignado al comisonado: \"Simon Gonzalez Pelaez', '2026-04-05 22:38:27'),
+(181, '1020304050', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Simon Gonzalez Pelaez\", se te ha asignado un caso con el nombre: \"Solicitud evaluación riesgos\" con la id 71', '2026-04-05 22:43:09'),
+(182, '1656966633', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Marleny\", uno de tus casos con el nombre Solicitud evaluación riesgos y la id 71 se le ha asignado al comisonado: \"Simon Gonzalez Pelaez', '2026-04-05 22:43:09'),
+(183, '1020304050', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Simon Gonzalez Pelaez\", se te ha asignado un caso con el nombre: \"Solicitud evaluación riesgos\" con la id 71', '2026-04-05 23:10:52'),
+(184, '1656966633', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Marleny\", uno de tus casos con el nombre Solicitud evaluación riesgos y la id 71 se le ha asignado al comisonado: \"Simon Gonzalez Pelaez', '2026-04-05 23:10:52'),
+(185, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Derecho petición sistema\" con la id 125', '2026-04-05 23:14:00'),
+(186, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Derecho petición sistema y la id 125 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-05 23:14:00'),
+(187, '1656966633', 'NUEVO CASO: \"Juanito le pego a una profesora\" ID CASO: 132. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional SSEMI asignado al comisionado Marleny Gaviria', '2026-04-05 23:19:01'),
+(188, '1656966633', 'NUEVO CASO: \"Se eyaculo en el salon\" ID CASO: 134. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Marleny Gaviria', '2026-04-05 23:20:42'),
+(189, '1656966633', 'HAS SIDO INHABILITADO DEL SISTEMA: Marleny Gaviria el día: 2026-04-05. Has sido INHABILITADO por el administrador encargado: Kory Carrerita, por el siguiente motivo: \"Hola bb\". En caso de error comuníquese con el administrador encargado a través del siguiente correo: kory.carrera.dev@gmail.com.', '2026-04-05 23:23:31'),
+(190, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Juanito le pego a una profesora\" con la id 132', '2026-04-05 23:24:39'),
+(191, '1656966633', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Marleny\", uno de tus casos con el nombre Juanito le pego a una profesora y la id 132 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-05 23:24:39'),
+(192, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Programación de examen médico ocupacional\" con la id 53', '2026-04-05 23:36:50'),
+(193, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Programación de examen médico ocupacional y la id 53 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-05 23:36:50'),
+(194, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Copia de resultados de examen médico ocupacional\" con la id 56', '2026-04-05 23:37:24'),
+(195, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Copia de resultados de examen médico ocupacional y la id 56 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:37:24'),
+(196, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Copia de resultados de examen médico ocupacional\" con la id 56', '2026-04-05 23:37:25'),
+(197, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Copia de resultados de examen médico ocupacional y la id 56 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:37:25'),
+(198, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Copia de resultados de examen médico ocupacional\" con la id 56', '2026-04-05 23:37:40'),
+(199, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Copia de resultados de examen médico ocupacional y la id 56 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:37:40'),
+(200, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Riesgo laboral no atendido oportunamente\" con la id 59', '2026-04-05 23:37:55'),
+(201, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Riesgo laboral no atendido oportunamente y la id 59 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:37:55'),
+(202, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Riesgo laboral no atendido oportunamente\" con la id 59', '2026-04-05 23:38:18'),
+(203, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Riesgo laboral no atendido oportunamente y la id 59 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:38:18'),
+(204, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Copia de resultados de examen médico ocupacional\" con la id 56', '2026-04-05 23:38:58'),
+(205, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Copia de resultados de examen médico ocupacional y la id 56 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:38:58'),
+(206, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Riesgo laboral no atendido oportunamente\" con la id 59', '2026-04-05 23:39:37'),
+(207, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Riesgo laboral no atendido oportunamente y la id 59 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:39:37'),
+(208, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Copia de resultados de examen médico ocupacional\" con la id 56', '2026-04-05 23:41:18'),
+(209, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Copia de resultados de examen médico ocupacional y la id 56 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:41:18'),
+(210, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Copia de resultados de examen médico ocupacional\" con la id 56', '2026-04-05 23:41:18'),
+(211, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Copia de resultados de examen médico ocupacional y la id 56 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:41:18'),
+(212, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Denuncia cableado expuesto\" con la id 61', '2026-04-05 23:44:12'),
+(213, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Denuncia cableado expuesto y la id 61 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:44:12'),
+(214, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Solicitud reposición botas\" con la id 91', '2026-04-05 23:44:57'),
+(215, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Solicitud reposición botas y la id 91 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:44:57'),
+(216, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Incidente leve laboratorio\" con la id 67', '2026-04-05 23:45:39'),
+(217, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Incidente leve laboratorio y la id 67 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:45:39'),
+(218, '1756664828', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Zack Lopez\", se te ha asignado un caso con el nombre: \"Incidente leve laboratorio\" con la id 67', '2026-04-05 23:45:40'),
+(219, '1756664828', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Zack\", uno de tus casos con el nombre Incidente leve laboratorio y la id 67 se le ha asignado al comisonado: \"Zack Lopez', '2026-04-05 23:45:40'),
+(220, '1456333298', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal\", se te ha asignado un caso con el nombre: \"Denuncia riesgo ergonómico\" con la id 70', '2026-04-05 23:46:16'),
+(221, '1020304050', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Simon\", uno de tus casos con el nombre Denuncia riesgo ergonómico y la id 70 se le ha asignado al comisonado: \"Juan Manuel Correal', '2026-04-05 23:46:16'),
+(222, '1656966633', 'HAS SIDO HABILITADO EN EL SISTEMA: Marleny Gaviria el día: 2026-04-05. Has sido HABILITADO por el administrador encargado: Kory Carrerita, por el siguiente motivo: \"Prueba\". Ahora tienes acceso nuevamente a las funciones de tu rol como comisionado, pero tus casos antiguos han sido asignados a otro comisionado, o en su defecto se encuentran en el estado \"Por Asignar\". En caso de error comuníquese con el administrador encargado a través del siguiente correo: kory.carrera.dev@gmail.com.', '2026-04-05 23:47:00'),
+(223, '1456333298', 'HAS SIDO INHABILITADO DEL SISTEMA: Juan Manuel Correal el día: 2026-04-05. Has sido INHABILITADO por el administrador encargado: Kory Carrerita, por el siguiente motivo: \"Prueba\". En caso de error comuníquese con el administrador encargado a través del siguiente correo: kory.carrera.dev@gmail.com.', '2026-04-05 23:47:47'),
+(224, '1656966633', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Marleny Gaviria\", se te ha asignado un caso con el nombre: \"Programación de examen médico ocupacional\" con la id 53', '2026-04-05 23:49:26'),
+(225, '1456333298', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Programación de examen médico ocupacional y la id 53 se le ha asignado al comisonado: \"Marleny Gaviria', '2026-04-05 23:49:26'),
+(226, '1756664828', 'NUEVO CASO: \"Reporte comisionado\" ID CASO: 135. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Bienestar Social asignado al comisionado Zack Lopez', '2026-04-06 00:17:53');
 
 -- --------------------------------------------------------
 
@@ -1746,7 +1871,30 @@ CREATE TABLE `seguimiento` (
 INSERT INTO `seguimiento` (`id_seguimiento`, `fecha_seguimiento`, `observacion`, `documento`, `id_caso`) VALUES
 (19, '2026-03-23 18:13:01', 'El caso aun sigue en proceso, se espera respuesta de las entidades encargadas', '1456333298', 58),
 (26, '2026-04-04 00:20:13', 'Prueba de reasignacion', '1487569254', 105),
-(27, '2026-04-04 00:23:09', 'Prueba 2, hubo un error', '1487569254', 105);
+(27, '2026-04-04 00:23:09', 'Prueba 2, hubo un error', '1487569254', 105),
+(28, '2026-04-05 22:33:45', 'Se desactivo el usuario anterior', '1487569254', 71),
+(29, '2026-04-05 22:34:52', 'Por que si', '1487569254', 71),
+(30, '2026-04-05 22:38:27', 'xd', '1487569254', 71),
+(31, '2026-04-05 22:43:09', 'Por que si', '1487569254', 71),
+(32, '2026-04-05 23:10:52', '71', '1487569254', 71),
+(33, '2026-04-05 23:14:00', 'OTRO INTENTO', '1487569254', 125),
+(34, '2026-04-05 23:24:39', 'Caso sin usuario asignado', '1487569254', 132),
+(35, '2026-04-05 23:36:50', 'hola', '1487569254', 53),
+(36, '2026-04-05 23:37:24', 'Usuario con muchos casos', '1487569254', 56),
+(37, '2026-04-05 23:37:25', 'Usuario con muchos casos', '1487569254', 56),
+(38, '2026-04-05 23:37:40', 'Usuario con muchos casos', '1487569254', 56),
+(39, '2026-04-05 23:37:55', 'Usuario con muchos casos', '1487569254', 59),
+(40, '2026-04-05 23:38:18', 'Usuario con muchos casos', '1487569254', 59),
+(41, '2026-04-05 23:38:58', 'Usuario con muchos casos', '1487569254', 56),
+(42, '2026-04-05 23:39:37', 'Usuario con muchos casos', '1487569254', 59),
+(43, '2026-04-05 23:41:18', 'Usuario con muchos casos', '1487569254', 56),
+(44, '2026-04-05 23:41:18', 'Usuario con muchos casos', '1487569254', 56),
+(45, '2026-04-05 23:44:12', 'Usuario con muchos casos', '1487569254', 61),
+(46, '2026-04-05 23:44:57', 'Usuario con muchos casos', '1487569254', 91),
+(47, '2026-04-05 23:45:39', 'Usuario con muchos casos', '1487569254', 67),
+(48, '2026-04-05 23:45:40', 'Usuario con muchos casos', '1487569254', 67),
+(49, '2026-04-05 23:46:16', 'Usuario con muchos casos', '1487569254', 70),
+(50, '2026-04-05 23:49:26', 'Sin casos por atender', '1487569254', 53);
 
 --
 -- Disparadores `seguimiento`
@@ -1825,10 +1973,10 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `fecha_caducidad`, `vigencia_usuario`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
 ('1020304050', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', '', 2, '$2y$10$/adpXMz4t00apED8Njy3j.2u8oRPBehzxuXwppb8MMW7wKdAMBTDm', '2026-02-12 14:18:58', '2028-02-12 14:18:58', '2026-2028', '2026-04-04 21:00:49', 1, 0, NULL),
-('1456333298', 'Juan Manuel', 'Correal', 'juangalvis.developer@gmail.com', '', 2, '$2y$10$D9v783uPM.afAM21MN7D8.KbSDy9uLEQryCieSOkleXydooL18oAS', '2026-02-12 14:22:31', '2028-02-12 14:22:31', '2026-2028', '2026-04-04 20:44:02', 1, 0, NULL),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$Jv38fJwprb95GT4MUs8n1elsr42/1fWNevWmOlYixG.NgZdhbF9US', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-05 18:17:23', 1, 0, '7be3757a753976a4ca6e'),
-('1656966633', 'Marleny', 'Gaviria', 'gaviriamarleny@gmail.com', NULL, 2, '$2y$10$Yszox29CROyfqKeSUdHYYuoYGJahybUK6MEOe0nRiVFjkmkQNGf2G', '2026-02-12 14:28:54', '2028-02-12 14:28:54', '2026-2028', '2026-04-04 20:51:34', 1, 0, NULL),
-('1756664828', 'Zack', 'Lopez', 'isaaccarvajal1356@gmail.com', '3001234567', 2, '$2y$10$W/vgvd7nQdS3CScecEZy2OY9VokePpeSRmUitXPY24KRs3.yg3fRW', '2026-02-12 14:20:29', '2028-02-12 14:20:29', '2026-2028', '2026-04-04 21:09:18', 1, 1, '1fc92e49b1c758f80f27');
+('1456333298', 'Juan Manuel', 'Correal', 'juangalvis.developer@gmail.com', '', 2, '$2y$10$D9v783uPM.afAM21MN7D8.KbSDy9uLEQryCieSOkleXydooL18oAS', '2026-02-12 14:22:31', '2028-02-12 14:22:31', '2026-2028', '2026-04-04 20:44:02', 0, 0, NULL),
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$Jv38fJwprb95GT4MUs8n1elsr42/1fWNevWmOlYixG.NgZdhbF9US', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-06 00:11:43', 1, 0, '7be3757a753976a4ca6e'),
+('1656966633', 'Marleny', 'Gaviria', 'koritocarrera@gmail.com', '', 2, '$2y$10$D5GVEeDtEo.Obd0zjk.IxO0M2WZ5iTz1t.B9TGWYgdlJ3mahQT4/u', '2026-02-12 14:28:54', '2028-02-12 14:28:54', '2026-2028', '2026-04-05 23:18:03', 1, 0, NULL),
+('1756664828', 'Zack', 'Lopez', 'isaaccarvajal1356@gmail.com', '3001234567', 2, '$2y$10$w4lPg411h/NW/uu2KYJFtec20RxgOG1eX28ReWtrhyjWQtzh.bruW', '2026-02-12 14:20:29', '2028-02-12 14:20:29', '2026-2028', '2026-04-06 00:14:13', 1, 1, '4f629435a7217caa25cc');
 
 --
 -- Disparadores `usuario`
@@ -1980,13 +2128,13 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `archivo`
 --
 ALTER TABLE `archivo`
-  MODIFY `id_archivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=2;
+  MODIFY `id_archivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
-  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=132;
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=136;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`
@@ -2010,19 +2158,19 @@ ALTER TABLE `informe`
 -- AUTO_INCREMENT de la tabla `monitoreo`
 --
 ALTER TABLE `monitoreo`
-  MODIFY `id_monitoreo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria para reconocimiento y relacion', AUTO_INCREMENT=20;
+  MODIFY `id_monitoreo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Llave primaria para reconocimiento y relacion', AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_administrador`
 --
 ALTER TABLE `noti_administrador`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=209;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_comisionado`
 --
 ALTER TABLE `noti_comisionado`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=172;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=227;
 
 --
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
@@ -2040,7 +2188,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `seguimiento`
 --
 ALTER TABLE `seguimiento`
-  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=28;
+  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_caso`
@@ -2052,7 +2200,7 @@ ALTER TABLE `tipo_caso`
 -- AUTO_INCREMENT de la tabla `token_usuario`
 --
 ALTER TABLE `token_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Restricciones para tablas volcadas
