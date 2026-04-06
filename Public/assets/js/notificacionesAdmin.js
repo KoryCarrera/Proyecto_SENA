@@ -182,7 +182,7 @@ async function cargarNotificaciones(url) {
   }
 }
 
-// ─── Paginación visual personalizada ─────────────────────────────────────────
+// Paginación visual personalizada 
 const actualizarPaginacionVisual = (table) => {
   if (!table) return;
 
