@@ -161,13 +161,13 @@ Una vez levantados los contenedores:
 #### Administrador
 ```
 Documento: 1487569254
-Contraseña: 123456
+Contraseña: korycarrera18
 ```
 
 #### Comisionado
 ```
-Documento: 1456333298
-Contraseña: galvis123
+Documento: 1013341532
+Contraseña: 363eee9200
 ```
 
 ### Flujo de Uso
