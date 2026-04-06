@@ -421,7 +421,6 @@ const reasignarCaso = async (idCaso) => {
     type: 'POST',
     dataType: 'json',
 
-
     success: function (response) {
       cerrarModal();
       cargarCasos();
@@ -440,7 +439,7 @@ const reasignarCaso = async (idCaso) => {
 
       Swal.fire({
         icon: 'success',
-        title: 'Usuario reactivado con exito',
+        title: 'Caso reasignado con exito',
         theme: 'dark',
         showConfirmButton: false,
         timer: 1000,
