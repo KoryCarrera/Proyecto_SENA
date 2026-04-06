@@ -9,7 +9,8 @@ const peticion = document.getElementById('peticion');
 const tutelas = document.getElementById('tutela');
 const atendidos = document.getElementById('atendido');
 const porAtender = document.getElementById('porAtender');
-const noAtendidos = document.getElementById('noAtendidos')
+const noAtendidos = document.getElementById('noAtendidos');
+const porAsignar = document.getElementById('porAsignar');
 
 //asignamos a cargando mientras llega el ajax
 total.textContent = `Cargando...`;
@@ -19,6 +20,7 @@ peticion.textContent = `Cargando...`;
 tutelas.textContent = `Cargando...`;
 atendidos.textContent = `Cargando...`;
 porAtender.textContent = `Cargando...`;
+porAsignar.textContent = `Cargando...`;
 
 //Agregamos el evento para que cuando cargue todo el dom ejecutar la funcion anonima
 document.addEventListener('DOMContentLoaded', function () {
@@ -52,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 atendidos.textContent = `0`;
                 porAtender.textContent = `0`;
                 noAtendidos.textContent = `0`;
+                porAsignar.textContent = `0`;
                 return;
             };
 
@@ -77,6 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
             atendidos.textContent = `${respuesta.atendidos}`;
             porAtender.textContent = `${respuesta.porAtender}`;
             noAtendidos.textContent = `${respuesta.noAtendidos}`;
+            porAsignar.textContent = `${respuesta.porAsignar}`
 
 
         },
@@ -102,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
             atendidos.textContent = `¡Error!`;
             porAtender.textContent = `¡Error!`;
             noAtendidos.textContent = `¡Error!`;
+            porAsignar.textContent = `¡Error!`;
             return;
         }
     });
