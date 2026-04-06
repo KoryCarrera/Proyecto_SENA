@@ -274,10 +274,8 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- script de logout(script propio) -->
   <script src="/assets/js/logout.js"></script>
-  <!-- script de registrarProceso(script propio) -->
-  <script src="/assets/js/registrarProceso.js"></script>
   <!-- script de procesos-modal(script propio) -->
-  <script src="/assets/js/procesos-modal.js"></script>
+  <script src="/assets/js/procesos-modal.js"></script> 
   <!-- script de inactividad(script propio) -->
   <script src="/assets/js/inactividad.js"></script>
 

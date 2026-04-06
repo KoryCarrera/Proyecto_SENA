@@ -199,7 +199,7 @@ class CasosModel extends baseHelper
                 throw new Exception('No se pudo crear el nuevo proceso');
             }
 
-            return ['success' => true, 'data' => $$nuevoProceso];
+            return ['success' => true, 'data' => $nuevoProceso];
         } catch (Exception $e) {
             error_log('Ha occurrido un error al registrar el proceso: ' . $e->getMessage());
             throw new Exception($e->getMessage());
