@@ -511,6 +511,23 @@ const actualizarPaginacionVisualComi = (table) => {
 
 // Eventos para cerrar el modal
 document.addEventListener('DOMContentLoaded', () => {
+    // Configuración de listeners únicos para modales (Evita fugas de eventos)
+    const modalArchivos = document.getElementById('modalArchivos');
+    if (modalArchivos) {
+        modalArchivos.addEventListener('click', (e) => {
+            if (e.target === modalArchivos) cerrarModalArchivos();
+        });
+    }
+
+    const modalLightbox = document.getElementById('modalLightbox');
+    if (modalLightbox) {
+        modalLightbox.addEventListener('click', (e) => {
+            if (e.target === modalLightbox || e.target.classList.contains('flex-col')) {
+                cerrarLightbox();
+            }
+        });
+    }
+
     const modal = document.getElementById('modalCaso');
     const btnGuardarCambios = document.getElementById('guardarCambios');
     const btnCerrar = document.getElementById('cerrar-modal');
@@ -612,7 +629,6 @@ if (typeof pdfjsLib !== 'undefined') {
 }
 
 window.abrirModalArchivos = async (idCaso) => {
-    console.log('ABRIR_MODAL_ARCHIVOS: ID Caso:', idCaso);
     const modalArchivos = document.getElementById('modalArchivos');
     const galeria = document.getElementById('galeriaArchivos');
 
@@ -651,7 +667,6 @@ window.abrirModalArchivos = async (idCaso) => {
             `;
         }
     } catch (error) {
-        console.error('Error:', error);
         galeria.innerHTML = `<div class="col-span-full alert alert-danger">Error de conexión con el servidor</div>`;
     }
 };
@@ -779,33 +794,58 @@ async function generarPreviewRemoto(url, archivo, containerId) {
     }
 }
 
-window.abrirLightbox = (url, nombre) => {
+window.abrirLightbox = async (url, nombre) => {
     const lightbox = document.getElementById('modalLightbox');
     const contenido = document.getElementById('contenidoLightbox');
     const footer = document.getElementById('footerLightbox');
 
     if (!lightbox || !contenido || !footer) return;
 
+    contenido.innerHTML = '<div class="spinner-border text-white"></div>';
+    footer.textContent = nombre;
     lightbox.style.display = 'flex';
     document.body.style.overflow = 'hidden';
-    footer.innerText = nombre;
 
-    if (url.toLowerCase().includes('.pdf')) {
-        contenido.innerHTML = `<iframe src="${url}" class="w-[90vw] h-[82vh] border-none rounded-xl bg-white shadow-2xl"></iframe>`;
-    } else {
-        contenido.innerHTML = `<img src="${url}" class="max-w-[95vw] max-h-[82vh] object-contain rounded-xl shadow-2xl border border-white/5">`;
+    const extension = nombre.split('.').pop().toLowerCase();
+
+    try {
+        if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(extension)) {
+            contenido.innerHTML = `<img src="${url}" class="max-w-full max-h-[80vh] object-contain shadow-2xl animate-fade-in" alt="${nombre}">`;
+        } 
+        else if (extension === 'pdf') {
+            contenido.innerHTML = `<iframe src="${url}" class="w-full h-[80vh] rounded-xl border-0" title="${nombre}"></iframe>`;
+        }
+        else {
+            contenido.innerHTML = `
+                <div class="text-center p-12 bg-slate-800/50 rounded-3xl border border-slate-700 backdrop-blur-xl">
+                    <i class="bi bi-file-earmark-arrow-down text-7xl text-indigo-400 mb-6 block"></i>
+                    <p class="text-white text-xl mb-6">Vista previa no disponible para este formato</p>
+                    <a href="${url}" download="${nombre}" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition-all font-bold uppercase tracking-tight">
+                        <i class="bi bi-download"></i> Descargar Archivo
+                    </a>
+                </div>
+            `;
+        }
+    } catch (e) {
+        contenido.innerHTML = `<div class="alert alert-danger">No se pudo cargar la vista previa</div>`;
     }
-};
+}
 
 window.cerrarLightbox = () => {
     const lightbox = document.getElementById('modalLightbox');
+    const contenido = document.getElementById('contenidoLightbox');
+    const footer = document.getElementById('footerLightbox');
     if (lightbox) lightbox.style.display = 'none';
+    if (contenido) contenido.innerHTML = '';
+    if (footer) footer.textContent = '';
     document.body.style.overflow = 'auto';
 };
 
 window.cerrarModalArchivos = () => {
     const modal = document.getElementById('modalArchivos');
+    const galeria = document.getElementById('galeriaArchivos');
     if (modal) modal.style.display = 'none';
+    if (galeria) galeria.innerHTML = '';
     document.body.style.overflow = 'auto';
 };
 
