@@ -664,3 +664,69 @@ function correoCambioEstado($emailDestino, $nombreUsuario, $estado, $motivo, $no
 
     return $correoEnviado;
 }
+
+/**
+ * Notifica la reasignación de un caso a ambos comisionados implicados
+ */
+/**
+ * Envía notificaciones personalizadas de reasignación
+ */
+function correoReasignacionCaso($emailRemitente, $emailDestinatario, $nombreRemitente, $nombreDestinatario, $idCaso, $motivo, $nombreApp = "Sistema de Gestión SENA")
+{
+    $asunto = "Movimiento en Caso PQRSD #" . $idCaso;
+
+    // --- PLANTILLA 1: PARA EL QUE ENTREGA EL CASO (Remitente) ---
+    $htmlRemitente = "
+    <html>
+    <body style='font-family: Arial, sans-serif; color: #333;'>
+        <div style='max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;'>
+            <div style='background-color: #39a900; color: white; padding: 20px; text-align: center;'>
+                <h2>Caso Reasignado</h2>
+            </div>
+            <div style='padding: 20px;'>
+                <p>Hola <strong>{$nombreRemitente}</strong>,</p>
+                <p>Te informamos que el caso <strong>#{$idCaso}</strong> que tenías asignado ha sido reasignado exitosamente a <strong>{$nombreDestinatario}</strong>.</p>
+                <p>Ya no eres el responsable de este caso en el sistema.</p>
+                <div style='background-color: #f9f9f9; padding: 15px; border-left: 4px solid #39a900;'>
+                    <strong>Motivo registrado:</strong><br/>
+                    <em>" . htmlspecialchars($motivo) . "</em>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>";
+
+    // --- PLANTILLA 2: PARA EL QUE RECIBE EL CASO (Destinatario) ---
+    $htmlDestinatario = "
+    <html>
+    <body style='font-family: Arial, sans-serif; color: #333;'>
+        <div style='max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;'>
+            <div style='background-color: #00324d; color: white; padding: 20px; text-align: center;'>
+                <h2>Nuevo Caso Asignado</h2>
+            </div>
+            <div style='padding: 20px;'>
+                <p>Hola <strong>{$nombreDestinatario}</strong>,</p>
+                <p>Se te ha asignado un nuevo caso: <strong>#{$idCaso}</strong>.</p>
+                <p>Este caso fue transferido por <strong>{$nombreRemitente}</strong> y requiere tu atención inmediata.</p>
+                <div style='background-color: #f9f9f9; padding: 15px; border-left: 4px solid #00324d;'>
+                    <strong>Observaciones del traslado:</strong><br/>
+                    <em>" . htmlspecialchars($motivo) . "</em>
+                </div>
+                <p style='text-align: center; margin-top: 20px;'>
+                    <a href='http://localhost:8000/casos' style='background-color: #39a900; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Ver Caso en el Sistema</a>
+                </p>
+            </div>
+        </div>
+    </body>
+    </html>";
+
+    // Enviamos a la persona que entrega
+    $dest1 = [['emailUser' => $emailRemitente, 'userName' => $nombreRemitente]];
+    $envio1 = enviarCorreo($asunto, $htmlRemitente, "Caso reasignado", $dest1);
+
+    // Enviamos a la persona que recibe
+    $dest2 = [['emailUser' => $emailDestinatario, 'userName' => $nombreDestinatario]];
+    $envio2 = enviarCorreo($asunto, $htmlDestinatario, "Nuevo caso asignado", $dest2);
+
+    return ($envio1 && $envio2);
+}
