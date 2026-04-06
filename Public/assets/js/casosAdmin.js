@@ -269,6 +269,10 @@ const supervisarCaso = async (idCaso) => {
         </div>
     `;
 
+  //agregamos boton cerrar
+  document.getElementById("modalFooter").innerHTML = `    <button type="button"
+      class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm font-medium"
+      data-bs-dismiss="modal">Cerrar</button>`
   modal.show(); //Renderizamos
 
   try {
@@ -319,17 +323,17 @@ const cerrarModal = () => {
 const modalReasignar = async (idCaso) => {
 
   //Capturamos el modal, reutilizando el modal de supervisar caso
-  const modalElement = document.getElementById('modalCaso');
+  const modalElement = document.getElementById('modalReasignar');
   //capturamos partes del modal
-  const modalBody = document.getElementById("modalCasoBody");
-  const modalTitle = document.getElementById("modalCasoLabel");
-  const modalFooter = document.getElementById("modalFooter");
+  const modalBody = document.getElementById("modalReasignarBody");
+  const modalTitle = document.getElementById("modalReasignarLabel");
+  const modalFooter = document.getElementById("modalReasignarFooter");
 
   //Inicializamos la clase de bootstrap para el modal
   const modal = new bootstrap.Modal(modalElement);
 
   //Mostramos el cargando
-  document.getElementById("modalCasoBody").innerHTML = `
+  modalBody.innerHTML = `
         <div class="text-center py-5">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Cargando...</span>
@@ -342,9 +346,6 @@ const modalReasignar = async (idCaso) => {
 
   //Insertamos el texto del titulo
   modalTitle.innerText = `Reasignar caso #${idCaso} (Operación sensible)`
-
-  //Recorreremos los usuarios 
-  let optionsComi = '';
 
   modalFooter.innerHTML = `
     <button type="button"
