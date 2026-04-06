@@ -44,10 +44,14 @@ try {
     $resultado = $model->configuracionPerfilUsuario($documento, $confirmar_contraseña, $nombre, $apellido, $email, $numero, $contraseña);
 
     // Actualizar sesión para reflejar cambios 
-    if (!empty($_POST['nombre'])) $_SESSION['user']['nombre'] = $_POST['nombre'];
-    if (!empty($_POST['apellido'])) $_SESSION['user']['apellido'] = $_POST['apellido'];
-    if (!empty($_POST['email'])) $_SESSION['user']['email'] = $_POST['email'];
-
+    if ($nombre && $apellido){
+        $user = $nombre . ' ' . $apellido;
+        $_SESSION['user']['username'] = $user;
+    } 
+    if ($email){
+        $_SESSION['user']['email'] = $email;
+    } 
+    
     //se envia un mensaje de exito por medio de un json
 
     echo json_encode([
