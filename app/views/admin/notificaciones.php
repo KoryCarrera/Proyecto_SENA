@@ -149,6 +149,31 @@
         </div>
       </header>
 
+      <!-- Barra de filtros -->
+      <div class="px-6 py-4 glass-nav z-30 flex flex-col md:flex-row gap-4 items-center justify-between border-b border-white/5">
+        <div class="flex items-center gap-2 w-full md:w-auto">
+          <div class="relative flex items-center">
+            <label class="text-slate-400 text-xs uppercase font-bold mr-2">Ver:</label>
+            <select id="filtroCantidadAdmin"
+              class="bg-slate-800/50 border border-slate-700 text-slate-200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 outline-none cursor-pointer hover:bg-slate-700/50 transition-colors">
+              <option value="5">5 registros</option>
+              <option value="10" selected>10 registros</option>
+              <option value="25">25 registros</option>
+              <option value="50">50 registros</option>
+            </select>
+          </div>
+        </div>
+
+        <form class="flex gap-2 w-full md:w-auto" onsubmit="return false;">
+          <div class="relative w-full md:w-64">
+            <input
+              class="glass-search w-full px-4 py-2 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all text-white"
+              type="search" id="buscarAdmin" placeholder="Buscar notificaciones..." aria-label="Search">
+            <i class="bi bi-search absolute right-3 top-2.5 text-slate-400"></i>
+          </div>
+        </form>
+      </div>
+
       <!-- Contenido principal (main) -->
       <main class="flex-1 overflow-y-auto p-6 md:p-8 animate-fade-in-up">
 
@@ -165,6 +190,40 @@
             </tbody>
           </table>
         </div>
+
+        <!-- Paginación externa — JS la controla dinámicamente -->
+        <div id="paginacionNotis" class="flex justify-center mt-8">
+            <nav class="flex items-center gap-x-1" aria-label="Pagination">
+
+              <!-- Botón Anterior -->
+              <button type="button" id="btnPaginaAnteriorNotis"
+                class="py-2 px-3 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                aria-label="Previous" disabled>
+                <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+                <span>Anterior</span>
+              </button>
+
+              <!-- Números de página — generados por JS -->
+              <div id="pagBotonesNotis" class="flex items-center gap-x-1"></div>
+
+              <!-- Botón Siguiente -->
+              <button type="button" id="btnPaginaSiguienteNotis"
+                class="py-2 px-3 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                aria-label="Next" disabled>
+                <span>Siguiente</span>
+                <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </button>
+
+            </nav>
+          </div>
 
       </main>
     </div>

@@ -113,22 +113,25 @@
                                     <!-- Reemplaza el src con la ruta de tu imagen y quita la clase 'hidden' -->
                                     <img src="/assets/img/carrusel-1.png" alt="Imagen 1"
                                         class="w-full h-full object-cover z-10 relative">
+                                        
 
                                 </div>
                                 <!-- Item 2 -->
                                 <div
                                     class="snap-center shrink-0 w-[calc(100%-1rem)] aspect-video bg-slate-800/50 rounded-xl flex items-center justify-center border border-white/10 overflow-hidden relative backdrop-blur-sm shadow-xl">
                                     <!-- Reemplaza el src con la ruta de tu imagen y quita la clase 'hidden' -->
-                                    <img src="/assets/img/carrucel-2.png" alt="Imagen 2"
+                                    <img src="#" alt=""
                                         class="w-full h-full object-cover  z-10 relative">
+                                        <span class="text-white justify-center items-center absolute font-bold text-2xl">Proximamente...</span>
 
                                 </div>
                                 <!-- Item 3 -->
                                 <div
                                     class="snap-center shrink-0 w-[calc(100%-1rem)] aspect-video bg-slate-800/50 rounded-xl flex items-center justify-center border border-white/10 overflow-hidden relative backdrop-blur-sm shadow-xl">
                                     <!-- Reemplaza el src con la ruta de tu imagen y quita la clase 'hidden' -->
-                                    <img src="/assets/img/carrucel-3.png" alt="Imagen 3"
+                                    <img src="#" alt=""
                                         class="w-full h-full object-cover  z-10 relative">
+                                        <span class="text-white justify-center items-center absolute font-bold text-2xl">Proximamente...</span>
 
                                 </div>
                             </div>

@@ -138,33 +138,27 @@
       </header>
 
       <!-- barra de filtros -->
-      <div class="glass-nav px-6 py-3 flex items-center justify-between border-b border-white/5 z-10">
-        <div class="flex items-center gap-4">
-          <div class="dropdown">
-
-            <!--aqui hay un boton para filtrar los casos -->
-            <button class="btn-filter dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-funnel-fill me-1"></i> Filtrar
-            </button>
-
-            <!-- menu para filtrar los casos -->
-            <ul class="dropdown-menu glass-dropdown">
-              <li><a class="dropdown-item" href="#">Nombre Del Caso</a></li>
-              <li><a class="dropdown-item" href="#">Fecha de registro</a></li>
-              <li><a class="dropdown-item" href="#">Tipo de Caso</a></li>
-              <li><a class="dropdown-item" href="#">Fecha de respuesta</a></li>
-              <li><a class="dropdown-item" href="#">Estado</a></li>
-              <li><a class="dropdown-item" href="#">Proceso</a></li>
-              <li><a class="dropdown-item" href="#">Comisionado Encargado</a></li>
-            </ul>
+      <div class="px-6 py-4 glass-nav z-30 flex flex-col md:flex-row gap-4 items-center justify-between border-b border-white/5">
+        <div class="flex items-center gap-2 w-full md:w-auto">
+          <div class="relative flex items-center">
+            <label class="text-slate-400 text-xs uppercase font-bold mr-2">Ver:</label>
+            <select id="filtroCantidadComi"
+              class="bg-slate-800/50 border border-slate-700 text-slate-200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 outline-none cursor-pointer hover:bg-slate-700/50 transition-colors">
+              <option value="5">5 registros</option>
+              <option value="10" selected>10 registros</option>
+              <option value="25">25 registros</option>
+              <option value="50">50 registros</option>
+            </select>
           </div>
         </div>
 
-        <!--aqui hay un boton para buscar los casos -->
-        <form class="d-flex" role="search">
-          <input class="glass-input form-control me-2 text-white" type="search" placeholder="Palabras Claves"
-            aria-label="Search">
-          <button class="btn-search" type="submit">Buscar</button>
+        <form class="flex gap-2 w-full md:w-auto" onsubmit="return false;">
+          <div class="relative w-full md:w-64">
+            <input
+              class="glass-search w-full px-4 py-2 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all text-white"
+              type="search" id="buscarComi" placeholder="Buscar notificaciones..." aria-label="Search">
+            <i class="bi bi-search absolute right-3 top-2.5 text-slate-400"></i>
+          </div>
         </form>
       </div>
 
@@ -181,16 +175,50 @@
                 </tr>
               </thead>
               <tbody>
-              <!--Relleno dinamico con JS-->
+                <!--Relleno dinamico con JS-->
               </tbody>
             </table>
+          </div>
+
+          <!-- Paginación externa — JS la controla dinámicamente -->
+          <div id="paginacionNotisComi" class="flex justify-center mt-8">
+            <nav class="flex items-center gap-x-1" aria-label="Pagination">
+
+              <!-- Botón Anterior -->
+              <button type="button" id="btnPaginaAnteriorNotisComi"
+                class="py-2 px-3 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                aria-label="Previous" disabled>
+                <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+                <span>Anterior</span>
+              </button>
+
+              <!-- Números de página — generados por JS -->
+              <div id="pagBotonesNotisComi" class="flex items-center gap-x-1"></div>
+
+              <!-- Botón Siguiente -->
+              <button type="button" id="btnPaginaSiguienteNotisComi"
+                class="py-2 px-3 inline-flex justify-center items-center gap-x-1.5 text-sm rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                aria-label="Next" disabled>
+                <span>Siguiente</span>
+                <svg class="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </button>
+
+            </nav>
           </div>
 
         </div>
       </main>
     </div>
   </div>
-<!-- se incluyen los archivos de javascript -->
+  <!-- se incluyen los archivos de javascript -->
   <!-- script que enlaza a datatables -->
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
