@@ -587,7 +587,7 @@ function correoRecuperacionPassword($emailDestino, $nombreUsuario, $linkRecupera
 
 function correoCambioEstado($emailDestino, $nombreUsuario, $estado, $motivo, $nombreApp = "Sistema de Gestion SENA")
 {
-    $asunto = "Actualización en el estado de tu cuenta";
+    $asunto = "Actualizacion en el estado de tu cuenta";
     
     // Formateamos el estado y asignamos un color dependiendo de si es activo o inactivo
     $estadoTexto = ($estado == 1 || strtolower($estado) == 'activo') ? 'Activada' : 'Inactivada / Suspendida';

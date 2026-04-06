@@ -1,74 +1,81 @@
 <?php
-// Definimos el tipo de archivo que llegará y enviará
 header('Content-Type: application/json');
 
 session_start();
 
-// Inclusión de dependencias
 require_once __DIR__ . "/../config/conexion.php";
 require_once __DIR__ . "/../models/baseHelper.php";
 require_once __DIR__ . "/../models/usuariosModel.php";
 require_once __DIR__ . "/../utils/utilsEmail.php";
 
-// Validamos protocolo http
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-    echo json_encode([
-        'status' => 'error',
-        'mensaje' => 'Método no permitido'
-    ]);
+    echo json_encode(['status' => 'error', 'mensaje' => 'Método no permitido']);
     exit;
 }
 
-// Se capturan los datos de la sesión de forma segura
+// Datos de quien realiza la acción (Sesión - El Admin)
 $documentoSession = $_SESSION['user']['documento'] ?? null;
-$emailDestino = $_SESSION['user']['email'] ?? null;   
-$nombreUsuario = $_SESSION['user']['nombre'] ?? 'Usuario'; 
 
-// Se capturan los datos del POST
+// Datos del POST (El usuario al que se le cambia el estado)
 $documento = $_POST['documento'] ?? null;
 $estado = $_POST['estado'] ?? null;
 $motivo = $_POST['motivo'] ?? null;
 
-// Se valida que los datos no sean nulos (usamos isset para el estado por si envían 0)
-// Añadimos la validación del correo para asegurarnos de que la sesión lo tenga
-if (!$documento || !isset($estado) || !$motivo || !$emailDestino) {
+if (!$documento || !isset($estado) || !$motivo) {
     echo json_encode([
-        'status' => 'error',
-        'mensaje' => 'Valores vacíos, incompletos o sesión inválida'
+        'status' => 'error', 
+        'mensaje' => 'Valores vacíos o incompletos'
     ]);
     exit;
 }
 
-// Usamos try catch para manejar posibles errores
 try {
     $model = new UsuariosModdel($pdo);
 
-    //  Se cambia el estado del usuario en la base de datos
+    // 1. Preparamos el parámetro para buscar al usuario afectado
+    $parametroBusqueda = [
+        ['value' => $documento, 'type' => PDO::PARAM_STR]
+    ];
+
+    // 2. Buscamos los datos usando tu SP "traer_usuario"
+    // Pasamos el nombre del SP y el array de parámetros
+    $usuarioAfectado = $model->consultSimpleWithParams('sp_traer_usuario(?)', $parametroBusqueda);
+
+    if (!$usuarioAfectado) {
+        echo json_encode([
+            'status' => 'error',
+            'mensaje' => 'No se encontró el usuario para notificar'
+        ]);
+        exit;
+    }
+
+    // Extraemos email y nombre de lo que devolvió tu SP
+    $emailDestino = $usuarioAfectado['email'];
+    $nombreCompleto = $usuarioAfectado['nombre'] . ' ' . ($usuarioAfectado['apellido'] ?? '');
+
+    // 3. Ejecutamos el cambio de estado en la base de datos
     $model->cambiarEstadoUsuario($documento, $estado, $documentoSession, $motivo);
 
-    //  Se envía la notificación por correo usando los datos de la sesión
-    $correoEnviado = correoCambioEstado($emailDestino, $nombreUsuario, $estado, $motivo);
+    // 4. Enviamos el correo al usuario (usando los datos frescos de la BD)
+    $correoEnviado = correoCambioEstado($emailDestino, $nombreCompleto, $estado, $motivo);
 
-    //  Respuesta final unificada al frontend
     if ($correoEnviado) {
         echo json_encode([
             'status' => 'ok',
-            'mensaje' => 'Estado actualizado y correo de notificación enviado con éxito'
+            'mensaje' => 'Estado actualizado y notificación enviada con éxito'
         ]);
     } else {
         echo json_encode([
             'status' => 'warning',
-            'mensaje' => 'Estado actualizado, pero hubo un problema al enviar el correo'
+            'mensaje' => 'Estado actualizado, pero hubo un error al enviar el correo'
         ]);
     }
 
-// Manejo de errores
 } catch (Exception $e) {
-    error_log('Ha ocurrido un error a la hora de cambiar estado usuario: ' . $e->getMessage());
-
+    error_log('Error en cambio de estado: ' . $e->getMessage());
     echo json_encode([
         'status' => 'error',
-        'mensaje' => 'Ocurrió un error interno en el servidor.'
+        'mensaje' => 'Error interno: ' . $e->getMessage()
     ]);
     exit;
 }
