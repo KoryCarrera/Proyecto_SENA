@@ -99,7 +99,13 @@ class CasosModel extends baseHelper {
                 [ 'value' => $findCase['documento'], 'type' => PDO::PARAM_STR ],
             ];
 
-            parent::insertOrUpdateData('sp_reasignar_caso(?, ?, ?, ?, ?)', $reasignarCaso);
+            $reasignar = parent::insertOrUpdateData('sp_reasignar_caso(?, ?, ?, ?, ?)', $reasignarCaso);
+
+            if($reasignar || count($reasignar) > 0){
+                throw new Exception('Exito al hacer la reasignación');
+            } else {
+                throw new Exception('No se pudo hacer la reasignación');
+            }
 
             return true;
         } catch(Exception $e) {
