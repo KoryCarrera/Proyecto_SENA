@@ -96,8 +96,8 @@ try {
 } catch (Exception $e) { //Capturamos errores sql
     error_log("Error en dashboardAdminSemana.php: " . $e->getMessage());
     echo json_encode([
-        'status' => 'error',
-        'mensaje' => 'Error del servidor: ' . $e->getMessage()
+        'status' => 'ok',
+        'mensaje' => 'No hay datos para mostrar'
     ]);
 }
 exit; //finalizamos el script

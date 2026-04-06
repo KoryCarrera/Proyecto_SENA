@@ -94,8 +94,8 @@ try {
 } catch (Exception $e) {
     error_log("Error en dashboardComiSemana.php: " . $e->getMessage());
     echo json_encode([
-        'status' => 'error',
-        'mensaje' => 'Error del servidor: ' . $e->getMessage()
+        'status' => 'ok',
+        'mensaje' => 'No hay datos para mostrar'
     ]); 
     exit;
 }

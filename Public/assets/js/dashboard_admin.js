@@ -232,7 +232,7 @@ const loadAllChartData = async (urlFetch) => {
             container: chartContainers.line,
             id: 'bar',
             type: 'line',
-            name: 'Casos por Mes'
+            name: 'Casos por fecha'
         },
         {
             canvasId: 'pieChart',
