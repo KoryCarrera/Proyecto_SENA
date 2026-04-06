@@ -197,12 +197,12 @@ const drawChart = (canvasElement, type, labels, data) => {
 };
 
 
-const renderChartFromResponse = (canvasId, container, apiResponse, chartId, chartType, chartName) => {
+const renderChartFromResponse = (canvasId, container, apiResponse, chartId, chartType, chartName, periodo) => {
     const chartIdCapitalized = chartId.charAt(0).toUpperCase() + chartId.slice(1);
     let labels = apiResponse[`labels${chartIdCapitalized}`];
     const data = apiResponse[`data${chartIdCapitalized}`];
 
-    if (chartId === 'bar' && labels && Array.isArray(labels) && labels.length > 0 && typeof labels[0] === 'number') {
+    if (chartId === 'bar' && periodo === 'anual' && labels && Array.isArray(labels) && labels.length > 0 && typeof labels[0] === 'number') {
         labels = labels.map(monthNum => MONTH_NAMES_ES[monthNum - 1] || `Mes ${monthNum}`);
     }
 
@@ -225,7 +225,7 @@ const renderChartFromResponse = (canvasId, container, apiResponse, chartId, char
 };
 
 
-const loadAllChartData = async (urlFetch) => {
+const loadAllChartData = async (urlFetch, periodo) => {
     const charts = [
         {
             canvasId: 'barChart',
@@ -265,7 +265,7 @@ const loadAllChartData = async (urlFetch) => {
         }
 
         charts.forEach(c => {
-            renderChartFromResponse(c.canvasId, c.container, apiResponse, c.id, c.type, c.name);
+            renderChartFromResponse(c.canvasId, c.container, apiResponse, c.id, c.type, c.name, periodo);
         });
 
     } catch (error) {
@@ -335,29 +335,21 @@ const actualizarTextos = (periodo) => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    chartContainers.bar = document.getElementById('pieChart')?.parentElement
-    chartContainers.line = document.getElementById('barChart')?.parentElement,
+    chartContainers.bar = document.getElementById('pieChart')?.parentElement;
+    chartContainers.line = document.getElementById('barChart')?.parentElement;
     chartContainers.polar = document.getElementById('polarChart')?.parentElement;
 
     actualizarTextos('anual');
-    loadAllChartData(ENDPOINT);
-
-})
+    loadAllChartData(ENDPOINT, 'anual');
+});
 
 selectGraficas.addEventListener('change', function () {
     const periodo = this.value;
-
     actualizarTextos(periodo);
 
     let endpoint = ENDPOINT;
     if (periodo === 'semana') endpoint = ENDPOINT_SEMANA;
     if (periodo === 'mes') endpoint = ENDPOINT_MES;
 
-    loadAllChartData(endpoint);
-});
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    actualizarTextos('anual');
-    loadAllChartData(ENDPOINT);
+    loadAllChartData(endpoint, periodo);
 });
