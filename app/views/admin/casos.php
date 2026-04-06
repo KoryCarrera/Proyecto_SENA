@@ -257,6 +257,26 @@
     </div>
   </div>
 
+    <!-- Modal Wrapper para reasignar-->
+  <div class="modal fade" id="modalReasignar" tabindex="-1" aria-labelledby="modalCasoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content glass-card border-slate-700">
+        <div class="modal-header border-slate-700 p-6">
+          <h5 class="modal-title text-xl font-bold text-white flex items-center gap-2" id="modalReasignarLabel">
+            <i class="bi bi-file-earmark-text text-indigo-400"></i> Detailles del Caso
+          </h5>
+          <button type="button" class="btn-close btn-close-white opacity-50 hover:opacity-100" data-bs-dismiss="modal"
+            aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-6 text-slate-300" id="modalReasignarBody">
+          <!-- El contenido se carga dinámicamente con JavaScript -->
+        </div>
+        <div class="modal-footer border-slate-700 p-6 bg-slate-900/20" id="modalReasignarFooter">
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 <!-- sscript de dataTables -->
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
