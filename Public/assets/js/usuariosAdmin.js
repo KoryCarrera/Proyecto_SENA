@@ -283,7 +283,7 @@ const cambiarEstadoUsuario = async (nuevoDocumento, nuevoEstado) => {
 
         Swal.fire({
             icon: 'success',
-            title: `Usuario ${accion}do con éxito`,
+            title: `El usuario se ha ${accion} con éxito`,
             theme: 'dark',
             timer: 1500,
             showConfirmButton: false

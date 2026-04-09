@@ -45,9 +45,12 @@ try {
 
     // Actualizar sesión para reflejar cambios 
     if ($nombre && $apellido){
+
         $user = $nombre . ' ' . $apellido;
         $_SESSION['user']['username'] = $user;
-    } 
+
+    }
+
     if ($email){
         $_SESSION['user']['email'] = $email;
     } 

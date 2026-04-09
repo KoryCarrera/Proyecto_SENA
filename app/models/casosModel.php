@@ -35,6 +35,10 @@ class CasosModel extends baseHelper
 
             if ($findCase['estado'] == 'Atendido' || $findCase['estado'] == 'No atendido' || $nuevoEstado == 1 || $nuevoEstado == 3) {
 
+                if(!$motivo){
+                    throw new Exception('¡Debes ingresar un motivo para este cambio de estado!');
+                }
+                
                 $newData = [
                     ['value' => $id_caso, 'type' => PDO::PARAM_INT],
                     ['value' => $nuevoEstado, 'type' => PDO::PARAM_INT],

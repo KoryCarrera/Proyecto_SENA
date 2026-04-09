@@ -161,13 +161,13 @@ Una vez levantados los contenedores:
 #### Administrador
 ```
 Documento: 1487569254
-Contraseña: 123456
+Contraseña: korycarrera18
 ```
 
 #### Comisionado
 ```
-Documento: 1456333298
-Contraseña: galvis123
+Documento: 1013341532
+Contraseña: 363eee9200
 ```
 
 ### Flujo de Uso
@@ -221,19 +221,16 @@ Proyecto_SENA/
 ## 📸 Capturas de Pantalla
 
 ### 🏠 Página de Inicio
-![Landing Page](Public/assets/img/img_readme/home.png)
+![Landing Page](Public/assets/img/img_readme/landing.png)
 
-### 🔐 Login Administrador
-![Login Admin](Public/assets/img/img_readme/loginAdmin.png)
-
-### 🔐 Login Comisionado
-![Login Comisionado](Public/assets/img/img_readme/loginComi.png)
+### 🔐 Login
+![Login Comisionado](Public/assets/img/img_readme/login.png)
 
 ### 📊 Dashboard Administrador
-![Dashboard Admin](Public/assets/img/img_readme/homeAdmin.png)
+![Dashboard Admin](Public/assets/img/img_readme/dashboardAdmin.png)
 
 ### 📋 Gestión de Casos
-![Casos Admin](Public/assets/img/img_readme/casosAdmin.png)
+![Casos Admin](Public/assets/img/img_readme/gestionCasos.png)
 
 ---
 
