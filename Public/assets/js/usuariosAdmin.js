@@ -87,14 +87,18 @@ const cargarUsuarios = async () => { //Realizamos una async function
     }
 };
 
-const renderizarTablaUsuarios = (usuarios, cuerpoTabla) => { //definimos la funcion anteriormente declarada
+const renderizarTablaUsuarios = async (usuarios, cuerpoTabla) => { //definimos la funcion anteriormente declarada
     let htmlFilas = ''; //inicializamos la variable de html vacia
 
     usuarios.forEach((usuario) => {  //*recorremos los roles y usuarios para personalizar su aspecto segun su contenido
         const estadoUsuario = obtenerEstadoUsuario(usuario.id_estado);
         const rolUsuario = obtenerRolUsuario(usuario.id_rol);
 
-        //Recorremos e insertamos datos en la variable html
+        if ($.fn.DataTable.isDataTable("#tablaUsuario")) {
+            $("#tablaUsuario").DataTable().destroy();
+        }
+
+        //Recorremos e insertamos datos en la variable html]
         htmlFilas += `
             <tr>
                 <th scope="row">${usuario.documento}</th>
@@ -102,7 +106,7 @@ const renderizarTablaUsuarios = (usuarios, cuerpoTabla) => { //definimos la func
                 <td>${usuario.apellido}</td>
                 <td>${usuario.email}</td>
                 <td>${estadoUsuario}</td>
-                <td>${usuario.ultimo_inicio_sesion}</td>
+                <td>${usuario.ultimo_inicio_sesion ?? 'N/A'}</td>
                 <td>${usuario.vigencia_usuario}</td>
                 <td>${rolUsuario}</td>
                 <td>
@@ -112,14 +116,12 @@ const renderizarTablaUsuarios = (usuarios, cuerpoTabla) => { //definimos la func
                 </td>
             </tr>           
         `;
+
+
     });
 
     cuerpoTabla.innerHTML = htmlFilas;
     //insertamos el html previamente hecho
-
-    if ($.fn.DataTable.isDataTable("#tablaUsuario")) {
-        $("#tablaUsuario").DataTable().destroy();
-    }
 
     // Inicializamos DataTables DESPUÉS de que los datos estén en el DOM
     var table = $("#tablaUsuario").DataTable({
@@ -133,8 +135,8 @@ const renderizarTablaUsuarios = (usuarios, cuerpoTabla) => { //definimos la func
         drawCallback: function () {
             actualizarPaginacionVisualUsuarios(table);
         },
-      
-    });  
+
+    });
 
     $("#buscarUsuarios").on("keyup", function () {
         table.search(this.value).draw();
