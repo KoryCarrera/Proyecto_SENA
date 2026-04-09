@@ -62,6 +62,10 @@ const CargarCasos = async () => {
 const renderizarTablaCasos = (casos, cuerpoTabla) => {
     let htmlFilas = '';
 
+    // Si ya existe una instancia de DataTables, la destruimos antes de crear una nueva
+    if ($.fn.DataTable.isDataTable("#tablaCasoComi")) {
+        $("#tablaCasoComi").DataTable().destroy();
+    }
     casos.forEach((caso) => {
         htmlFilas += `
             <tr>
@@ -81,11 +85,6 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
         `;
     });
     cuerpoTabla.innerHTML = htmlFilas;
-
-    // Si ya existe una instancia de DataTables, la destruimos antes de crear una nueva
-    if ($.fn.DataTable.isDataTable("#tablaCasoComi")) {
-        $("#tablaCasoComi").DataTable().destroy();
-    }
 
     // Inicializamos DataTables DESPUÉS de que los datos estén en el DOM
     var table = $("#tablaCasoComi").DataTable({

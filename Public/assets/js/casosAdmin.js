@@ -101,6 +101,9 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
     //Declaramos variable que definiremos mas adelante
     const estadoBadge = obtenerBadgeEstado(caso.estado);
 
+    if ($.fn.DataTable.isDataTable("#tablaCaso")) {
+      $("#tablaCaso").DataTable().clear().destroy();
+    }
     //insertamos cada iteracion en html
     htmlFilas += `
             <tr>
