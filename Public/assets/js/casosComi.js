@@ -226,7 +226,7 @@ const mostrarDetallesCaso = (caso) => {
     const modalBody = document.getElementById('modalCasoBody');
     const modalTitle = document.getElementById('modalCasoLabel');
 
-    modalTitle.textContent = `Gestionar Caso #${caso.id_caso} `;
+    modalTitle.textContent = `Gestionar caso: ${caso.nombre}`;
 
     modalBody.innerHTML = `
     <div class="row">
@@ -259,9 +259,15 @@ const mostrarDetallesCaso = (caso) => {
         </div>
         <div class="col-md-6 mb-3">
             <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Seguimientos</label>
-            <p class="text-slate-300 mb-0">${caso.seguimientos || 'N/A'}</p>
+            <p class="text-slate-300 mb-0">${caso.total_seguimientos || 'N/A'}</p>
         </div>
     </div>
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <label class="form-label fw-bold">Radicado SENA</label>
+                <p class="text-slate-300 mb-0">${caso.radicado ?? "N/A"}</p>
+            </div>
+        </div>
 
     ${caso.description || caso.descripcion ? `
     <div class="row">

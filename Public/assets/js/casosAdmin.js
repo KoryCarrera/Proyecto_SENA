@@ -474,7 +474,7 @@ const mostrarDetallesCaso = (caso) => {
   const modalTitle = document.getElementById("modalCasoLabel");
 
   //definimos el titulo
-  modalTitle.textContent = `Caso #${caso.id_caso} - ${caso.tipo_caso}`;
+  modalTitle.textContent = `Gestionar caso: ${caso.nombre}`;
 
   //insertamos el html con los datos del caso
   modalBody.innerHTML = `
@@ -512,9 +512,20 @@ const mostrarDetallesCaso = (caso) => {
         </div>
         
         <div class="row">
-            <div class="col-md-12 mb-3">
+            <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Comisionado Encargado:</label>
                 <p class="form-control-plaintext">${caso.comisionado || "Sin asignar"}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Seguimientos:</label>
+                <p class="form-control-plaintext">${caso.total_seguimientos ?? "N/A"}</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <label class="form-label fw-bold">Radicado SENA</label>
+                <p class="form-control-plaintext">${caso.radicado ?? "N/A"}</p>
             </div>
         </div>
 
