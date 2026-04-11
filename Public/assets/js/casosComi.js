@@ -62,6 +62,10 @@ const CargarCasos = async () => {
 const renderizarTablaCasos = (casos, cuerpoTabla) => {
     let htmlFilas = '';
 
+    // Si ya existe una instancia de DataTables, la destruimos antes de crear una nueva
+    if ($.fn.DataTable.isDataTable("#tablaCasoComi")) {
+        $("#tablaCasoComi").DataTable().destroy();
+    }
     casos.forEach((caso) => {
         htmlFilas += `
             <tr>
@@ -82,11 +86,6 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
         `;
     });
     cuerpoTabla.innerHTML = htmlFilas;
-
-    // Si ya existe una instancia de DataTables, la destruimos antes de crear una nueva
-    if ($.fn.DataTable.isDataTable("#tablaCasoComi")) {
-        $("#tablaCasoComi").DataTable().destroy();
-    }
 
     // Inicializamos DataTables DESPUÉS de que los datos estén en el DOM
     var table = $("#tablaCasoComi").DataTable({
@@ -228,7 +227,7 @@ const mostrarDetallesCaso = (caso) => {
     const modalBody = document.getElementById('modalCasoBody');
     const modalTitle = document.getElementById('modalCasoLabel');
 
-    modalTitle.textContent = `Gestionar Caso #${caso.id_caso} `;
+    modalTitle.textContent = `Gestionar caso: ${caso.nombre}`;
 
     modalBody.innerHTML = `
     <div class="row">
@@ -270,6 +269,12 @@ const mostrarDetallesCaso = (caso) => {
             <p class="text-slate-300 mb-0">${caso.radicado || 'Sin radicar'}</p>
         </div>
     </div>
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <label class="form-label fw-bold">Radicado SENA</label>
+                <p class="text-slate-300 mb-0">${caso.radicado ?? "N/A"}</p>
+            </div>
+        </div>
 
     ${caso.description || caso.descripcion ? `
     <div class="row">

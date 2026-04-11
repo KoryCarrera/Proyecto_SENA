@@ -101,6 +101,9 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
     //Declaramos variable que definiremos mas adelante
     const estadoBadge = obtenerBadgeEstado(caso.estado);
 
+    if ($.fn.DataTable.isDataTable("#tablaCaso")) {
+      $("#tablaCaso").DataTable().clear().destroy();
+    }
     //insertamos cada iteracion en html
     htmlFilas += `
             <tr>
@@ -472,7 +475,7 @@ const mostrarDetallesCaso = (caso) => {
   const modalTitle = document.getElementById("modalCasoLabel");
 
   //definimos el titulo
-  modalTitle.textContent = `Caso #${caso.id_caso} - ${caso.tipo_caso}`;
+  modalTitle.textContent = `Gestionar caso: ${caso.nombre}`;
 
   //insertamos el html con los datos del caso
   modalBody.innerHTML = `
