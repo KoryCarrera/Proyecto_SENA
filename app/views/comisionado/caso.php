@@ -198,6 +198,7 @@
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Estado</th>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Proceso</th>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Comisionado Encargado</th>
+                      <th scope="col" class="px-6 py-4 font-medium tracking-wider">Radicado</th>
                       <th scope="col" class="px-6 py-4 font-medium tracking-wider">Gestionar</th>
                     </tr>
                   </thead>

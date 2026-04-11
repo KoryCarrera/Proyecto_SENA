@@ -72,6 +72,7 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
                 <td>${obtenerBadgeEstado(caso.estado)}</td>
                 <td>${caso.proceso}</td>
                 <td>${caso.comisionado}</td>
+                <td>${caso.radicado || "Sin radicado"}</td>
                 <td>
                     <button class="btn-table" onclick="gestionarCaso(${caso.id_caso})">
                         <i class="bi bi-gear-fill"></i> Gestionar
@@ -260,7 +261,13 @@ const mostrarDetallesCaso = (caso) => {
         </div>
         <div class="col-md-6 mb-3">
             <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Seguimientos</label>
-            <p class="text-slate-300 mb-0">${caso.seguimientos || 'N/A'}</p>
+            <p class="text-slate-300 mb-0">${caso.seguimientos || 'Sin seguimientos'}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Radicado</label>
+            <p class="text-slate-300 mb-0">${caso.radicado || 'Sin radicar'}</p>
         </div>
     </div>
 
