@@ -114,6 +114,7 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
                 <td>${estadoBadge}</td>
                 <td>${caso.proceso || "N/A"}</td>
                 <td>${caso.comisionado}</td>
+                <td>${caso.radicado || "Sin radicado"}</td>
                 <td>
                     <button class="btn-table bg-red-600 hover:bg-red-500 mr-2 rounded-lg px-3 py-2" onclick="modalReasignar(${caso.id_caso})">
                         <i class="bi bi-repeat text-white"></i> 
@@ -517,15 +518,14 @@ const mostrarDetallesCaso = (caso) => {
                 <p class="form-control-plaintext">${caso.comisionado || "Sin asignar"}</p>
             </div>
             <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Seguimientos:</label>
-                <p class="form-control-plaintext">${caso.total_seguimientos ?? "N/A"}</p>
+                <label class="form-label fw-bold">Radicado:</label>
+                <p class="form-control-plaintext">${caso.radicado || "Sin radicado"}</p>
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-12 mb-3">
-                <label class="form-label fw-bold">Radicado SENA</label>
-                <p class="form-control-plaintext">${caso.radicado ?? "N/A"}</p>
+                <label class="form-label fw-bold">Seguimientos:</label>
+                <p class="form-control-plaintext">${caso.seguimientos || "Sin seguimientos"}</p>
             </div>
         </div>
 
