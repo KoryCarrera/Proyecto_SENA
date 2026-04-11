@@ -241,6 +241,7 @@ const mostrarDetallesCaso = (caso) => {
             <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Tipo de Caso</label>
             <p class="text-slate-300 mb-0">${caso.tipo_caso || 'N/A'}</p>
         </div>
+        
     </div>
 
     <div class="row">
