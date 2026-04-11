@@ -182,6 +182,7 @@
                   <tr>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider"># Id</th>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider">Fecha de Registro</th>
+                    <th scope="col" class="px-6 py-4 font-medium tracking-wider">Nombre del caso</th>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider">Tipo de Caso</th>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider">Fecha de respuesta</th>
                     <th scope="col" class="px-6 py-4 font-medium tracking-wider">Estado</th>

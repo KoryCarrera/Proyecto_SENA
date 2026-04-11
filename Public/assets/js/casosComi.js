@@ -71,6 +71,7 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
             <tr>
                 <th>${caso.id_caso}</th>
                 <td>${formatearFecha(caso.fecha_inicio)}</td>
+                <td>${caso.nombre}</td>
                 <td>${caso.tipo_caso}</td>
                 <td>${caso.fecha_cierre ? formatearFecha(caso.fecha_cierre) : '<span class="badge bg-warning text-dark">Pendiente</span>'}</td>
                 <td>${obtenerBadgeEstado(caso.estado)}</td>

@@ -109,6 +109,7 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
             <tr>
                 <th scope="row">${caso.id_caso}</th>
                 <td>${fechaInicio}</td>
+                <td>${caso.nombre}</td>
                 <td>${caso.tipo_caso || "N/A"}</td>
                 <td>${fechaCierre}</td>
                 <td>${estadoBadge}</td>
@@ -498,6 +499,13 @@ const mostrarDetallesCaso = (caso) => {
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Fecha de Cierre:</label>
                 <p class="form-control-plaintext">${caso.fecha_cierre ? formatearFecha(caso.fecha_cierre) : '<span class="badge bg-warning text-dark">Pendiente</span>'}</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Nombre del caso:</label>
+                <p class="form-control-plaintext">${caso.nombre || "N/A"}</p>
             </div>
         </div>
         
