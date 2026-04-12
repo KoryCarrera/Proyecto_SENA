@@ -109,6 +109,12 @@ async function cargarNotificaciones(url) {
     if (respuesta.status === 'ok') {
       tbody.innerHTML = '';
       let i = 0;
+      
+      // Si ya existe una instancia de DataTables, la destruimos antes de crear una nueva
+      if ($.fn.DataTable.isDataTable("#containerNotis")) {
+        $("#containerNotis").DataTable().destroy();
+      }
+
       respuesta.notificaciones.forEach(data => {
         i++;
         tbody.innerHTML +=
