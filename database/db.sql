@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 12-04-2026 a las 15:24:15
+-- Tiempo de generación: 12-04-2026 a las 15:36:07
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -904,8 +904,10 @@ END$$
 
 CREATE PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
     SELECT 
-    	c.documento,
+    	c.nombre,
+        c.documento,
         c.id_caso,
+        c.radicado, 
         CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
         c.fecha_inicio,
         c.fecha_cierre,
@@ -913,13 +915,17 @@ CREATE PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
         t.nombre_caso AS tipo_caso,
         p.nombre AS proceso,
         c.descripcion,
-        u.id_rol
+        u.id_rol,
+       
+        (SELECT COUNT(s.id_seguimiento) 
+         FROM seguimiento s 
+         WHERE s.id_caso = c.id_caso) AS total_seguimientos
     FROM caso c
     LEFT JOIN usuario u ON c.documento = u.documento
     INNER JOIN estado e ON c.id_estado = e.id_estado
     INNER JOIN tipo_caso t ON c.id_tipo_caso = t.id_tipo_caso
     INNER JOIN procesoorganizacional p ON c.id_proceso = p.id_proceso
-    WHERE c.id_caso = p_id_caso
+    WHERE c.id_caso = p_id_caso 
     LIMIT 1;
 END$$
 
@@ -1318,7 +1324,7 @@ CREATE TABLE `caso` (
 --
 
 INSERT INTO `caso` (`id_caso`, `nombre`, `radicado`, `documento`, `id_seguimiento`, `id_proceso`, `fecha_ultimo_seguimiento`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
-(136, 'Denuncia cable suelto', NULL, '1013341532', NULL, 14, NULL, '2026-01-06 08:20:00', '2026-01-08 03:20:00', 1, 1, 'Se reporta cable suelto en zona de trabajo que puede generar riesgo eléctrico'),
+(136, 'Denuncia cable suelto', NULL, '1013341532', 55, 14, '2026-04-12 15:30:02', '2026-01-06 08:20:00', '2026-01-08 03:20:00', 1, 1, 'Se reporta cable suelto en zona de trabajo que puede generar riesgo eléctrico'),
 (137, 'Solicitud inspección seguridad', NULL, '1027961396', NULL, 14, NULL, '2026-01-18 10:15:00', '2026-01-19 17:15:00', 1, 2, 'Se solicita inspección preventiva de seguridad en área operativa'),
 (138, 'Denuncia caída trabajador', NULL, '1013342119', NULL, 14, NULL, '2026-02-04 09:10:00', NULL, 2, 1, 'Se reporta caída leve de trabajador durante jornada laboral'),
 (139, 'Solicitud revisión herramientas', NULL, '1020304050', NULL, 14, NULL, '2026-02-22 11:30:00', '2026-02-23 11:30:00', 1, 2, 'Se solicita revisión de herramientas deterioradas'),
@@ -1777,7 +1783,8 @@ CREATE TABLE `seguimiento` (
 
 INSERT INTO `seguimiento` (`id_seguimiento`, `fecha_seguimiento`, `observacion`, `documento`, `id_caso`) VALUES
 (51, '2026-04-06 01:38:45', 'Caso por asignar', '1487569254', 174),
-(52, '2026-04-06 01:39:29', 'Caso por asignar', '1487569254', 183);
+(52, '2026-04-06 01:39:29', 'Caso por asignar', '1487569254', 183),
+(55, '2026-04-12 15:30:02', 'holiwis', '1013341532', 136);
 
 --
 -- Disparadores `seguimiento`
@@ -1855,7 +1862,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `fecha_caducidad`, `vigencia_usuario`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
-('1013341532', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', '3207619679', 2, '$2y$10$9/SLzD/EK5z.H428GsH3.uKgWVAJpbE6v.Dy508UPDzslms0eD8Jm', '2026-04-06 01:11:50', '2028-04-06 01:11:50', '2026-2028', '2026-04-12 15:12:50', 1, 0, NULL),
+('1013341532', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', '3207619679', 2, '$2y$10$9/SLzD/EK5z.H428GsH3.uKgWVAJpbE6v.Dy508UPDzslms0eD8Jm', '2026-04-06 01:11:50', '2028-04-06 01:11:50', '2026-2028', '2026-04-12 15:30:49', 1, 0, NULL),
 ('1013342119', 'Isaac Manuel', 'Carvajal Lopez', 'isaaccarvajal1356@gmail.com', '3243389897', 2, '$2y$10$MsUHwJtTJ9Txsd1o7mvQ2uV/rEkKfRFfaWTHYFZDOMUbKMi.fvKGy', '2026-04-06 01:22:41', '2028-04-06 01:22:41', '2026-2028', '2026-04-06 05:15:20', 1, 0, NULL),
 ('1020304050', 'Marleny', 'Gaviria', 'koritocarrera@gmail.com', '3001234567', 2, '$2y$10$MO98eVba1jIkuZgsDsZ3NOmMQwwXRnpL650wjeTSGnhstE0dh17h6', '2026-04-06 01:24:53', '2028-04-06 01:24:53', '2026-2028', '2026-04-06 04:22:41', 1, 0, NULL),
 ('1027961396', 'Juan Manuel', 'Correal Galvis', 'juangalvis.developer@gmail.com', '3243740191', 2, '$2y$10$rpd99onGDNu3Mm7g2f0uoOhX9P00afAeEsilbuegithqkfrDUaIPK', '2026-04-06 01:20:43', '2028-04-06 01:20:43', '2026-2028', NULL, 1, 0, NULL),
@@ -2071,7 +2078,7 @@ ALTER TABLE `rol`
 -- AUTO_INCREMENT de la tabla `seguimiento`
 --
 ALTER TABLE `seguimiento`
-  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=55;
+  MODIFY `id_seguimiento` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_caso`

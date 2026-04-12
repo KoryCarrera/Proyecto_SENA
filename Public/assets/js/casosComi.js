@@ -262,13 +262,7 @@ const mostrarDetallesCaso = (caso) => {
         </div>
         <div class="col-md-6 mb-3">
             <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Seguimientos</label>
-            <p class="text-slate-300 mb-0">${caso.seguimientos || 'Sin seguimientos'}</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 mb-3">
-            <label class="fw-bold text-white uppercase" style="font-size: 1rem; letter-spacing: 0.05em;">Radicado</label>
-            <p class="text-slate-300 mb-0">${caso.radicado || 'Sin radicar'}</p>
+            <p class="text-slate-300 mb-0">${caso.total_seguimientos || 'Sin seguimientos'}</p>
         </div>
     </div>
         <div class="row">
