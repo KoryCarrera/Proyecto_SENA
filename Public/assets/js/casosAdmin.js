@@ -501,14 +501,6 @@ const mostrarDetallesCaso = (caso) => {
                 <p class="form-control-plaintext">${caso.fecha_cierre ? formatearFecha(caso.fecha_cierre) : '<span class="badge bg-warning text-dark">Pendiente</span>'}</p>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label fw-bold">Nombre del caso:</label>
-                <p class="form-control-plaintext">${caso.nombre || "N/A"}</p>
-            </div>
-        </div>
-        
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Estado:</label>
@@ -533,7 +525,7 @@ const mostrarDetallesCaso = (caso) => {
         <div class="row">
             <div class="col-md-12 mb-3">
                 <label class="form-label fw-bold">Seguimientos:</label>
-                <p class="form-control-plaintext">${caso.seguimientos || "Sin seguimientos"}</p>
+                <p class="form-control-plaintext">${caso.total_seguimientos || "Sin seguimientos"}</p>
             </div>
         </div>
 
