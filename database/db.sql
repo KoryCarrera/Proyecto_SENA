@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 12-04-2026 a las 15:36:07
+-- Tiempo de generación: 13-04-2026 a las 03:48:07
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -1737,11 +1737,12 @@ CREATE TABLE `procesoorganizacional` (
 --
 
 INSERT INTO `procesoorganizacional` (`id_proceso`, `fecha_creacion`, `descripcion`, `documento_usuario`, `nombre`, `estado`) VALUES
-(10, '2026-02-11 22:43:31', 'N/a', '1487569254', 'Bienestar Social', 1),
-(11, '2026-02-11 22:43:58', 'N/a', '1487569254', 'SSEMI', 1),
-(12, '2026-02-11 22:44:36', 'N/a', '1487569254', 'Ropa de Trabajo', 1),
-(13, '2026-02-11 22:45:22', 'N/a', '1487569254', 'Plan de incentivos', 1),
-(14, '2026-02-11 22:45:37', 'N/a', '1487569254', 'SST', 1);
+(10, '2026-02-11 22:43:31', 'Gestión y seguimiento de requerimientos asociados a programas, beneficios y actividades institucionales diseñadas para promover la calidad de vida, el desarrollo integral y un clima organizacional óptimo.', '1487569254', 'Bienestar Social', 1),
+(11, '2026-02-11 22:43:58', 'Atención y administración de casos vinculados a los servicios de salud, asistencia médica y evaluación integral, orientados a garantizar el bienestar físico y preventivo del personal.', '1487569254', 'SSEMI', 1),
+(12, '2026-02-11 22:44:36', 'Tramitación de solicitudes, asignaciones y reportes correspondientes a la dotación de uniformes, elementos de protección y vestuario reglamentario, asegurando el cumplimiento normativo para el desarrollo de las labores.', '1487569254', 'Ropa de Trabajo', 1),
+(13, '2026-02-11 22:45:22', 'Administración de casos relacionados con los programas de reconocimiento, estímulos y compensaciones, estructurados para motivar, retener y premiar el desempeño sobresaliente dentro de la organización.', '1487569254', 'Plan de incentivos', 1),
+(14, '2026-02-11 22:45:37', 'Recepción y gestión de reportes sobre condiciones de riesgo, incidentes, accidentes laborales y requerimientos normativos, con el fin de mitigar peligros y promover entornos de trabajo seguros.', '1487569254', 'SST', 1),
+(15, '2026-04-13 03:47:40', 'Categoría transversal destinada a la clasificación de requerimientos atípicos, consultas generales o incidencias excepcionales que, por su naturaleza, no se enmarcan de manera directa en los procesos organizacionales estandarizados.', '1487569254', 'Casos Especiales', 1);
 
 -- --------------------------------------------------------
 
@@ -1862,11 +1863,11 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `fecha_caducidad`, `vigencia_usuario`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
-('1013341532', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', '3207619679', 2, '$2y$10$9/SLzD/EK5z.H428GsH3.uKgWVAJpbE6v.Dy508UPDzslms0eD8Jm', '2026-04-06 01:11:50', '2028-04-06 01:11:50', '2026-2028', '2026-04-12 15:30:49', 1, 0, NULL),
+('1013341532', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', '3207619679', 2, '$2y$10$9/SLzD/EK5z.H428GsH3.uKgWVAJpbE6v.Dy508UPDzslms0eD8Jm', '2026-04-06 01:11:50', '2028-04-06 01:11:50', '2026-2028', '2026-04-13 03:46:39', 1, 0, NULL),
 ('1013342119', 'Isaac Manuel', 'Carvajal Lopez', 'isaaccarvajal1356@gmail.com', '3243389897', 2, '$2y$10$MsUHwJtTJ9Txsd1o7mvQ2uV/rEkKfRFfaWTHYFZDOMUbKMi.fvKGy', '2026-04-06 01:22:41', '2028-04-06 01:22:41', '2026-2028', '2026-04-06 05:15:20', 1, 0, NULL),
 ('1020304050', 'Marleny', 'Gaviria', 'koritocarrera@gmail.com', '3001234567', 2, '$2y$10$MO98eVba1jIkuZgsDsZ3NOmMQwwXRnpL650wjeTSGnhstE0dh17h6', '2026-04-06 01:24:53', '2028-04-06 01:24:53', '2026-2028', '2026-04-06 04:22:41', 1, 0, NULL),
 ('1027961396', 'Juan Manuel', 'Correal Galvis', 'juangalvis.developer@gmail.com', '3243740191', 2, '$2y$10$rpd99onGDNu3Mm7g2f0uoOhX9P00afAeEsilbuegithqkfrDUaIPK', '2026-04-06 01:20:43', '2028-04-06 01:20:43', '2026-2028', NULL, 1, 0, NULL),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$Jv38fJwprb95GT4MUs8n1elsr42/1fWNevWmOlYixG.NgZdhbF9US', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-06 04:19:25', 1, 0, '7be3757a753976a4ca6e');
+('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$Jv38fJwprb95GT4MUs8n1elsr42/1fWNevWmOlYixG.NgZdhbF9US', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-13 03:47:06', 1, 0, '7be3757a753976a4ca6e');
 
 --
 -- Disparadores `usuario`
@@ -2066,7 +2067,7 @@ ALTER TABLE `noti_comisionado`
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
 --
 ALTER TABLE `procesoorganizacional`
-  MODIFY `id_proceso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=15;
+  MODIFY `id_proceso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`

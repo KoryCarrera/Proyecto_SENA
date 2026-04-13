@@ -20,6 +20,10 @@ const cargarCasos = async () => {
     return;
   }
 
+  if ($.fn.DataTable.isDataTable("#tablaCaso")) {
+    $("#tablaCaso").DataTable().clear().destroy();
+  }
+
   //Insertamos el "cargando..." mientras nos llegan datos
   cuerpoTabla.innerHTML = `
         <tr>
@@ -101,9 +105,6 @@ const renderizarTablaCasos = (casos, cuerpoTabla) => {
     //Declaramos variable que definiremos mas adelante
     const estadoBadge = obtenerBadgeEstado(caso.estado);
 
-    if ($.fn.DataTable.isDataTable("#tablaCaso")) {
-      $("#tablaCaso").DataTable().clear().destroy();
-    }
     //insertamos cada iteracion en html
     htmlFilas += `
             <tr>
@@ -322,8 +323,9 @@ const supervisarCaso = async (idCaso) => {
   }
 };
 
-const cerrarModal = () => {
-  const modalElement = document.getElementById('modalCaso');
+
+const cerrarModalReasignar = () => {
+  const modalElement = document.getElementById('modalReasignar');
   const modal = bootstrap.Modal.getInstance(modalElement);
   if (modal) {
     modal.hide();
@@ -433,7 +435,7 @@ const reasignarCaso = async (idCaso) => {
     dataType: 'json',
 
     success: function (response) {
-      cerrarModal();
+      cerrarModalReasignar();
       cargarCasos();
 
       if (response.status == 'error') {
@@ -455,6 +457,10 @@ const reasignarCaso = async (idCaso) => {
         showConfirmButton: false,
         timer: 1000,
       });
+
+      cerrarModalReasignar();
+      cargarCasos();
+
     },
 
     error: function (jqXHR, textStatus, errorThrown) {
@@ -462,9 +468,11 @@ const reasignarCaso = async (idCaso) => {
       Swal.fire({
         icon: 'error',
         title: 'Error de conexión',
-        text: 'Ocurrió un error al intentar reactivar al usuario.',
+        text: 'Ocurrió un error al intentar reasignar al usuario.',
         theme: 'dark'
       });
+      cerrarModalReasignar();
+      cargarCasos();
     }
   })
 }
@@ -695,13 +703,7 @@ const actualizarPaginacionVisual = (table) => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", () => {
-  cargarCasos(); // Los datos llegan → renderizarTablaCasos → DataTables se inicia allí
-
-  // Los listeners de cierre de modal para archivos ahora están en visor-archivos.js
+  cargarCasos();
 });
 
-// ============================================================
-// FUNCIONES PARA EL VISOR DE ARCHIVOS ADJUNTOS (Avanzado)
-// ============================================================
-// El visor de archivos ahora se maneja de forma centralizada en visor-archivos.js
 
