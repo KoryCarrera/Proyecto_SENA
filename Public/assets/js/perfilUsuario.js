@@ -124,8 +124,6 @@ btnGuardarCambios.addEventListener('click', function (event) {
                                     theme: 'dark'
                                 });
 
-                                infoImportante.textContent = "Tu perfil ha sido actualizado exitosamente. Recuerda que cualquier cambio en tu información será registrado y reportado al administrador para garantizar la seguridad de tu cuenta. Si has cambiado tu contraseña, esta modificación requerirá la aprobación previa de la administración antes de hacerse efectiva, por lo que te recomendamos estar atento a cualquier comunicación relacionada con este proceso.";
-
                                 //Limpiamos los campos del formulario
                                 nuevoNombre.value = "";
                                 nuevoApellido.value = "";
