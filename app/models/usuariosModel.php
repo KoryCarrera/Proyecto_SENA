@@ -141,7 +141,7 @@ class UsuariosModdel extends baseHelper
 
             parent::insertOrUpdateData('sp_editar_usuario(?, ?, ?, ?, ?, ?, ?)', $dataInsert);
 
-            return $token;
+            return $token ?? true;
         } catch (Exception $e) {
             error_log('Error al gestionar usuario: ' . $e->getMessage());
             throw new Exception($e);

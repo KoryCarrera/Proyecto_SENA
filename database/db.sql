@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: db_sena
--- Tiempo de generación: 13-04-2026 a las 03:48:07
+-- Tiempo de generación: 13-04-2026 a las 12:44:36
 -- Versión del servidor: 10.6.25-MariaDB-ubu2204
 -- Versión de PHP: 8.3.30
 
@@ -25,13 +25,13 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE PROCEDURE `sp_activar_2FA` (IN `p_documento` VARCHAR(20), IN `p_estado_2fa` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_activar_2FA` (IN `p_documento` VARCHAR(20), IN `p_estado_2fa` INT)   BEGIN
 
 UPDATE usuario SET 2FA = p_estado_2fa WHERE documento = p_documento;
 
 END$$
 
-CREATE PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estado` INT, IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estado` INT, IN `p_documento` VARCHAR(20))   BEGIN
 	DECLARE v_cierre DATETIME DEFAULT NULL;
     
     IF NOT EXISTS (SELECT 1 FROM caso WHERE id_caso = p_id_caso) THEN
@@ -47,7 +47,7 @@ CREATE PROCEDURE `sp_actualizar_estado_caso` (IN `p_id_caso` INT, IN `p_id_estad
     
     END$$
 
-CREATE PROCEDURE `sp_actualizar_estado_caso_con_motivo` (IN `p_id_caso` INT, IN `p_id_estado` INT, IN `p_documento` VARCHAR(20), IN `p_motivo` TEXT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_actualizar_estado_caso_con_motivo` (IN `p_id_caso` INT, IN `p_id_estado` INT, IN `p_documento` VARCHAR(20), IN `p_motivo` TEXT)   BEGIN
     DECLARE v_cierre DATETIME DEFAULT NULL;
     DECLARE v_rows INT;
 
@@ -89,13 +89,13 @@ CREATE PROCEDURE `sp_actualizar_estado_caso_con_motivo` (IN `p_id_caso` INT, IN 
 
 END$$
 
-CREATE PROCEDURE `sp_actualizar_password_usuario` (IN `p_documento` VARCHAR(20), IN `p_nueva_password` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_actualizar_password_usuario` (IN `p_documento` VARCHAR(20), IN `p_nueva_password` VARCHAR(255))   BEGIN
     UPDATE usuario
     SET contraseña = p_nueva_password
     WHERE documento = p_documento;
 END$$
 
-CREATE PROCEDURE `sp_analisis_demanda` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_analisis_demanda` ()   BEGIN
     SELECT
         tc.nombre_caso,
 
@@ -122,7 +122,7 @@ CREATE PROCEDURE `sp_analisis_demanda` ()   BEGIN
     LIMIT 5;
 END$$
 
-CREATE PROCEDURE `sp_buscar_usuario` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_buscar_usuario` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
 u.documento, 
@@ -136,7 +136,7 @@ FROM usuario u INNER JOIN rol r ON u.id_rol = r.id_rol WHERE documento = p_docum
 
 END$$
 
-CREATE PROCEDURE `sp_cambiar_contrasena_con_token` (IN `p_token` VARCHAR(255), IN `p_password_hash` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_cambiar_contrasena_con_token` (IN `p_token` VARCHAR(255), IN `p_password_hash` VARCHAR(255))   BEGIN
     DECLARE v_documento VARCHAR(50);
 
     SELECT documento INTO v_documento
@@ -162,7 +162,7 @@ CREATE PROCEDURE `sp_cambiar_contrasena_con_token` (IN `p_token` VARCHAR(255), I
     END IF;
 END$$
 
-CREATE PROCEDURE `sp_cambiar_estado_proceso` (IN `p_id_proceso` INT, IN `p_motivo` TEXT, IN `p_documento` VARCHAR(20), IN `p_estado` INT)   BEGIN 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_cambiar_estado_proceso` (IN `p_id_proceso` INT, IN `p_motivo` TEXT, IN `p_documento` VARCHAR(20), IN `p_estado` INT)   BEGIN 
 	
 	DECLARE v_nombre VARCHAR(100);
 	DECLARE v_nombre_admin VARCHAR(200);
@@ -218,7 +218,7 @@ CREATE PROCEDURE `sp_cambiar_estado_proceso` (IN `p_id_proceso` INT, IN `p_motiv
     COMMIT;
 END$$
 
-CREATE PROCEDURE `sp_cambiar_estado_usuario` (IN `p_documento` VARCHAR(20), IN `p_estado` INT, IN `p_motivo` TEXT, IN `p_documento_admin` VARCHAR(20))   BEGIN 	
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_cambiar_estado_usuario` (IN `p_documento` VARCHAR(20), IN `p_estado` INT, IN `p_motivo` TEXT, IN `p_documento_admin` VARCHAR(20))   BEGIN 	
 
 DECLARE v_nombre VARCHAR(200);
 DECLARE v_nombre_admin VARCHAR(200);
@@ -299,7 +299,7 @@ COMMIT;
 
 END$$
 
-CREATE PROCEDURE `sp_caracterizacion_usuarios` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_caracterizacion_usuarios` ()   BEGIN
     SELECT
         r.nombre_rol,
         COUNT(c.id_caso) AS total_pqrsd_mes
@@ -311,7 +311,7 @@ CREATE PROCEDURE `sp_caracterizacion_usuarios` ()   BEGIN
     GROUP BY r.id_rol, r.nombre_rol;
 END$$
 
-CREATE PROCEDURE `sp_casos_por_comisionado` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_comisionado` ()   BEGIN
 
 SELECT 
     CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
@@ -324,7 +324,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_comisionado_doc` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_comisionado_doc` (IN `p_documento` VARCHAR(50))   BEGIN
     DECLARE v_gran_total INT;
 
     SELECT COUNT(id_caso) INTO v_gran_total 
@@ -341,7 +341,7 @@ CREATE PROCEDURE `sp_casos_por_comisionado_doc` (IN `p_documento` VARCHAR(50))  
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_comi_mes` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_comi_mes` ()   BEGIN
 	SELECT 
     CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
     COUNT(c.id_caso) AS total_casos
@@ -353,7 +353,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_comi_semana` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_comi_semana` ()   BEGIN
 SELECT 
     CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
     COUNT(c.id_caso) AS total_casos
@@ -365,7 +365,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_estado` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_estado` ()   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -379,7 +379,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_estado_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_estado_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -394,7 +394,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_estado_mes` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_estado_mes` ()   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -408,7 +408,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_estado_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_estado_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -423,7 +423,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_estado_semana` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_estado_semana` ()   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -437,7 +437,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_estado_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_estado_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     e.estado AS nombre_estado,
@@ -452,7 +452,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_mes` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_mes` ()   BEGIN
 
 SELECT 
     MONTH(fecha_inicio) AS mes,
@@ -465,7 +465,7 @@ ORDER BY mes;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_proceso` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_proceso` ()   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -477,7 +477,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_proceso_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_proceso_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -491,7 +491,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_proceso_mes` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_proceso_mes` ()   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -504,7 +504,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_proceso_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_proceso_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -518,7 +518,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_proceso_semana` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_proceso_semana` ()   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -531,7 +531,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_proceso_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_proceso_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     p.nombre AS proceso,
@@ -544,7 +544,7 @@ ORDER BY total_casos DESC;
 
 END$$
 
-CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_semana` ()   BEGIN
     SELECT 
     DAYOFWEEK(fecha_inicio) AS dia_semana,
         COUNT(*) AS casos_dia
@@ -554,7 +554,7 @@ CREATE PROCEDURE `sp_casos_por_semana` ()   BEGIN
     ORDER BY dia_semana;
 END$$
 
-CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
     SELECT 
         DAY(fecha_inicio) AS dia,
         COUNT(*) AS total_casos
@@ -565,7 +565,7 @@ CREATE PROCEDURE `sp_casos_por_un_mes` ()   BEGIN
     ORDER BY dia;
 END$$
 
-CREATE PROCEDURE `sp_configurar_usuario` (IN `p_documento` VARCHAR(20), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_configurar_usuario` (IN `p_documento` VARCHAR(20), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN
 UPDATE usuario 
     SET 
         nombre = COALESCE(NULLIF(p_nombre, ''), nombre),
@@ -580,11 +580,11 @@ UPDATE usuario
     WHERE documento = p_documento;
 END$$
 
-CREATE PROCEDURE `sp_consultar_token_2fa` (IN `p_documento` VARCHAR(20))   SELECT token FROM token_usuario WHERE documento = p_documento$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_consultar_token_2fa` (IN `p_documento` VARCHAR(20))   SELECT token FROM token_usuario WHERE documento = p_documento$$
 
-CREATE PROCEDURE `sp_consultar_token_cookie` (IN `p_documento` VARCHAR(20))   SELECT cookie FROM usuario WHERE documento = p_documento$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_consultar_token_cookie` (IN `p_documento` VARCHAR(20))   SELECT cookie FROM usuario WHERE documento = p_documento$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contear_casos_tipo` ()   BEGIN
 
 SELECT 
     tc.nombre_caso,
@@ -597,7 +597,7 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contear_casos_tipo_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 
 SELECT 
     tc.nombre_caso,
@@ -611,7 +611,7 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo_mes` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contear_casos_tipo_mes` ()   BEGIN
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -623,7 +623,7 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contear_casos_tipo_mes_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -635,7 +635,7 @@ ORDER BY tc.nombre_caso;
 
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo_semana` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contear_casos_tipo_semana` ()   BEGIN
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -646,7 +646,7 @@ GROUP BY tc.nombre_caso
 ORDER BY tc.nombre_caso;
 END$$
 
-CREATE PROCEDURE `sp_contear_casos_tipo_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_contear_casos_tipo_semana_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 SELECT 
     tc.nombre_caso,
     COUNT(c.id_caso) AS total
@@ -657,7 +657,7 @@ GROUP BY tc.nombre_caso
 ORDER BY tc.nombre_caso;
 END$$
 
-CREATE PROCEDURE `sp_editar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_rol` INT, IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_editar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(100), IN `p_apellido` VARCHAR(100), IN `p_email` VARCHAR(150), IN `p_rol` INT, IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN
     UPDATE usuario 
     SET 
         nombre = p_nombre,
@@ -672,9 +672,9 @@ CREATE PROCEDURE `sp_editar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre
     WHERE documento = p_documento;
 END$$
 
-CREATE PROCEDURE `sp_eliminar_token_2fa` (IN `p_documento` VARCHAR(20))   DELETE FROM token_usuario WHERE documento = p_documento$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_eliminar_token_2fa` (IN `p_documento` VARCHAR(20))   DELETE FROM token_usuario WHERE documento = p_documento$$
 
-CREATE PROCEDURE `sp_estadisticas_procesos_comisionado` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_estadisticas_procesos_comisionado` (IN `p_documento` VARCHAR(50))   BEGIN
     SELECT 
         p.nombre AS proceso,
         COUNT(c.id_caso) AS total_casos
@@ -690,7 +690,7 @@ CREATE PROCEDURE `sp_estadisticas_procesos_comisionado` (IN `p_documento` VARCHA
         total_casos DESC;
 END$$
 
-CREATE PROCEDURE `sp_generar_token_recuperacion` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_generar_token_recuperacion` (IN `p_documento` VARCHAR(50))   BEGIN
     DECLARE v_token VARCHAR(255);
     DECLARE v_expira DATETIME;
 
@@ -718,25 +718,26 @@ CREATE PROCEDURE `sp_generar_token_recuperacion` (IN `p_documento` VARCHAR(50)) 
     SELECT v_token AS token, v_expira AS expira;
 END$$
 
-CREATE PROCEDURE `sp_guardar_cookie` (IN `p_documento` VARCHAR(20), IN `p_cookie` VARCHAR(20))   UPDATE usuario SET cookie = p_cookie WHERE documento = p_documento$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_guardar_cookie` (IN `p_documento` VARCHAR(20), IN `p_cookie` VARCHAR(20))   UPDATE usuario SET cookie = p_cookie WHERE documento = p_documento$$
 
-CREATE PROCEDURE `sp_guardar_token_2fa` (IN `p_documento` VARCHAR(20), IN `p_token` VARCHAR(70))   INSERT INTO token_usuario(documento, token) VALUES(p_documento, p_token)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_guardar_token_2fa` (IN `p_documento` VARCHAR(20), IN `p_token` VARCHAR(70))   INSERT INTO token_usuario(documento, token) VALUES(p_documento, p_token)$$
 
-CREATE PROCEDURE `sp_insertar_archivo_caso` (IN `p_id_caso` INT, IN `p_nombre_archivo` VARCHAR(255), IN `p_ruta` VARCHAR(255), IN `p_tipo_archivo` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insertar_archivo_caso` (IN `p_id_caso` INT, IN `p_nombre_archivo` VARCHAR(255), IN `p_ruta` VARCHAR(255), IN `p_tipo_archivo` VARCHAR(50))   BEGIN
 INSERT INTO archivo (id_caso, nombre_archivo, ruta, tipo_archivo, fecha_subida)
 VALUES (p_id_caso, p_nombre_archivo, p_ruta, p_tipo_archivo, NOW());
 END$$
 
-CREATE PROCEDURE `sp_listar_archivos_caso` (IN `p_id_caso` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_archivos_caso` (IN `p_id_caso` INT)   BEGIN
 	SELECT id_archivo, nombre_archivo, ruta, tipo_archivo, fecha_subida
 	FROM archivo
    	WHERE id_caso = p_id_caso
 	ORDER BY fecha_subida DESC;
 END$$
 
-CREATE PROCEDURE `sp_listar_casos` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_casos` ()   BEGIN
 	SELECT 
 			c.id_caso,
+            c.radicado,
             c.nombre,
 			CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
 			c.fecha_inicio,
@@ -753,7 +754,7 @@ CREATE PROCEDURE `sp_listar_casos` ()   BEGIN
 		ORDER BY c.fecha_inicio DESC;
 	END$$
 
-CREATE PROCEDURE `sp_listar_casos_comisionado_doc` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_casos_comisionado_doc` (IN `p_documento` VARCHAR(50))   BEGIN
     SELECT 
         c.id_caso,
         CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
@@ -772,9 +773,10 @@ CREATE PROCEDURE `sp_listar_casos_comisionado_doc` (IN `p_documento` VARCHAR(50)
     ORDER BY c.fecha_inicio DESC;
 END$$
 
-CREATE PROCEDURE `sp_listar_caso_por_comisionado` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_caso_por_comisionado` (IN `p_documento` VARCHAR(50))   BEGIN
     SELECT 
     		c.nombre,
+            c.radicado,
 			c.id_caso,
 			CONCAT(u.nombre, ' ', u.apellido) AS comisionado,
 			c.fecha_inicio,
@@ -792,7 +794,7 @@ CREATE PROCEDURE `sp_listar_caso_por_comisionado` (IN `p_documento` VARCHAR(50))
 		ORDER BY c.fecha_inicio DESC;
     END$$
 
-CREATE PROCEDURE `sp_listar_comisionados_y_casos` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_comisionados_y_casos` ()   BEGIN
     	
         SELECT 
     u.documento,
@@ -808,7 +810,7 @@ ORDER BY total_casos DESC;
         
     END$$
 
-CREATE PROCEDURE `sp_listar_estados_caso` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_estados_caso` ()   BEGIN
     SELECT 
         id_estado,
         estado
@@ -816,7 +818,7 @@ CREATE PROCEDURE `sp_listar_estados_caso` ()   BEGIN
     ORDER BY id_estado ASC;
 END$$
 
-CREATE PROCEDURE `sp_listar_noti_admin` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_noti_admin` (IN `p_documento` VARCHAR(20))   BEGIN
 SELECT	
 	id_notificacion AS id, 
 	documento, 
@@ -827,7 +829,7 @@ WHERE documento = p_documento
 ORDER BY fecha DESC, id_notificacion DESC;
 END$$
 
-CREATE PROCEDURE `sp_listar_noti_comi` (IN `p_documento` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_noti_comi` (IN `p_documento` VARCHAR(20))   BEGIN
 SELECT	
 	id_notificacion AS id, 
 	documento, 
@@ -838,7 +840,7 @@ WHERE documento = p_documento
 ORDER BY fecha DESC, id_notificacion DESC;
 END$$
 
-CREATE PROCEDURE `sp_listar_procesos_activos` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_procesos_activos` ()   BEGIN
     SELECT 
         id_proceso,
         nombre
@@ -847,12 +849,12 @@ CREATE PROCEDURE `sp_listar_procesos_activos` ()   BEGIN
     ORDER BY nombre ASC;
 END$$
 
-CREATE PROCEDURE `sp_listar_proceso_organizacional` ()   BEGIN 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_proceso_organizacional` ()   BEGIN 
 	SELECT p.id_proceso, p.nombre AS nombre_proceso, p.descripcion, p.fecha_creacion, p.estado, CONCAT(u.nombre, ' ', u.apellido) AS nombre_creador, u.documento, u.email
  	FROM procesoorganizacional p INNER JOIN usuario u ON p.documento_usuario = u.documento ORDER BY p.fecha_creacion DESC;
 END$$
 
-CREATE PROCEDURE `sp_listar_seguimientos_por_caso` (IN `p_caso` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_seguimientos_por_caso` (IN `p_caso` INT)   BEGIN
     SELECT 
         s.id_seguimiento,
         s.fecha_seguimiento,
@@ -865,7 +867,7 @@ CREATE PROCEDURE `sp_listar_seguimientos_por_caso` (IN `p_caso` INT)   BEGIN
     LIMIT 20;
 END$$
 
-CREATE PROCEDURE `sp_listar_tipos_caso` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_tipos_caso` ()   BEGIN
     SELECT 
         id_tipo_caso,
         nombre_caso
@@ -873,13 +875,13 @@ CREATE PROCEDURE `sp_listar_tipos_caso` ()   BEGIN
     ORDER BY nombre_caso ASC;
 END$$
 
-CREATE PROCEDURE `sp_listar_usuarios` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_listar_usuarios` ()   BEGIN
 
  SELECT documento, nombre, apellido, email, id_rol, id_estado, vigencia_usuario, ultimo_inicio_sesion FROM usuario;
 
 END$$
 
-CREATE PROCEDURE `sp_login_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_login_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
     SELECT
         documento,
         CONCAT(nombre, ' ', apellido) AS     
@@ -902,7 +904,7 @@ AND id_estado = 1
     END IF;
 END$$
 
-CREATE PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
     SELECT 
     	c.nombre,
         c.documento,
@@ -929,13 +931,17 @@ CREATE PROCEDURE `sp_obtener_caso_por_id` (IN `p_id_caso` INT)   BEGIN
     LIMIT 1;
 END$$
 
-CREATE PROCEDURE `sp_reactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
+CREATE DEFINER=`root`@`%` PROCEDURE `sp_obtener_correo_administrador` ()   BEGIN
+    SELECT email FROM usuario WHERE id_estado = 1 AND id_rol = 1;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_reactivar_proceso` (IN `p_id_proceso` INT)   BEGIN 
     UPDATE procesoorganizacional 
     SET estado = 1 
     WHERE id_proceso = p_id_proceso;
 END$$
 
-CREATE PROCEDURE `sp_reasignar_caso` (IN `p_documento` VARCHAR(20), IN `p_documento_nuevo` VARCHAR(20), IN `p_id_caso` INT, IN `p_descripcion` TEXT, IN `p_documento_viejo` VARCHAR(20))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_reasignar_caso` (IN `p_documento` VARCHAR(20), IN `p_documento_nuevo` VARCHAR(20), IN `p_id_caso` INT, IN `p_descripcion` TEXT, IN `p_documento_viejo` VARCHAR(20))   BEGIN
     DECLARE v_nombre_usuario VARCHAR(200);
     DECLARE v_nombre_caso VARCHAR(200);
     DECLARE v_nombre_viejo varchar(200);
@@ -981,7 +987,7 @@ CREATE PROCEDURE `sp_reasignar_caso` (IN `p_documento` VARCHAR(20), IN `p_docume
     COMMIT;
 END$$
 
-CREATE PROCEDURE `sp_registrar_caso` (IN `p_documento` VARCHAR(20), IN `p_id_proceso` INT, IN `p_id_tipo_caso` INT, IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(255), IN `p_radicado` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_caso` (IN `p_documento` VARCHAR(20), IN `p_id_proceso` INT, IN `p_id_tipo_caso` INT, IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(255), IN `p_radicado` VARCHAR(50))   BEGIN
 DECLARE v_id_caso INT;
     
 INSERT INTO caso (documento, id_proceso, id_tipo_caso, descripcion, nombre, radicado) VALUES (p_documento, p_id_proceso, p_id_tipo_caso, p_descripcion, p_nombre, p_radicado);
@@ -1008,7 +1014,7 @@ INSERT INTO caso (documento, id_proceso, id_tipo_caso, descripcion, nombre, radi
 
 END$$
 
-CREATE PROCEDURE `sp_registrar_informe` (IN `p_documento` VARCHAR(50), IN `p_formato` VARCHAR(10), IN `p_contenido` TEXT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_informe` (IN `p_documento` VARCHAR(50), IN `p_formato` VARCHAR(10), IN `p_contenido` TEXT)   BEGIN
 
 
 
@@ -1038,11 +1044,11 @@ CREATE PROCEDURE `sp_registrar_informe` (IN `p_documento` VARCHAR(50), IN `p_for
 
 END$$
 
-CREATE PROCEDURE `sp_registrar_monitoreo` (IN `p_documento` VARCHAR(50), IN `p_tipo` ENUM('inicio_sesion','accion'), IN `p_descripcion` TEXT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_monitoreo` (IN `p_documento` VARCHAR(50), IN `p_tipo` ENUM('inicio_sesion','accion'), IN `p_descripcion` TEXT)   BEGIN
 INSERT INTO usuario (documento, fecha, tipo, descripcion) VALUES (p_documento, NOW(), p_tipo, p_descripcion);
 END$$
 
-CREATE PROCEDURE `sp_registrar_proceso_organizacional` (IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(100), IN `p_documento_usuario` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_proceso_organizacional` (IN `p_descripcion` TEXT, IN `p_nombre` VARCHAR(100), IN `p_documento_usuario` VARCHAR(50))   BEGIN
 	DECLARE v_id_proceso INT;
     
     INSERT INTO procesoorganizacional (descripcion, nombre, documento_usuario)
@@ -1061,7 +1067,7 @@ CREATE PROCEDURE `sp_registrar_proceso_organizacional` (IN `p_descripcion` TEXT,
         WHERE p.id_proceso = v_id_proceso;
 END$$
 
-CREATE PROCEDURE `sp_registrar_seguimiento` (IN `p_observacion` TEXT, IN `p_caso` INT, IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_seguimiento` (IN `p_observacion` TEXT, IN `p_caso` INT, IN `p_documento` VARCHAR(50))   BEGIN
     
     IF NOT EXISTS (SELECT 1 FROM caso WHERE p_caso = caso.id_caso)
     	THEN SIGNAL SQLSTATE '45000'
@@ -1078,7 +1084,7 @@ CREATE PROCEDURE `sp_registrar_seguimiento` (IN `p_observacion` TEXT, IN `p_caso
     
     END$$
 
-CREATE PROCEDURE `sp_registrar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(50), IN `p_apellido` VARCHAR(50), IN `p_email` VARCHAR(100), IN `p_id_rol` INT(11), IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_registrar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nombre` VARCHAR(50), IN `p_apellido` VARCHAR(50), IN `p_email` VARCHAR(100), IN `p_id_rol` INT(11), IN `p_contraseña` VARCHAR(255), IN `p_numero` VARCHAR(30))   BEGIN 
     
     DECLARE v_f_registro DATETIME;
     DECLARE v_f_caducidad DATETIME;
@@ -1120,7 +1126,7 @@ CREATE PROCEDURE `sp_registrar_usuario` (IN `p_documento` VARCHAR(50), IN `p_nom
     );
 END$$
 
-CREATE PROCEDURE `sp_reporte_pqrs_excel` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_reporte_pqrs_excel` ()   BEGIN
     DECLARE anio_actual INT;
     SET anio_actual = YEAR(CURDATE());
 
@@ -1175,7 +1181,7 @@ CREATE PROCEDURE `sp_reporte_pqrs_excel` ()   BEGIN
 
 END$$
 
-CREATE PROCEDURE `sp_resumen_casos_global` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_resumen_casos_global` ()   BEGIN
     SELECT
         COUNT(c.id_caso)                                                          AS total_casos,
 
@@ -1196,7 +1202,7 @@ CREATE PROCEDURE `sp_resumen_casos_global` ()   BEGIN
 
 END$$
 
-CREATE PROCEDURE `sp_resumen_casos_por_documento` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_resumen_casos_por_documento` (IN `p_documento` VARCHAR(50))   BEGIN
     IF NOT EXISTS (SELECT 1 FROM usuario WHERE documento = p_documento) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'El documento no corresponde a ningun usuario registrado.';
@@ -1221,7 +1227,7 @@ CREATE PROCEDURE `sp_resumen_casos_por_documento` (IN `p_documento` VARCHAR(50))
       AND YEAR(c.fecha_inicio) = YEAR(CURDATE());
 END$$
 
-CREATE PROCEDURE `sp_resumen_productividad_comisionados` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_resumen_productividad_comisionados` ()   BEGIN
     SELECT
         u.documento,
         u.nombre,
@@ -1257,13 +1263,13 @@ CREATE PROCEDURE `sp_resumen_productividad_comisionados` ()   BEGIN
     GROUP BY u.documento, u.nombre, u.apellido;
 END$$
 
-CREATE PROCEDURE `sp_traer_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_traer_usuario` (IN `p_documento` VARCHAR(50))   BEGIN
 
 SELECT documento, nombre, apellido, email, numero, id_rol, id_estado, vigencia_usuario, ultimo_inicio_sesion, 2FA FROM usuario WHERE documento = TRIM(p_documento COLLATE utf8mb4_general_ci);
 
 END$$
 
-CREATE PROCEDURE `sp_usuario_por_token` (IN `p_token` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_usuario_por_token` (IN `p_token` VARCHAR(255))   BEGIN
     SELECT 
         u.documento,
         u.nombre,
@@ -1275,7 +1281,7 @@ CREATE PROCEDURE `sp_usuario_por_token` (IN `p_token` VARCHAR(255))   BEGIN
     LIMIT 1;
 END$$
 
-CREATE PROCEDURE `sp_validacion_estado_caso` (IN `p_id_caso` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_validacion_estado_caso` (IN `p_id_caso` INT)   BEGIN
 	SELECT id_estado AS id_estado
     FROM caso 
     WHERE id_caso = p_id_caso;
@@ -1297,6 +1303,13 @@ CREATE TABLE `archivo` (
   `ruta` varchar(255) NOT NULL COMMENT 'Ruta del archivo',
   `tipo_archivo` varchar(50) NOT NULL COMMENT 'Formato del archivo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `archivo`
+--
+
+INSERT INTO `archivo` (`id_archivo`, `id_caso`, `nombre_archivo`, `fecha_subida`, `ruta`, `tipo_archivo`) VALUES
+(1, 186, 'D_c5joqWsAEt9-U.jpg', '2026-04-13 12:02:47', 'uploads/casos/caso#186/archivo_69dcdb677b6b0.jpg', 'imagen');
 
 -- --------------------------------------------------------
 
@@ -1324,7 +1337,6 @@ CREATE TABLE `caso` (
 --
 
 INSERT INTO `caso` (`id_caso`, `nombre`, `radicado`, `documento`, `id_seguimiento`, `id_proceso`, `fecha_ultimo_seguimiento`, `fecha_inicio`, `fecha_cierre`, `id_estado`, `id_tipo_caso`, `descripcion`) VALUES
-(136, 'Denuncia cable suelto', NULL, '1013341532', 55, 14, '2026-04-12 15:30:02', '2026-01-06 08:20:00', '2026-01-08 03:20:00', 1, 1, 'Se reporta cable suelto en zona de trabajo que puede generar riesgo eléctrico'),
 (137, 'Solicitud inspección seguridad', NULL, '1027961396', NULL, 14, NULL, '2026-01-18 10:15:00', '2026-01-19 17:15:00', 1, 2, 'Se solicita inspección preventiva de seguridad en área operativa'),
 (138, 'Denuncia caída trabajador', NULL, '1013342119', NULL, 14, NULL, '2026-02-04 09:10:00', NULL, 2, 1, 'Se reporta caída leve de trabajador durante jornada laboral'),
 (139, 'Solicitud revisión herramientas', NULL, '1020304050', NULL, 14, NULL, '2026-02-22 11:30:00', '2026-02-23 11:30:00', 1, 2, 'Se solicita revisión de herramientas deterioradas'),
@@ -1370,7 +1382,8 @@ INSERT INTO `caso` (`id_caso`, `nombre`, `radicado`, `documento`, `id_seguimient
 (180, 'Solicitud chaqueta térmica', NULL, '1020304050', NULL, 12, NULL, '2026-03-12 15:40:22', NULL, 4, 2, 'Personal de archivo solicita chaqueta por bajas temperaturas en sótano'),
 (181, 'Denuncia dotación dañada', NULL, '1013341532', NULL, 12, NULL, '2026-03-20 09:20:11', NULL, 4, 1, 'Calzado de seguridad presenta desprendimiento de suela'),
 (182, 'Consulta puntos acumulados', NULL, '1027961396', NULL, 13, NULL, '2026-03-25 10:05:33', NULL, 4, 2, 'Funcionario desea conocer el saldo actual de sus puntos de incentivo'),
-(183, 'Sugerencia programa bienestar', NULL, '1027961396', 52, 13, '2026-04-06 01:39:29', '2026-03-29 16:30:45', NULL, 2, 1, 'Propuesta para incluir actividades deportivas en el plan de incentivos');
+(183, 'Sugerencia programa bienestar', NULL, '1027961396', 52, 13, '2026-04-06 01:39:29', '2026-03-29 16:30:45', NULL, 2, 1, 'Propuesta para incluir actividades deportivas en el plan de incentivos'),
+(186, 'Queja estudiantil', '3331', '1013341532', NULL, 15, NULL, '2026-04-13 12:02:47', NULL, 2, 2, 'El estudainte de la ficha 3238164 llamado Isaac Manuel, presento denuncia falsa contra un docente de la ficha por supuesta mala formación, siendo la denuncia falsa, pero igual procesada por la comisión de personal, se solicita desestimación de la Denunca');
 
 --
 -- Disparadores `caso`
@@ -1644,7 +1657,8 @@ INSERT INTO `noti_administrador` (`id_notificacion`, `documento`, `mensaje`, `fe
 (257, '1487569254', 'NUEVO CASO: \"Solicitud chaqueta térmica\" ID CASO: 180. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Marleny Gaviria', '2026-04-06 01:37:51'),
 (258, '1487569254', 'NUEVO CASO: \"Denuncia dotación dañada\" ID CASO: 181. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Ropa de Trabajo asignado al comisionado Simon Gonzalez Pelaez', '2026-04-06 01:37:51'),
 (259, '1487569254', 'NUEVO CASO: \"Consulta puntos acumulados\" ID CASO: 182. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Juan Manuel Correal Galvis', '2026-04-06 01:37:51'),
-(260, '1487569254', 'NUEVO CASO: \"Sugerencia programa bienestar\" ID CASO: 183. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:37:51');
+(260, '1487569254', 'NUEVO CASO: \"Sugerencia programa bienestar\" ID CASO: 183. \nSe ha registrado un nuevo caso de Denuncia Por Atender perteneciente al Proceso Organizacional Plan de incentivos asignado al comisionado Isaac Manuel Carvajal Lopez', '2026-04-06 01:37:51'),
+(261, '1487569254', 'NUEVO CASO: \"Queja estudiantil\" ID CASO: 186. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Casos Especiales asignado al comisionado Simón Gonzalez Pelaez', '2026-04-13 12:02:47');
 
 -- --------------------------------------------------------
 
@@ -1715,7 +1729,8 @@ INSERT INTO `noti_comisionado` (`id_notificacion`, `documento`, `mensaje`, `fech
 (275, '1020304050', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Marleny Gaviria\", se te ha asignado un caso con el nombre: \"Solicitud examen periódico\" con la id 174', '2026-04-06 01:38:45'),
 (276, '1027961396', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Juan Manuel\", uno de tus casos con el nombre Solicitud examen periódico y la id 174 se le ha asignado al comisonado: \"Marleny Gaviria', '2026-04-06 01:38:45'),
 (277, '1027961396', 'SE TE HA ASIGNADO UN CASO: Estimado Comisionado \"Juan Manuel Correal Galvis\", se te ha asignado un caso con el nombre: \"Sugerencia programa bienestar\" con la id 183', '2026-04-06 01:39:29'),
-(278, '1013342119', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Isaac Manuel\", uno de tus casos con el nombre Sugerencia programa bienestar y la id 183 se le ha asignado al comisonado: \"Juan Manuel Correal Galvis', '2026-04-06 01:39:29');
+(278, '1013342119', 'UNO DE TUS CASOS SE HA REASIGNADO: Estimado Comisionado \"Isaac Manuel\", uno de tus casos con el nombre Sugerencia programa bienestar y la id 183 se le ha asignado al comisonado: \"Juan Manuel Correal Galvis', '2026-04-06 01:39:29'),
+(279, '1013341532', 'NUEVO CASO: \"Queja estudiantil\" ID CASO: 186. \nSe ha registrado un nuevo caso de Solicitud Por Atender perteneciente al Proceso Organizacional Casos Especiales asignado al comisionado Simón Gonzalez Pelaez', '2026-04-13 12:02:47');
 
 -- --------------------------------------------------------
 
@@ -1784,8 +1799,7 @@ CREATE TABLE `seguimiento` (
 
 INSERT INTO `seguimiento` (`id_seguimiento`, `fecha_seguimiento`, `observacion`, `documento`, `id_caso`) VALUES
 (51, '2026-04-06 01:38:45', 'Caso por asignar', '1487569254', 174),
-(52, '2026-04-06 01:39:29', 'Caso por asignar', '1487569254', 183),
-(55, '2026-04-12 15:30:02', 'holiwis', '1013341532', 136);
+(52, '2026-04-06 01:39:29', 'Caso por asignar', '1487569254', 183);
 
 --
 -- Disparadores `seguimiento`
@@ -1863,11 +1877,11 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `nombre`, `apellido`, `email`, `numero`, `id_rol`, `contraseña`, `fecha_registro`, `fecha_caducidad`, `vigencia_usuario`, `ultimo_inicio_sesion`, `id_estado`, `2FA`, `cookie`) VALUES
-('1013341532', 'Simon', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', '3207619679', 2, '$2y$10$9/SLzD/EK5z.H428GsH3.uKgWVAJpbE6v.Dy508UPDzslms0eD8Jm', '2026-04-06 01:11:50', '2028-04-06 01:11:50', '2026-2028', '2026-04-13 03:46:39', 1, 0, NULL),
+('1013341532', 'Simón', 'Gonzalez Pelaez', 'pelaezgonzalezsimon919@gmail.com', '3207619679', 2, '$2y$10$9/SLzD/EK5z.H428GsH3.uKgWVAJpbE6v.Dy508UPDzslms0eD8Jm', '2026-04-06 01:11:50', '2028-04-06 01:11:50', '2026-2028', '2026-04-13 11:55:22', 1, 0, NULL),
 ('1013342119', 'Isaac Manuel', 'Carvajal Lopez', 'isaaccarvajal1356@gmail.com', '3243389897', 2, '$2y$10$MsUHwJtTJ9Txsd1o7mvQ2uV/rEkKfRFfaWTHYFZDOMUbKMi.fvKGy', '2026-04-06 01:22:41', '2028-04-06 01:22:41', '2026-2028', '2026-04-06 05:15:20', 1, 0, NULL),
-('1020304050', 'Marleny', 'Gaviria', 'koritocarrera@gmail.com', '3001234567', 2, '$2y$10$MO98eVba1jIkuZgsDsZ3NOmMQwwXRnpL650wjeTSGnhstE0dh17h6', '2026-04-06 01:24:53', '2028-04-06 01:24:53', '2026-2028', '2026-04-06 04:22:41', 1, 0, NULL),
+('1020304050', 'Marleny', 'Gaviria', 'enesperaconfirmacion@gmail.com', '3001234567', 2, '$2y$10$MO98eVba1jIkuZgsDsZ3NOmMQwwXRnpL650wjeTSGnhstE0dh17h6', '2026-04-06 01:24:53', '2028-04-06 01:24:53', '2026-2028', '2026-04-06 04:22:41', 1, 0, NULL),
 ('1027961396', 'Juan Manuel', 'Correal Galvis', 'juangalvis.developer@gmail.com', '3243740191', 2, '$2y$10$rpd99onGDNu3Mm7g2f0uoOhX9P00afAeEsilbuegithqkfrDUaIPK', '2026-04-06 01:20:43', '2028-04-06 01:20:43', '2026-2028', NULL, 1, 0, NULL),
-('1487569254', 'Kory', 'Carrerita', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$Jv38fJwprb95GT4MUs8n1elsr42/1fWNevWmOlYixG.NgZdhbF9US', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-13 03:47:06', 1, 0, '7be3757a753976a4ca6e');
+('1487569254', 'Kory', 'Carrera', 'kory.carrera.dev@gmail.com', '3001234567', 1, '$2y$10$Jv38fJwprb95GT4MUs8n1elsr42/1fWNevWmOlYixG.NgZdhbF9US', '2026-01-24 03:14:09', '2028-01-24 03:14:09', '2026-2028', '2026-04-13 12:34:26', 1, 0, '7be3757a753976a4ca6e');
 
 --
 -- Disparadores `usuario`
@@ -2019,13 +2033,13 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `archivo`
 --
 ALTER TABLE `archivo`
-  MODIFY `id_archivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar';
+  MODIFY `id_archivo` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para encontrar y relacionar', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `caso`
 --
 ALTER TABLE `caso`
-  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=184;
+  MODIFY `id_caso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK de casos', AUTO_INCREMENT=191;
 
 --
 -- AUTO_INCREMENT de la tabla `configuracionusuario`
@@ -2055,19 +2069,19 @@ ALTER TABLE `monitoreo`
 -- AUTO_INCREMENT de la tabla `noti_administrador`
 --
 ALTER TABLE `noti_administrador`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=261;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=266;
 
 --
 -- AUTO_INCREMENT de la tabla `noti_comisionado`
 --
 ALTER TABLE `noti_comisionado`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=279;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para relacionar y encontrar', AUTO_INCREMENT=284;
 
 --
 -- AUTO_INCREMENT de la tabla `procesoorganizacional`
 --
 ALTER TABLE `procesoorganizacional`
-  MODIFY `id_proceso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=16;
+  MODIFY `id_proceso` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK para ubicar y relacionar', AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
@@ -2172,7 +2186,7 @@ DELIMITER $$
 --
 -- Eventos
 --
-CREATE EVENT `ev_caso_caducado` ON SCHEDULE EVERY 1 DAY STARTS '2026-03-17 23:00:00' ON COMPLETION PRESERVE ENABLE DO BEGIN
+CREATE DEFINER=`root`@`localhost` EVENT `ev_caso_caducado` ON SCHEDULE EVERY 1 DAY STARTS '2026-03-17 23:00:00' ON COMPLETION PRESERVE ENABLE DO BEGIN
     UPDATE caso
     SET id_estado = 3
     WHERE 
@@ -2181,7 +2195,7 @@ CREATE EVENT `ev_caso_caducado` ON SCHEDULE EVERY 1 DAY STARTS '2026-03-17 23:00
         AND id_estado <> 3;
 END$$
 
-CREATE EVENT `ev_caducar_usuarios_vencidos` ON SCHEDULE EVERY 1 DAY STARTS '2026-03-18 00:00:00' ON COMPLETION PRESERVE ENABLE DO BEGIN
+CREATE DEFINER=`root`@`localhost` EVENT `ev_caducar_usuarios_vencidos` ON SCHEDULE EVERY 1 DAY STARTS '2026-03-18 00:00:00' ON COMPLETION PRESERVE ENABLE DO BEGIN
 UPDATE usuario
 SET id_estado = 0
 WHERE fecha_caducidad <= NOW()

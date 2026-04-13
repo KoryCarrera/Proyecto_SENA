@@ -24,6 +24,10 @@ const cargarUsuarios = async () => { //Realizamos una async function
         return;
     }
 
+        if ($.fn.DataTable.isDataTable("#tablaUsuario")) {
+            $("#tablaUsuario").DataTable().destroy();
+        }
+
     //Insertamos el "cargando..." mientras esperamos una response por parte del endpoint
     cuerpoTabla.innerHTML = `
         <tr>
@@ -93,10 +97,6 @@ const renderizarTablaUsuarios = async (usuarios, cuerpoTabla) => { //definimos l
     usuarios.forEach((usuario) => {  //*recorremos los roles y usuarios para personalizar su aspecto segun su contenido
         const estadoUsuario = obtenerEstadoUsuario(usuario.id_estado);
         const rolUsuario = obtenerRolUsuario(usuario.id_rol);
-
-        if ($.fn.DataTable.isDataTable("#tablaUsuario")) {
-            $("#tablaUsuario").DataTable().destroy();
-        }
 
         //Recorremos e insertamos datos en la variable html]
         htmlFilas += `
@@ -426,6 +426,9 @@ const guardarCambios = () => {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.error("Error en la comunicación con el servidor:", textStatus, errorThrown);
+
+            cerrarModal(); //cerramos el modal
+            cargarUsuarios() //refrescamos la tabla
 
             //Mostramos alerta estetica
             Swal.fire({

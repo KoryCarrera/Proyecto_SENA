@@ -40,6 +40,9 @@ try {
     // se registra el proceso
     $resultado = $model->registrarProceso($descripcion, $nombre, $documentoUsuario);
 
+    // Se obtiene el correo del administrador para enviar la notificación
+    $correoAdmin = $model->consultSimpleHelper("sp_obtener_correo_administrador()");
+
     // SOLUCIÓN: Agrupamos el éxito, el correo y el exit en un solo bloque
     if ($resultado['success'] == true) {
         
@@ -49,7 +52,7 @@ try {
         // Intentamos enviar el correo
         $correoEnviado = false;
         if ($idProceso) {
-            $correoEnviado = correoRegistrarProceso($idProceso, $nombre, $descripcion);
+            $correoEnviado = correoRegistrarProceso($idProceso, $nombre, $descripcion, $correoAdmin);
         }
 
         if (!$correoEnviado) {

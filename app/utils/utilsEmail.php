@@ -304,7 +304,7 @@ Si no solicitaste este cambio, contacta al administrador.";
 //
 // CORREO DE REGISTRAR UN CASO
 //
-function correoRegistroCaso($idCaso, $nombreCaso, $proceso, $tipoCaso, $descripcion, $resultadoArchivos){
+function correoRegistroCaso($idCaso, $nombreCaso, $proceso, $tipoCaso, $descripcion, $resultadoArchivos, $correoAdmin){
     
     $asunto = "Nuevo Caso Registrado - #{$idCaso}: {$nombreCaso}";
 
@@ -385,7 +385,7 @@ function correoRegistroCaso($idCaso, $nombreCaso, $proceso, $tipoCaso, $descripc
 
     $destinatarios = [
         [
-            'emailUser' => 'isaaccarvajal1356@gmail.com',
+            'emailUser' => $correoAdmin['email'],
             'userName' => 'Administrador'
         ]
     ];
@@ -417,7 +417,7 @@ function correoRegistroCaso($idCaso, $nombreCaso, $proceso, $tipoCaso, $descripc
 //
 // CORREO DE REGISTRAR PROCESO 
 //
-function correoRegistrarProceso($idProceso, $nombre, $descripcion){
+function correoRegistrarProceso($idProceso, $nombre, $descripcion, $correoAdmin){
     
         $asunto = "Nuevo proceso registrado - #{$idProceso}: {$nombre}";
 
@@ -483,7 +483,7 @@ function correoRegistrarProceso($idProceso, $nombre, $descripcion){
 
     $destinatarios = [
         [
-            'emailUser' => 'isaaccarvajal1356@gmail.com',
+            'emailUser' => $correoAdmin['email'],
             'userName' => 'Administrador'
         ]
     ];

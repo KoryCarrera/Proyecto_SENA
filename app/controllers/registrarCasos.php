@@ -107,8 +107,11 @@ try {
         }
     }
 
+    // se obtiene el correo del administrador para enviar la notificación
+    $correoAdmin = $modelCaso->consultSimpleHelper("sp_obtener_correo_administrador()");
+
     // se envia el correo de registro
-    $correo = correoRegistroCaso($idCaso, $nombreCaso, $registrar['data']['proceso'], $registrar['data']['tipo_caso'], $descripcion, $resultadoArchivos);
+    $correo = correoRegistroCaso($idCaso, $nombreCaso, $registrar['data']['proceso'], $registrar['data']['tipo_caso'], $descripcion, $resultadoArchivos, $correoAdmin);
 
     // se valida si se pudo enviar el correo
     if (!$correo) {
