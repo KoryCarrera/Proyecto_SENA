@@ -19,8 +19,6 @@ Sistema web para la gestión eficiente de Peticiones, Quejas, Reclamos, Sugerenc
 - [Uso](#-uso)
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 - [Capturas de Pantalla](#-capturas-de-pantalla)
-- [Pendientes Conocidos](#-pendientes-conocidos)
-- [Roadmap](#-roadmap)
 - [Contribuidores](#-contribuidores)
 - [Licencia](#-licencia)
 
@@ -52,14 +50,14 @@ Sistema web que proporciona:
 - ✅ Supervisión de todos los casos registrados
 - ✅ Generación de reportes en **PDF** y **Excel**
 - ✅ Dashboard con estadísticas visuales (Chart.js)
-- 🔄 Notificaciones (En desarrollo)
+- ✅ Notificaciones
 
 ### 👨‍💻 Rol: Comisionado
 - ✅ Registro de nuevos casos PQRSD
 - ✅ Visualización de casos propios y generales
 - ✅ Dashboard con estadísticas personalizadas
-- 🔄 Adjuntar evidencias (imágenes/videos) - En desarrollo
-- 🔄 Acceso restringido solo a casos asignados - En desarrollo
+- ✅ Adjuntar evidencias (imágenes/videos)
+- ✅ Acceso restringido solo a casos asignados
 
 ---
 ## 🛠️ Tecnologías
@@ -231,21 +229,6 @@ Proyecto_SENA/
 
 ### 📋 Gestión de Casos
 ![Casos Admin](Public/assets/img/img_readme/gestionCasos.png)
-
----
-
-## ⚠️ Pendientes Conocidos
-
-### 🚧 Funcionalidades Pendientes
-- Sistema de notificaciones en tiempo real
-- Adjuntar evidencias fotográficas/videos a casos
-- Alertas automáticas por correo electrónico
-- Control de acceso basado en casos asignados (comisionados solo deben ver sus casos)
-
----
-
-## 🗺️ Roadmap
----
 
 ## 👥 Contribuidores
 
