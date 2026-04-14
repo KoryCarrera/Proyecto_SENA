@@ -151,6 +151,20 @@
             <div
               class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
             </div>
+            <h1 class="text-4xl font-bold text-white mb-3">¡Bienvenido al Sistema de Gestión SENA!</h1>
+            <p class="text-base text-slate-300 max-w-3xl leading-relaxed">
+              Como administrador, tienes acceso total a las herramientas y funciones de esta plataforma.
+              Desde aquí podrás gestionar usuarios, supervisar solicitudes, generar reportes y mantener actualizada la
+              información institucional.
+              Tu rol es fundamental para garantizar el correcto funcionamiento del sistema y apoyar la labor de la
+              Comisión de Personal.
+            </p>
+          </div>
+          <!-- seccion de bienvenida  con su respectivo texto -->
+          <div class="glass-card p-8 mb-8 relative overflow-hidden">
+            <div
+              class="absolute -right-10 -top-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
+            </div>
             <div class="flex items-center justify-between p-2 mb-6 min-w-full">
               <h1 class="text-2xl font-bold text-white mb-4 uppercase tracking-wider">Estadísticas generales anuales
               </h1>

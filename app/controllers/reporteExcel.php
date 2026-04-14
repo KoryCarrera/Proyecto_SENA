@@ -51,9 +51,9 @@ $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet(); //Capturamos la hoja activa
 $sheet->setTitle("Tabla Base"); //definimos el nombre de la hoja que capturamos más arriba
 
-$sheet->mergeCells('B2:K2'); //Combinamos y centramos de la celda B2 a la K2 para definir el titulo de la pestaña
+$sheet->mergeCells('B2:M2'); //Combinamos y centramos de la celda B2 a la M2 para definir el titulo de la pestaña
 $sheet->setCellValue('B2', 'INFORME DE GESTIÓN SENA'); //Ingresamos lo que ira en esas celdas mergeadas
-$sheet->mergeCells('B3:K3'); //Combinamos y centramos una nueva celda para ingresar datos relacionados al reporte
+$sheet->mergeCells('B3:M3'); //Combinamos y centramos una nueva celda para ingresar datos relacionados al reporte
 $sheet->setCellValue('B3', 'ID de reporte: ' . $datosInforme['id_generado'] . ' Fecha de generación: ' . $datosInforme['fecha_registro']); //Insertamos los datos de auditoria en el documento (ID y fecha)
 
 $estiloTitulo = [ //En un array definimos las parametros de estilos
@@ -92,11 +92,11 @@ $estiloSubTitulo = [ //Definimos los estilos de la segunda celda combinada y cen
 
 //Aplicamos los estilos con el metodo aplyFromArray
 
-$sheet->getStyle('B2:K2')->applyFromArray($estiloTitulo);
-$sheet->getStyle('B3:K3')->applyFromArray($estiloSubTitulo);
+$sheet->getStyle('B2:M2')->applyFromArray($estiloTitulo);
+$sheet->getStyle('B3:M3')->applyFromArray($estiloSubTitulo);
 
 
-$encabezados = ['Documento', 'Id', 'Comisionado', 'Estado Usuario', 'Mes', 'Tipo', 'Estado', 'Proceso', 'Fecha Registro', 'Fecha Radicado']; //Definimos las cabeceras de las tablas
+$encabezados = ['Documento', 'Id', 'Nombre Caso', 'Radicado', 'Comisionado', 'Estado Usuario', 'Mes', 'Tipo', 'Estado', 'Proceso', 'Fecha Registro', 'Fecha Radicado']; //Definimos las cabeceras de las tablas
 $sheet->fromArray($encabezados, NULL, 'B4'); //Los aplicamos a la hoja que tenemos activa
 
 $estiloEncabezado = [ //Definimos los estilos de las cabeceras de nuestra tabla base
@@ -118,8 +118,8 @@ $estiloEncabezado = [ //Definimos los estilos de las cabeceras de nuestra tabla 
         ],
     ],
 ];
-$sheet->getStyle('B4:K4')->applyFromArray($estiloEncabezado); //Aplicamos el estilo
-$sheet->setAutoFilter('B4:K4'); //Aplicamos la herramienta filtro automatico de Excel
+$sheet->getStyle('B4:M4')->applyFromArray($estiloEncabezado); //Aplicamos el estilo
+$sheet->setAutoFilter('B4:M4'); //Aplicamos la herramienta filtro automatico de Excel
 
 
 if (!empty($datosReporte) && is_array($datosReporte)) { //Validamos los datos que nos llegaron de la BD
@@ -128,7 +128,7 @@ if (!empty($datosReporte) && is_array($datosReporte)) { //Validamos los datos qu
 
     $numeroDeFilas = count($datosReporte); //Contamos las filas que nos regresó el array
     $ultimaFila = 4 + $numeroDeFilas; //Encontramos la ultima fila
-    $rangoCuerpo = 'B5:K' . $ultimaFila; //Definimos el rango del cuerpo de la tabla
+    $rangoCuerpo = 'B5:M' . $ultimaFila; //Definimos el rango del cuerpo de la tabla
 
     $estiloDatos = [ //Definimos los estilos de el cuerpo de la tabla
         'borders' => [
@@ -149,12 +149,12 @@ if (!empty($datosReporte) && is_array($datosReporte)) { //Validamos los datos qu
 
 } else { //En caso de que no haya datos se mostrará esto
     $sheet->setCellValue('B5', 'No se encontraron registros en la base de datos.');
-    $sheet->mergeCells('B5:K5');
+    $sheet->mergeCells('B5:M5');
     $sheet->getStyle('B5')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 }
 
 
-foreach (range('B', 'K') as $col) { //Aqui reiteramos la opcion en cada celda
+foreach (range('B', 'M') as $col) { //Aqui reiteramos la opcion en cada celda
     $sheet->getColumnDimension($col)->setAutoSize(true); //Definimos AutoSize para que textos largos se vean bien
 }
 

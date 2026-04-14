@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     icon: 'success',
                     title: '¡Exito!',
                     text: data.mensaje || 'Contraseña actualizada correctamente.',
+                    theme: 'dark',
                     allowOutsideClick: false
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -75,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             icon: icono,
             title: titulo,
             text: texto,
+            theme: 'dark',
         });
     }
 });
